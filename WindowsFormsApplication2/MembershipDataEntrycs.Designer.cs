@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MembershipDataEntrycs));
             this.txtSavingsDeposit = new System.Windows.Forms.TextBox();
             this.label73 = new System.Windows.Forms.Label();
@@ -207,6 +207,10 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.label67 = new System.Windows.Forms.Label();
+            this.txtRelationship = new System.Windows.Forms.TextBox();
+            this.label101 = new System.Windows.Forms.Label();
+            this.txtRemarks = new System.Windows.Forms.TextBox();
             this.panel10.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
@@ -710,14 +714,14 @@
             // 
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -774,6 +778,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.txtRemarks);
+            this.tabPage2.Controls.Add(this.label101);
+            this.tabPage2.Controls.Add(this.txtRelationship);
+            this.tabPage2.Controls.Add(this.label67);
             this.tabPage2.Controls.Add(this.txtContactNo2);
             this.tabPage2.Controls.Add(this.cmbContactAreaCode);
             this.tabPage2.Controls.Add(this.txtContactNo1);
@@ -2430,6 +2438,51 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label67.Location = new System.Drawing.Point(749, 14);
+            this.label67.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(119, 21);
+            this.label67.TabIndex = 97;
+            this.label67.Text = "Relationship :";
+            // 
+            // txtRelationship
+            // 
+            this.txtRelationship.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRelationship.Location = new System.Drawing.Point(870, 15);
+            this.txtRelationship.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRelationship.MaxLength = 30;
+            this.txtRelationship.Name = "txtRelationship";
+            this.txtRelationship.Size = new System.Drawing.Size(462, 28);
+            this.txtRelationship.TabIndex = 98;
+            // 
+            // label101
+            // 
+            this.label101.AutoSize = true;
+            this.label101.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label101.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label101.Location = new System.Drawing.Point(777, 58);
+            this.label101.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label101.Name = "label101";
+            this.label101.Size = new System.Drawing.Size(89, 21);
+            this.label101.TabIndex = 99;
+            this.label101.Text = "Remarks :";
+            // 
+            // txtRemarks
+            // 
+            this.txtRemarks.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRemarks.Location = new System.Drawing.Point(870, 51);
+            this.txtRemarks.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRemarks.MaxLength = 300;
+            this.txtRemarks.Multiline = true;
+            this.txtRemarks.Name = "txtRemarks";
+            this.txtRemarks.Size = new System.Drawing.Size(462, 62);
+            this.txtRemarks.TabIndex = 100;
+            // 
             // MembershipDataEntrycs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2667,5 +2720,9 @@
         public System.Windows.Forms.Label label65;
         public System.Windows.Forms.Label label64;
         public System.Windows.Forms.Label label100;
+        public System.Windows.Forms.TextBox txtRemarks;
+        public System.Windows.Forms.Label label101;
+        public System.Windows.Forms.TextBox txtRelationship;
+        public System.Windows.Forms.Label label67;
     }
 }

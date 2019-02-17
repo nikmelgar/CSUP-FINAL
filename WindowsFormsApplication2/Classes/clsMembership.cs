@@ -294,10 +294,11 @@ namespace WindowsFormsApplication2
 
         public string countActiveMembers(Label lblActive)
         {
+            //Change From Active Members to Non-Payroll Members
             con = new SqlConnection();
             global.connection(con);
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT count(*) FROM Membership WHERE IsApprove ='1' and IsActive = '1'", con);
+            SqlDataAdapter adapter = new SqlDataAdapter("SELECT count(*) FROM Membership WHERE IsApprove ='1' and IsActive = '1' and Company_Code = 'COMP010'", con);
             DataTable dt = new DataTable();
             adapter.Fill(dt);
 
@@ -313,10 +314,11 @@ namespace WindowsFormsApplication2
 
         public string countTotalMembers(Label lblTotalMember)
         {
+            //Change From All Members w/ Pending to Active Members Only (Payroll)
             con = new SqlConnection();
             global.connection(con);
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT count(*) FROM Membership WHERE IsApprove ='1' or Isapprove is null and IsActive = '1'", con);
+            SqlDataAdapter adapter = new SqlDataAdapter("SELECT count(*) FROM Membership WHERE IsApprove ='1' and IsActive = '1' and Company_Code <> 'COMP010'", con);
             DataTable dt = new DataTable();
             adapter.Fill(dt);
 

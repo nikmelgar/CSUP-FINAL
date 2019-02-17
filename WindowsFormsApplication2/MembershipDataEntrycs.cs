@@ -514,7 +514,11 @@ namespace WindowsFormsApplication2
                 }
 
 
+                //Added Feb 17 2019 as per maam vangie
+                //Relationship and Remarks
                 
+                cmd.Parameters.AddWithValue("@Relationship", txtRelationship.Text);
+                cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
 
                 //Check if theres a beneficiary
                 if (dataGridView1.Rows.Count > 0)
@@ -926,6 +930,11 @@ namespace WindowsFormsApplication2
                 cmd.Parameters.AddWithValue("@Savings_Deposit", Convert.ToDecimal(txtSavingsDeposit.Text));
             }
 
+
+            //Added Feb 17 2019 as per maam vangie
+            //Relationship and Remarks
+            cmd.Parameters.AddWithValue("@Relationship", txtRelationship.Text);
+            cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
 
             cmd.ExecuteNonQuery();
 

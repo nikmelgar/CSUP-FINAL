@@ -208,7 +208,7 @@
             this.lblTotalNumberCount.AutoSize = true;
             this.lblTotalNumberCount.Font = new System.Drawing.Font("Century Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalNumberCount.ForeColor = System.Drawing.Color.White;
-            this.lblTotalNumberCount.Location = new System.Drawing.Point(234, 18);
+            this.lblTotalNumberCount.Location = new System.Drawing.Point(109, 17);
             this.lblTotalNumberCount.Name = "lblTotalNumberCount";
             this.lblTotalNumberCount.Size = new System.Drawing.Size(64, 47);
             this.lblTotalNumberCount.TabIndex = 9;
@@ -219,11 +219,11 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(109, 77);
+            this.label1.Location = new System.Drawing.Point(109, 79);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(183, 19);
+            this.label1.Size = new System.Drawing.Size(186, 19);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Total No. of Members";
+            this.label1.Text = "Total Active Members";
             // 
             // pictureBox1
             // 
@@ -329,7 +329,7 @@
             this.lblTotalPendingMembers.AutoSize = true;
             this.lblTotalPendingMembers.Font = new System.Drawing.Font("Century Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalPendingMembers.ForeColor = System.Drawing.Color.White;
-            this.lblTotalPendingMembers.Location = new System.Drawing.Point(234, 18);
+            this.lblTotalPendingMembers.Location = new System.Drawing.Point(109, 18);
             this.lblTotalPendingMembers.Name = "lblTotalPendingMembers";
             this.lblTotalPendingMembers.Size = new System.Drawing.Size(64, 47);
             this.lblTotalPendingMembers.TabIndex = 11;
@@ -340,11 +340,11 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(138, 77);
+            this.label4.Location = new System.Drawing.Point(106, 79);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(158, 19);
+            this.label4.Size = new System.Drawing.Size(193, 19);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Pending Members";
+            this.label4.Text = "Members for Approval";
             // 
             // pictureBox2
             // 
@@ -450,7 +450,7 @@
             this.lblTotalActiveMembers.AutoSize = true;
             this.lblTotalActiveMembers.Font = new System.Drawing.Font("Century Gothic", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotalActiveMembers.ForeColor = System.Drawing.Color.White;
-            this.lblTotalActiveMembers.Location = new System.Drawing.Point(237, 18);
+            this.lblTotalActiveMembers.Location = new System.Drawing.Point(109, 18);
             this.lblTotalActiveMembers.Name = "lblTotalActiveMembers";
             this.lblTotalActiveMembers.Size = new System.Drawing.Size(64, 47);
             this.lblTotalActiveMembers.TabIndex = 13;
@@ -471,11 +471,11 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(152, 77);
+            this.label6.Location = new System.Drawing.Point(109, 79);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(144, 19);
+            this.label6.Size = new System.Drawing.Size(187, 19);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Active Members";
+            this.label6.Text = "Non-Payroll Members";
             // 
             // panel18
             // 
@@ -713,7 +713,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 93.007F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.993007F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1185F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1189F));
             this.tableLayoutPanel1.Controls.Add(this.label10, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label13, 0, 0);
@@ -736,10 +736,10 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(180, 1);
+            this.label10.Location = new System.Drawing.Point(177, 1);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(5, 20);
+            this.label10.Size = new System.Drawing.Size(4, 20);
             this.label10.TabIndex = 4;
             this.label10.Text = ":";
             // 
@@ -747,10 +747,10 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(180, 38);
+            this.label12.Location = new System.Drawing.Point(177, 38);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(5, 20);
+            this.label12.Size = new System.Drawing.Size(4, 20);
             this.label12.TabIndex = 4;
             this.label12.Text = ":";
             // 
@@ -779,7 +779,7 @@
             // txtEmployeeID
             // 
             this.txtEmployeeID.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmployeeID.Location = new System.Drawing.Point(194, 5);
+            this.txtEmployeeID.Location = new System.Drawing.Point(190, 5);
             this.txtEmployeeID.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmployeeID.Name = "txtEmployeeID";
             this.txtEmployeeID.Size = new System.Drawing.Size(470, 26);
@@ -789,7 +789,7 @@
             // txtLastName
             // 
             this.txtLastName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLastName.Location = new System.Drawing.Point(194, 42);
+            this.txtLastName.Location = new System.Drawing.Point(190, 42);
             this.txtLastName.Margin = new System.Windows.Forms.Padding(4);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(470, 26);
@@ -799,7 +799,7 @@
             // txtFirstName
             // 
             this.txtFirstName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFirstName.Location = new System.Drawing.Point(194, 76);
+            this.txtFirstName.Location = new System.Drawing.Point(190, 76);
             this.txtFirstName.Margin = new System.Windows.Forms.Padding(4);
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.Size = new System.Drawing.Size(470, 26);
@@ -810,10 +810,10 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(180, 72);
+            this.label15.Location = new System.Drawing.Point(177, 72);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(5, 20);
+            this.label15.Size = new System.Drawing.Size(4, 20);
             this.label15.TabIndex = 10;
             this.label15.Text = ":";
             // 

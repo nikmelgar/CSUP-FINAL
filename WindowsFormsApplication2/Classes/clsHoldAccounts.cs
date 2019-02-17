@@ -36,8 +36,8 @@ namespace WindowsFormsApplication2.Classes
             dgv.Columns["EmployeeID"].FillWeight = 30;
             
             dgv.Columns["reason"].HeaderText = "Reason";
-            dgv.Columns["user_inserted"].HeaderText = "User Inserted";
-            dgv.Columns["dateinserted"].HeaderText = "Date Inserted";
+            dgv.Columns["user_inserted"].HeaderText = "Posted by";
+            dgv.Columns["dateinserted"].HeaderText = "Date Posted";
 
             dgv.Columns["Name"].FillWeight = 120;
             dgv.Columns["user_inserted"].FillWeight = 70;

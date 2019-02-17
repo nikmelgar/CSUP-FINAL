@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Collections;
 
 namespace WindowsFormsApplication2
 {
@@ -101,6 +102,8 @@ namespace WindowsFormsApplication2
             {
                 if (e.ColumnIndex == 0)
                 {
+                    //Hide Panel loan type
+                    panel38.Visible = false;
                     //// It returns the retangular area that represents the Display area for a cell  
                     Rectangle oRectangle = datagridviewTransaction.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
                     datagridviewTransaction.SelectedCells[e.ColumnIndex].ReadOnly = true;
@@ -125,10 +128,79 @@ namespace WindowsFormsApplication2
                     dgvTrans.Columns["Code"].FillWeight = 30;
 
                 }
+                else if(e.ColumnIndex == 1)
+                {
+                    try
+                    {
+                        //Stored object of user id Classes.clsCashReceipt.userID;
+                        if (datagridviewTransaction.Rows[selectedRow].Cells[0].Value.ToString() == "002")
+                        {
+                            //Hide panel transaction
+                            panelTrans.Visible = false;
+                            //// It returns the retangular area that represents the Display area for a cell  
+                            Rectangle oRectangle = datagridviewTransaction.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                            ////Setting area for DateTimePicker Control  
+                            //// Setting Location  
+                            panel38.Location = new Point(oRectangle.X + 691, oRectangle.Y + 215);
+
+                            selected = datagridviewTransaction.CurrentCell.ColumnIndex;
+                            selectedRow = datagridviewTransaction.CurrentRow.Index;
+
+
+                            //load database
+                            con = new SqlConnection();
+                            global.connection(con);
+
+                            if (txtPayorID.Text != "")
+                            {
+                                cmd = new SqlCommand();
+                                cmd.Connection = con;
+                                cmd.CommandText = "sp_ReturnLoanTypesPerUser";
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+
+                                //Put in datatable
+                                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                                DataTable dt = new DataTable();
+                                adapter.Fill(dt);
+
+                                //If Theres a loan then make it visible
+                                // Now make it visible
+                                if (dt.Rows.Count > 0)
+                                {
+                                    panel38.Visible = true;
+                                }
+                                else
+                                {
+                                    panel38.Visible = false;
+                                }
+
+                                dataGridView2.DataSource = dt;
+                                dataGridView2.Columns["Loan_Type"].FillWeight = 30;
+                                dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
+                                dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+
+                                //Hide other columns
+                                dataGridView2.Columns["Loan_No"].Visible = false;
+                                dataGridView2.Columns["userID"].Visible = false;
+                                dataGridView2.Columns["CurrentDr"].Visible = false;
+                                dataGridView2.Columns["PastDueDr"].Visible = false;
+                                dataGridView2.Columns["Balance"].Visible = false;
+                                dataGridView2.Columns["Deferred"].Visible = false;
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                    }                               
+
+                }
                 else
                 {
                     selected = datagridviewTransaction.CurrentCell.ColumnIndex;
                     panelTrans.Visible = false;
+                    panel38.Visible = false;
                 }
             }
         }
@@ -651,22 +723,158 @@ namespace WindowsFormsApplication2
 
                 if(radioMember.Checked == true)
                 {
+                    con = new SqlConnection();
+                    global.connection(con);
+
                     dataGridView3.Rows.Clear();
-                    if (datagridviewTransaction.Rows[0].Cells[0].Value.ToString() == "001")
+                    int x, y;
+                    x = datagridviewTransaction.Rows.Count - 1;
+                    y = 0; //Set Count
+
+                    while (y != x)
                     {
-                        dataGridView3.Rows[0].Cells[0].Value = "300.1";
-                        dataGridView3.Rows[0].Cells[4].Value = txtTransAmount.Text;
-                        dataGridView3.Rows[0].Cells[1].Value = txtPayorID.Text + " - " + txtPayorName.Text;
-                        dataGridView3.Rows[0].Cells[5].Value = Classes.clsCashReceipt.userID.ToString();
+                        //Savings || Loans || Share Capital
+                        if (datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "001" || datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "002" || datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "003")
+                        {
+                            ArrayList row = new ArrayList();
+                            switch (datagridviewTransaction.Rows[y].Cells[0].Value.ToString())
+                            {
+                                case "001":
+                                    //Savings
+                                    row.Add("300.1");
+                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                    row.Add("");
+                                    row.Add("0.00");
+                                    row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                    row.Add(Classes.clsCashReceipt.userID.ToString());
+                                    dataGridView3.Rows.Add(row.ToArray());
+                                    break;
+                                case "002":
+                                    //Loans
 
-                        int rowId = dataGridView3.Rows.Add();
-                        // Grab the new row!
-                        DataGridViewRow row2 = dataGridView3.Rows[rowId];
+                                    cmd = new SqlCommand();
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "sp_ReturnLoanTypesPerUserSEARCH";
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+                                    cmd.Parameters.AddWithValue("@description", datagridviewTransaction.Rows[y].Cells[1].Value.ToString());
 
-                        // Add the data
-                        row2.Cells[0].Value = "101";
-                        row2.Cells[3].Value = txtTransAmount.Text;
+                                    //Put in datatable
+                                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                                    DataTable dt = new DataTable();
+                                    adapter.Fill(dt);
+
+                                    //Declare Double first
+                                    Double balance, deferred, amountInput, Excess;
+
+                                    //Set Variable Values
+                                    balance = Convert.ToDouble(dt.Rows[0].ItemArray[6].ToString());
+                                    deferred = Convert.ToDouble(dt.Rows[0].ItemArray[7].ToString());
+                                    amountInput = Convert.ToDouble(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+
+                                    //Has a deferred loan
+                                    if(deferred != 0.00 || deferred != 0)
+                                    {
+                                        if(amountInput > deferred)
+                                        {
+                                            //Payment is greater than deferred 
+                                            //Past Due First
+                                            Excess = amountInput - deferred;
+
+                                            row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
+                                            row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                            row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                            row.Add("0.00");
+                                            row.Add(Convert.ToDecimal(deferred).ToString("#,0.00"));
+                                            row.Add(Classes.clsCashReceipt.userID.ToString());
+                                            dataGridView3.Rows.Add(row.ToArray());
+
+                                            //Current Loan
+                                            row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
+                                            row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                            row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                            row.Add("0.00");
+                                            row.Add(Convert.ToDecimal(Excess).ToString("#,0.00"));
+                                            row.Add(Classes.clsCashReceipt.userID.ToString());
+                                            dataGridView3.Rows.Add(row.ToArray());
+                                        }
+                                        else //For exact and Less than the amount
+                                        {
+                                            //Exact Amount 
+                                            row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
+                                            row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                            row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                            row.Add("0.00");
+                                            row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                            row.Add(Classes.clsCashReceipt.userID.ToString());
+                                            dataGridView3.Rows.Add(row.ToArray());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //No Deferred Loan
+                                        //Current Loan
+                                        row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
+                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                        row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                        row.Add("0.00");
+                                        row.Add(Convert.ToDecimal(datagridviewTransaction.Rows[y].Cells[2].Value.ToString()).ToString("#,0.00"));
+                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                        dataGridView3.Rows.Add(row.ToArray());
+                                    }
+
+
+                                    //Restore Variables to 0;
+                                    balance = 0;
+                                    deferred = 0;
+                                    amountInput = 0;
+                                    Excess = 0;
+                                    break;
+                                case "003":
+                                    //Share Capital
+                                    row.Add("363");
+                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                    row.Add("");
+                                    row.Add("0.00");
+                                    row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                    row.Add(Classes.clsCashReceipt.userID.ToString());
+                                    dataGridView3.Rows.Add(row.ToArray());
+                                    break;
+                            }
+
+                        }
+
+                        y = y + 1;
                     }
+                    //Last Record for Payment
+                    ArrayList row1 = new ArrayList();
+                    if (radioCash.Checked == true || radioPecciCheck.Checked == true)
+                    {
+                        //Cash
+                        row1.Add("101");
+                        row1.Add("");
+                        row1.Add("");
+                        row1.Add(txtTransAmount.Text);
+                        row1.Add("0.00");
+                        row1.Add("0");
+                        dataGridView3.Rows.Add(row1.ToArray());
+                    }
+                    else
+                    {
+                        //COCI
+                        row1.Add("105");
+                        row1.Add("");
+                        row1.Add("");
+                        row1.Add(txtTransAmount.Text);
+                        row1.Add("0.00");
+                        row1.Add("0");
+                        dataGridView3.Rows.Add(row1.ToArray());
+                    }
+
+                    //var index = dataGridView3.Rows.Add();
+                    //dataGridView3.Rows[index].Cells[0].Value = "101";
+                    //dataGridView3.Rows[index].Cells[3].Value = txtTransAmount.Text;
+                    computeDetails();
                 }
             }
 
@@ -802,7 +1010,7 @@ namespace WindowsFormsApplication2
                                 cmdDetail.Parameters.AddWithValue("@Or_No", txtORNo.Text);
                                 cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                                if (Convert.ToInt32(row.Cells[5].Value) == 0)
+                                if (Convert.ToInt32(row.Cells[5].Value) == 0 || row.Cells[5].Value.ToString() == "")
                                 {
                                     cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
                                 }
@@ -1561,6 +1769,81 @@ namespace WindowsFormsApplication2
             {
                 txtCheckAmount.Text = Convert.ToDecimal(txtCheckAmount.Text).ToString("#,0.00");
             }
+        }
+
+        private void txtLoanTypeSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (txtPayorID.Text != "")
+            {
+                con = new SqlConnection();
+                global.connection(con);
+
+                if (txtLoanTypeSearch.Text == "")
+                {
+                    //Return all Loan Types possible for this user
+                    
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnLoanTypesPerUser";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+
+                    //Put in datatable
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    dataGridView2.DataSource = dt;
+                    dataGridView2.Columns["Loan_Type"].FillWeight = 30;
+                    dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
+                    dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+
+                    //Hide other columns
+                    dataGridView2.Columns["Loan_No"].Visible = false;
+                    dataGridView2.Columns["userID"].Visible = false;
+                    dataGridView2.Columns["CurrentDr"].Visible = false;
+                    dataGridView2.Columns["PastDueDr"].Visible = false;
+                    dataGridView2.Columns["Balance"].Visible = false;
+                    dataGridView2.Columns["Deferred"].Visible = false;
+
+                }
+                else
+                {
+                    //Return the search loan
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnLoanTypesPerUserSEARCH";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+                    cmd.Parameters.AddWithValue("@description", txtLoanTypeSearch.Text);
+
+                    //Put in datatable
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    dataGridView2.DataSource = dt;
+                    dataGridView2.Columns["Loan_Type"].FillWeight = 30;
+                    dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
+                    dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+
+                    //Hide other columns
+                    dataGridView2.Columns["Loan_No"].Visible = false;
+                    dataGridView2.Columns["userID"].Visible = false;
+                    dataGridView2.Columns["CurrentDr"].Visible = false;
+                    dataGridView2.Columns["PastDueDr"].Visible = false;
+                    dataGridView2.Columns["Balance"].Visible = false;
+                    dataGridView2.Columns["Deferred"].Visible = false;
+                }
+            }
+
+        }
+
+        private void dataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            datagridviewTransaction.Rows[selectedRow].Cells[selected].Value = dataGridView2.SelectedRows[0].Cells["Loan_Description"].Value.ToString();
+            
+            panel38.Visible = false;
         }
 
         public void forUpdating()

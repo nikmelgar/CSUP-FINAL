@@ -36,6 +36,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -128,12 +129,6 @@
             this.panel32 = new System.Windows.Forms.Panel();
             this.panel33 = new System.Windows.Forms.Panel();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Debit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Credit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.userid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -156,9 +151,6 @@
             this.label29 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.datagridviewTransaction = new System.Windows.Forms.DataGridView();
-            this.AccntDescription = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.subs = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel10 = new System.Windows.Forms.Panel();
@@ -171,6 +163,22 @@
             this.panel28 = new System.Windows.Forms.Panel();
             this.panel29 = new System.Windows.Forms.Panel();
             this.panel30 = new System.Windows.Forms.Panel();
+            this.panel38 = new System.Windows.Forms.Panel();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.panel39 = new System.Windows.Forms.Panel();
+            this.panel40 = new System.Windows.Forms.Panel();
+            this.panel41 = new System.Windows.Forms.Panel();
+            this.panel42 = new System.Windows.Forms.Panel();
+            this.txtLoanTypeSearch = new System.Windows.Forms.TextBox();
+            this.AccntDescription = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.subs = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Debit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Credit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.userid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelHeader.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -194,6 +202,8 @@
             this.contextMenuStrip1.SuspendLayout();
             this.panelTrans.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrans)).BeginInit();
+            this.panel38.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel2
@@ -1334,52 +1344,6 @@
             this.dataGridView3.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView3_DataError);
             this.dataGridView3.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView3_EditingControlShowing);
             // 
-            // dataGridViewComboBoxColumn1
-            // 
-            this.dataGridViewComboBoxColumn1.DataPropertyName = "Account_Description";
-            this.dataGridViewComboBoxColumn1.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.dataGridViewComboBoxColumn1.FillWeight = 115F;
-            this.dataGridViewComboBoxColumn1.HeaderText = "Account Description";
-            this.dataGridViewComboBoxColumn1.Name = "dataGridViewComboBoxColumn1";
-            this.dataGridViewComboBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewComboBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Subsidiary_Code";
-            this.dataGridViewTextBoxColumn1.FillWeight = 95F;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Subsidiary";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Loan_No";
-            this.dataGridViewTextBoxColumn2.FillWeight = 60F;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Loan No";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            // 
-            // Debit
-            // 
-            this.Debit.DataPropertyName = "Debit";
-            this.Debit.FillWeight = 50F;
-            this.Debit.HeaderText = "Debit";
-            this.Debit.Name = "Debit";
-            // 
-            // Credit
-            // 
-            this.Credit.DataPropertyName = "Credit";
-            this.Credit.FillWeight = 50F;
-            this.Credit.HeaderText = "Credit";
-            this.Credit.Name = "Credit";
-            // 
-            // userid
-            // 
-            this.userid.DataPropertyName = "userID";
-            this.userid.HeaderText = "UserID";
-            this.userid.Name = "userid";
-            this.userid.Visible = false;
-            // 
             // contextMenuStrip2
             // 
             this.contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -1666,26 +1630,6 @@
             this.datagridviewTransaction.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.datagridviewTransaction_DataError);
             this.datagridviewTransaction.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.datagridviewTransaction_EditingControlShowing);
             // 
-            // AccntDescription
-            // 
-            this.AccntDescription.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.AccntDescription.FillWeight = 25F;
-            this.AccntDescription.HeaderText = "Code";
-            this.AccntDescription.Name = "AccntDescription";
-            this.AccntDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.AccntDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // subs
-            // 
-            this.subs.HeaderText = "Loan Type";
-            this.subs.Name = "subs";
-            // 
-            // Amount
-            // 
-            this.Amount.FillWeight = 60F;
-            this.Amount.HeaderText = "Amount";
-            this.Amount.Name = "Amount";
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -1741,7 +1685,7 @@
             this.panelTrans.Controls.Add(this.panel28);
             this.panelTrans.Controls.Add(this.panel29);
             this.panelTrans.Controls.Add(this.panel30);
-            this.panelTrans.Location = new System.Drawing.Point(753, 223);
+            this.panelTrans.Location = new System.Drawing.Point(726, 229);
             this.panelTrans.Name = "panelTrans";
             this.panelTrans.Size = new System.Drawing.Size(374, 183);
             this.panelTrans.TabIndex = 114;
@@ -1807,12 +1751,165 @@
             this.panel30.Size = new System.Drawing.Size(3, 183);
             this.panel30.TabIndex = 7;
             // 
+            // panel38
+            // 
+            this.panel38.BackColor = System.Drawing.Color.White;
+            this.panel38.Controls.Add(this.txtLoanTypeSearch);
+            this.panel38.Controls.Add(this.dataGridView2);
+            this.panel38.Controls.Add(this.panel39);
+            this.panel38.Controls.Add(this.panel40);
+            this.panel38.Controls.Add(this.panel41);
+            this.panel38.Controls.Add(this.panel42);
+            this.panel38.Location = new System.Drawing.Point(932, 418);
+            this.panel38.Name = "panel38";
+            this.panel38.Size = new System.Drawing.Size(374, 183);
+            this.panel38.TabIndex = 115;
+            this.panel38.Visible = false;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.EnableHeadersVisualStyles = false;
+            this.dataGridView2.Location = new System.Drawing.Point(9, 41);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.ReadOnly = true;
+            this.dataGridView2.RowTemplate.Height = 24;
+            this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView2.Size = new System.Drawing.Size(356, 133);
+            this.dataGridView2.TabIndex = 108;
+            this.dataGridView2.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellDoubleClick);
+            // 
+            // panel39
+            // 
+            this.panel39.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(141)))), ((int)(((byte)(188)))));
+            this.panel39.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel39.Location = new System.Drawing.Point(0, 3);
+            this.panel39.Name = "panel39";
+            this.panel39.Size = new System.Drawing.Size(3, 177);
+            this.panel39.TabIndex = 10;
+            // 
+            // panel40
+            // 
+            this.panel40.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(141)))), ((int)(((byte)(188)))));
+            this.panel40.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel40.Location = new System.Drawing.Point(0, 180);
+            this.panel40.Name = "panel40";
+            this.panel40.Size = new System.Drawing.Size(371, 3);
+            this.panel40.TabIndex = 9;
+            // 
+            // panel41
+            // 
+            this.panel41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(141)))), ((int)(((byte)(188)))));
+            this.panel41.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel41.Location = new System.Drawing.Point(0, 0);
+            this.panel41.Name = "panel41";
+            this.panel41.Size = new System.Drawing.Size(371, 3);
+            this.panel41.TabIndex = 8;
+            // 
+            // panel42
+            // 
+            this.panel42.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(141)))), ((int)(((byte)(188)))));
+            this.panel42.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel42.Location = new System.Drawing.Point(371, 0);
+            this.panel42.Name = "panel42";
+            this.panel42.Size = new System.Drawing.Size(3, 183);
+            this.panel42.TabIndex = 7;
+            // 
+            // txtLoanTypeSearch
+            // 
+            this.txtLoanTypeSearch.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLoanTypeSearch.Location = new System.Drawing.Point(9, 10);
+            this.txtLoanTypeSearch.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLoanTypeSearch.MaxLength = 50;
+            this.txtLoanTypeSearch.Name = "txtLoanTypeSearch";
+            this.txtLoanTypeSearch.Size = new System.Drawing.Size(355, 28);
+            this.txtLoanTypeSearch.TabIndex = 145;
+            this.txtLoanTypeSearch.TextChanged += new System.EventHandler(this.txtLoanTypeSearch_TextChanged);
+            // 
+            // AccntDescription
+            // 
+            this.AccntDescription.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.AccntDescription.FillWeight = 25F;
+            this.AccntDescription.HeaderText = "Code";
+            this.AccntDescription.Name = "AccntDescription";
+            this.AccntDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.AccntDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // subs
+            // 
+            this.subs.HeaderText = "Loan Type";
+            this.subs.Name = "subs";
+            this.subs.ReadOnly = true;
+            // 
+            // Amount
+            // 
+            this.Amount.FillWeight = 60F;
+            this.Amount.HeaderText = "Amount";
+            this.Amount.Name = "Amount";
+            // 
+            // dataGridViewComboBoxColumn1
+            // 
+            this.dataGridViewComboBoxColumn1.DataPropertyName = "Account_Description";
+            this.dataGridViewComboBoxColumn1.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.dataGridViewComboBoxColumn1.FillWeight = 115F;
+            this.dataGridViewComboBoxColumn1.HeaderText = "Account Description";
+            this.dataGridViewComboBoxColumn1.Name = "dataGridViewComboBoxColumn1";
+            this.dataGridViewComboBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewComboBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Subsidiary_Code";
+            this.dataGridViewTextBoxColumn1.FillWeight = 95F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Subsidiary";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "Loan_No";
+            this.dataGridViewTextBoxColumn2.FillWeight = 60F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "Loan No";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // Debit
+            // 
+            this.Debit.DataPropertyName = "Debit";
+            this.Debit.FillWeight = 50F;
+            this.Debit.HeaderText = "Debit";
+            this.Debit.Name = "Debit";
+            // 
+            // Credit
+            // 
+            this.Credit.DataPropertyName = "Credit";
+            this.Credit.FillWeight = 50F;
+            this.Credit.HeaderText = "Credit";
+            this.Credit.Name = "Credit";
+            // 
+            // userid
+            // 
+            this.userid.DataPropertyName = "userID";
+            this.userid.HeaderText = "UserID";
+            this.userid.Name = "userid";
+            this.userid.Visible = false;
+            // 
             // CashReceiptVoucher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1361, 905);
+            this.Controls.Add(this.panel38);
             this.Controls.Add(this.panelTrans);
             this.Controls.Add(this.datagridviewTransaction);
             this.Controls.Add(this.panel13);
@@ -1870,6 +1967,9 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.panelTrans.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrans)).EndInit();
+            this.panel38.ResumeLayout(false);
+            this.panel38.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2003,14 +2103,21 @@
         public System.Windows.Forms.DataGridViewTextBoxColumn chkDate;
         public System.Windows.Forms.DataGridViewTextBoxColumn chckNo;
         public System.Windows.Forms.Label status;
+        public System.Windows.Forms.Panel panel38;
+        public System.Windows.Forms.DataGridView dataGridView2;
+        public System.Windows.Forms.Panel panel39;
+        public System.Windows.Forms.Panel panel40;
+        public System.Windows.Forms.Panel panel41;
+        public System.Windows.Forms.Panel panel42;
+        public System.Windows.Forms.TextBox txtLoanTypeSearch;
+        private System.Windows.Forms.DataGridViewComboBoxColumn AccntDescription;
+        private System.Windows.Forms.DataGridViewTextBoxColumn subs;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Amount;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Debit;
         private System.Windows.Forms.DataGridViewTextBoxColumn Credit;
         private System.Windows.Forms.DataGridViewTextBoxColumn userid;
-        private System.Windows.Forms.DataGridViewComboBoxColumn AccntDescription;
-        private System.Windows.Forms.DataGridViewTextBoxColumn subs;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Amount;
     }
 }

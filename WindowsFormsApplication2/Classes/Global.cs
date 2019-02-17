@@ -21,18 +21,18 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            conbd.DataSource = "192.168.255.176";
+            //conbd.DataSource = "192.168.255.176";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            ////conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+
+            //Local Connection House
+            conbd.DataSource = ".";
             conbd.InitialCatalog = "PECCI-NEW";
             conbd.IntegratedSecurity = true;
             conbd.UserID = "sa";
             conbd.Password = "SYSADMIN";
-
-            ////Local Connection House
-            //conbd.DataSource = ".";
-            //conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
-            //conbd.UserID = "sa";
-            //conbd.Password = "SYSADMIN";
 
             //Maam Vangie IP
 

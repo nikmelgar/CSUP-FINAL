@@ -25,6 +25,7 @@ namespace WindowsFormsApplication2
         Classes.clsJournalVoucher clsJournal = new Classes.clsJournalVoucher();
         Classes.clsCashReceipt clsCash = new Classes.clsCashReceipt();
         Classes.clsSavings clsSavings = new Classes.clsSavings();
+        Classes.clsHoldAccounts clsHoldAccount = new Classes.clsHoldAccounts();
 
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
@@ -145,8 +146,23 @@ namespace WindowsFormsApplication2
                 case "0": //Savings
                     SavingsDataEntry savingsDataentry = new SavingsDataEntry();
 
+                    //Check for hold accounts
+                    if (clsHoldAccount.checkIfHoldAccount(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == true)
+                    {
+                        Alert.show("Members Account is on hold!", Alert.AlertType.error);
+                        return;
+                    }
+
+                    if (clsHoldAccount.checkIfTHeresADependent(dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString()) == true)
+                    {
+                        Alert.show("Members Account is on hold!", Alert.AlertType.error);
+                        return;
+                    }
+                    //for dependent purposes
+
                     foreach (Form form in Application.OpenForms)
                     {
+                        //Start Validation first if selected account is hold                   
 
                         if (form.GetType() == typeof(SavingsDataEntry))
                         {
@@ -247,6 +263,8 @@ namespace WindowsFormsApplication2
                     savingsDataentry.txtAmountWithdrawn.Focus();
                     savingsDataentry.Show();
                     break;
+
+
                 case "1":
                     //==========================================================================================
                     //                      DISBURSEMENT CODE

@@ -96,7 +96,7 @@ namespace WindowsFormsApplication2
 
         private void btnView_Click(object sender, EventArgs e)
         {
-            if(cmbView.Text == "All Pending Members")
+            if(cmbView.Text == "Members for Approval")
             {
                 clsBatch.loadAllMembersForApproval(dataGridView1);
             }
@@ -261,7 +261,7 @@ namespace WindowsFormsApplication2
                         }
 
                         //ReLoad The Gridview for Real Time
-                        if (cmbView.Text == "All Pending Members")
+                        if (cmbView.Text == "Members for Approval")
                         {
                             clsBatch.loadAllMembersForApproval(dataGridView1);
                         }
@@ -350,7 +350,7 @@ namespace WindowsFormsApplication2
                 cmd.ExecuteNonQuery();
 
                 //Load Datagridview per COmbobox description
-                if (cmbView.Text == "All Pending Members")
+                if (cmbView.Text == "Members for Approval")
                 {
                     clsBatch.loadAllMembersForApproval(dataGridView1);
                 }

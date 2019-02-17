@@ -236,7 +236,7 @@
             this.cmbView.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbView.FormattingEnabled = true;
             this.cmbView.Items.AddRange(new object[] {
-            "All Pending Members",
+            "Members for Approval",
             "Date / Month"});
             this.cmbView.Location = new System.Drawing.Point(65, 18);
             this.cmbView.Margin = new System.Windows.Forms.Padding(4);

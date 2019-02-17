@@ -497,6 +497,12 @@
     <Compile Include="ReportsForms\rptMembershipMain.Designer.cs">
       <DependentUpon>rptMembershipMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReportsForms\rptMembershipMainPageNonPayroll.cs">
+      <DependentUpon>rptMembershipMainPageNonPayroll.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="ReportsForms\rptMembershipMainPage.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -808,6 +814,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ReportsForms\rptMembershipMain.resx">
       <DependentUpon>rptMembershipMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportsForms\rptMembershipMainPageNonPayroll.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptMembershipMainPageNonPayroll.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportsForms\rptMembershipMainPage.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
