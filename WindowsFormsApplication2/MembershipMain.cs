@@ -412,10 +412,8 @@ namespace WindowsFormsApplication2
             Global global = new Global();
             global.connection(con);
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport WHERE IsApprove ='1' and IsActive = '1' and Company_Code <> 'COMP010' ORDER BY Company ASC", con);
-
-
-
+            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport WHERE IsApprove ='1' and IsActive = '1' and Company_Code <> 'COMP010' ORDER BY Company", con);
+            
             DataTable dt = new DataTable();
             DataSet ds = new DataSet();
 
