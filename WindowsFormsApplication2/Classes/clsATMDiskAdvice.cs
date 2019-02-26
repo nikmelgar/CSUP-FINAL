@@ -34,7 +34,8 @@ namespace WindowsFormsApplication2.Classes
                 dgv.Rows.Add(dt.Rows.Count);
                 decimal ttlPerBankRight = 0;
                 decimal ttalLoans = 0;
-                for (int i = 0; i < dt.Rows.Count; i++)
+                decimal ttalSDPrBank = 0;
+                for (int i = 0; i < dt.Rows.Count; i++) //Loop for Banks
                 {
                     dgv.Rows[i].Cells[0].Value = dt.Rows[i].ItemArray[0].ToString();
 
@@ -43,21 +44,22 @@ namespace WindowsFormsApplication2.Classes
                     DataTable dt2 = new DataTable();
                     adapter2.Fill(dt2);
 
-                    for (int x = 0; x < dt2.Rows.Count; x++)
+                    for (int x = 0; x < dt2.Rows.Count; x++) //For Loans and SD
                     {
                         if (dt2.Rows[x].ItemArray[0].ToString() == "SD")
                         {
                             //SAVINGS
                             dgv.Rows[i].Cells[1].Value = Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString()).ToString("#,0.00");
+                            ttalSDPrBank = Convert.ToDecimal(dgv.Rows[i].Cells[1].Value);
                         }
                         else
                         {
                             //LOANS
-                            ttalLoans = ttalLoans + Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString());
+                            ttalLoans += Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString());
                         }
 
                         //Total Amount Per Banks[Savings/Loans]
-                        ttlPerBankRight = Convert.ToDecimal(dgv.Rows[i].Cells[1].Value) + Convert.ToDecimal(dgv.Rows[i].Cells[2].Value);
+                        ttlPerBankRight = ttalSDPrBank + ttalLoans;
 
                         dgv.Rows[i].Cells[3].Value = ttlPerBankRight.ToString("#,0.00");
                         dgv.Rows[i].Cells[2].Value = ttalLoans.ToString("#,0.00");
@@ -87,12 +89,13 @@ namespace WindowsFormsApplication2.Classes
                 }
             }
 
-
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[0].Value = "Total";
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[1].Value = sumSD.ToString("#,0.00");
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[2].Value = sumLI.ToString("#,0.00");
+            sumTT = sumSD + sumLI;
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[3].Value = sumTT.ToString("#,0.00");
-            
+
+
         }
 
         public void loadBankCode(ComboBox cmb)

@@ -353,6 +353,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportsForms\CashReceiptReportSummary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CashReceiptReportSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ReportsForms\crDisbursement.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -724,6 +730,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ReportsForms\CashReceiptReportSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CashReceiptReportSummary.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReportsForms\crDisbursement.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>crDisbursement.cs</LastGenOutput>

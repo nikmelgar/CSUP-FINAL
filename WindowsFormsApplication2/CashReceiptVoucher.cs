@@ -150,7 +150,7 @@ namespace WindowsFormsApplication2
                             //load database
                             con = new SqlConnection();
                             global.connection(con);
-
+                            
                             if (txtPayorID.Text != "")
                             {
                                 cmd = new SqlCommand();
@@ -188,6 +188,7 @@ namespace WindowsFormsApplication2
                                 dataGridView2.Columns["Balance"].Visible = false;
                                 dataGridView2.Columns["Deferred"].Visible = false;
                             }
+                            
                         }
                     }
                     catch
@@ -482,7 +483,7 @@ namespace WindowsFormsApplication2
                     //load database
                     con = new SqlConnection();
                     global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
@@ -731,6 +732,33 @@ namespace WindowsFormsApplication2
                     x = datagridviewTransaction.Rows.Count - 1;
                     y = 0; //Set Count
 
+
+                    //Change from last to first Record for Payment
+                    ArrayList row1 = new ArrayList();
+                    if (radioCash.Checked == true || radioPecciCheck.Checked == true)
+                    {
+                        //Cash
+                        row1.Add("101");
+                        row1.Add("");
+                        row1.Add("");
+                        row1.Add(txtTransAmount.Text);
+                        row1.Add("0.00");
+                        row1.Add("0");
+                        dataGridView3.Rows.Add(row1.ToArray());
+                    }
+                    else
+                    {
+                        //COCI
+                        row1.Add("105");
+                        row1.Add("");
+                        row1.Add("");
+                        row1.Add(txtTransAmount.Text);
+                        row1.Add("0.00");
+                        row1.Add("0");
+                        dataGridView3.Rows.Add(row1.ToArray());
+                    }
+
+                    //Details Credit
                     while (y != x)
                     {
                         //Savings || Loans || Share Capital
@@ -846,31 +874,7 @@ namespace WindowsFormsApplication2
 
                         y = y + 1;
                     }
-                    //Last Record for Payment
-                    ArrayList row1 = new ArrayList();
-                    if (radioCash.Checked == true || radioPecciCheck.Checked == true)
-                    {
-                        //Cash
-                        row1.Add("101");
-                        row1.Add("");
-                        row1.Add("");
-                        row1.Add(txtTransAmount.Text);
-                        row1.Add("0.00");
-                        row1.Add("0");
-                        dataGridView3.Rows.Add(row1.ToArray());
-                    }
-                    else
-                    {
-                        //COCI
-                        row1.Add("105");
-                        row1.Add("");
-                        row1.Add("");
-                        row1.Add(txtTransAmount.Text);
-                        row1.Add("0.00");
-                        row1.Add("0");
-                        dataGridView3.Rows.Add(row1.ToArray());
-                    }
-
+                    
                     //var index = dataGridView3.Rows.Add();
                     //dataGridView3.Rows[index].Cells[0].Value = "101";
                     //dataGridView3.Rows[index].Cells[3].Value = txtTransAmount.Text;
@@ -1096,7 +1100,7 @@ namespace WindowsFormsApplication2
                                     cmdchek.CommandType = CommandType.StoredProcedure;
                                     cmdchek.Parameters.AddWithValue("@Or_No", txtORNo.Text);
                                     cmdchek.Parameters.AddWithValue("@Bank", row.Cells[0].Value);
-                                    cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value);
+                                    cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value.ToString().Replace(",",""));
                                     cmdchek.Parameters.AddWithValue("@Check_Date", row.Cells[2].Value);
                                     cmdchek.Parameters.AddWithValue("@Check_No", row.Cells[3].Value);
                                     cmdchek.ExecuteNonQuery(); //SAVING TRANSACTION
@@ -1170,7 +1174,7 @@ namespace WindowsFormsApplication2
                 con = new SqlConnection();
                 global.connection(con);
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
@@ -1186,7 +1190,7 @@ namespace WindowsFormsApplication2
             {
                 con = new SqlConnection();
                 global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
@@ -1712,6 +1716,13 @@ namespace WindowsFormsApplication2
                     {
                         if (dgvChecks.Rows.Count > 0)
                         {
+                            //Delete First Records
+                            SqlCommand cmdDelete = new SqlCommand();
+                            cmdDelete.Connection = con;
+                            cmdDelete.CommandText = "DELETE Cash_Receipts_Checks Or_No = '"+ txtORNo.Text +"'";
+                            cmdDelete.CommandType = CommandType.Text;
+                            cmdDelete.ExecuteNonQuery();
+
                             foreach (DataGridViewRow row in dgvChecks.Rows)
                             {
                                 if (row.Cells[0].Value != null)
@@ -1722,7 +1733,7 @@ namespace WindowsFormsApplication2
                                     cmdchek.CommandType = CommandType.StoredProcedure;
                                     cmdchek.Parameters.AddWithValue("@Or_No", txtORNo.Text);
                                     cmdchek.Parameters.AddWithValue("@Bank", row.Cells[0].Value);
-                                    cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value);
+                                    cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value.ToString().Replace(",",""));
                                     cmdchek.Parameters.AddWithValue("@Check_Date", row.Cells[2].Value);
                                     cmdchek.Parameters.AddWithValue("@Check_No", row.Cells[3].Value);
                                     cmdchek.ExecuteNonQuery(); //SAVING TRANSACTION

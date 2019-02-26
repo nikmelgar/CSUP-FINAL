@@ -578,6 +578,11 @@ namespace WindowsFormsApplication2
 
            lblTotalAmount.Text = sumApplied.ToString("#,0.00");
         }
+
+        private void LoanApproval_Load(object sender, EventArgs e)
+        {
+
+        }
     }
     
 }

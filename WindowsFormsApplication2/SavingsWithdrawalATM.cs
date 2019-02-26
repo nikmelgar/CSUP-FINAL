@@ -202,7 +202,7 @@ namespace WindowsFormsApplication2
                     con = new SqlConnection();
                     global.connection(con);
 
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_SavingsWithdrawalATM", con);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_SavingsWithdrawalATM ORDER BY Bank_Code", con);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 

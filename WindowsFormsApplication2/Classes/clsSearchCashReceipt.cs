@@ -23,7 +23,7 @@ namespace WindowsFormsApplication2.Classes
             con = new SqlConnection();
             global.connection(con);
 
-            adapter = new SqlDataAdapter("SELECT LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix as Name From Membership WHERE userID = '" + userid + "'", con);
+            adapter = new SqlDataAdapter("SELECT CASE WHEN Suffix is not null then LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN suffix is null then LastName+', '+ FirstName + SPACE(1) + MiddleName end as Name From Membership WHERE userID = '" + userid + "'", con);
             dt = new DataTable();
 
             adapter.Fill(dt);

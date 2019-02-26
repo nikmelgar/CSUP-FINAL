@@ -646,19 +646,23 @@ namespace WindowsFormsApplication2
                         //========================================================================
                         //  UPDATE TABLE WITHDRAWAL AND JOURNAL HEADER
                         //========================================================================
+                        int x = 0;
+                        while(x != dtGet.Rows.Count)
+                        {
+                            SqlCommand cmdwd = new SqlCommand();
+                            cmdwd.Connection = con;
+                            cmdwd.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[x].ItemArray[0].ToString() + "'";
+                            cmdwd.CommandType = CommandType.Text;
+                            cmdwd.ExecuteNonQuery();
 
-                        SqlCommand cmdwd = new SqlCommand();
-                        cmdwd.Connection = con;
-                        cmdwd.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '"+ Classes.clsUser.Username + "' WHERE JV_No = '"+ dtGet.Rows[0].ItemArray[0].ToString() +"'";
-                        cmdwd.CommandType = CommandType.Text;
-                        cmdwd.ExecuteNonQuery();
+                            SqlCommand cmdJv = new SqlCommand();
+                            cmdJv.Connection = con;
+                            cmdJv.CommandText = "UPDATE Journal_Header SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[x].ItemArray[0].ToString() + "'";
+                            cmdJv.CommandType = CommandType.Text;
+                            cmdJv.ExecuteNonQuery();
 
-                        SqlCommand cmdJv = new SqlCommand();
-                        cmdJv.Connection = con;
-                        cmdJv.CommandText = "UPDATE Journal_Header SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[0].ItemArray[0].ToString() + "'";
-                        cmdJv.CommandType = CommandType.Text;
-                        cmdJv.ExecuteNonQuery();
-
+                            x = x + 1;
+                        }
                     }
 
 

@@ -43,7 +43,17 @@
             this.txtPrincipal = new System.Windows.Forms.TextBox();
             this.txtInterest = new System.Windows.Forms.TextBox();
             this.panel17 = new System.Windows.Forms.Panel();
+            this.label55 = new System.Windows.Forms.Label();
+            this.lblTotalAmount = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Applied = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.accntCr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pastdue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.typeloan = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel16 = new System.Windows.Forms.Panel();
             this.label44 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
@@ -158,16 +168,6 @@
             this.txtDisapprovedBy = new System.Windows.Forms.TextBox();
             this.txtCancelledBy = new System.Windows.Forms.TextBox();
             this.label54 = new System.Windows.Forms.Label();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Applied = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.accntCr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pastdue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.typeloan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lblTotalAmount = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
             this.panel22.SuspendLayout();
             this.panel17.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -321,6 +321,33 @@
             this.panel17.Size = new System.Drawing.Size(875, 407);
             this.panel17.TabIndex = 153;
             // 
+            // label55
+            // 
+            this.label55.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label55.AutoSize = true;
+            this.label55.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label55.Location = new System.Drawing.Point(476, 366);
+            this.label55.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(233, 23);
+            this.label55.TabIndex = 119;
+            this.label55.Text = "Total Amount Applied :";
+            this.label55.Click += new System.EventHandler(this.label55_Click);
+            // 
+            // lblTotalAmount
+            // 
+            this.lblTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblTotalAmount.AutoSize = true;
+            this.lblTotalAmount.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalAmount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.lblTotalAmount.Location = new System.Drawing.Point(709, 366);
+            this.lblTotalAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTotalAmount.Name = "lblTotalAmount";
+            this.lblTotalAmount.Size = new System.Drawing.Size(49, 23);
+            this.lblTotalAmount.TabIndex = 118;
+            this.lblTotalAmount.Text = "0.00";
+            // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
@@ -355,6 +382,53 @@
             this.dataGridView1.TabIndex = 78;
             this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Loan No";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Type";
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Balance";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "Def. balance";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            // 
+            // Applied
+            // 
+            this.Applied.HeaderText = "Applied Amount";
+            this.Applied.Name = "Applied";
+            // 
+            // accntCr
+            // 
+            this.accntCr.HeaderText = "accntCR";
+            this.accntCr.Name = "accntCr";
+            this.accntCr.Visible = false;
+            // 
+            // pastdue
+            // 
+            this.pastdue.HeaderText = "pastdue";
+            this.pastdue.Name = "pastdue";
+            this.pastdue.Visible = false;
+            // 
+            // typeloan
+            // 
+            this.typeloan.HeaderText = "typeloan";
+            this.typeloan.Name = "typeloan";
+            this.typeloan.Visible = false;
             // 
             // panel16
             // 
@@ -1702,80 +1776,6 @@
             this.label54.TabIndex = 170;
             this.label54.Text = "Cancelled By :";
             // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Loan No";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Type";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Balance";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Def. balance";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            // 
-            // Applied
-            // 
-            this.Applied.HeaderText = "Applied Amount";
-            this.Applied.Name = "Applied";
-            // 
-            // accntCr
-            // 
-            this.accntCr.HeaderText = "accntCR";
-            this.accntCr.Name = "accntCr";
-            this.accntCr.Visible = false;
-            // 
-            // pastdue
-            // 
-            this.pastdue.HeaderText = "pastdue";
-            this.pastdue.Name = "pastdue";
-            this.pastdue.Visible = false;
-            // 
-            // typeloan
-            // 
-            this.typeloan.HeaderText = "typeloan";
-            this.typeloan.Name = "typeloan";
-            this.typeloan.Visible = false;
-            // 
-            // lblTotalAmount
-            // 
-            this.lblTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTotalAmount.AutoSize = true;
-            this.lblTotalAmount.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalAmount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.lblTotalAmount.Location = new System.Drawing.Point(709, 366);
-            this.lblTotalAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblTotalAmount.Name = "lblTotalAmount";
-            this.lblTotalAmount.Size = new System.Drawing.Size(49, 23);
-            this.lblTotalAmount.TabIndex = 118;
-            this.lblTotalAmount.Text = "0.00";
-            // 
-            // label55
-            // 
-            this.label55.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label55.AutoSize = true;
-            this.label55.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label55.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label55.Location = new System.Drawing.Point(476, 366);
-            this.label55.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(233, 23);
-            this.label55.TabIndex = 119;
-            this.label55.Text = "Total Amount Applied :";
-            this.label55.Click += new System.EventHandler(this.label55_Click);
-            // 
             // LoanApproval
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1805,6 +1805,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LoanApproval";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Load += new System.EventHandler(this.LoanApproval_Load);
             this.panel22.ResumeLayout(false);
             this.panel22.PerformLayout();
             this.panel17.ResumeLayout(false);

@@ -70,14 +70,14 @@ namespace WindowsFormsApplication2.Classes
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     dgv.Rows[i].Cells[0].Value = dt.Rows[i].ItemArray[0].ToString(); //Loan No
-                    dgv.Rows[i].Cells[1].Value = dt.Rows[i].ItemArray[1].ToString() +" - "+ dt.Rows[i].ItemArray[33].ToString(); //Type
-                    dgv.Rows[i].Cells[2].Value = Convert.ToDecimal(dt.Rows[i].ItemArray[36].ToString()).ToString("#,0.00");  //Balance
-                    dgv.Rows[i].Cells[3].Value = Convert.ToDecimal(dt.Rows[i].ItemArray[37].ToString()).ToString("#,0.00");  //Def Balance
+                    dgv.Rows[i].Cells[1].Value = dt.Rows[i].ItemArray[1].ToString() +" - "+ dt.Rows[i].ItemArray[34].ToString(); //Type
+                    dgv.Rows[i].Cells[2].Value = Convert.ToDecimal(dt.Rows[i].ItemArray[37].ToString()).ToString("#,0.00");  //Balance
+                    dgv.Rows[i].Cells[3].Value = Convert.ToDecimal(dt.Rows[i].ItemArray[38].ToString()).ToString("#,0.00");  //Def Balance
 
-                    dgv.Rows[i].Cells[5].Value = dt.Rows[i].ItemArray[34].ToString(); //Accnt Cr
-                    dgv.Rows[i].Cells[6].Value = dt.Rows[i].ItemArray[35].ToString(); //Past Due / Deferred
+                    dgv.Rows[i].Cells[5].Value = dt.Rows[i].ItemArray[35].ToString(); //Accnt Cr
+                    dgv.Rows[i].Cells[6].Value = dt.Rows[i].ItemArray[36].ToString(); //Past Due / Deferred
 
-                    dgv.Rows[i].Cells[7].Value = dt.Rows[i].ItemArray[1].ToString(); //Past Due / Deferred
+                    dgv.Rows[i].Cells[7].Value = dt.Rows[i].ItemArray[1].ToString(); //typeofloan
                 }
             }
         }

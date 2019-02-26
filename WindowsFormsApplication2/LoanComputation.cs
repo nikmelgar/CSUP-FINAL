@@ -379,6 +379,14 @@ namespace WindowsFormsApplication2
                 //Refresh the grid
                 clsLoanComputation.loadLoanApprovedDetails(dataGridView1, lblTotalCount);
 
+                //Set Loan Released Date
+                SqlCommand cmdRelease = new SqlCommand();
+                cmdRelease.Connection = con;
+                cmdRelease.CommandText = "sp_LoanReleasedDate";
+                cmdRelease.CommandType = CommandType.StoredProcedure;
+                cmdRelease.Parameters.AddWithValue("@LoanNo", txtLoanNo.Text);
+                cmdRelease.ExecuteNonQuery();
+
                 clearTextFIelds();
             }
         }

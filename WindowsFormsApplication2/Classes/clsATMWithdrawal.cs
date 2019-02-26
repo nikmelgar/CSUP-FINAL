@@ -24,7 +24,7 @@ namespace WindowsFormsApplication2.Classes
             con = new SqlConnection();
             global.connection(con);
 
-            adapter = new SqlDataAdapter("SELECT * FROM vw_SavingsWithdrawalATM", con);
+            adapter = new SqlDataAdapter("SELECT * FROM vw_SavingsWithdrawalATM ORDER BY Bank_Code", con);
             dt = new DataTable();
             adapter.Fill(dt);
 

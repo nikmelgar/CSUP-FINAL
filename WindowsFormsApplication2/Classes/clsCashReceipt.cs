@@ -51,7 +51,7 @@ namespace WindowsFormsApplication2.Classes
             con = new SqlConnection();
             global.connection(con);
 
-            adapter = new SqlDataAdapter("SELECT (Bank_Code + ' - '+ Bank_Name) as Bank_Name,Bank_Code FROM Bank WHERE isActive = 1", con);
+            adapter = new SqlDataAdapter("SELECT (Bank_Code) as Bank_Name,Bank_Code FROM Bank WHERE isActive = 1", con);
             DataTable dt = new DataTable();
             adapter.Fill(dt);
 
