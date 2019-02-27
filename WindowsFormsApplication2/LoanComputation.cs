@@ -173,7 +173,8 @@ namespace WindowsFormsApplication2
                     ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
 
                     //Charge Service fee for the net amount 
-                    srvcFromNet = ttalNet * Convert.ToDouble(clsParameter.serviceFee());
+                    srvcFromNet = Convert.ToDouble(txtLoanAmount.Text.Replace(",", "")) - Convert.ToDouble(txtExistingBalance.Text.Replace(",", ""));
+                    srvcFromNet = srvcFromNet * Convert.ToDouble(clsParameter.serviceFee());
 
                     txtServiceFee.Text = Convert.ToDecimal(srvcFromNet).ToString("#,0.00");
                     ttalDeduction = ttalDeduction + srvcFromNet;

@@ -26,6 +26,7 @@ namespace WindowsFormsApplication2
 
         //=========================================
         Classes.clsLoan clsLoan = new Classes.clsLoan();
+        Classes.clsParameter clsParameter = new Classes.clsParameter();
         Global global = new Global();
 
         SqlConnection con;
@@ -34,6 +35,8 @@ namespace WindowsFormsApplication2
         DataTable dt;
         double less;
         public static int userID { get; set; }
+        public static Boolean plarRenew { get; set; }
+        public static Double plarExistingBalance { get; set; }
         private void button1_Click(object sender, EventArgs e)
         {
           
@@ -291,9 +294,24 @@ namespace WindowsFormsApplication2
             cr.SetParameterValue("TotalPayments", txtTotalPayment.Text);
             cr.SetParameterValue("TotalInterest", txtInterest.Text);
             double lessTotal,netAmount;
-            lessTotal = Convert.ToDouble(txtLoanAmount.Text) * 0.02;
+
+
+            //If Loan PLAR is RENEW then change the service fee amount
+
+            if (plarRenew == true)
+            {
+                lessTotal = Convert.ToDouble(txtLoanAmount.Text) - plarExistingBalance; 
+                lessTotal = lessTotal * Convert.ToDouble(clsParameter.serviceFee());
+            }
+            else
+            {
+                lessTotal = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
+            }
+
+          
             netAmount = Convert.ToDouble(txtLoanAmount.Text) - lessTotal;
             netAmount = netAmount - less;
+
             cr.SetParameterValue("LessServiceFee", Convert.ToString(Convert.ToDecimal(lessTotal).ToString("#,0.00")));
             cr.SetParameterValue("TotalNet", Convert.ToString(Convert.ToDecimal(netAmount).ToString("#,0.00")));
 
@@ -417,6 +435,55 @@ namespace WindowsFormsApplication2
             if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
+            }
+        }
+
+        private void cmbLoanType_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if(cmbLoanType.Text != "")
+            {
+                dataGridView1.Rows.Clear();
+
+                con = new SqlConnection();
+                global.connection(con);
+
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanBalancesForPrevLoan";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userid", userID);
+                cmd.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                cmd.Parameters.AddWithValue("@Loan_No", ' ');
+
+                adapter = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                
+                //If Theres a data for prev loan
+                if(dt.Rows.Count > 0)
+                {
+                    //SET plarBoolean = TRUE if PLAR
+                    if (cmbLoanType.SelectedValue.ToString() == "PLAR")
+                    {
+                        plarRenew = true;
+                        plarExistingBalance = Convert.ToDouble(dt.Rows[0].ItemArray[37].ToString());
+                    }
+                    else
+                    {
+                        plarRenew = false;
+                        plarExistingBalance = 0;
+                    }
+
+                    //Put in LESS 
+                    string[] row = { dt.Rows[0].ItemArray[1].ToString() + " - " + dt.Rows[0].ItemArray[0].ToString(), Convert.ToDecimal(dt.Rows[0].ItemArray[37].ToString()).ToString("#,0.00") };
+                    dataGridView1.Rows.Add(row);
+
+                }
+                else
+                {
+                    plarRenew = false;
+                }
             }
         }
     }
