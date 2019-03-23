@@ -77,63 +77,64 @@ namespace WindowsFormsApplication2.LoginForm
             string Password = "";
             bool IsExist = false;
 
-            con = new SqlConnection();
-            global.connection(con);
-
-            cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_GetUsernameAndPassword";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
-
-            adapter = new SqlDataAdapter(cmd);
-            dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                Password = dt.Rows[0].ItemArray[1].ToString();
-                IsExist = true;
-            }
-            else
-            {
-                //Username does not exist!
-                Alert.show("Username does not exist!", Alert.AlertType.error);
-                txtUsername.Focus();
-                return;
-            }
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_GetUsernameAndPassword";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
 
-            if (IsExist)
-            {
-                if (Classes.clsUser.Decrypt(Password).Equals(txtPassword.Text))
+                adapter = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
                 {
-                    //Go To Main Form
-                    
-                    //Move Name and Other Information for Users Login
-                    Classes.clsUser.Username = txtUsername.Text;
-                    Classes.clsUser.firstName = dt.Rows[0].ItemArray[2].ToString();
-                    Classes.clsUser.middleName = dt.Rows[0].ItemArray[3].ToString();
-                    Classes.clsUser.lastName = dt.Rows[0].ItemArray[4  ].ToString();
-
-
-                    //Go to Form
-                    MainForm frm = new MainForm();
-                    this.Hide();
-                    frm.ShowDialog();
+                    Password = dt.Rows[0].ItemArray[1].ToString();
+                    IsExist = true;
                 }
                 else
                 {
-                    Alert.show("Password is incorrect!", Alert.AlertType.error);
-                    txtPassword.Focus();
+                    //Username does not exist!
+                    Alert.show("Username does not exist!", Alert.AlertType.error);
+                    txtUsername.Focus();
+                    return;
+                }
+
+                if (IsExist)
+                {
+                    if (Classes.clsUser.Decrypt(Password).Equals(txtPassword.Text))
+                    {
+                        //Go To Main Form
+
+                        //Move Name and Other Information for Users Login
+                        Classes.clsUser.Username = txtUsername.Text;
+                        Classes.clsUser.firstName = dt.Rows[0].ItemArray[2].ToString();
+                        Classes.clsUser.middleName = dt.Rows[0].ItemArray[3].ToString();
+                        Classes.clsUser.lastName = dt.Rows[0].ItemArray[4].ToString();
+
+
+                        //Go to Form
+                        MainForm frm = new MainForm();
+                        this.Hide();
+                        frm.ShowDialog();
+                    }
+                    else
+                    {
+                        Alert.show("Password is incorrect!", Alert.AlertType.error);
+                        txtPassword.Focus();
+                        return;
+                    }
+                }
+                else
+                {
+                    Alert.show("Please enter the valid credentials", Alert.AlertType.error);
+                    txtUsername.Focus();
                     return;
                 }
             }
-            else
-            {
-                Alert.show("Please enter the valid credentials", Alert.AlertType.error);
-                txtUsername.Focus();
-                return;
-            }
+
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

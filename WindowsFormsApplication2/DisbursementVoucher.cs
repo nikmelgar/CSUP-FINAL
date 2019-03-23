@@ -24,6 +24,9 @@ namespace WindowsFormsApplication2
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
         public string getTransaction { get; set; }
+        public string getBankFromWithdrawal { get; set; }
+
+        public bool fromWithdrawal = false;
 
         public bool fromReplenishment = false;
         decimal number;
@@ -50,6 +53,12 @@ namespace WindowsFormsApplication2
             {
                 if (fromReplenishment == true)
                 {
+                    if(fromWithdrawal == true)
+                    {
+                        this.Close();
+                        return;
+                    }
+
                     Alert.show("Please save this disbursement before closing!", Alert.AlertType.error);
                     return;
                 }
@@ -107,13 +116,21 @@ namespace WindowsFormsApplication2
             clsDisbursement.loadBank(cmbBank);
 
 
-            //loadw
+            //load
             populateDatagridCombobox();
 
             if(fromReplenishment == true)
             {
                 cmbTransaction.SelectedValue = getTransaction;
-                cmbBank.SelectedValue = "PCIB";
+                if(getBankFromWithdrawal == "")
+                {
+                    cmbBank.SelectedValue = "PCIB";
+                }
+                else
+                {
+                    cmbBank.SelectedValue = getBankFromWithdrawal;
+                }
+                
             }
             else
             {
@@ -128,19 +145,23 @@ namespace WindowsFormsApplication2
         {
             DataGridViewComboBoxColumn cbCell = (DataGridViewComboBoxColumn)dataGridView1.Columns[0];
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT account_Code,account_Description From chart_of_Accounts", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT account_Code,account_Description From chart_of_Accounts", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
 
-            cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
-            cbCell.AutoComplete = true;
-            cbCell.DisplayMember = "account_Description";
-            cbCell.ValueMember = "account_code";
-            cbCell.DataSource = dt;
+                cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+                cbCell.AutoComplete = true;
+                cbCell.DisplayMember = "account_Description";
+                cbCell.ValueMember = "account_code";
+                cbCell.DataSource = dt;
+            }
+
+               
         }
         private void btnSearchPayee_Click(object sender, EventArgs e)
         {
@@ -195,36 +216,41 @@ namespace WindowsFormsApplication2
         {
             if (txtSearch.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Account_Code,Account_Description from chart_of_accounts where Account_Code like '%" + txtSearch.Text + "%' or account_Description like '%" + txtSearch.Text + "%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Account_Code,Account_Description from chart_of_accounts where Account_Code like '%" + txtSearch.Text + "%' or account_Description like '%" + txtSearch.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView2.DataSource = dt;
+                    dataGridView2.DataSource = dt;
 
-                dataGridView2.Columns["Account_code"].HeaderText = "Code";
-                dataGridView2.Columns["Account_code"].FillWeight = 30;
+                    dataGridView2.Columns["Account_code"].HeaderText = "Code";
+                    dataGridView2.Columns["Account_code"].FillWeight = 30;
 
-                dataGridView2.Columns["Account_Description"].HeaderText = "Description";
-                txtSearch.Focus();
+                    dataGridView2.Columns["Account_Description"].HeaderText = "Description";
+                    txtSearch.Focus();
+                } 
             }
             else
             {
-                con = new SqlConnection();
-                global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                dataGridView2.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView2.Columns["Account_code"].HeaderText = "Code";
-                dataGridView2.Columns["Account_code"].FillWeight = 30;
+                    dataGridView2.DataSource = dt;
 
-                dataGridView2.Columns["Account_Description"].HeaderText = "Description";
-                txtSearch.Focus();
+                    dataGridView2.Columns["Account_code"].HeaderText = "Code";
+                    dataGridView2.Columns["Account_code"].FillWeight = 30;
+
+                    dataGridView2.Columns["Account_Description"].HeaderText = "Description";
+                    txtSearch.Focus();
+                }   
             }
         }
 
@@ -385,19 +411,23 @@ namespace WindowsFormsApplication2
                     panel22.Visible = true;
 
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                    dataGridView2.DataSource = dt;
+                        dataGridView2.DataSource = dt;
 
-                    dataGridView2.Columns["Account_code"].HeaderText = "Code";
-                    dataGridView2.Columns["Account_code"].FillWeight = 30;
+                        dataGridView2.Columns["Account_code"].HeaderText = "Code";
+                        dataGridView2.Columns["Account_code"].FillWeight = 30;
 
-                    dataGridView2.Columns["Account_Description"].HeaderText = "Description";
-                    txtSearch.Focus();
+                        dataGridView2.Columns["Account_Description"].HeaderText = "Description";
+                        txtSearch.Focus();
+
+                    }
+                    
                 }
                 else if (e.ColumnIndex == 1)
                 {
@@ -417,21 +447,25 @@ namespace WindowsFormsApplication2
                     //disable panel account description
                     panel22.Visible = false;
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    dataGridView3.DataSource = dt;
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix IS NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix ELSE LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                    dataGridView3.Columns["userID"].Visible = false;
+                        dataGridView3.DataSource = dt;
 
-                    dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
-                    dataGridView3.Columns["EmployeeID"].FillWeight = 30;
+                        dataGridView3.Columns["userID"].Visible = false;
+
+                        dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
+                        dataGridView3.Columns["EmployeeID"].FillWeight = 30;
 
 
-                    textBox1.Focus();
+                        textBox1.Focus();
+                    }
+                      
                 }
                 else
                 {
@@ -494,127 +528,131 @@ namespace WindowsFormsApplication2
                     }
 
                     //If Equal Continue to save
-                    con = new SqlConnection();
-                    global.connection(con);
-
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_InsertDisbursementHeader";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CVDate", dtCVDate.Text);
-
-                    //FOr Payee Type 
-                    //Member = 0 Client = 1
-                    if(radioMember.Checked == true)
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
-                        cmd.Parameters.AddWithValue("@Payee_Type", "0");
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Payee_Type", "1");
-                    }
+                        con.Open();
 
-                    //Check if Theres a Member or Client
-                    if (Classes.clsDisbursement.userID.ToString() == "")
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_InsertDisbursementHeader";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@CVDate", dtCVDate.Text);
 
-                    }
-                    else if(Classes.clsDisbursement.userID == 0)
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@userID", Classes.clsDisbursement.userID.ToString());
-                    }
-
-                    cmd.Parameters.AddWithValue("@Payee", txtPayee.Text);
-                    cmd.Parameters.AddWithValue("@Payee_Name", txtPayeeName.Text);
-                    cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
-                    cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmd.Parameters.AddWithValue("@Bank_Code", cmbBank.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Check_No", txtChequeNo.Text);
-                    cmd.Parameters.AddWithValue("@Check_Date", dtChequeDate.Text);
-                    cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtAmount.Text));
-                    cmd.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-                    cmd.ExecuteNonQuery();
-
-                    //Get The CV NO.
-
-                    SqlCommand cmdCV = new SqlCommand();
-                    cmdCV.Connection = con;
-                    cmdCV.CommandText = "sp_GetCVNoAfterSaving";
-                    cmdCV.CommandType = CommandType.StoredProcedure;
-                    cmdCV.Parameters.AddWithValue("@CV_Date", dtCVDate.Text);
-                    cmdCV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmdCV);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    if (dt.Rows.Count > 0)
-                    {
-                        txtCVNo.Text = dt.Rows[0].ItemArray[0].ToString();
-                    }
-                    else
-                    {
-                        return;
-                    }
-
-                    //Insert CV Details
-                    //SAVE DETAILS ============================================================================================
-                    if (dataGridView1.Rows.Count > 0)
-                    {
-                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        //FOr Payee Type 
+                        //Member = 0 Client = 1
+                        if (radioMember.Checked == true)
                         {
-                            if (row.Cells[0].Value != null)
+                            cmd.Parameters.AddWithValue("@Payee_Type", "0");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Payee_Type", "1");
+                        }
+
+                        //Check if Theres a Member or Client
+                        if (Classes.clsDisbursement.userID.ToString() == "")
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                        }
+                        else if (Classes.clsDisbursement.userID == 0)
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@userID", Classes.clsDisbursement.userID.ToString());
+                        }
+
+                        cmd.Parameters.AddWithValue("@Payee", txtPayee.Text);
+                        cmd.Parameters.AddWithValue("@Payee_Name", txtPayeeName.Text);
+                        cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
+                        cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                        cmd.Parameters.AddWithValue("@Bank_Code", cmbBank.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Check_No", txtChequeNo.Text);
+                        cmd.Parameters.AddWithValue("@Check_Date", dtChequeDate.Text);
+                        cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtAmount.Text));
+                        cmd.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+                        cmd.ExecuteNonQuery();
+
+                        //Get The CV NO.
+
+                        SqlCommand cmdCV = new SqlCommand();
+                        cmdCV.Connection = con;
+                        cmdCV.CommandText = "sp_GetCVNoAfterSaving";
+                        cmdCV.CommandType = CommandType.StoredProcedure;
+                        cmdCV.Parameters.AddWithValue("@CV_Date", dtCVDate.Text);
+                        cmdCV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmdCV);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            txtCVNo.Text = dt.Rows[0].ItemArray[0].ToString();
+                        }
+                        else
+                        {
+                            return;
+                        }
+
+                        //Insert CV Details
+                        //SAVE DETAILS ============================================================================================
+                        if (dataGridView1.Rows.Count > 0)
+                        {
+                            foreach (DataGridViewRow row in dataGridView1.Rows)
                             {
-                                SqlCommand cmdDetail = new SqlCommand();
-                                cmdDetail.Connection = con;
-                                cmdDetail.CommandText = "sp_InsertDisbursementDetail";
-                                cmdDetail.CommandType = CommandType.StoredProcedure;
-                                cmdDetail.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-                                cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+                                if (row.Cells[0].Value != null)
+                                {
+                                    SqlCommand cmdDetail = new SqlCommand();
+                                    cmdDetail.Connection = con;
+                                    cmdDetail.CommandText = "sp_InsertDisbursementDetail";
+                                    cmdDetail.CommandType = CommandType.StoredProcedure;
+                                    cmdDetail.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
+                                    cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                                if (Convert.ToInt32(row.Cells[5].Value) == 0)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                                }
+                                    if (Convert.ToInt32(row.Cells[5].Value) == 0)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                    }
 
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                                }
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                    }
 
 
-                                if (row.Cells[2].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
+                                    if (row.Cells[2].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
 
-                                cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                                cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                                cmdDetail.ExecuteNonQuery();
+                                    cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                    cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                    cmdDetail.ExecuteNonQuery();
+                                }
                             }
                         }
                     }
 
+                   
+
                     //SAVE MESSAGEBOX HERE
-                    Alert.show("Disbursement Voucher Successfully Created!", Alert.AlertType.success);
+                    Alert.show("Disbursement voucher successfully created.", Alert.AlertType.success);
 
                     //Button Save = New / Button Cancel = Close
                     btnNew.Text = "NEW";
@@ -663,6 +701,7 @@ namespace WindowsFormsApplication2
             btnPrint.Enabled = false;
             btnPrintCheque.Enabled = false;
             btnSearch.Enabled = true;
+            btnRelease.Enabled = false;
 
 
             //Button Naming Convension
@@ -762,7 +801,7 @@ namespace WindowsFormsApplication2
                 if (clsDisbursement.checkIfPosted(txtCVNo.Text) == true)
                 {
                     //If Voucher already Posted
-                    Alert.show("Disbursement Voucher Already Posted!", Alert.AlertType.error);
+                    Alert.show("Disbursement voucher already posted.", Alert.AlertType.error);
                     return;
                 }
 
@@ -783,7 +822,7 @@ namespace WindowsFormsApplication2
                 btnPrint.Enabled = false;
                 btnPrintCheque.Enabled = false;
                 btnSearch.Enabled = false;
-
+                btnRelease.Enabled = false; 
 
                 //=============================================
                 //              Enable Fields
@@ -834,119 +873,120 @@ namespace WindowsFormsApplication2
                     //===================================================================================================================
                     //                                      Disbursement Header
                     //===================================================================================================================
-                    con = new SqlConnection();
-                    global.connection(con);
-
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_UpdateDisbursementHeader";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@cv_No", txtCVNo.Text);
-                    cmd.Parameters.AddWithValue("@cv_Date", dtCVDate.Text);
-
-                    //FOr Payee Type 
-                    //Member = 0 Client = 1
-                    if (radioMember.Checked == true)
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
-                        cmd.Parameters.AddWithValue("@Payee_Type", "0");
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Payee_Type", "1");
-                    }
+                        con.Open();
 
-                    //Check if Theres a Member or Client
-                    if (Classes.clsDisbursement.userID.ToString() == "")
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_UpdateDisbursementHeader";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@cv_No", txtCVNo.Text);
+                        cmd.Parameters.AddWithValue("@cv_Date", dtCVDate.Text);
 
-                    }
-                    else if (Classes.clsDisbursement.userID == 0)
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@userID", Classes.clsDisbursement.userID.ToString());
-                    }
-
-                    cmd.Parameters.AddWithValue("@Payee", txtPayee.Text);
-                    cmd.Parameters.AddWithValue("@Payee_Name", txtPayeeName.Text);
-                    cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
-                    cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmd.Parameters.AddWithValue("@Bank_Code", cmbBank.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Check_No", txtChequeNo.Text);
-                    cmd.Parameters.AddWithValue("@Check_Date", dtChequeDate.Text);
-                    cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtAmount.Text));
-                    cmd.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
-                    cmd.ExecuteNonQuery();
-
-                    //==============================================================================================
-                    //                          FOR DISBURSEMENT DETAILS
-                    //==============================================================================================
-
-                    SqlCommand cmdDelete = new SqlCommand();
-                    cmdDelete.Connection = con;
-                    cmdDelete.CommandText = "sp_DeleteDisbursementDetail";
-                    cmdDelete.CommandType = CommandType.StoredProcedure;
-                    cmdDelete.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-                    cmdDelete.ExecuteNonQuery();
-
-                    //==============================================================================================
-                    //                          FOR DISBURSEMENT DETAILS UPDATING
-                    //==============================================================================================
-                    if (dataGridView1.Rows.Count > 0)
-                    {
-                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        //FOr Payee Type 
+                        //Member = 0 Client = 1
+                        if (radioMember.Checked == true)
                         {
-                            if (row.Cells[0].Value != null)
+                            cmd.Parameters.AddWithValue("@Payee_Type", "0");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Payee_Type", "1");
+                        }
+
+                        //Check if Theres a Member or Client
+                        if (Classes.clsDisbursement.userID.ToString() == "")
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                        }
+                        else if (Classes.clsDisbursement.userID == 0)
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@userID", Classes.clsDisbursement.userID.ToString());
+                        }
+
+                        cmd.Parameters.AddWithValue("@Payee", txtPayee.Text);
+                        cmd.Parameters.AddWithValue("@Payee_Name", txtPayeeName.Text);
+                        cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
+                        cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                        cmd.Parameters.AddWithValue("@Bank_Code", cmbBank.SelectedValue);
+                        cmd.Parameters.AddWithValue("@Check_No", txtChequeNo.Text);
+                        cmd.Parameters.AddWithValue("@Check_Date", dtChequeDate.Text);
+                        cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtAmount.Text));
+                        cmd.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
+                        cmd.ExecuteNonQuery();
+
+                        //==============================================================================================
+                        //                          FOR DISBURSEMENT DETAILS
+                        //==============================================================================================
+
+                        SqlCommand cmdDelete = new SqlCommand();
+                        cmdDelete.Connection = con;
+                        cmdDelete.CommandText = "sp_DeleteDisbursementDetail";
+                        cmdDelete.CommandType = CommandType.StoredProcedure;
+                        cmdDelete.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
+                        cmdDelete.ExecuteNonQuery();
+
+                        //==============================================================================================
+                        //                          FOR DISBURSEMENT DETAILS UPDATING
+                        //==============================================================================================
+                        if (dataGridView1.Rows.Count > 0)
+                        {
+                            foreach (DataGridViewRow row in dataGridView1.Rows)
                             {
-                                SqlCommand cmdDetail = new SqlCommand();
-                                cmdDetail.Connection = con;
-                                cmdDetail.CommandText = "sp_InsertDisbursementDetail";
-                                cmdDetail.CommandType = CommandType.StoredProcedure;
-                                cmdDetail.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-                                cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+                                if (row.Cells[0].Value != null)
+                                {
+                                    SqlCommand cmdDetail = new SqlCommand();
+                                    cmdDetail.Connection = con;
+                                    cmdDetail.CommandText = "sp_InsertDisbursementDetail";
+                                    cmdDetail.CommandType = CommandType.StoredProcedure;
+                                    cmdDetail.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
+                                    cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                                if(DBNull.Value.Equals(row.Cells[5]))
-                                {
-                                    //NULL
-                                    cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
-                                } 
-                                else
-                                {
-                                    //Not Null
-                                    cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                                }
+                                    if (DBNull.Value.Equals(row.Cells[5]))
+                                    {
+                                        //NULL
+                                        cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
+                                    }
+                                    else
+                                    {
+                                        //Not Null
+                                        cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                    }
 
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                                }
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                    }
 
 
-                                if (row.Cells[2].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
+                                    if (row.Cells[2].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
 
-                                cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                                cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                                cmdDetail.ExecuteNonQuery();
+                                    cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                    cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                    cmdDetail.ExecuteNonQuery();
+                                }
                             }
                         }
                     }
-
                     //Messagebox here
-                    Alert.show("Disbursement Voucher Successfully Updated!", Alert.AlertType.success);
+                    Alert.show("Disbursement Voucher Successfully Updated.", Alert.AlertType.success);
 
                     //return all buttons
                     //Button Enable [Commands]
@@ -1001,7 +1041,7 @@ namespace WindowsFormsApplication2
             if (clsDisbursement.checkIfPosted(txtCVNo.Text) == true)
             {
                 //If Voucher already Posted
-                Alert.show("Disbursement Voucher Already Posted!", Alert.AlertType.error);
+                Alert.show("Disbursement voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
@@ -1022,53 +1062,68 @@ namespace WindowsFormsApplication2
             if (result == DialogResult.Yes)
             {
                 //Code for posting
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_PostingDisbursement";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-                cmd.Parameters.AddWithValue("@Posted_By", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
-
-
-                //REFLECT TO WITHDRAWAL FROM REPLENISHMENT CASH
-                if(fromReplenishment == true)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    SqlCommand cmd2 = new SqlCommand();
-                    cmd2.Connection = con;
-                    cmd2.CommandText = "sp_UpdateReplenishAndCVNoWithdrawalSlip";
-                    cmd2.CommandType = CommandType.StoredProcedure;
-                    cmd2.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-                    cmd2.Parameters.AddWithValue("@JV_No",jvno);
-                    cmd2.ExecuteNonQuery();
+                    con.Open();
 
-                    jvno = null;
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_PostingDisbursement";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
+                    cmd.Parameters.AddWithValue("@Posted_By", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
+
+
+                    //REFLECT TO WITHDRAWAL FROM REPLENISHMENT CASH
+                    if (fromReplenishment == true)
+                    {
+                        SqlCommand cmd2 = new SqlCommand();
+                        cmd2.Connection = con;
+                        cmd2.CommandText = "sp_UpdateReplenishAndCVNoWithdrawalSlip";
+                        cmd2.CommandType = CommandType.StoredProcedure;
+                        cmd2.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
+                        cmd2.Parameters.AddWithValue("@JV_No", jvno);
+                        cmd2.ExecuteNonQuery();
+
+                        jvno = null;
+                    }
+
+                    //Posting for Withdrawal Table
+                    if (Classes.clsDisbursement.releaseCashWithdrawal == true)
+                    {
+                        SqlCommand cmdSD = new SqlCommand();
+                        cmdSD.Connection = con;
+                        cmdSD.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "', CV_No = '" + txtCVNo.Text + "', CV_Date = '" + DateTime.Today + "' WHERE Withdrawal_Slip_No = '" + Classes.clsDisbursement.slipFromWithdrawal + "'";
+                        cmdSD.CommandType = CommandType.Text;
+                        cmdSD.ExecuteNonQuery();
+                        //After posting set to false 
+                        Classes.clsDisbursement.releaseCashWithdrawal = false;
+                        Classes.clsDisbursement.slipFromWithdrawal = string.Empty;
+
+                        //Refresh Savings Grid
+                        Savings frm = new Savings();
+                        frm = (Savings)Application.OpenForms["Savings"];
+                        frm.refreshData();
+                    }
+
+                    //Check if the voucher is from withdrawal of savings 
+                    SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT wd_slip_no FROM Disbursement_Header WHERE CV_No = '" + txtCVNo.Text + "'", con);
+                    DataTable dtCheck = new DataTable();
+                    adapterCheck.Fill(dtCheck);
+
+                    if (dtCheck.Rows[0].ItemArray[0].ToString() != "")
+                    {
+                        //TRUE [FROM SAVINGS]
+                        SqlCommand cmdSD = new SqlCommand();
+                        cmdSD.Connection = con;
+                        cmdSD.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "', CV_No = '" + txtCVNo.Text + "', CV_Date = '" + DateTime.Today.ToShortDateString() + "' WHERE Withdrawal_Slip_No = '" + dtCheck.Rows[0].ItemArray[0].ToString() + "'";
+                        cmdSD.CommandType = CommandType.Text;
+                        cmdSD.ExecuteNonQuery();
+                    }
                 }
-
-                //Posting for Withdrawal Table
-                if(Classes.clsDisbursement.releaseCashWithdrawal == true)
-                {
-                    SqlCommand cmdSD = new SqlCommand();
-                    cmdSD.Connection = con;
-                    cmdSD.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '"+ Classes.clsUser.Username +"', CV_No = '"+ txtCVNo.Text +"', CV_Date = '"+ DateTime.Today +"' WHERE Withdrawal_Slip_No = '"+ Classes.clsDisbursement.slipFromWithdrawal + "'";
-                    cmdSD.CommandType = CommandType.Text;
-                    cmdSD.ExecuteNonQuery();
-                    //After posting set to false 
-                    Classes.clsDisbursement.releaseCashWithdrawal = false;
-                    Classes.clsDisbursement.slipFromWithdrawal = string.Empty;
-
-                    //Refresh Savings Grid
-                    Savings frm = new Savings();
-                    frm = (Savings)Application.OpenForms["Savings"];
-                    frm.refreshData();
-                }
-
-
                 //Success Message
-                Alert.show("Disbursement Voucher Successfully Posted!", Alert.AlertType.success);
+                Alert.show("Disbursement voucher successfully posted.", Alert.AlertType.success);
 
                 //Display Message
                 status.Visible = true;
@@ -1107,7 +1162,7 @@ namespace WindowsFormsApplication2
             if (clsDisbursement.checkIfPosted(txtCVNo.Text) == true)
             {
                 //If Voucher already Posted
-                Alert.show("Disbursement Voucher Already Posted!", Alert.AlertType.error);
+                Alert.show("Disbursement voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
@@ -1128,21 +1183,21 @@ namespace WindowsFormsApplication2
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                
 
-                //Code for posting
-                con = new SqlConnection();
-                global.connection(con);
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_CancellationOfDisbursement";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-                cmd.Parameters.AddWithValue("@Cancel_Note", txtParticular.Text);
-                cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_CancellationOfDisbursement";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
+                    cmd.Parameters.AddWithValue("@Cancel_Note", txtParticular.Text);
+                    cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
+                }
                 //Success Message
                 Alert.show("Disbursement Voucher Successfully Cancelled!", Alert.AlertType.success);
 
@@ -1177,143 +1232,144 @@ namespace WindowsFormsApplication2
             if (txtCVNo.Text != "")
             {
                 //Print Purposes
-                con = new SqlConnection();
-                global.connection(con);
-
-                if (cmbTransaction.SelectedValue.ToString() == "TRAN002")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    //Check first if he has a other deduction
-                    SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT * FROM vw_GeneralDisbursementVoucher WHERE Loan_No ='" + txtLoanNo.Text + "'", con);
-                    DataTable dtCheck = new DataTable();
-                    adapterCheck.Fill(dtCheck);
+                    con.Open();
 
-                    if (dtCheck.Rows.Count > 0)
+                    if (cmbTransaction.SelectedValue.ToString() == "TRAN002")
                     {
-                        //Call vw_GeneralJournal
-                        //Generate GENERAL VOUCHER REPORT FOR LOANS
-                        SqlCommand cmdGeneral = new SqlCommand();
-                        cmdGeneral.Connection = con;
-                        cmdGeneral.CommandText = "SELECT * FROM vw_GeneralDisbursementVoucher WHERE Loan_No = '" + txtLoanNo.Text + "'";
-                        cmdGeneral.CommandType = CommandType.Text;
-                        cmdGeneral.ExecuteNonQuery();
+                        //Check first if he has a other deduction
+                        SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT * FROM vw_GeneralDisbursementVoucher WHERE Loan_No ='" + txtLoanNo.Text + "'", con);
+                        DataTable dtCheck = new DataTable();
+                        adapterCheck.Fill(dtCheck);
 
-                        SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
+                        if (dtCheck.Rows.Count > 0)
+                        {
+                            //Call vw_GeneralJournal
+                            //Generate GENERAL VOUCHER REPORT FOR LOANS
+                            SqlCommand cmdGeneral = new SqlCommand();
+                            cmdGeneral.Connection = con;
+                            cmdGeneral.CommandText = "SELECT * FROM vw_GeneralDisbursementVoucher WHERE Loan_No = '" + txtLoanNo.Text + "'";
+                            cmdGeneral.CommandType = CommandType.Text;
+                            cmdGeneral.ExecuteNonQuery();
 
-
-
-                        DataTable dtGeneral = new DataTable();
-                        DataSet dsGeneral = new DataSet();
-
-                        ReportsForms.DisbursementGeneralVoucher cr = new ReportsForms.DisbursementGeneralVoucher();
-                        ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
-
-                        li = new TableLogOnInfo();
+                            SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
 
 
-                        adapterGeneral.Fill(dsGeneral, "vw_GeneralJournalVoucher");
-                        dtGeneral = dsGeneral.Tables["vw_GeneralJournalVoucher"];
-                        cr.SetDataSource(dsGeneral.Tables["vw_GeneralJournalVoucher"]);
 
-                        //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-                        cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+                            DataTable dtGeneral = new DataTable();
+                            DataSet dsGeneral = new DataSet();
 
-                        cr.SetParameterValue("cv_no", txtCVNo.Text);
-                        cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNo.Text));
-                        cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNo.Text));
-                        cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNo.Text));
+                            ReportsForms.DisbursementGeneralVoucher cr = new ReportsForms.DisbursementGeneralVoucher();
+                            ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
 
-                        SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNo.Text + "' ORDER BY Schedule_Payment ASC", con);
-                        DataTable dtBillDate = new DataTable();
-                        adapterBillDate.Fill(dtBillDate);
+                            li = new TableLogOnInfo();
 
-                        cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
 
-                        rpt.crystalReportViewer1.ReportSource = cr;
-                        rpt.ShowDialog();
+                            adapterGeneral.Fill(dsGeneral, "vw_GeneralJournalVoucher");
+                            dtGeneral = dsGeneral.Tables["vw_GeneralJournalVoucher"];
+                            cr.SetDataSource(dsGeneral.Tables["vw_GeneralJournalVoucher"]);
+
+                            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                            cr.SetParameterValue("cv_no", txtCVNo.Text);
+                            cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNo.Text));
+                            cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNo.Text));
+                            cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNo.Text));
+
+                            SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNo.Text + "' ORDER BY Schedule_Payment ASC", con);
+                            DataTable dtBillDate = new DataTable();
+                            adapterBillDate.Fill(dtBillDate);
+
+                            cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
+
+                            rpt.crystalReportViewer1.ReportSource = cr;
+                            rpt.ShowDialog();
+                        }
+                        else
+                        {
+                            //Call vw_GeneralJournalVoucherNoLoanDeduction
+                            //Generate GENERAL VOUCHER REPORT FOR LOANS
+                            SqlCommand cmdGeneral = new SqlCommand();
+                            cmdGeneral.Connection = con;
+                            cmdGeneral.CommandText = "SELECT * FROM vw_GeneralDisbursementVoucherNoLoanDeduction WHERE Loan_No = '" + txtLoanNo.Text + "'";
+                            cmdGeneral.CommandType = CommandType.Text;
+                            cmdGeneral.ExecuteNonQuery();
+
+                            SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
+
+
+
+                            DataTable dtGeneral = new DataTable();
+                            DataSet dsGeneral = new DataSet();
+
+                            ReportsForms.DisbursementGeneralVoucherNoDeduction cr = new ReportsForms.DisbursementGeneralVoucherNoDeduction();
+                            ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
+
+                            li = new TableLogOnInfo();
+
+                            adapterGeneral.Fill(dsGeneral, "vw_GeneralDisbursementVoucherNoLoanDeduction");
+                            dtGeneral = dsGeneral.Tables["vw_GeneralDisbursementVoucherNoLoanDeduction"];
+                            cr.SetDataSource(dsGeneral.Tables["vw_GeneralDisbursementVoucherNoLoanDeduction"]);
+
+                            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                            cr.SetParameterValue("cv_no", txtCVNo.Text);
+                            cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNo.Text));
+                            cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNo.Text));
+                            cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNo.Text));
+
+                            SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNo.Text + "' ORDER BY Schedule_Payment ASC", con);
+                            DataTable dtBillDate = new DataTable();
+                            adapterBillDate.Fill(dtBillDate);
+
+                            cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
+
+                            rpt.crystalReportViewer1.ReportSource = cr;
+                            rpt.ShowDialog();
+                        }
                     }
                     else
                     {
-                        //Call vw_GeneralJournalVoucherNoLoanDeduction
-                        //Generate GENERAL VOUCHER REPORT FOR LOANS
-                        SqlCommand cmdGeneral = new SqlCommand();
-                        cmdGeneral.Connection = con;
-                        cmdGeneral.CommandText = "SELECT * FROM vw_GeneralDisbursementVoucherNoLoanDeduction WHERE Loan_No = '" + txtLoanNo.Text + "'";
-                        cmdGeneral.CommandType = CommandType.Text;
-                        cmdGeneral.ExecuteNonQuery();
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_GetDisbursementDetailSummaryReport";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
 
-                        SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
 
 
-                        DataTable dtGeneral = new DataTable();
-                        DataSet dsGeneral = new DataSet();
+                        DataTable dt = new DataTable();
+                        DataSet ds = new DataSet();
 
-                        ReportsForms.DisbursementGeneralVoucherNoDeduction cr = new ReportsForms.DisbursementGeneralVoucherNoDeduction();
-                        ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
+                        ReportsForms.crDisbursement cr = new ReportsForms.crDisbursement();
+                        ReportsForms.rptDisbursement rpt = new ReportsForms.rptDisbursement();
 
                         li = new TableLogOnInfo();
-                        
-                        adapterGeneral.Fill(dsGeneral, "vw_GeneralDisbursementVoucherNoLoanDeduction");
-                        dtGeneral = dsGeneral.Tables["vw_GeneralDisbursementVoucherNoLoanDeduction"];
-                        cr.SetDataSource(dsGeneral.Tables["vw_GeneralDisbursementVoucherNoLoanDeduction"]);
+
+                        li.ConnectionInfo.IntegratedSecurity = false;
+
+                        adapter.Fill(ds, "vw_DisbursementForReporting");
+                        dt = ds.Tables["vw_DisbursementForReporting"];
+                        cr.SetDataSource(ds.Tables["vw_DisbursementForReporting"]);
 
                         //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
                         cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
 
-                        cr.SetParameterValue("cv_no", txtCVNo.Text);
-                        cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNo.Text));
-                        cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNo.Text));
-                        cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNo.Text));
-
-                        SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNo.Text + "' ORDER BY Schedule_Payment ASC", con);
-                        DataTable dtBillDate = new DataTable();
-                        adapterBillDate.Fill(dtBillDate);
-
-                        cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
-
                         rpt.crystalReportViewer1.ReportSource = cr;
+                        rpt.crystalReportViewer1.RefreshReport();
+
                         rpt.ShowDialog();
                     }
                 }
-                else
-                {
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_GetDisbursementDetailSummaryReport";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CV_No", txtCVNo.Text);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
-
-
-                    DataTable dt = new DataTable();
-                    DataSet ds = new DataSet();
-
-                    ReportsForms.crDisbursement cr = new ReportsForms.crDisbursement();
-                    ReportsForms.rptDisbursement rpt = new ReportsForms.rptDisbursement();
-
-                    li = new TableLogOnInfo();
-
-                    li.ConnectionInfo.IntegratedSecurity = false;
-
-                    adapter.Fill(ds, "vw_DisbursementForReporting");
-                    dt = ds.Tables["vw_DisbursementForReporting"];
-                    cr.SetDataSource(ds.Tables["vw_DisbursementForReporting"]);
-
-                    //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-                    cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-                    rpt.crystalReportViewer1.ReportSource = cr;
-                    rpt.crystalReportViewer1.RefreshReport();
-
-                    rpt.ShowDialog();
-                }
-
             }
             else
             {
@@ -1326,7 +1382,7 @@ namespace WindowsFormsApplication2
         {
             if (cmbTransaction.Text == "" || cmbTransaction.Text == " - " || cmbBank.Text == "" || checkNo.Text == "" || Amount.Text == "" || payee.Text == "")
             {
-                Alert.show("All Fields with ( * ) are required!", Alert.AlertType.warning);
+                Alert.show("All fields with ( * ) are required.", Alert.AlertType.warning);
                 return true;
             }
             else if(dgv.Rows.Count <= 1)
@@ -1402,34 +1458,41 @@ namespace WindowsFormsApplication2
         {
             if (textBox1.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,(CASE WHEN Suffix IS NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix ELSE LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView3.DataSource = dt;
+                    dataGridView3.DataSource = dt;
 
-                dataGridView3.Columns["userID"].Visible = false;
+                    dataGridView3.Columns["userID"].Visible = false;
 
-                dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
-                dataGridView3.Columns["EmployeeID"].FillWeight = 30;
-                textBox1.Focus();
+                    dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
+                    dataGridView3.Columns["EmployeeID"].FillWeight = 30;
+                    textBox1.Focus();
+                }
+
+                
             }
             else
             {
-                con = new SqlConnection();
-                global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix IS NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix ELSE LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView3.DataSource = dt;
+                    dataGridView3.DataSource = dt;
 
-                dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
-                dataGridView3.Columns["EmployeeID"].FillWeight = 30;
-                textBox1.Focus();
+                    dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
+                    dataGridView3.Columns["EmployeeID"].FillWeight = 30;
+                    textBox1.Focus();
+                }
+                 
             }
         }
 
@@ -1512,7 +1575,7 @@ namespace WindowsFormsApplication2
             if (clsDisbursement.checkIfPosted(txtCVNo.Text) == true)
             {
                 //If Voucher already Posted
-                Alert.show("Disbursement Voucher Already Posted!", Alert.AlertType.error);
+                Alert.show("Disbursement voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
@@ -1527,6 +1590,7 @@ namespace WindowsFormsApplication2
                 btnCancel.Enabled = false;
                 btnPrint.Enabled = false;
                 btnPrintCheque.Enabled = false;
+                btnRelease.Enabled = false;
 
                 btnChangeCheque.Size = new Size(169, 37);
 
@@ -1549,58 +1613,61 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-                con = new SqlConnection();
-                global.connection(con);
-
-                //check if from withdrawal slip then change withdrawal slip also
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT wd_slip_no FROM Disbursement_Header WHERE CV_No = '" + txtCVNo.Text + "'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                if (!DBNull.Value.Equals(dt.Rows[0].ItemArray[0].ToString()))
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    //not null = From Withdrawal Slip
+                    con.Open();
 
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "UPDATE Withdrawal_Slip SET Check_No = '" + txtChequeNo.Text + "' WHERE Withdrawal_Slip_No ='" + dt.Rows[0].ItemArray[0].ToString() + "'";
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
+                    //check if from withdrawal slip then change withdrawal slip also
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT wd_slip_no FROM Disbursement_Header WHERE CV_No = '" + txtCVNo.Text + "'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    SqlCommand cmd2 = new SqlCommand();
-                    cmd2.Connection = con;
-                    cmd2.CommandText = "UPDATE Disbursement_Header SET Check_No = '" + txtChequeNo.Text + "' WHERE CV_No = '" + txtCVNo.Text + "'";
-                    cmd2.CommandType = CommandType.Text;
-                    cmd2.ExecuteNonQuery();
+                    if (!DBNull.Value.Equals(dt.Rows[0].ItemArray[0].ToString()))
+                    {
+                        //not null = From Withdrawal Slip
 
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "UPDATE Withdrawal_Slip SET Check_No = '" + txtChequeNo.Text + "' WHERE Withdrawal_Slip_No ='" + dt.Rows[0].ItemArray[0].ToString() + "'";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
+
+                        SqlCommand cmd2 = new SqlCommand();
+                        cmd2.Connection = con;
+                        cmd2.CommandText = "UPDATE Disbursement_Header SET Check_No = '" + txtChequeNo.Text + "' WHERE CV_No = '" + txtCVNo.Text + "'";
+                        cmd2.CommandType = CommandType.Text;
+                        cmd2.ExecuteNonQuery();
+
+                    }
+                    else
+                    {
+                        //null = Not From Withdrawal
+                        SqlCommand cmd2 = new SqlCommand();
+                        cmd2.Connection = con;
+                        cmd2.CommandText = "UPDATE Disbursement_Header SET Check_No = '" + txtChequeNo.Text + "' WHERE CV_No = '" + txtCVNo.Text + "'";
+                        cmd2.CommandType = CommandType.Text;
+                        cmd2.ExecuteNonQuery();
+                    }
+
+                    txtChequeNo.Enabled = false;
+                    btnSearch.Enabled = true;
+                    btnChangeCheque.Text = "CHANGE NUMBER";
+                    Alert.show("Cheque No. Successfully Updated.", Alert.AlertType.success);
+
+                    //Restore to original after successfully updated
+                    btnSearch.Enabled = true;
+                    btnNew.Enabled = true;
+                    btnEdit.Enabled = true;
+                    btnPost.Enabled = true;
+                    btnCancel.Enabled = true;
+                    btnPrint.Enabled = true;
+                    btnPrintCheque.Enabled = true;
+                    btnRelease.Enabled = true;
+                    btnChangeCheque.Text = "CHANGE NUMBER";
+                    btnChangeCheque.Size = new Size(273, 37);
+                    txtChequeNo.Enabled = false;
+                    button1.Visible = false;
                 }
-                else
-                {
-                    //null = Not From Withdrawal
-                    SqlCommand cmd2 = new SqlCommand();
-                    cmd2.Connection = con;
-                    cmd2.CommandText = "UPDATE Disbursement_Header SET Check_No = '" + txtChequeNo.Text + "' WHERE CV_No = '" + txtCVNo.Text + "'";
-                    cmd2.CommandType = CommandType.Text;
-                    cmd2.ExecuteNonQuery();
-                }
-
-                txtChequeNo.Enabled = false;
-                btnSearch.Enabled = true;
-                btnChangeCheque.Text = "CHANGE NUMBER";
-                Alert.show("Cheque No. Successfully Updated!", Alert.AlertType.success);
-
-                //Restore to original after successfully updated
-                btnSearch.Enabled = true;
-                btnNew.Enabled = true;
-                btnEdit.Enabled = true;
-                btnPost.Enabled = true;
-                btnCancel.Enabled = true;
-                btnPrint.Enabled = true;
-                btnPrintCheque.Enabled = true;
-                btnChangeCheque.Text = "CHANGE NUMBER";
-                btnChangeCheque.Size = new Size(273, 37);
-                txtChequeNo.Enabled = false;
-                button1.Visible = false;
             }
 
           }
@@ -1618,6 +1685,7 @@ namespace WindowsFormsApplication2
             btnChangeCheque.Size = new Size(273, 37);
             txtChequeNo.Enabled = false;
             button1.Visible = false;
+            btnRelease.Enabled = true;
         }
 
         private void txtLoanNo_TextChanged(object sender, EventArgs e)
@@ -1630,6 +1698,11 @@ namespace WindowsFormsApplication2
             {
                 txtLoanType.Text = "";
             }
+        }
+
+        private void btnRelease_Click(object sender, EventArgs e)
+        {
+            clsDisbursement.ReleaseDisbursement(txtCVNo.Text,status);
         }
 
         public void ForReplenishment()

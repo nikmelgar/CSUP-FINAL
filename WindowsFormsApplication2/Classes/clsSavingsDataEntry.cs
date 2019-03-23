@@ -259,45 +259,49 @@ namespace WindowsFormsApplication2.Classes
 
         public string returnMembersSaving(string userID)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_GetSavingsPerUser";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@userid", userID);
-
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return Convert.ToDecimal(dt.Rows[0].ItemArray[0]).ToString("#,##0.00");
-            }
-            else
-            {
-                return "0.00";
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_GetSavingsPerUser";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userid", userID);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return Convert.ToDecimal(dt.Rows[0].ItemArray[0]).ToString("#,##0.00");
+                }
+                else
+                {
+                    return "0.00";
+                }
             }
         }
 
         public string returnCompanyDescription(string CompanyCode)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT Description FROM Company WHERE Company_Code='" + CompanyCode + "'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return dt.Rows[0].ItemArray[0].ToString();
-            }
-            else
-            {
-                return "";
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Description FROM Company WHERE Company_Code='" + CompanyCode + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return dt.Rows[0].ItemArray[0].ToString();
+                }
+                else
+                {
+                    return "";
+                }
             }
         }
 
@@ -305,126 +309,140 @@ namespace WindowsFormsApplication2.Classes
         {
             cmb.DataSource = null;
 
-            SqlConnection con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT Bank_Code,Bank_Name FROM Bank WHERE isActive ='1'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Bank_Code,Bank_Name FROM Bank WHERE isActive ='1'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = "Bank_Name";
-            cmb.ValueMember = "Bank_Code";
-            cmb.DataSource = dt;
-
+                cmb.DisplayMember = "Bank_Name";
+                cmb.ValueMember = "Bank_Code";
+                cmb.DataSource = dt;
+            }
         }
 
         public bool getCountWithdrawal()
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_GetTotalNumberOfWithdrawalPerUser";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@userID", userID);
-
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (Convert.ToInt32(dt.Rows.Count) >= clsParam.withdrawalPerDay())
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                //Cannot Apply for Withdrawal [1 withdrawal limit a day]
-                return true;
-            }
-            else
-            {
-                //Continue to withdrawal
-                return false;
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_GetTotalNumberOfWithdrawalPerUser";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userID", userID);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (Convert.ToInt32(dt.Rows.Count) >= clsParam.withdrawalPerDay())
+                {
+                    //Cannot Apply for Withdrawal [1 withdrawal limit a day]
+                    return true;
+                }
+                else
+                {
+                    //Continue to withdrawal
+                    return false;
+                }
+
             }
         }
 
         public string returnWithdrawalSlipNo()
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_returnWithdrawalSlipNo";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@userID", userID);
-
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return dt.Rows[0].ItemArray[0].ToString();
-            }
-            else
-            {
-                return "";
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_returnWithdrawalSlipNo";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userID", userID);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return dt.Rows[0].ItemArray[0].ToString();
+                }
+                else
+                {
+                    return "";
+                }
             }
         }
 
         public string returnReleaseDate(string withdrawalSlip)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT ReleaseDate FROM Withdrawal_Slip WHERE Withdrawal_Slip_No ='"+ withdrawalSlip +"'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return dt.Rows[0].ItemArray[0].ToString();
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT ReleaseDate FROM Withdrawal_Slip WHERE Withdrawal_Slip_No ='" + withdrawalSlip + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return dt.Rows[0].ItemArray[0].ToString();
+                }
+                else
+                {
+                    return "";
+                }
             }
-            else
-            {
-                return "";
-            }
+
+              
         }
 
         public bool checkIfPosted(string withdrawalNo)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '"+ withdrawalNo +"' and Posted = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count >= 1)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '" + withdrawalNo + "' and Posted = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count >= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
         public bool checkIfCancelled(string withdrawalNo)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '" + withdrawalNo + "' and Cancell = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count >= 1)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '" + withdrawalNo + "' and Cancell = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count >= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            } 
         }
     }
 }

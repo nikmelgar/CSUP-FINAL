@@ -89,25 +89,25 @@ namespace WindowsFormsApplication2
         {
             if(cmbLoanType.Text == "")
             {
-                Alert.show("Please select loan first!", Alert.AlertType.error);
+                Alert.show("Please select loan type.", Alert.AlertType.error);
                 return;
             }
 
             if(txtLoanAmount.Text == "")
             {
-                Alert.show("Please put loan amount!", Alert.AlertType.error);
+                Alert.show("Please enter loan amount.", Alert.AlertType.error);
                 return;
             }
 
             if(interestRate.Text == "")
             {
-                Alert.show("Please put interest rate!", Alert.AlertType.error);
+                Alert.show("Please enter interest rate.", Alert.AlertType.error);
                 return;
             }
 
             if(txtTerminMos.Text == "")
             {
-                Alert.show("Please fill up Terms in Months", Alert.AlertType.error);
+                Alert.show("Please enter ttrms in months.", Alert.AlertType.error);
                 return;
             }
 
@@ -149,80 +149,77 @@ namespace WindowsFormsApplication2
 
 
             //Insert into table for REPORT but first remove any data which already encoded 
-            con = new SqlConnection();
-            global.connection(con);
-
-            cmd = new SqlCommand();
-            cmd.CommandText = "DELETE Loan_Amortization WHERE Encoded_By = '" + Classes.clsUser.Username + "'";
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.Text;
-            cmd.ExecuteNonQuery();
-
-            int x = 0;
-            double y, z, i, ob;
-
-            //Now Insert the DATA to the TABLE
-            for (int a = 0; a < Convert.ToInt32(txtTerminMos.Text); a++)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                z = PV * rate;
-                i = finalResult2 - z;
-                ob = PV - i;
+                con.Open();
 
-                //save code here
                 cmd = new SqlCommand();
+                cmd.CommandText = "DELETE Loan_Amortization WHERE Encoded_By = '" + Classes.clsUser.Username + "'";
                 cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_InsertLoanAmortization";
-                cmd.Parameters.AddWithValue("@loan_type", cmbLoanType.SelectedValue);
-                cmd.Parameters.AddWithValue("@userID", userID);
-                cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
-                cmd.Parameters.AddWithValue("@Name", txtName.Text);
-                cmd.Parameters.AddWithValue("@payment", txtMonthlyPayment.Text.Replace(",",""));
-                cmd.Parameters.AddWithValue("@interest", Convert.ToString(decimal.Round(Convert.ToDecimal(z), 2)));
-                cmd.Parameters.AddWithValue("@principal", Convert.ToString(decimal.Round(Convert.ToDecimal(i), 2)));
-                cmd.Parameters.AddWithValue("@balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                cmd.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username.ToString());
+                cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
 
-                z = 0;
-                PV = ob;
-            }
+                int x = 0;
+                double y, z, i, ob;
 
-            //================================================================================
-            //              IF THERES A  LESS FOR NET AMOUNT
-            //================================================================================
-            SqlCommand cmdLess = new SqlCommand();
-            cmdLess.Connection = con;
-            cmdLess.CommandText = "DELETE loan_amort_less WHERE encoded_by = '" + Classes.clsUser.Username + "'";
-            cmdLess.CommandType = CommandType.Text;
-            cmdLess.ExecuteNonQuery();
-
-            if (dataGridView1.Rows.Count > 0)
-            {
-                //=================================================================================
-                //              Insert to the Database if theres a value
-                //=================================================================================
                 //Now Insert the DATA to the TABLE
-                for (int b = 0; b < dataGridView1.Rows.Count; b++)
+                for (int a = 0; a < Convert.ToInt32(txtTerminMos.Text); a++)
                 {
-                    SqlCommand cmd2 = new SqlCommand();
-                    cmd2.Connection = con;
-                    cmd2.CommandText = "sp_insertLoanAmortLess";
-                    cmd2.CommandType = CommandType.StoredProcedure;
-                    cmd2.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
-                    cmd2.Parameters.AddWithValue("@Description", dataGridView1.Rows[b].Cells[0].Value.ToString());
-                    cmd2.Parameters.AddWithValue("@Amount", Convert.ToDecimal(dataGridView1.Rows[b].Cells[1].Value.ToString()));
-                    cmd2.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
-                    cmd2.ExecuteNonQuery();
+                    z = PV * rate;
+                    i = finalResult2 - z;
+                    ob = PV - i;
+
+                    //save code here
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_InsertLoanAmortization";
+                    cmd.Parameters.AddWithValue("@loan_type", cmbLoanType.SelectedValue);
+                    cmd.Parameters.AddWithValue("@userID", userID);
+                    cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
+                    cmd.Parameters.AddWithValue("@Name", txtName.Text);
+                    cmd.Parameters.AddWithValue("@payment", txtMonthlyPayment.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@interest", Convert.ToString(decimal.Round(Convert.ToDecimal(z), 2)));
+                    cmd.Parameters.AddWithValue("@principal", Convert.ToString(decimal.Round(Convert.ToDecimal(i), 2)));
+                    cmd.Parameters.AddWithValue("@balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                    cmd.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username.ToString());
+                    cmd.ExecuteNonQuery();
+
+                    z = 0;
+                    PV = ob;
                 }
 
+                //================================================================================
+                //              IF THERES A  LESS FOR NET AMOUNT
+                //================================================================================
+                SqlCommand cmdLess = new SqlCommand();
+                cmdLess.Connection = con;
+                cmdLess.CommandText = "DELETE loan_amort_less WHERE encoded_by = '" + Classes.clsUser.Username + "'";
+                cmdLess.CommandType = CommandType.Text;
+                cmdLess.ExecuteNonQuery();
 
+                if (dataGridView1.Rows.Count > 0)
+                {
+                    //=================================================================================
+                    //              Insert to the Database if theres a value
+                    //=================================================================================
+                    //Now Insert the DATA to the TABLE
+                    for (int b = 0; b < dataGridView1.Rows.Count; b++)
+                    {
+                        SqlCommand cmd2 = new SqlCommand();
+                        cmd2.Connection = con;
+                        cmd2.CommandText = "sp_insertLoanAmortLess";
+                        cmd2.CommandType = CommandType.StoredProcedure;
+                        cmd2.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                        cmd2.Parameters.AddWithValue("@Description", dataGridView1.Rows[b].Cells[0].Value.ToString());
+                        cmd2.Parameters.AddWithValue("@Amount", Convert.ToDecimal(dataGridView1.Rows[b].Cells[1].Value.ToString()));
+                        cmd2.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
+                        cmd2.ExecuteNonQuery();
+                    }
+
+
+                }
             }
-
-
-
-
-
 
         }
 
@@ -360,9 +357,15 @@ namespace WindowsFormsApplication2
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if(txtDescriptionLESS.Text == "")
+            {
+                Alert.show("Please enter description.", Alert.AlertType.error);
+                return;
+            }
+
             if(txtAmountLESS.Text == "")
             {
-                Alert.show("Please put amount first!", Alert.AlertType.error);
+                Alert.show("Please enter amount to be deducted.", Alert.AlertType.error);
                 return;
             }
             txtAmountLESS.Text = Convert.ToDecimal(txtAmountLESS.Text).ToString("#,0.00");
@@ -444,45 +447,47 @@ namespace WindowsFormsApplication2
             {
                 dataGridView1.Rows.Clear();
 
-                con = new SqlConnection();
-                global.connection(con);
-
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_ReturnLoanBalancesForPrevLoan";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@userid", userID);
-                cmd.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
-                cmd.Parameters.AddWithValue("@Loan_No", ' ');
-
-                adapter = new SqlDataAdapter(cmd);
-                dt = new DataTable();
-                adapter.Fill(dt);
-
-                
-                //If Theres a data for prev loan
-                if(dt.Rows.Count > 0)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    //SET plarBoolean = TRUE if PLAR
-                    if (cmbLoanType.SelectedValue.ToString() == "PLAR")
+                    con.Open();
+
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnLoanBalancesForPrevLoan";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", userID);
+                    cmd.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Loan_No", ' ');
+
+                    adapter = new SqlDataAdapter(cmd);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
+
+
+                    //If Theres a data for prev loan
+                    if (dt.Rows.Count > 0)
                     {
-                        plarRenew = true;
-                        plarExistingBalance = Convert.ToDouble(dt.Rows[0].ItemArray[37].ToString());
+                        //SET plarBoolean = TRUE if PLAR
+                        if (cmbLoanType.SelectedValue.ToString() == "PLAR")
+                        {
+                            plarRenew = true;
+                            plarExistingBalance = Convert.ToDouble(dt.Rows[0].ItemArray[37].ToString());
+                        }
+                        else
+                        {
+                            plarRenew = false;
+                            plarExistingBalance = 0;
+                        }
+
+                        //Put in LESS 
+                        string[] row = { dt.Rows[0].ItemArray[1].ToString() + " - " + dt.Rows[0].ItemArray[0].ToString(), Convert.ToDecimal(dt.Rows[0].ItemArray[37].ToString()).ToString("#,0.00") };
+                        dataGridView1.Rows.Add(row);
+
                     }
                     else
                     {
                         plarRenew = false;
-                        plarExistingBalance = 0;
                     }
-
-                    //Put in LESS 
-                    string[] row = { dt.Rows[0].ItemArray[1].ToString() + " - " + dt.Rows[0].ItemArray[0].ToString(), Convert.ToDecimal(dt.Rows[0].ItemArray[37].ToString()).ToString("#,0.00") };
-                    dataGridView1.Rows.Add(row);
-
-                }
-                else
-                {
-                    plarRenew = false;
                 }
             }
         }

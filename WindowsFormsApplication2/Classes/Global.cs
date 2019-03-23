@@ -21,18 +21,21 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            conbd.DataSource = "192.168.255.176";
-            conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
-            conbd.UserID = "sa";
-            conbd.Password = "SYSADMIN";
-
-            ////Local Connection House
-            //conbd.DataSource = ".";
+            //conbd.DataSource = "192.168.255.176";
             //conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
+            ////conbd.IntegratedSecurity = true;
             //conbd.UserID = "sa";
             //conbd.Password = "SYSADMIN";
+
+            //Local Connection House
+            conbd.DataSource = ".";
+            conbd.InitialCatalog = "PECCI-NEW";
+            conbd.IntegratedSecurity = true;
+            conbd.UserID = "sa";
+            conbd.Password = "SYSADMIN";
+            conbd.MaxPoolSize = 20000;
+
+            
 
             //Maam Vangie IP
 
@@ -46,17 +49,48 @@ namespace WindowsFormsApplication2
             initialCatalog = conbd.InitialCatalog;
             username = conbd.UserID;
             pass = conbd.Password;
+            con.ConnectionString = conbd.ToString();
 
-            if (con.State == System.Data.ConnectionState.Open)
+            if (con.State != ConnectionState.Open)
             {
                 con.Close();
+                con.Open();
             }
-
-            con.ConnectionString = conbd.ToString();
-            con.Open();
-
         }
-        
+
+        public string connectString()
+        {
+            SqlConnectionStringBuilder conbd = new SqlConnectionStringBuilder();
+
+            //Office Connection
+
+            //conbd.DataSource = "192.168.255.176";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            ////conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+
+            //Local Connection House
+            conbd.DataSource = ".";
+            conbd.InitialCatalog = "PECCI-NEW";
+            conbd.IntegratedSecurity = true;
+            conbd.UserID = "sa";
+            conbd.Password = "SYSADMIN";
+            conbd.MaxPoolSize = 20000;
+
+
+
+            //Maam Vangie IP
+
+            //conbd.DataSource = "192.168.255.178";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            ////conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+
+            return conbd.ToString();
+        }
+
         //For Resigned in PECCI cannot Transcat
         public Boolean checkMemberIfResignedTRUE(int id)
         {
@@ -85,103 +119,109 @@ namespace WindowsFormsApplication2
 
         public void loadDataForFileMaintenance(DataGridView dgv, string tblName)
         {
-            SqlConnection con = new SqlConnection();
-            connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tblName + " where isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            dgv.DataSource = dt;
-
-            int colCnt = dt.Columns.Count;
-            int x = 0;
-
-
-            while (x != colCnt)
+            using (SqlConnection con = new SqlConnection(connectString()))
             {
-                if (x != 0 && x != 1)
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tblName + " where isActive = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                dgv.DataSource = dt;
+
+                int colCnt = dt.Columns.Count;
+                int x = 0;
+
+
+                while (x != colCnt)
                 {
-                    dgv.Columns[x].Visible = false;
+                    if (x != 0 && x != 1)
+                    {
+                        dgv.Columns[x].Visible = false;
+                    }
+                    x = x + 1;
                 }
-                x = x + 1;
             }
-
-
         }
 
         public bool CheckDuplicateEntry(String Description, string tableName)
         {
 
-            SqlConnection con = new SqlConnection();
-            connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " WHERE Description ='" + Description + "'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(connectString()))
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                con.Open();
 
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " WHERE Description ='" + Description + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         public bool CheckDuplicateEntryParam(String criteria, string stringtoCompare, string tableName)
         {
 
-            SqlConnection con = new SqlConnection();
-            connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " WHERE " + criteria + " ='" + stringtoCompare + "'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(connectString()))
             {
-                return true;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " WHERE " + criteria + " ='" + stringtoCompare + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+
+            
 
         }
         public void loadComboBox(ComboBox cmb, string tableName, string Display, string val)
         {
             cmb.DataSource = null;
 
-            SqlConnection con = new SqlConnection();
-            connection(con);
+            using (SqlConnection con = new SqlConnection(connectString()))
+            {
+                con.Open();
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT " + Display + ", " + val + " FROM  " + tableName + " WHERE isActive ='1'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT " + Display + ", " + val + " FROM  " + tableName + " WHERE isActive ='1'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            cmb.DisplayMember = Display;
-            cmb.ValueMember = val;
-            cmb.DataSource = dt;
-
+                cmb.DisplayMember = Display;
+                cmb.ValueMember = val;
+                cmb.DataSource = dt;
+            }
         }
 
         public void loadComboBoxDistinct(ComboBox cmb, string tableName, string Display)
         {
             cmb.DataSource = null;
 
-            SqlConnection con = new SqlConnection();
-            connection(con);
+            using (SqlConnection con = new SqlConnection(connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT distinct(" + Display + ") FROM  " + tableName + " WHERE isActive ='1'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT distinct(" + Display + ") FROM  " + tableName + " WHERE isActive ='1'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = Display;
-            cmb.DataSource = dt;
-
+                cmb.DisplayMember = Display;
+                cmb.DataSource = dt;
+            }
         }
 
         #endregion region

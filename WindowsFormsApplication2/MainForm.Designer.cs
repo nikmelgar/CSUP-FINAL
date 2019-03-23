@@ -35,6 +35,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panelMenu = new System.Windows.Forms.Panel();
+            this.btnQuery = new System.Windows.Forms.Button();
             this.button28 = new System.Windows.Forms.Button();
             this.lblFullName = new System.Windows.Forms.Label();
             this.btnParameter = new System.Windows.Forms.Button();
@@ -58,6 +59,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.btnCompany = new System.Windows.Forms.Button();
             this.panelProcessSub = new System.Windows.Forms.Panel();
+            this.button29 = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
@@ -162,6 +164,7 @@
             // panelMenu
             // 
             this.panelMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(45)))), ((int)(((byte)(50)))));
+            this.panelMenu.Controls.Add(this.btnQuery);
             this.panelMenu.Controls.Add(this.button28);
             this.panelMenu.Controls.Add(this.lblFullName);
             this.panelMenu.Controls.Add(this.btnParameter);
@@ -182,6 +185,22 @@
             this.panelMenu.TabIndex = 23;
             this.panelMenu.Click += new System.EventHandler(this.panelMenu_Click);
             // 
+            // btnQuery
+            // 
+            this.btnQuery.FlatAppearance.BorderSize = 0;
+            this.btnQuery.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnQuery.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnQuery.ForeColor = System.Drawing.Color.White;
+            this.btnQuery.Image = ((System.Drawing.Image)(resources.GetObject("btnQuery.Image")));
+            this.btnQuery.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnQuery.Location = new System.Drawing.Point(20, 617);
+            this.btnQuery.Name = "btnQuery";
+            this.btnQuery.Size = new System.Drawing.Size(321, 61);
+            this.btnQuery.TabIndex = 36;
+            this.btnQuery.Text = "Query";
+            this.btnQuery.UseVisualStyleBackColor = true;
+            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
+            // 
             // button28
             // 
             this.button28.FlatAppearance.BorderSize = 0;
@@ -190,7 +209,7 @@
             this.button28.ForeColor = System.Drawing.Color.White;
             this.button28.Image = ((System.Drawing.Image)(resources.GetObject("button28.Image")));
             this.button28.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button28.Location = new System.Drawing.Point(20, 522);
+            this.button28.Location = new System.Drawing.Point(20, 484);
             this.button28.Name = "button28";
             this.button28.Size = new System.Drawing.Size(321, 61);
             this.button28.TabIndex = 35;
@@ -217,7 +236,7 @@
             this.btnParameter.ForeColor = System.Drawing.Color.White;
             this.btnParameter.Image = ((System.Drawing.Image)(resources.GetObject("btnParameter.Image")));
             this.btnParameter.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnParameter.Location = new System.Drawing.Point(20, 656);
+            this.btnParameter.Location = new System.Drawing.Point(20, 684);
             this.btnParameter.Name = "btnParameter";
             this.btnParameter.Size = new System.Drawing.Size(321, 61);
             this.btnParameter.TabIndex = 33;
@@ -233,7 +252,7 @@
             this.btnLoans.ForeColor = System.Drawing.Color.White;
             this.btnLoans.Image = ((System.Drawing.Image)(resources.GetObject("btnLoans.Image")));
             this.btnLoans.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLoans.Location = new System.Drawing.Point(20, 455);
+            this.btnLoans.Location = new System.Drawing.Point(20, 417);
             this.btnLoans.Name = "btnLoans";
             this.btnLoans.Size = new System.Drawing.Size(321, 61);
             this.btnLoans.TabIndex = 32;
@@ -249,7 +268,7 @@
             this.btnSavings.ForeColor = System.Drawing.Color.White;
             this.btnSavings.Image = ((System.Drawing.Image)(resources.GetObject("btnSavings.Image")));
             this.btnSavings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSavings.Location = new System.Drawing.Point(20, 388);
+            this.btnSavings.Location = new System.Drawing.Point(20, 350);
             this.btnSavings.Name = "btnSavings";
             this.btnSavings.Size = new System.Drawing.Size(321, 61);
             this.btnSavings.TabIndex = 31;
@@ -265,7 +284,7 @@
             this.btnMembership.ForeColor = System.Drawing.Color.White;
             this.btnMembership.Image = ((System.Drawing.Image)(resources.GetObject("btnMembership.Image")));
             this.btnMembership.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMembership.Location = new System.Drawing.Point(20, 321);
+            this.btnMembership.Location = new System.Drawing.Point(20, 283);
             this.btnMembership.Name = "btnMembership";
             this.btnMembership.Size = new System.Drawing.Size(321, 61);
             this.btnMembership.TabIndex = 30;
@@ -281,7 +300,7 @@
             this.btnReports.ForeColor = System.Drawing.Color.White;
             this.btnReports.Image = ((System.Drawing.Image)(resources.GetObject("btnReports.Image")));
             this.btnReports.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReports.Location = new System.Drawing.Point(20, 723);
+            this.btnReports.Location = new System.Drawing.Point(20, 751);
             this.btnReports.Name = "btnReports";
             this.btnReports.Size = new System.Drawing.Size(321, 61);
             this.btnReports.TabIndex = 29;
@@ -297,7 +316,7 @@
             this.btnProcess.ForeColor = System.Drawing.Color.White;
             this.btnProcess.Image = ((System.Drawing.Image)(resources.GetObject("btnProcess.Image")));
             this.btnProcess.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnProcess.Location = new System.Drawing.Point(20, 589);
+            this.btnProcess.Location = new System.Drawing.Point(20, 551);
             this.btnProcess.Name = "btnProcess";
             this.btnProcess.Size = new System.Drawing.Size(321, 61);
             this.btnProcess.TabIndex = 28;
@@ -313,7 +332,7 @@
             this.btnFileMaintenance.ForeColor = System.Drawing.Color.White;
             this.btnFileMaintenance.Image = ((System.Drawing.Image)(resources.GetObject("btnFileMaintenance.Image")));
             this.btnFileMaintenance.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnFileMaintenance.Location = new System.Drawing.Point(20, 254);
+            this.btnFileMaintenance.Location = new System.Drawing.Point(20, 216);
             this.btnFileMaintenance.Name = "btnFileMaintenance";
             this.btnFileMaintenance.Size = new System.Drawing.Size(321, 61);
             this.btnFileMaintenance.TabIndex = 26;
@@ -324,7 +343,7 @@
             // SidePanel
             // 
             this.SidePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.SidePanel.Location = new System.Drawing.Point(3, 187);
+            this.SidePanel.Location = new System.Drawing.Point(3, 149);
             this.SidePanel.Name = "SidePanel";
             this.SidePanel.Size = new System.Drawing.Size(13, 61);
             this.SidePanel.TabIndex = 25;
@@ -337,7 +356,7 @@
             this.btnDashBoard.ForeColor = System.Drawing.Color.White;
             this.btnDashBoard.Image = ((System.Drawing.Image)(resources.GetObject("btnDashBoard.Image")));
             this.btnDashBoard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDashBoard.Location = new System.Drawing.Point(20, 187);
+            this.btnDashBoard.Location = new System.Drawing.Point(20, 149);
             this.btnDashBoard.Name = "btnDashBoard";
             this.btnDashBoard.Size = new System.Drawing.Size(321, 61);
             this.btnDashBoard.TabIndex = 2;
@@ -522,6 +541,7 @@
             // panelProcessSub
             // 
             this.panelProcessSub.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(45)))), ((int)(((byte)(50)))));
+            this.panelProcessSub.Controls.Add(this.button29);
             this.panelProcessSub.Controls.Add(this.button19);
             this.panelProcessSub.Controls.Add(this.button18);
             this.panelProcessSub.Controls.Add(this.button17);
@@ -533,6 +553,23 @@
             this.panelProcessSub.TabIndex = 27;
             this.panelProcessSub.Visible = false;
             // 
+            // button29
+            // 
+            this.button29.FlatAppearance.BorderSize = 0;
+            this.button29.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button29.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button29.ForeColor = System.Drawing.Color.White;
+            this.button29.Image = ((System.Drawing.Image)(resources.GetObject("button29.Image")));
+            this.button29.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button29.Location = new System.Drawing.Point(-3, 142);
+            this.button29.Name = "button29";
+            this.button29.Size = new System.Drawing.Size(278, 41);
+            this.button29.TabIndex = 62;
+            this.button29.Text = "Transaction Receipts";
+            this.button29.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button29.UseVisualStyleBackColor = true;
+            this.button29.Click += new System.EventHandler(this.button29_Click);
+            // 
             // button19
             // 
             this.button19.FlatAppearance.BorderSize = 0;
@@ -541,7 +578,7 @@
             this.button19.ForeColor = System.Drawing.Color.White;
             this.button19.Image = ((System.Drawing.Image)(resources.GetObject("button19.Image")));
             this.button19.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button19.Location = new System.Drawing.Point(0, 189);
+            this.button19.Location = new System.Drawing.Point(0, 233);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(278, 41);
             this.button19.TabIndex = 61;
@@ -558,7 +595,7 @@
             this.button18.ForeColor = System.Drawing.Color.White;
             this.button18.Image = ((System.Drawing.Image)(resources.GetObject("button18.Image")));
             this.button18.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button18.Location = new System.Drawing.Point(0, 142);
+            this.button18.Location = new System.Drawing.Point(0, 186);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(278, 41);
             this.button18.TabIndex = 60;
@@ -579,7 +616,7 @@
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(278, 41);
             this.button17.TabIndex = 59;
-            this.button17.Text = "Cash Receipts Voucher";
+            this.button17.Text = "Receipt Voucher";
             this.button17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button17.UseVisualStyleBackColor = true;
             this.button17.Click += new System.EventHandler(this.button17_Click);
@@ -1049,6 +1086,8 @@
         private System.Windows.Forms.Button button26;
         private System.Windows.Forms.Button button27;
         private System.Windows.Forms.Button button28;
+        private System.Windows.Forms.Button button29;
+        private System.Windows.Forms.Button btnQuery;
     }
 }
 

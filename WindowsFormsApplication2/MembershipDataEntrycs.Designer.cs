@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MembershipDataEntrycs));
             this.txtSavingsDeposit = new System.Windows.Forms.TextBox();
             this.label73 = new System.Windows.Forms.Label();
@@ -78,6 +78,10 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtRemarks = new System.Windows.Forms.TextBox();
+            this.label101 = new System.Windows.Forms.Label();
+            this.txtRelationship = new System.Windows.Forms.TextBox();
+            this.label67 = new System.Windows.Forms.Label();
             this.txtContactNo2 = new System.Windows.Forms.MaskedTextBox();
             this.cmbContactAreaCode = new System.Windows.Forms.ComboBox();
             this.txtContactNo1 = new System.Windows.Forms.MaskedTextBox();
@@ -207,10 +211,6 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.label67 = new System.Windows.Forms.Label();
-            this.txtRelationship = new System.Windows.Forms.TextBox();
-            this.label101 = new System.Windows.Forms.Label();
-            this.txtRemarks = new System.Windows.Forms.TextBox();
             this.panel10.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
@@ -332,6 +332,7 @@
             this.label66.Size = new System.Drawing.Size(143, 21);
             this.label66.TabIndex = 78;
             this.label66.Text = "First Deduction :";
+            this.label66.Click += new System.EventHandler(this.label66_Click);
             // 
             // label72
             // 
@@ -567,7 +568,7 @@
             this.dtDatePMS.Margin = new System.Windows.Forms.Padding(4);
             this.dtDatePMS.Name = "dtDatePMS";
             this.dtDatePMS.Size = new System.Drawing.Size(135, 28);
-            this.dtDatePMS.TabIndex = 20;
+            this.dtDatePMS.TabIndex = 19;
             // 
             // txtAccountNo
             // 
@@ -577,7 +578,7 @@
             this.txtAccountNo.Margin = new System.Windows.Forms.Padding(4);
             this.txtAccountNo.Name = "txtAccountNo";
             this.txtAccountNo.Size = new System.Drawing.Size(255, 28);
-            this.txtAccountNo.TabIndex = 18;
+            this.txtAccountNo.TabIndex = 17;
             this.txtAccountNo.TextChanged += new System.EventHandler(this.txtLastName_TextChanged);
             this.txtAccountNo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtHomeTel_KeyPress);
             this.txtAccountNo.Validating += new System.ComponentModel.CancelEventHandler(this.txtAccountNo_Validating);
@@ -617,7 +618,7 @@
             this.cmbBankName.Margin = new System.Windows.Forms.Padding(4);
             this.cmbBankName.Name = "cmbBankName";
             this.cmbBankName.Size = new System.Drawing.Size(207, 29);
-            this.cmbBankName.TabIndex = 17;
+            this.cmbBankName.TabIndex = 16;
             this.cmbBankName.Validating += new System.ComponentModel.CancelEventHandler(this.cmbBankName_Validating);
             // 
             // label42
@@ -714,14 +715,14 @@
             // 
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -803,6 +804,51 @@
             this.tabPage2.Text = "Contact Person";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // txtRemarks
+            // 
+            this.txtRemarks.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRemarks.Location = new System.Drawing.Point(870, 51);
+            this.txtRemarks.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRemarks.MaxLength = 300;
+            this.txtRemarks.Multiline = true;
+            this.txtRemarks.Name = "txtRemarks";
+            this.txtRemarks.Size = new System.Drawing.Size(462, 62);
+            this.txtRemarks.TabIndex = 37;
+            // 
+            // label101
+            // 
+            this.label101.AutoSize = true;
+            this.label101.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label101.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label101.Location = new System.Drawing.Point(777, 58);
+            this.label101.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label101.Name = "label101";
+            this.label101.Size = new System.Drawing.Size(89, 21);
+            this.label101.TabIndex = 99;
+            this.label101.Text = "Remarks :";
+            // 
+            // txtRelationship
+            // 
+            this.txtRelationship.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRelationship.Location = new System.Drawing.Point(870, 15);
+            this.txtRelationship.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRelationship.MaxLength = 30;
+            this.txtRelationship.Name = "txtRelationship";
+            this.txtRelationship.Size = new System.Drawing.Size(462, 28);
+            this.txtRelationship.TabIndex = 33;
+            // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label67.Location = new System.Drawing.Point(749, 14);
+            this.label67.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(119, 21);
+            this.label67.TabIndex = 97;
+            this.label67.Text = "Relationship :";
+            // 
             // txtContactNo2
             // 
             this.txtContactNo2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -810,7 +856,7 @@
             this.txtContactNo2.Mask = "####-###-####";
             this.txtContactNo2.Name = "txtContactNo2";
             this.txtContactNo2.Size = new System.Drawing.Size(234, 28);
-            this.txtContactNo2.TabIndex = 37;
+            this.txtContactNo2.TabIndex = 36;
             // 
             // cmbContactAreaCode
             // 
@@ -823,7 +869,7 @@
             this.cmbContactAreaCode.Margin = new System.Windows.Forms.Padding(4);
             this.cmbContactAreaCode.Name = "cmbContactAreaCode";
             this.cmbContactAreaCode.Size = new System.Drawing.Size(54, 29);
-            this.cmbContactAreaCode.TabIndex = 35;
+            this.cmbContactAreaCode.TabIndex = 34;
             this.cmbContactAreaCode.SelectedValueChanged += new System.EventHandler(this.cmbContactAreaCode_SelectedValueChanged);
             // 
             // txtContactNo1
@@ -833,7 +879,7 @@
             this.txtContactNo1.Mask = "###-####";
             this.txtContactNo1.Name = "txtContactNo1";
             this.txtContactNo1.Size = new System.Drawing.Size(117, 28);
-            this.txtContactNo1.TabIndex = 36;
+            this.txtContactNo1.TabIndex = 35;
             // 
             // label95
             // 
@@ -928,7 +974,7 @@
             this.txtContactName.MaxLength = 50;
             this.txtContactName.Name = "txtContactName";
             this.txtContactName.Size = new System.Drawing.Size(578, 28);
-            this.txtContactName.TabIndex = 34;
+            this.txtContactName.TabIndex = 32;
             this.txtContactName.TextChanged += new System.EventHandler(this.txtContactName_TextChanged);
             this.txtContactName.Validating += new System.ComponentModel.CancelEventHandler(this.txtContactName_Validating);
             // 
@@ -964,7 +1010,7 @@
             this.txtPlacePMS.Margin = new System.Windows.Forms.Padding(4);
             this.txtPlacePMS.Name = "txtPlacePMS";
             this.txtPlacePMS.Size = new System.Drawing.Size(150, 28);
-            this.txtPlacePMS.TabIndex = 19;
+            this.txtPlacePMS.TabIndex = 18;
             this.txtPlacePMS.TextChanged += new System.EventHandler(this.txtLastName_TextChanged);
             this.txtPlacePMS.Validating += new System.ComponentModel.CancelEventHandler(this.txtPlacePMS_Validating);
             // 
@@ -977,7 +1023,7 @@
             this.txtEmail.MaxLength = 50;
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(392, 28);
-            this.txtEmail.TabIndex = 16;
+            this.txtEmail.TabIndex = 15;
             this.txtEmail.TextChanged += new System.EventHandler(this.txtLastName_TextChanged);
             this.txtEmail.Validating += new System.ComponentModel.CancelEventHandler(this.txtEmail_Validating);
             // 
@@ -1100,7 +1146,7 @@
             this.cmbCompany.Margin = new System.Windows.Forms.Padding(4);
             this.cmbCompany.Name = "cmbCompany";
             this.cmbCompany.Size = new System.Drawing.Size(208, 29);
-            this.cmbCompany.TabIndex = 22;
+            this.cmbCompany.TabIndex = 21;
             this.cmbCompany.SelectedValueChanged += new System.EventHandler(this.cmbCompany_SelectedValueChanged);
             this.cmbCompany.Validating += new System.ComponentModel.CancelEventHandler(this.cmbCompany_Validating);
             // 
@@ -1136,7 +1182,7 @@
             this.txtEmployeeIDNo.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmployeeIDNo.Name = "txtEmployeeIDNo";
             this.txtEmployeeIDNo.Size = new System.Drawing.Size(260, 28);
-            this.txtEmployeeIDNo.TabIndex = 21;
+            this.txtEmployeeIDNo.TabIndex = 20;
             this.txtEmployeeIDNo.TextChanged += new System.EventHandler(this.txtLastName_TextChanged);
             this.txtEmployeeIDNo.Validating += new System.ComponentModel.CancelEventHandler(this.txtEmployeeIDNo_Validating);
             // 
@@ -1814,7 +1860,7 @@
             this.cmbOfficeArea.Margin = new System.Windows.Forms.Padding(4);
             this.cmbOfficeArea.Name = "cmbOfficeArea";
             this.cmbOfficeArea.Size = new System.Drawing.Size(54, 29);
-            this.cmbOfficeArea.TabIndex = 27;
+            this.cmbOfficeArea.TabIndex = 26;
             this.cmbOfficeArea.SelectedValueChanged += new System.EventHandler(this.cmbOfficeArea_SelectedValueChanged);
             // 
             // txtOfficeTelNo
@@ -1824,7 +1870,7 @@
             this.txtOfficeTelNo.Mask = "###-####";
             this.txtOfficeTelNo.Name = "txtOfficeTelNo";
             this.txtOfficeTelNo.Size = new System.Drawing.Size(117, 28);
-            this.txtOfficeTelNo.TabIndex = 28;
+            this.txtOfficeTelNo.TabIndex = 27;
             // 
             // dtResignedFromPecci
             // 
@@ -1836,7 +1882,7 @@
             this.dtResignedFromPecci.Name = "dtResignedFromPecci";
             this.dtResignedFromPecci.ShowCheckBox = true;
             this.dtResignedFromPecci.Size = new System.Drawing.Size(331, 28);
-            this.dtResignedFromPecci.TabIndex = 32;
+            this.dtResignedFromPecci.TabIndex = 31;
             // 
             // label97
             // 
@@ -1870,7 +1916,7 @@
             this.txtPrincipalNo.Name = "txtPrincipalNo";
             this.txtPrincipalNo.ReadOnly = true;
             this.txtPrincipalNo.Size = new System.Drawing.Size(356, 28);
-            this.txtPrincipalNo.TabIndex = 31;
+            this.txtPrincipalNo.TabIndex = 30;
             // 
             // label62
             // 
@@ -1894,7 +1940,7 @@
             this.cmboPrevComp.Margin = new System.Windows.Forms.Padding(4);
             this.cmboPrevComp.Name = "cmboPrevComp";
             this.cmboPrevComp.Size = new System.Drawing.Size(239, 29);
-            this.cmboPrevComp.TabIndex = 29;
+            this.cmboPrevComp.TabIndex = 28;
             // 
             // label61
             // 
@@ -1951,7 +1997,7 @@
             this.txtSalary.Margin = new System.Windows.Forms.Padding(4);
             this.txtSalary.Name = "txtSalary";
             this.txtSalary.Size = new System.Drawing.Size(195, 28);
-            this.txtSalary.TabIndex = 30;
+            this.txtSalary.TabIndex = 29;
             this.txtSalary.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSalary_KeyPress);
             this.txtSalary.Leave += new System.EventHandler(this.txtSalary_Leave);
             // 
@@ -1989,7 +2035,7 @@
             this.dtDateResigned.Name = "dtDateResigned";
             this.dtDateResigned.ShowCheckBox = true;
             this.dtDateResigned.Size = new System.Drawing.Size(195, 28);
-            this.dtDateResigned.TabIndex = 26;
+            this.dtDateResigned.TabIndex = 25;
             // 
             // label55
             // 
@@ -2023,7 +2069,7 @@
             this.dtDateHired.Margin = new System.Windows.Forms.Padding(4);
             this.dtDateHired.Name = "dtDateHired";
             this.dtDateHired.Size = new System.Drawing.Size(175, 28);
-            this.dtDateHired.TabIndex = 25;
+            this.dtDateHired.TabIndex = 24;
             // 
             // label53
             // 
@@ -2058,7 +2104,7 @@
             this.cmbCostCenter.Margin = new System.Windows.Forms.Padding(4);
             this.cmbCostCenter.Name = "cmbCostCenter";
             this.cmbCostCenter.Size = new System.Drawing.Size(161, 29);
-            this.cmbCostCenter.TabIndex = 24;
+            this.cmbCostCenter.TabIndex = 23;
             this.cmbCostCenter.Validating += new System.ComponentModel.CancelEventHandler(this.cmbCostCenter_Validating);
             // 
             // label51
@@ -2108,7 +2154,7 @@
             this.cmbPayrollGroup.Margin = new System.Windows.Forms.Padding(4);
             this.cmbPayrollGroup.Name = "cmbPayrollGroup";
             this.cmbPayrollGroup.Size = new System.Drawing.Size(195, 29);
-            this.cmbPayrollGroup.TabIndex = 23;
+            this.cmbPayrollGroup.TabIndex = 22;
             this.cmbPayrollGroup.Validating += new System.ComponentModel.CancelEventHandler(this.cmbPayrollGroup_Validating);
             // 
             // label3
@@ -2259,7 +2305,7 @@
             this.txtSSSNo.Mask = "##-#######-#";
             this.txtSSSNo.Name = "txtSSSNo";
             this.txtSSSNo.Size = new System.Drawing.Size(255, 28);
-            this.txtSSSNo.TabIndex = 15;
+            this.txtSSSNo.TabIndex = 14;
             // 
             // txtTINno
             // 
@@ -2269,7 +2315,7 @@
             this.txtTINno.Mask = "###-###-###-###";
             this.txtTINno.Name = "txtTINno";
             this.txtTINno.Size = new System.Drawing.Size(207, 28);
-            this.txtTINno.TabIndex = 14;
+            this.txtTINno.TabIndex = 13;
             this.txtTINno.TextChanged += new System.EventHandler(this.txtLastName_TextChanged);
             this.txtTINno.Validating += new System.ComponentModel.CancelEventHandler(this.txtTINno_Validating);
             // 
@@ -2295,7 +2341,7 @@
             this.txtHomeTel.Mask = "###-####";
             this.txtHomeTel.Name = "txtHomeTel";
             this.txtHomeTel.Size = new System.Drawing.Size(89, 28);
-            this.txtHomeTel.TabIndex = 12;
+            this.txtHomeTel.TabIndex = 11;
             // 
             // lblAsteriskATMnO
             // 
@@ -2328,7 +2374,7 @@
             this.txtCellNo.Mask = "####-###-####";
             this.txtCellNo.Name = "txtCellNo";
             this.txtCellNo.Size = new System.Drawing.Size(121, 28);
-            this.txtCellNo.TabIndex = 13;
+            this.txtCellNo.TabIndex = 12;
             // 
             // label98
             // 
@@ -2437,51 +2483,6 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
-            // 
-            // label67
-            // 
-            this.label67.AutoSize = true;
-            this.label67.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label67.Location = new System.Drawing.Point(749, 14);
-            this.label67.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(119, 21);
-            this.label67.TabIndex = 97;
-            this.label67.Text = "Relationship :";
-            // 
-            // txtRelationship
-            // 
-            this.txtRelationship.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRelationship.Location = new System.Drawing.Point(870, 15);
-            this.txtRelationship.Margin = new System.Windows.Forms.Padding(4);
-            this.txtRelationship.MaxLength = 30;
-            this.txtRelationship.Name = "txtRelationship";
-            this.txtRelationship.Size = new System.Drawing.Size(462, 28);
-            this.txtRelationship.TabIndex = 98;
-            // 
-            // label101
-            // 
-            this.label101.AutoSize = true;
-            this.label101.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label101.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label101.Location = new System.Drawing.Point(777, 58);
-            this.label101.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label101.Name = "label101";
-            this.label101.Size = new System.Drawing.Size(89, 21);
-            this.label101.TabIndex = 99;
-            this.label101.Text = "Remarks :";
-            // 
-            // txtRemarks
-            // 
-            this.txtRemarks.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRemarks.Location = new System.Drawing.Point(870, 51);
-            this.txtRemarks.Margin = new System.Windows.Forms.Padding(4);
-            this.txtRemarks.MaxLength = 300;
-            this.txtRemarks.Multiline = true;
-            this.txtRemarks.Name = "txtRemarks";
-            this.txtRemarks.Size = new System.Drawing.Size(462, 62);
-            this.txtRemarks.TabIndex = 100;
             // 
             // MembershipDataEntrycs
             // 

@@ -27,28 +27,30 @@ namespace WindowsFormsApplication2
         private Point m_firstClickLoc;
         private void BillingAndCollectionMain_Load(object sender, EventArgs e)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            adapter = new SqlDataAdapter("SELECT * FROM BILLING", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter("select Deduction_Code,SUM(TotalDueAmount) as TotalDueAmount from Billing GROUP BY Deduction_Code", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-            chart1.DataSource = dt;
+                chart1.DataSource = dt;
 
-            //Billing
-            chart1.Series["Billing"].XValueMember = "Deduction_Code";
-            chart1.Series["Billing"].YValueMembers = "TotalDueAmount";
+                //Billing
+                chart1.Series["Billing"].XValueMember = "Deduction_Code";
+                chart1.Series["Billing"].YValueMembers = "TotalDueAmount";
 
-            chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
-            chart1.Series["Billing"].ToolTip = "#VALY";
+                chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
+                chart1.Series["Billing"].ToolTip = "#VALY";
 
-            //Collection
-            chart1.Series["Collection"].XValueMember = "Deduction_Code";
-            chart1.Series["Collection"].YValueMembers = "TotalDueAmount";
+                //Collection
+                chart1.Series["Collection"].XValueMember = "Deduction_Code";
+                chart1.Series["Collection"].YValueMembers = "TotalDueAmount";
 
-            chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
-            chart1.Series["Collection"].ToolTip = "#VALY";
+                chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
+                chart1.Series["Collection"].ToolTip = "#VALY";
+            }
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -102,6 +104,16 @@ namespace WindowsFormsApplication2
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void panelAction_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

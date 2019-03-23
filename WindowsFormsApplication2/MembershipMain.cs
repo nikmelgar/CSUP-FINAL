@@ -25,6 +25,7 @@ namespace WindowsFormsApplication2
         bool x;
         clsHoverDash cls = new clsHoverDash();
         clsMembership clsMembership = new clsMembership();
+        Global global = new Global();
         private void lblAddNewMember_Click(object sender, EventArgs e)
         {
             //controls
@@ -383,7 +384,7 @@ namespace WindowsFormsApplication2
         {
             if(txtEmployeeID.Text == "" && txtFirstName.Text == "" && txtLastName.Text == "")
             {
-                Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                Alert.show("Please enter valid keyword to be searched.", Alert.AlertType.warning);
                 return;
             }
             else
@@ -408,32 +409,35 @@ namespace WindowsFormsApplication2
             CrystalDecisions.Shared.TableLogOnInfo li;
 
             //Print Purposes
-            SqlConnection con = new SqlConnection();
-            Global global = new Global();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport WHERE IsApprove ='1' and IsActive = '1' and Company_Code <> 'COMP010' ORDER BY Company", con);
-            
-            DataTable dt = new DataTable();
-            DataSet ds = new DataSet();
 
-            ReportsForms.rptMembershipMainPage cr = new ReportsForms.rptMembershipMainPage();
-            ReportsForms.rptMembershipMain rpt = new ReportsForms.rptMembershipMain();
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport WHERE IsApprove ='1' and IsActive = '1' and Company_Code <> 'COMP010' ORDER BY Company", con);
 
-            li = new TableLogOnInfo();
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
 
-            li.ConnectionInfo.IntegratedSecurity = false;
+                ReportsForms.rptMembershipMainPage cr = new ReportsForms.rptMembershipMainPage();
+                ReportsForms.rptMembershipMain rpt = new ReportsForms.rptMembershipMain();
 
-            adapter.Fill(ds, "vw_MembershipReport");
-            dt = ds.Tables["vw_MembershipReport"];
-            cr.SetDataSource(ds.Tables["vw_MembershipReport"]);
-            cr.SetParameterValue("status", "Active Members");
+                li = new TableLogOnInfo();
 
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+                li.ConnectionInfo.IntegratedSecurity = false;
 
-            rpt.crystalReportViewer1.ReportSource = cr;
-            rpt.ShowDialog();
+                adapter.Fill(ds, "vw_MembershipReport");
+                dt = ds.Tables["vw_MembershipReport"];
+                cr.SetDataSource(ds.Tables["vw_MembershipReport"]);
+                cr.SetParameterValue("status", "Active Members");
+
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
+            }
+
         }
 
         private void label9_Click(object sender, EventArgs e)
@@ -442,35 +446,37 @@ namespace WindowsFormsApplication2
             CrystalDecisions.Shared.TableLogOnInfo li;
 
             //Print Purposes
-            SqlConnection con = new SqlConnection();
-            Global global = new Global();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            //Change from Active Members to Non-Payroll Members
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport where isActive = 1 and isApprove = 1 and Company_Code = 'COMP010'", con);
+                //Change from Active Members to Non-Payroll Members
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport where isActive = 1 and isApprove = 1 and Company_Code = 'COMP010'", con);
 
 
 
-            DataTable dt = new DataTable();
-            DataSet ds = new DataSet();
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
 
-            ReportsForms.rptMembershipMainPageNonPayroll cr = new ReportsForms.rptMembershipMainPageNonPayroll();
-            ReportsForms.rptMembershipMain rpt = new ReportsForms.rptMembershipMain();
+                ReportsForms.rptMembershipMainPageNonPayroll cr = new ReportsForms.rptMembershipMainPageNonPayroll();
+                ReportsForms.rptMembershipMain rpt = new ReportsForms.rptMembershipMain();
 
-            li = new TableLogOnInfo();
+                li = new TableLogOnInfo();
 
-            li.ConnectionInfo.IntegratedSecurity = false;
+                li.ConnectionInfo.IntegratedSecurity = false;
 
-            adapter.Fill(ds, "vw_MembershipReport");
-            dt = ds.Tables["vw_MembershipReport"];
-            cr.SetDataSource(ds.Tables["vw_MembershipReport"]);
-            cr.SetParameterValue("status", "Non-Payroll Members");
+                adapter.Fill(ds, "vw_MembershipReport");
+                dt = ds.Tables["vw_MembershipReport"];
+                cr.SetDataSource(ds.Tables["vw_MembershipReport"]);
+                cr.SetParameterValue("status", "Non-Payroll Members");
 
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
 
-            rpt.crystalReportViewer1.ReportSource = cr;
-            rpt.ShowDialog();
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
+            }
+                         
         }
 
         private void label8_Click(object sender, EventArgs e)
@@ -479,34 +485,36 @@ namespace WindowsFormsApplication2
             CrystalDecisions.Shared.TableLogOnInfo li;
 
             //Print Purposes
-            SqlConnection con = new SqlConnection();
-            Global global = new Global();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport where isActive = 1 and isApprove is null ORDER BY Company ASC", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_MembershipReport where isActive = 1 and isApprove is null ORDER BY Company ASC", con);
 
 
 
-            DataTable dt = new DataTable();
-            DataSet ds = new DataSet();
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
 
-            ReportsForms.rptMembershipMainPage cr = new ReportsForms.rptMembershipMainPage();
-            ReportsForms.rptMembershipMain rpt = new ReportsForms.rptMembershipMain();
+                ReportsForms.rptMembershipMainPage cr = new ReportsForms.rptMembershipMainPage();
+                ReportsForms.rptMembershipMain rpt = new ReportsForms.rptMembershipMain();
 
-            li = new TableLogOnInfo();
+                li = new TableLogOnInfo();
 
-            li.ConnectionInfo.IntegratedSecurity = false;
+                li.ConnectionInfo.IntegratedSecurity = false;
 
-            adapter.Fill(ds, "vw_MembershipReport");
-            dt = ds.Tables["vw_MembershipReport"];
-            cr.SetDataSource(ds.Tables["vw_MembershipReport"]);
-            cr.SetParameterValue("status", "Members for Approval");
+                adapter.Fill(ds, "vw_MembershipReport");
+                dt = ds.Tables["vw_MembershipReport"];
+                cr.SetDataSource(ds.Tables["vw_MembershipReport"]);
+                cr.SetParameterValue("status", "New Members for Approval");
 
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
 
-            rpt.crystalReportViewer1.ReportSource = cr;
-            rpt.ShowDialog();
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
+            }
+
         }
 
         private void panel1_Click(object sender, EventArgs e)

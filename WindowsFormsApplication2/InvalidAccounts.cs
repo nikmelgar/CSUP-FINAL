@@ -62,7 +62,7 @@ namespace WindowsFormsApplication2
         {
             if(txtSearchText.Text == "")
             {
-                Alert.show("Please put valid keyword!", Alert.AlertType.error);
+                Alert.show("Please enter a valid keyword!", Alert.AlertType.error);
                 return;
             }
             clsATMReject.searchInvalidAccount(txtSearchText, txtSearchText.Text.Trim(), dataGridView1);
@@ -74,12 +74,12 @@ namespace WindowsFormsApplication2
             {
                 if(dataGridView1.Rows.Count > 0)
                 {
-                    Alert.show("Please account to be remove!", Alert.AlertType.error);
+                    Alert.show("Please select account to be remove!", Alert.AlertType.error);
                     return;
                 }
                 else
                 {
-                    Alert.show("No Records to be remove!", Alert.AlertType.error);
+                    Alert.show("No records to be removed!", Alert.AlertType.error);
                     return;
                 }
             }
@@ -108,25 +108,27 @@ namespace WindowsFormsApplication2
                     //=======================================================================
                     //      FOR LOANS REMOVE
                     //=======================================================================
-                    SqlConnection con = new SqlConnection();
-                    global.connection(con);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "UPDATE Journal_Header SET Cancelled = '1' , Cancelled_By = '"+ Classes.clsUser.Username + "' , Posted = '0', Cancel_Note ='Invalid Account Number', Particulars = 'Invalid Account Number' WHERE JV_No = '" + dataGridView1.SelectedRows[0].Cells["jv_no"].Value.ToString() + "'";
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "UPDATE Journal_Header SET Cancelled = '1' , Cancelled_By = '" + Classes.clsUser.Username + "' , Posted = '0', Cancel_Note ='Invalid Account Number', Particulars = 'Invalid Account Number' WHERE JV_No = '" + dataGridView1.SelectedRows[0].Cells["jv_no"].Value.ToString() + "'";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
 
-                    SqlCommand cmd2 = new SqlCommand();
-                    cmd2.Connection = con;
-                    cmd2.CommandText = "UPDATE Loan SET Status = '2' WHERE Loan_No = '"+ dataGridView1.SelectedRows[0].Cells["wd_loan_slip"].Value.ToString() + "'";
-                    cmd2.CommandType = CommandType.Text;
-                    cmd2.ExecuteNonQuery();
+                        SqlCommand cmd2 = new SqlCommand();
+                        cmd2.Connection = con;
+                        cmd2.CommandText = "UPDATE Loan SET Status = '2' WHERE Loan_No = '" + dataGridView1.SelectedRows[0].Cells["wd_loan_slip"].Value.ToString() + "'";
+                        cmd2.CommandType = CommandType.Text;
+                        cmd2.ExecuteNonQuery();
 
-                    //=======================================================================
-                    //      REMOVE IN ATM TABLE AFTER
-                    //=======================================================================
-                    clsATMReject.removeATM(dataGridView1.SelectedRows[0].Cells["wd_loan_slip"].Value.ToString());
+                        //=======================================================================
+                        //      REMOVE IN ATM TABLE AFTER
+                        //=======================================================================
+                        clsATMReject.removeATM(dataGridView1.SelectedRows[0].Cells["wd_loan_slip"].Value.ToString());
+                    }
 
                 }
 

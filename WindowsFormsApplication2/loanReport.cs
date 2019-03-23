@@ -70,83 +70,84 @@ namespace WindowsFormsApplication2
             CrystalDecisions.Shared.TableLogOnInfo li;
 
             //Print Purposes
-            con = new SqlConnection();
-            global.connection(con);
-
-
-            //SET VALUES FIRST
-            string type, comp, stat;
-
-            if(cmbLoanType.SelectedValue.ToString() == "ALL")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                type = "";
+                con.Open();
+
+                //SET VALUES FIRST
+                string type, comp, stat;
+
+                if (cmbLoanType.SelectedValue.ToString() == "ALL")
+                {
+                    type = "";
+                }
+                else
+                {
+                    type = cmbLoanType.SelectedValue.ToString();
+                }
+
+                if (cmbCompany.SelectedValue.ToString() == "ALL COMPANY")
+                {
+                    comp = "";
+
+                }
+                else
+                {
+                    comp = cmbCompany.SelectedValue.ToString();
+                }
+
+                if (cmbStatus.SelectedValue.ToString() == "ALL STATUS")
+                {
+                    status = "('FOR APPROVAL','APPROVED','DISAPPROVED','RELEASED','FBA','CANCELLED','FOR RELEASE','FOR POSTING')";
+                }
+                else
+                {
+                    status = "('" + cmbStatus.SelectedValue.ToString() + "')";
+                }
+
+                //=====================================================================================
+                //                  STRING QUERY BUILDER
+                //=====================================================================================
+
+
+                str = "select * From vw_LoanReport WHERE Loan_No Like '%" + txtLoanNo.Text + "%' and Loan_Type Like '%" + type + "%' and Company Like '%" + comp + "%' and Status in " + status + " and Name like '%" + txtName.Text + "%' and [Encoded By] like '%" + txtEncodedBy.Text + "%' and [Date Encoded] Between '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+
+
+                SqlDataAdapter adapter = new SqlDataAdapter(str, con);
+                DataTable checkDT = new DataTable();
+                adapter.Fill(checkDT);
+
+                if (checkDT.Rows.Count == 0)
+                {
+                    Alert.show("No Record(s) Found!", Alert.AlertType.error);
+                    return;
+                }
+
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
+
+                ReportsForms.loanReport cr = new ReportsForms.loanReport();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+                adapter.Fill(ds, "vw_LoanReport");
+                dt = ds.Tables["vw_LoanReport"];
+                cr.SetDataSource(ds.Tables["vw_LoanReport"]);
+
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                //Setup Parameters
+                cr.SetParameterValue("from", dtFrom.Text);
+                cr.SetParameterValue("to", dtTo.Text);
+                cr.SetParameterValue("PrintedBy", Classes.clsUser.Username);
+
+                cr.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.DefaultPaperSize;
+
+                crystalReportViewer1.ReportSource = cr;
             }
-            else
-            {
-                type = cmbLoanType.SelectedValue.ToString();
-            }
-
-            if(cmbCompany.SelectedValue.ToString() == "ALL COMPANY")
-            {
-                comp = "";
-                
-            }
-            else
-            {
-                comp = cmbCompany.SelectedValue.ToString();
-            }
-
-            if(cmbStatus.SelectedValue.ToString() == "ALL STATUS")
-            {
-                status = "('FOR APPROVAL','APPROVED','DISAPPROVED','RELEASED','FBA','CANCELLED','FOR RELEASE','FOR POSTING')";
-            }
-            else
-            {
-                status = "('" + cmbStatus.SelectedValue.ToString() +"')";
-            }
-
-            //=====================================================================================
-            //                  STRING QUERY BUILDER
-            //=====================================================================================
-
-            
-            str = "select * From vw_LoanReport WHERE Loan_No Like '%" + txtLoanNo.Text + "%' and Loan_Type Like '%" + type + "%' and Company Like '%" + comp + "%' and Status in " + status + " and Name like '%" + txtName.Text + "%' and [Encoded By] like '%" + txtEncodedBy.Text + "%' and [Date Encoded] Between '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-            
-
-            SqlDataAdapter adapter = new SqlDataAdapter(str, con);
-            DataTable checkDT = new DataTable();
-            adapter.Fill(checkDT);
-
-            if (checkDT.Rows.Count == 0)
-            {
-                Alert.show("No Record(s) Found!", Alert.AlertType.error);
-                return;
-            }
-
-            DataTable dt = new DataTable();
-            DataSet ds = new DataSet();
-
-            ReportsForms.loanReport cr = new ReportsForms.loanReport();
-
-            li = new TableLogOnInfo();
-
-            li.ConnectionInfo.IntegratedSecurity = false;
-
-            adapter.Fill(ds, "vw_LoanReport");
-            dt = ds.Tables["vw_LoanReport"];
-            cr.SetDataSource(ds.Tables["vw_LoanReport"]);
-
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-            //Setup Parameters
-            cr.SetParameterValue("from", dtFrom.Text);
-            cr.SetParameterValue("to", dtTo.Text);
-            cr.SetParameterValue("PrintedBy", Classes.clsUser.Username);
-
-            cr.PrintOptions.PaperSize = CrystalDecisions.Shared.PaperSize.DefaultPaperSize;
-            
-            crystalReportViewer1.ReportSource = cr;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

@@ -19,24 +19,25 @@ namespace WindowsFormsApplication2.Classes
         {
             cmb.DataSource = null;
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = procName;
-            cmd.CommandType = CommandType.StoredProcedure;
-                       
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = procName;
+                cmd.CommandType = CommandType.StoredProcedure;
 
-            adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
 
-            string str = dt.Columns[cnt].ToString();
-            cmb.DisplayMember = str;
-            cmb.ValueMember = dt.Columns[0].ToString();
-            cmb.DataSource = dt;
+                adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
+                string str = dt.Columns[cnt].ToString();
+                cmb.DisplayMember = str;
+                cmb.ValueMember = dt.Columns[0].ToString();
+                cmb.DataSource = dt;
+            }
         }
     }
 }

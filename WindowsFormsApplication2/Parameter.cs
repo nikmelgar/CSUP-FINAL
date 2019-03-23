@@ -114,19 +114,20 @@ namespace WindowsFormsApplication2
                 //====================================================================
                 //                      START INSERTING
                 //====================================================================
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertParameter";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@frm", cmbFrm.Text);
-                cmd.Parameters.AddWithValue("@Description", txtDescription.Text);
-                cmd.Parameters.AddWithValue("@val", txtValues.Text);
-                cmd.Parameters.AddWithValue("@inserted_by", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
-
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertParameter";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@frm", cmbFrm.Text);
+                    cmd.Parameters.AddWithValue("@Description", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@val", txtValues.Text);
+                    cmd.Parameters.AddWithValue("@inserted_by", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
+                }
                 //====================================================================
                 //                      RESET FIELDS AND BUTTONS
                 //====================================================================
@@ -145,7 +146,7 @@ namespace WindowsFormsApplication2
                 //                      Alert
                 //====================================================================
 
-                Alert.show("Successfully Added!", Alert.AlertType.success);
+                Alert.show("Successfully Added.", Alert.AlertType.success);
             }
             else
             {
@@ -160,22 +161,21 @@ namespace WindowsFormsApplication2
                 //====================================================================
                 //                      START UPDATE
                 //====================================================================
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateParameter";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@frm", cmbFrm.Text);
+                    cmd.Parameters.AddWithValue("@Description", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@val", txtValues.Text);
+                    cmd.Parameters.AddWithValue("@lastval", lastVal);
+                    cmd.Parameters.AddWithValue("@usermodified", Classes.clsUser.Username);
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateParameter";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@frm", cmbFrm.Text);
-                cmd.Parameters.AddWithValue("@Description", txtDescription.Text);
-                cmd.Parameters.AddWithValue("@val", txtValues.Text);
-                cmd.Parameters.AddWithValue("@lastval", lastVal);
-                cmd.Parameters.AddWithValue("@usermodified", Classes.clsUser.Username);
-
-                cmd.ExecuteNonQuery();
-
-
+                    cmd.ExecuteNonQuery();
+                }
                 //====================================================================
                 //                      RESET FIELDS AND BUTTONS
                 //====================================================================
@@ -194,7 +194,7 @@ namespace WindowsFormsApplication2
                 //                      Alert
                 //====================================================================
 
-                Alert.show("Successfully Updated!", Alert.AlertType.success);
+                Alert.show("Successfully updated.", Alert.AlertType.success);
                 lastVal = "";
             }
         }

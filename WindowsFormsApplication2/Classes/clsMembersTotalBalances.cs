@@ -20,21 +20,23 @@ namespace WindowsFormsApplication2.Classes
 
         public void UpdateMembersTotalBalance(int userID,string EmployeeID,Decimal Savings,Decimal Share_Capital,Decimal Loans,Decimal Deferred,string FromForm)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_AdjustMentMembershipBalanceInfo";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@userID", userID);
-            cmd.Parameters.AddWithValue("@EmployeeID", EmployeeID);
-            cmd.Parameters.AddWithValue("@Savings", Savings);
-            cmd.Parameters.AddWithValue("@Share_Capital", Share_Capital);
-            cmd.Parameters.AddWithValue("@Loans", Loans);
-            cmd.Parameters.AddWithValue("@Deferred", Deferred);
-            cmd.Parameters.AddWithValue("@FromForm", FromForm);
-            cmd.ExecuteNonQuery();
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_AdjustMentMembershipBalanceInfo";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userID", userID);
+                cmd.Parameters.AddWithValue("@EmployeeID", EmployeeID);
+                cmd.Parameters.AddWithValue("@Savings", Savings);
+                cmd.Parameters.AddWithValue("@Share_Capital", Share_Capital);
+                cmd.Parameters.AddWithValue("@Loans", Loans);
+                cmd.Parameters.AddWithValue("@Deferred", Deferred);
+                cmd.Parameters.AddWithValue("@FromForm", FromForm);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

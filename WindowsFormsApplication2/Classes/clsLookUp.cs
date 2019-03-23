@@ -20,144 +20,153 @@ namespace WindowsFormsApplication2.Classes
         public void loadLookUpQuery(string tableName,DataGridView dgv)
         {
             //Open Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            //check whos form trigger the lookup
-            if(whosLookUp.ToString() == "0" || whosLookUp.ToString() == "1" || whosLookUp.ToString() == "2")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM " + tableName, con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                con.Open();
 
-                if(dt.Rows.Count > 0)
+                //check whos form trigger the lookup
+                if (whosLookUp.ToString() == "0" || whosLookUp.ToString() == "1" || whosLookUp.ToString() == "2")
                 {
-                    dgv.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM " + tableName, con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    int colCnt = dt.Columns.Count;
-                    int x = 0;
-
-
-                    while (x != colCnt)
+                    if (dt.Rows.Count > 0)
                     {
-                        dgv.Columns[x].Visible = false;
-                        x = x + 1;
+                        dgv.DataSource = dt;
+
+                        int colCnt = dt.Columns.Count;
+                        int x = 0;
+
+
+                        while (x != colCnt)
+                        {
+                            dgv.Columns[x].Visible = false;
+                            x = x + 1;
+                        }
+
+                        dgv.Columns["EmployeeID"].Visible = true;
+                        dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                        dgv.Columns["LastName"].Visible = true;
+                        dgv.Columns["LastName"].HeaderText = "Last Name";
+
+                        dgv.Columns["FirstName"].Visible = true;
+                        dgv.Columns["FirstName"].HeaderText = "First Name";
+
+                        dgv.Columns["MiddleName"].Visible = true;
+                        dgv.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                        dgv.Columns["Date_Of_Birth"].Visible = true;
+                        dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
                     }
-
-                    dgv.Columns["EmployeeID"].Visible = true;
-                    dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                    dgv.Columns["LastName"].Visible = true;
-                    dgv.Columns["LastName"].HeaderText = "Last Name";
-
-                    dgv.Columns["FirstName"].Visible = true;
-                    dgv.Columns["FirstName"].HeaderText = "First Name";
-
-                    dgv.Columns["MiddleName"].Visible = true;
-                    dgv.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                    dgv.Columns["Date_Of_Birth"].Visible = true;
-                    dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
                 }
             }
+
         }
 
         public void SearchSavings(string employeeid,string firstname,string lastname, DataGridView dgv)
         {
             //Open Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            //check whos form trigger the lookup
-            if (whosLookUp.ToString() == "0")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                con.Open();
 
-                if (dt.Rows.Count > 0)
+                //check whos form trigger the lookup
+                if (whosLookUp.ToString() == "0")
                 {
-                    dgv.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    int colCnt = dt.Columns.Count;
-                    int x = 0;
-
-
-                    while (x != colCnt)
+                    if (dt.Rows.Count > 0)
                     {
-                        dgv.Columns[x].Visible = false;
-                        x = x + 1;
+                        dgv.DataSource = dt;
+
+                        int colCnt = dt.Columns.Count;
+                        int x = 0;
+
+
+                        while (x != colCnt)
+                        {
+                            dgv.Columns[x].Visible = false;
+                            x = x + 1;
+                        }
+
+                        dgv.Columns["EmployeeID"].Visible = true;
+                        dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                        dgv.Columns["LastName"].Visible = true;
+                        dgv.Columns["LastName"].HeaderText = "Last Name";
+
+                        dgv.Columns["FirstName"].Visible = true;
+                        dgv.Columns["FirstName"].HeaderText = "First Name";
+
+                        dgv.Columns["MiddleName"].Visible = true;
+                        dgv.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                        dgv.Columns["Date_Of_Birth"].Visible = true;
+                        dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
                     }
-
-                    dgv.Columns["EmployeeID"].Visible = true;
-                    dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                    dgv.Columns["LastName"].Visible = true;
-                    dgv.Columns["LastName"].HeaderText = "Last Name";
-
-                    dgv.Columns["FirstName"].Visible = true;
-                    dgv.Columns["FirstName"].HeaderText = "First Name";
-
-                    dgv.Columns["MiddleName"].Visible = true;
-                    dgv.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                    dgv.Columns["Date_Of_Birth"].Visible = true;
-                    dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
-                }
-                else
-                {
-                    Alert.show("No Records Found!", Alert.AlertType.warning);
-                    return;
+                    else
+                    {
+                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        return;
+                    }
                 }
             }
+
+                
         }
 
         public void SearchMemberDisbursement(string employeeid, string firstname, string lastname, DataGridView dgv)
         {
             //Open Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            //check whos form trigger the lookup
-            if (whosLookUp.ToString() == "1")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                con.Open();
 
-                if (dt.Rows.Count > 0)
+                //check whos form trigger the lookup
+                if (whosLookUp.ToString() == "1")
                 {
-                    dgv.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    int colCnt = dt.Columns.Count;
-                    int x = 0;
-
-
-                    while (x != colCnt)
+                    if (dt.Rows.Count > 0)
                     {
-                        dgv.Columns[x].Visible = false;
-                        x = x + 1;
+                        dgv.DataSource = dt;
+
+                        int colCnt = dt.Columns.Count;
+                        int x = 0;
+
+
+                        while (x != colCnt)
+                        {
+                            dgv.Columns[x].Visible = false;
+                            x = x + 1;
+                        }
+
+                        dgv.Columns["EmployeeID"].Visible = true;
+                        dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                        dgv.Columns["LastName"].Visible = true;
+                        dgv.Columns["LastName"].HeaderText = "Last Name";
+
+                        dgv.Columns["FirstName"].Visible = true;
+                        dgv.Columns["FirstName"].HeaderText = "First Name";
+
+                        dgv.Columns["MiddleName"].Visible = true;
+                        dgv.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                        dgv.Columns["Date_Of_Birth"].Visible = true;
+                        dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
                     }
-
-                    dgv.Columns["EmployeeID"].Visible = true;
-                    dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                    dgv.Columns["LastName"].Visible = true;
-                    dgv.Columns["LastName"].HeaderText = "Last Name";
-
-                    dgv.Columns["FirstName"].Visible = true;
-                    dgv.Columns["FirstName"].HeaderText = "First Name";
-
-                    dgv.Columns["MiddleName"].Visible = true;
-                    dgv.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                    dgv.Columns["Date_Of_Birth"].Visible = true;
-                    dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
-                }
-                else
-                {
-                    Alert.show("No Records Found!", Alert.AlertType.warning);
-                    return;
+                    else
+                    {
+                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        return;
+                    }
                 }
             }
         }
@@ -165,49 +174,51 @@ namespace WindowsFormsApplication2.Classes
         public void SearchMemberCashReceipt(string employeeid, string firstname, string lastname, DataGridView dgv)
         {
             //Open Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            //check whos form trigger the lookup
-            if (whosLookUp.ToString() == "2")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                con.Open();
 
-                if (dt.Rows.Count > 0)
+                //check whos form trigger the lookup
+                if (whosLookUp.ToString() == "2")
                 {
-                    dgv.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 50 * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    int colCnt = dt.Columns.Count;
-                    int x = 0;
-
-
-                    while (x != colCnt)
+                    if (dt.Rows.Count > 0)
                     {
-                        dgv.Columns[x].Visible = false;
-                        x = x + 1;
+                        dgv.DataSource = dt;
+
+                        int colCnt = dt.Columns.Count;
+                        int x = 0;
+
+
+                        while (x != colCnt)
+                        {
+                            dgv.Columns[x].Visible = false;
+                            x = x + 1;
+                        }
+
+                        dgv.Columns["EmployeeID"].Visible = true;
+                        dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                        dgv.Columns["LastName"].Visible = true;
+                        dgv.Columns["LastName"].HeaderText = "Last Name";
+
+                        dgv.Columns["FirstName"].Visible = true;
+                        dgv.Columns["FirstName"].HeaderText = "First Name";
+
+                        dgv.Columns["MiddleName"].Visible = true;
+                        dgv.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                        dgv.Columns["Date_Of_Birth"].Visible = true;
+                        dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
                     }
-
-                    dgv.Columns["EmployeeID"].Visible = true;
-                    dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                    dgv.Columns["LastName"].Visible = true;
-                    dgv.Columns["LastName"].HeaderText = "Last Name";
-
-                    dgv.Columns["FirstName"].Visible = true;
-                    dgv.Columns["FirstName"].HeaderText = "First Name";
-
-                    dgv.Columns["MiddleName"].Visible = true;
-                    dgv.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                    dgv.Columns["Date_Of_Birth"].Visible = true;
-                    dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
-                }
-                else
-                {
-                    Alert.show("No Records Found!", Alert.AlertType.warning);
-                    return;
+                    else
+                    {
+                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        return;
+                    }
                 }
             }
         }

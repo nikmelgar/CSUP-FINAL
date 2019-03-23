@@ -96,6 +96,7 @@ namespace WindowsFormsApplication2
                 cmbBankName.Enabled = true;
                 txtCheque.Enabled = true;
                 btnRelease.Enabled = true;
+                btnRelease.Text = "PREPARE CHEQUE";
 
                 //loadBank
                 clsSavingsDataEntry.loadComboBox(cmbBankName);
@@ -107,6 +108,7 @@ namespace WindowsFormsApplication2
                 cmbBankName.Text = "";
                 txtCheque.Text = "";
                 cmbBankName.DataSource = null;
+                btnRelease.Text = "RELEASE";
             }
 
             txtAmountWithdrawn.Focus();
@@ -116,6 +118,7 @@ namespace WindowsFormsApplication2
         {
             txtAmountWithdrawn.Focus();
             btnRelease.Enabled = true;
+            btnRelease.Text = "RELEASE";
         }
 
         private void txtAmountWithdrawn_TextChanged(object sender, EventArgs e)
@@ -232,7 +235,7 @@ namespace WindowsFormsApplication2
                 //Check if theres a employeeid and amount
                 if (txtEmployeeID.Text == "" || txtAmountWithdrawn.Text == "")
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -248,7 +251,7 @@ namespace WindowsFormsApplication2
                     //Put the Param here
                     if (Convert.ToDecimal(txtAmountWithdrawn.Text) > clsParam.cashLimit())
                     {
-                        Alert.show("Exceeds allowed daily limit of "+ clsParam.cashLimit().ToString("#,0.00") +"!", Alert.AlertType.warning);
+                        Alert.show("Exceeds maximum daily cash withdrawal of "+ clsParam.cashLimit().ToString("#,0.00") +"!", Alert.AlertType.warning);
                         return;
                     }
                 }
@@ -277,7 +280,7 @@ namespace WindowsFormsApplication2
                 Decimal Total;
                 if (Convert.ToDecimal(txtAmountWithdrawn.Text) >= Convert.ToDecimal(txtWithdrawalBalance.Text))
                 {
-                    Alert.show("Amount exceeds the withdrawable amount", Alert.AlertType.warning);
+                    Alert.show("Exceeds minimum maintaining balance of Php " + clsParam.remainingBalance().ToString("#,0.00"), Alert.AlertType.warning);
                     txtAmountInWords.Text = "";
                     return;
                 }
@@ -286,7 +289,7 @@ namespace WindowsFormsApplication2
                     Total = Convert.ToDecimal(txtAmountWithdrawn.Text) + clsParam.remainingBalance();
                     if (Total > Convert.ToDecimal(txtWithdrawalBalance.Text))
                     {
-                        Alert.show("Exceeds allowed maintaining balance of Php " + clsParam.remainingBalance().ToString("#,0.00"), Alert.AlertType.warning);
+                        Alert.show("Exceeds minimum maintaining balance of Php " + clsParam.remainingBalance().ToString("#,0.00"), Alert.AlertType.warning);
                         txtAmountInWords.Text = "";
                         return;
                     }
@@ -296,13 +299,13 @@ namespace WindowsFormsApplication2
                 //Check for hold accounts
                 if(clsHoldAccount.checkIfHoldAccount(Classes.clsSavingsDataEntry.userID) == true)
                 {
-                    Alert.show("Members Account is on hold!", Alert.AlertType.error);
+                    Alert.show("Member's account is on hold.", Alert.AlertType.error);
                     return;
                 }
 
                 if (clsHoldAccount.checkIfTHeresADependent(txtEmployeeID.Text) == true)
                 {
-                    Alert.show("Members Account is on hold!", Alert.AlertType.error);
+                    Alert.show("Member's account is on hold.", Alert.AlertType.error);
                     return;
                 }
                 //for dependent purposes
@@ -317,79 +320,81 @@ namespace WindowsFormsApplication2
                 //Check for withdrawal limit For Saving
                 if (clsSavingsDataEntry.getCountWithdrawal() == true)
                 {
-                    Alert.show("Exceed allowed withdrawal transaction per day!", Alert.AlertType.error);
+                    Alert.show("Exceed allowed withdrawal transaction per day.", Alert.AlertType.error);
                     return;
                 }
 
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_InsertWithdrawal";
-                cmd.Parameters.AddWithValue("@userID", Classes.clsSavingsDataEntry.userID);
-                cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
-                cmd.Parameters.AddWithValue("@wdDate", dtDateWithdrawal.Text);
-                cmd.Parameters.AddWithValue("@Balance_Before_Withdrawal", Convert.ToDecimal(txtCurrentBalanceBeforeWithdrawal.Text));
-                cmd.Parameters.AddWithValue("@Withdrawal_Mode", returnMode());
-                cmd.Parameters.AddWithValue("@AmtWithdrawn", Convert.ToDecimal(txtAmountWithdrawn.Text));
-
-
-                if (cmbBankName.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_InsertWithdrawal";
+                    cmd.Parameters.AddWithValue("@userID", Classes.clsSavingsDataEntry.userID);
+                    cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
+                    cmd.Parameters.AddWithValue("@wdDate", dtDateWithdrawal.Text);
+                    cmd.Parameters.AddWithValue("@Balance_Before_Withdrawal", Convert.ToDecimal(txtCurrentBalanceBeforeWithdrawal.Text));
+                    cmd.Parameters.AddWithValue("@Withdrawal_Mode", returnMode());
+                    cmd.Parameters.AddWithValue("@AmtWithdrawn", Convert.ToDecimal(txtAmountWithdrawn.Text));
+
+
+                    if (cmbBankName.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
+                    }
+
+                    cmd.Parameters.AddWithValue("@Check_No", txtCheque.Text);
+                    cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
+                    if (radioPerea.Checked == true)
+                    {
+                        cmd.Parameters.AddWithValue("@WDFrom", '1');
+                    }
+                    else if (radioDansalan.Checked == true)
+                    {
+                        cmd.Parameters.AddWithValue("@WDFrom", '0');
+                    }
+
+                    cmd.ExecuteNonQuery();
+
+                    Alert.show("Successfully Added.", Alert.AlertType.success);
+
+                    //Get Withdrawal Slip Number
+                    txtWithdrawalSlipNo.Text = clsSavingsDataEntry.returnWithdrawalSlipNo();
+
+                    if (clsSavingsDataEntry.returnReleaseDate(txtWithdrawalSlipNo.Text).ToString() == "" || clsSavingsDataEntry.returnReleaseDate(txtWithdrawalSlipNo.Text).ToString() == string.Empty)
+                    {
+                        dtReleaseDate.Text = "";
+                    }
+
+                    //refresh
+                    try
+                    {
+                        savings = (Savings)Application.OpenForms["Savings"];
+                        savings.refreshData();
+
+                    }
+                    catch
+                    {
+
+                    }
+                    //Visible Status
+                    status.Visible = true;
+                    status.Text = "FOR RELEASE";
+
+
+                    //Lock for this user
+                    //Insert here for register the open form and reference
+                    clsOpen.insertTransaction("Savings", txtWithdrawalSlipNo.Text);
+
+
+                    btnSave.Text = "NEW";
                 }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
-                }
-
-                cmd.Parameters.AddWithValue("@Check_No", txtCheque.Text);
-                cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
-                if (radioPerea.Checked == true)
-                {
-                    cmd.Parameters.AddWithValue("@WDFrom", '1');
-                }
-                else if (radioDansalan.Checked == true)
-                {
-                    cmd.Parameters.AddWithValue("@WDFrom", '0');
-                }
-
-                cmd.ExecuteNonQuery();
-
-                Alert.show("Successfully Added!", Alert.AlertType.success);
-
-                //Get Withdrawal Slip Number
-                txtWithdrawalSlipNo.Text = clsSavingsDataEntry.returnWithdrawalSlipNo();
-
-                if(clsSavingsDataEntry.returnReleaseDate(txtWithdrawalSlipNo.Text).ToString() == "" || clsSavingsDataEntry.returnReleaseDate(txtWithdrawalSlipNo.Text).ToString() == string.Empty)
-                {
-                    dtReleaseDate.Text = "";
-                }
-
-                //refresh
-                try
-                {
-                    savings = (Savings)Application.OpenForms["Savings"];
-                    savings.refreshData();
-
-                }
-                catch
-                {
-
-                }
-                //Visible Status
-                status.Visible = true;
-                status.Text = "FOR RELEASE";
-
-
-                //Lock for this user
-                //Insert here for register the open form and reference
-                clsOpen.insertTransaction("Savings", txtWithdrawalSlipNo.Text);
-
-
-                btnSave.Text = "NEW";
             }
             else if(btnSave.Text == "UPDATE") //UPDATE
             {
@@ -414,33 +419,34 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateWithdrawalAmout";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Withdrawal_Slip_No", txtWithdrawalSlipNo.Text);
-                cmd.Parameters.AddWithValue("@AmtWithdrawn", Convert.ToDecimal(txtAmountWithdrawn.Text));
-
-                if(cmbBankName.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
-                }
-                cmd.Parameters.AddWithValue("@check_no", txtCheque.Text);
+                    con.Open();
 
-                cmd.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateWithdrawalAmout";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Withdrawal_Slip_No", txtWithdrawalSlipNo.Text);
+                    cmd.Parameters.AddWithValue("@AmtWithdrawn", Convert.ToDecimal(txtAmountWithdrawn.Text));
 
+                    if (cmbBankName.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
+                    }
+                    cmd.Parameters.AddWithValue("@check_no", txtCheque.Text);
+
+                    cmd.ExecuteNonQuery();
+                }
                 //refresh
                 savings = (Savings)Application.OpenForms["Savings"];
                 savings.refreshData();
 
-                Alert.show("Successfully Updated!", Alert.AlertType.success);
+                Alert.show("Successfully updated.", Alert.AlertType.success);
 
             }
             else
@@ -464,7 +470,7 @@ namespace WindowsFormsApplication2
         {
             if(txtWithdrawalSlipNo.Text == "")
             {
-                Alert.show("Select Withdrawal For Release!", Alert.AlertType.error);
+                Alert.show("No withdrawal for release.", Alert.AlertType.error);
                 return;
             }
 
@@ -485,260 +491,291 @@ namespace WindowsFormsApplication2
                 Alert.show("This Withdrawal Already Released!", Alert.AlertType.error);
                 return;
             }
-            
 
-            string msg = Environment.NewLine + "Are you sure you want to release this?";
-            DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                con = new SqlConnection();
-                global.connection(con);
+                con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_ReleaseWithdrawalDate";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Withdrawal_Slip_No", txtWithdrawalSlipNo.Text);
-                cmd.ExecuteNonQuery();
-
-                //Put the date to the textbox
-                dtReleaseDate.Text = Convert.ToDateTime(clsSavingsDataEntry.returnReleaseDate(txtWithdrawalSlipNo.Text)).ToShortDateString();
-
-                status.Visible = true;
-                status.Text = "RELEASED";
-
-                //refresh
-                savings = (Savings)Application.OpenForms["Savings"];
-                savings.refreshData();
-
-                btnSave.Text = "NEW";
-
-                //CHECK IF WITHDRAWABLE METHOD IS CHECK 
-                //IF CHECK GO TO DISBURSEMENT AND SAVE THE RELEASED VALUE
-                //===========================================================================================================
-
-                if(radioCheque.Checked == true)
+                if (radioCheque.Checked == true)
                 {
-                    //Put true for disbursement posting if withdrawal from check
-                    Classes.clsDisbursement.releaseCashWithdrawal = true;
-                    Classes.clsDisbursement.slipFromWithdrawal = txtWithdrawalSlipNo.Text;
-
-                    //=================================================================================
-                    //Call Disbursement
-                    //=================================================================================
-
-                    DisbursementVoucher cv = new DisbursementVoucher();
-                    cv.ForReplenishment();
-
-                    foreach (Form form in Application.OpenForms)
-                    {
-                        
-                        if (form.GetType() == typeof(DisbursementVoucher))
-                        {
-                            form.Activate();
-                            DisbursementVoucher cv1 = new DisbursementVoucher();
-                            cv1 = (DisbursementVoucher)Application.OpenForms["DisbursementVoucher"];
-                            cv1.dataGridView1.Rows[0].Cells[3].Value = txtAmountWithdrawn.Text; //==Debit
-                            cv1.dataGridView1.Rows[1].Cells[4].Value = txtAmountWithdrawn.Text; //==Credit
-                            cv1.cmbTransaction.SelectedValue = "TRAN001";
-                            cv1.cmbBank.SelectedValue = cmbBankName.SelectedValue;
-                            cv1.txtChequeNo.Text = txtCheque.Text;
-                            cv1.txtAmount.Text = txtAmountWithdrawn.Text;
-                            slip = txtWithdrawalSlipNo.Text;
-                            slip = slip.Substring(12, 4);
-                            cv1.txtParticular.Text = "Withdrawal of Savings per Slip receipt no. " + slip + " Dated : " + DateTime.Now.ToShortDateString();
-                            cv1.radioMember.Checked = true;
-                            cv1.txtPayee.Text = txtEmployeeID.Text;
-                            cv1.txtPayeeName.Text = txtName.Text;
-                            Classes.clsDisbursement.userID = Classes.clsSavingsDataEntry.userID;
-                            return;
-                        }
-                    }
-
-                    cv.dataGridView1.Rows.Add(1);
-
-                    
-                    cv.getTransaction = "TRAN001";
-                    cv.cmbBank.SelectedValue = cmbBankName.SelectedValue;
-                    Classes.clsDisbursement.userID = Classes.clsSavingsDataEntry.userID;
-                    cv.txtChequeNo.Text = txtCheque.Text;
-                    cv.txtAmount.Text = txtAmountWithdrawn.Text;
-                    slip = txtWithdrawalSlipNo.Text;
-                    slip = slip.Substring(12, 4);
-                    cv.txtParticular.Text = "Withdrawal of Savings per Slip receipt no. " + slip + " Dated : " + DateTime.Now.ToShortDateString();
-                    cv.radioMember.Checked = true;
-                    cv.txtPayee.Text = txtEmployeeID.Text;
-                    cv.txtPayeeName.Text = txtName.Text;
-
-                    cv.dataGridView1.Rows[0].Cells[0].Value = "300.1";
-                    cv.dataGridView1.Rows[0].Cells[3].Value = txtAmountWithdrawn.Text;
-
-                    int rowId = cv.dataGridView1.Rows.Add();
-                    // Grab the new row!
-                    DataGridViewRow row2 = cv.dataGridView1.Rows[rowId];
-
-                    // Add the data
-                    row2.Cells[0].Value = "102.17";
-                    row2.Cells[4].Value = txtAmountWithdrawn.Text;
-
-
-                    cv.btnEdit.Enabled = false;
-                    cv.btnPost.Enabled = true;
-                    cv.btnCancel.Enabled = true;
-                    cv.btnPrint.Enabled = true;
-                    cv.btnPrintCheque.Enabled = true;                    
-                    cv.btnSearch.Enabled = false;
-                    cv.dataGridView1.Enabled = false;
-                    cv.txtChequeNo.Enabled = false;
-                    cv.dtChequeDate.Enabled = false;
-                    cv.txtAmount.Enabled = false;
-                    cv.txtParticular.Enabled = false;
-                    cv.btnSearchPayee.Enabled = false;
-                    cv.btnSearchLoan.Enabled = false;
-                    cv.btnNew.Enabled = false;
-
-                    cv.btnNew.Text = "NEW";
-                                           
-                    cv.Show();
-                    //=================================================================================
-                    //SAVING DISBURSEMENT
-                    //=================================================================================
-                    SqlCommand cmdHeader = new SqlCommand();
-                    cmdHeader.Connection = con;
-                    cmdHeader.CommandText = "sp_InsertDisbursementHeader";
-                    cmdHeader.CommandType = CommandType.StoredProcedure;
-                    cmdHeader.Parameters.AddWithValue("@CVDate", DateTime.Now.ToShortDateString());
-
-                    //FOr Payee Type 
-                    //Member = 0 Client = 1
-                    if (cv.radioMember.Checked == true)
-                    {
-                        cmdHeader.Parameters.AddWithValue("@Payee_Type", "0");
-                    }
-                    else
-                    {
-                        cmdHeader.Parameters.AddWithValue("@Payee_Type", "1");
-                    }
-
-                    //Check if Theres a Member or Client
-                    if (Classes.clsDisbursement.userID.ToString() == "")
-                    {
-                        cmdHeader.Parameters.AddWithValue("@userID", DBNull.Value);
-
-                    }
-                    else if (Classes.clsDisbursement.userID == 0)
-                    {
-                        cmdHeader.Parameters.AddWithValue("@userID", DBNull.Value);
-                    }
-                    else
-                    {
-                        cmdHeader.Parameters.AddWithValue("@userID", Classes.clsDisbursement.userID.ToString());
-                    }
-
-                    cmdHeader.Parameters.AddWithValue("@Payee", cv.txtPayee.Text);
-                    cmdHeader.Parameters.AddWithValue("@Payee_Name", cv.txtPayeeName.Text);
-                    cmdHeader.Parameters.AddWithValue("@Particulars", cv.txtParticular.Text);
-                    cmdHeader.Parameters.AddWithValue("@Loan_No", cv.txtLoanNo.Text);
-                    cmdHeader.Parameters.AddWithValue("@Bank_Code", cv.cmbBank.SelectedValue);
-                    cmdHeader.Parameters.AddWithValue("@Check_No", cv.txtChequeNo.Text);
-                    cmdHeader.Parameters.AddWithValue("@Check_Date", cv.dtChequeDate.Text);
-                    cmdHeader.Parameters.AddWithValue("@Amount", Convert.ToDecimal(cv.txtAmount.Text));
-                    cmdHeader.Parameters.AddWithValue("@Transaction_Type", cv.cmbTransaction.SelectedValue);
-                    cmdHeader.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-                    cmdHeader.ExecuteNonQuery();
-
-                    //Get The CV NO.
-
-                    SqlCommand cmdCV = new SqlCommand();
-                    cmdCV.Connection = con;
-                    cmdCV.CommandText = "sp_GetCVNoAfterSaving";
-                    cmdCV.CommandType = CommandType.StoredProcedure;
-                    cmdCV.Parameters.AddWithValue("@CV_Date", DateTime.Now.ToShortDateString());
-                    cmdCV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmdCV);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT CV_No FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '" + txtWithdrawalSlipNo.Text + "'", con);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
-                    if (dt.Rows.Count > 0)
+                    if (dt.Rows[0].ItemArray[0].ToString() != "")
                     {
-                        cv.txtCVNo.Text = dt.Rows[0].ItemArray[0].ToString();
+
                     }
-                    else
-                    {
-                        return;
-                    }
-
-                    //Insert CV Details
-                    //SAVE DETAILS ============================================================================================
-                    if (cv.dataGridView1.Rows.Count > 0)
-                    {
-                        foreach (DataGridViewRow row in cv.dataGridView1.Rows)
-                        {
-                            if (row.Cells[0].Value != null)
-                            {
-                                SqlCommand cmdDetail = new SqlCommand();
-                                cmdDetail.Connection = con;
-                                cmdDetail.CommandText = "sp_InsertDisbursementDetail";
-                                cmdDetail.CommandType = CommandType.StoredProcedure;
-                                cmdDetail.Parameters.AddWithValue("@CV_No", cv.txtCVNo.Text);
-                                cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
-
-                                if (Convert.ToInt32(row.Cells[5].Value) == 0)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                                }
-
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                                }
-
-
-                                if (row.Cells[2].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
-
-                                cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                                cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                                cmdDetail.ExecuteNonQuery();
-                            }
-                        }
-                    }
-
-                    //=================================================================================
-                    //                     SAVE WITHDRAWAL SLIP FOR CHANGING PURPOSES
-                    //=================================================================================
-                    SqlCommand cmdWD = new SqlCommand();
-                    cmdWD.Connection = con;
-                    cmdWD.CommandText = "UPDATE Disbursement_Header SET wd_slip_no = '"+ txtWithdrawalSlipNo.Text +"' WHERE CV_No = '" + cv.txtCVNo.Text + "'";
-                    cmdWD.CommandType = CommandType.Text;
-                    cmdWD.ExecuteNonQuery();
                 }
 
-                //=================================================================================
-                //MessageBox Before Showing Disbursement
-                //=================================================================================
-                this.Close();
-                Alert.show("Successfully Released!", Alert.AlertType.success);
 
-            }
-            else
-            {
-                return;
+                string msg = Environment.NewLine + "Are you sure you want to release this?";
+                DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    if (btnRelease.Text == "RELEASE")
+                    {
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_ReleaseWithdrawalDate";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Withdrawal_Slip_No", txtWithdrawalSlipNo.Text);
+                        cmd.ExecuteNonQuery();
+
+                        //Put the date to the textbox
+                        dtReleaseDate.Text = Convert.ToDateTime(clsSavingsDataEntry.returnReleaseDate(txtWithdrawalSlipNo.Text)).ToShortDateString();
+
+                        status.Visible = true;
+                        status.Text = "RELEASED";
+
+                        //refresh
+                        savings = (Savings)Application.OpenForms["Savings"];
+                        savings.refreshData();
+
+                        btnSave.Text = "NEW";
+
+                        //=================================================================================
+                        //MessageBox Before Showing Disbursement
+                        //=================================================================================
+                        this.Close();
+                        Alert.show("Successfully Released!", Alert.AlertType.success);
+                    }
+
+                    //CHECK IF WITHDRAWABLE METHOD IS CHECK 
+                    //IF CHECK GO TO DISBURSEMENT AND SAVE THE RELEASED VALUE
+                    //===========================================================================================================
+
+                    if (radioCheque.Checked == true)
+                    {
+                        //Put true for disbursement posting if withdrawal from check
+                        Classes.clsDisbursement.releaseCashWithdrawal = true;
+                        Classes.clsDisbursement.slipFromWithdrawal = txtWithdrawalSlipNo.Text;
+
+                        //=================================================================================
+                        //Call Disbursement
+                        //=================================================================================
+
+                        DisbursementVoucher cv = new DisbursementVoucher();
+                        //03-10-2019
+                        cv.ForReplenishment();
+                        cv.fromWithdrawal = true;
+
+                        cv.dataGridView1.Rows.Add(1);
+
+
+                        cv.getTransaction = "TRAN001";
+                        cv.getBankFromWithdrawal = cmbBankName.SelectedValue.ToString();
+                        Classes.clsDisbursement.userID = Classes.clsSavingsDataEntry.userID;
+                        cv.txtChequeNo.Text = txtCheque.Text;
+                        cv.txtAmount.Text = txtAmountWithdrawn.Text;
+                        slip = txtWithdrawalSlipNo.Text;
+                        slip = slip.Substring(12, 4);
+                        cv.txtParticular.Text = "Withdrawal of Savings per Slip receipt no. " + slip + " Dated : " + DateTime.Now.ToShortDateString();
+                        cv.radioMember.Checked = true;
+                        cv.txtPayee.Text = txtEmployeeID.Text;
+                        cv.txtPayeeName.Text = txtName.Text;
+
+                        cv.dataGridView1.Rows[0].Cells[0].Value = "300.1";
+                        cv.dataGridView1.Rows[0].Cells[3].Value = txtAmountWithdrawn.Text;
+                        //Put the Subsidiary or the Member ID and Name in Disbursement Details
+                        cv.dataGridView1.Rows[0].Cells[1].Value = txtEmployeeID.Text + " - " + txtName.Text;
+                        cv.dataGridView1.Rows[0].Cells[5].Value = Classes.clsSavingsDataEntry.userID;
+
+                        int rowId = cv.dataGridView1.Rows.Add();
+                        // Grab the new row!
+                        DataGridViewRow row2 = cv.dataGridView1.Rows[rowId];
+
+                        //Added March 10 , 2019 as Per Sir Manny Request For Cheque Release
+                        SqlDataAdapter adapterBank = new SqlDataAdapter("SELECT Bank_Account_Code FROM Bank WHERE Bank_Code ='" + cmbBankName.SelectedValue.ToString() + "'", con);
+                        DataTable dtBank = new DataTable();
+                        adapterBank.Fill(dtBank);
+
+
+                        // Add the data
+                        row2.Cells[0].Value = dtBank.Rows[0].ItemArray[0].ToString();
+                        row2.Cells[4].Value = txtAmountWithdrawn.Text;
+
+
+                        cv.btnEdit.Enabled = false;
+                        cv.btnPost.Enabled = true;
+                        cv.btnCancel.Enabled = true;
+                        cv.btnPrint.Enabled = true;
+                        cv.btnPrintCheque.Enabled = true;
+                        cv.btnSearch.Enabled = false;
+                        cv.dataGridView1.Enabled = false;
+                        cv.txtChequeNo.Enabled = false;
+                        cv.dtChequeDate.Enabled = false;
+                        cv.txtAmount.Enabled = false;
+                        cv.txtParticular.Enabled = false;
+                        cv.btnSearchPayee.Enabled = false;
+                        cv.btnSearchLoan.Enabled = false;
+                        cv.btnNew.Enabled = false;
+
+                        cv.btnNew.Text = "NEW";
+
+
+
+                        //BEFORE NEXT WINDOW REMOVE THE OPEN TRANSACTION
+                        //============================================================
+                        //              REMOVE OPEN FORM
+                        //============================================================
+                        clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
+
+                        cv.Show();
+                        //=================================================================================
+                        //SAVING DISBURSEMENT
+                        //=================================================================================
+                        SqlCommand cmdHeader = new SqlCommand();
+                        cmdHeader.Connection = con;
+                        cmdHeader.CommandText = "sp_InsertDisbursementHeader";
+                        cmdHeader.CommandType = CommandType.StoredProcedure;
+                        cmdHeader.Parameters.AddWithValue("@CVDate", DateTime.Now.ToShortDateString());
+
+                        //FOr Payee Type 
+                        //Member = 0 Client = 1
+                        if (cv.radioMember.Checked == true)
+                        {
+                            cmdHeader.Parameters.AddWithValue("@Payee_Type", "0");
+                        }
+                        else
+                        {
+                            cmdHeader.Parameters.AddWithValue("@Payee_Type", "1");
+                        }
+
+                        //Check if Theres a Member or Client
+                        if (Classes.clsDisbursement.userID.ToString() == "")
+                        {
+                            cmdHeader.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                        }
+                        else if (Classes.clsDisbursement.userID == 0)
+                        {
+                            cmdHeader.Parameters.AddWithValue("@userID", DBNull.Value);
+                        }
+                        else
+                        {
+                            cmdHeader.Parameters.AddWithValue("@userID", Classes.clsDisbursement.userID.ToString());
+                        }
+
+                        cmdHeader.Parameters.AddWithValue("@Payee", cv.txtPayee.Text);
+                        cmdHeader.Parameters.AddWithValue("@Payee_Name", cv.txtPayeeName.Text);
+                        cmdHeader.Parameters.AddWithValue("@Particulars", cv.txtParticular.Text);
+                        cmdHeader.Parameters.AddWithValue("@Loan_No", cv.txtLoanNo.Text);
+                        cmdHeader.Parameters.AddWithValue("@Bank_Code", cv.cmbBank.SelectedValue);
+                        cmdHeader.Parameters.AddWithValue("@Check_No", cv.txtChequeNo.Text);
+                        cmdHeader.Parameters.AddWithValue("@Check_Date", cv.dtChequeDate.Text);
+                        cmdHeader.Parameters.AddWithValue("@Amount", Convert.ToDecimal(cv.txtAmount.Text));
+                        cmdHeader.Parameters.AddWithValue("@Transaction_Type", cv.cmbTransaction.SelectedValue);
+                        cmdHeader.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+                        cmdHeader.ExecuteNonQuery();
+
+                        //Get The CV NO.
+
+                        SqlCommand cmdCV = new SqlCommand();
+                        cmdCV.Connection = con;
+                        cmdCV.CommandText = "sp_GetCVNoAfterSaving";
+                        cmdCV.CommandType = CommandType.StoredProcedure;
+                        cmdCV.Parameters.AddWithValue("@CV_Date", DateTime.Now.ToShortDateString());
+                        cmdCV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmdCV);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            cv.txtCVNo.Text = dt.Rows[0].ItemArray[0].ToString();
+                        }
+                        else
+                        {
+                            return;
+                        }
+
+                        //Insert CV Details
+                        //SAVE DETAILS ============================================================================================
+                        if (cv.dataGridView1.Rows.Count > 0)
+                        {
+                            foreach (DataGridViewRow row in cv.dataGridView1.Rows)
+                            {
+                                if (row.Cells[0].Value != null)
+                                {
+                                    SqlCommand cmdDetail = new SqlCommand();
+                                    cmdDetail.Connection = con;
+                                    cmdDetail.CommandText = "sp_InsertDisbursementDetail";
+                                    cmdDetail.CommandType = CommandType.StoredProcedure;
+                                    cmdDetail.Parameters.AddWithValue("@CV_No", cv.txtCVNo.Text);
+                                    cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+
+                                    if (Convert.ToInt32(row.Cells[5].Value) == 0)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                    }
+
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                    }
+
+
+                                    if (row.Cells[2].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
+
+                                    cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                    cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                    cmdDetail.ExecuteNonQuery();
+                                }
+                            }
+                        }
+
+                        //=================================================================================
+                        //                     SAVE WITHDRAWAL SLIP FOR CHANGING PURPOSES
+                        //=================================================================================
+                        SqlCommand cmdWD = new SqlCommand();
+                        cmdWD.Connection = con;
+                        cmdWD.CommandText = "UPDATE Disbursement_Header SET wd_slip_no = '" + txtWithdrawalSlipNo.Text + "' WHERE CV_No = '" + cv.txtCVNo.Text + "'";
+                        cmdWD.CommandType = CommandType.Text;
+                        cmdWD.ExecuteNonQuery();
+
+                        //=================================================================================
+                        //                     SAVE CV NO FOR WITHDRAWAL SLIP
+                        //=================================================================================
+                        SqlCommand cmdWDCV = new SqlCommand();
+                        cmdWDCV.Connection = con;
+                        cmdWDCV.CommandText = "UPDATE Withdrawal_Slip SET cv_no = '" + cv.txtCVNo.Text + "' WHERE Withdrawal_Slip_No = '" + txtWithdrawalSlipNo.Text + "'";
+                        cmdWDCV.CommandType = CommandType.Text;
+                        cmdWDCV.ExecuteNonQuery();
+
+                        Alert.show("Withdrawal voucher successfully prepared.", Alert.AlertType.success);
+
+
+                        SqlDataAdapter adapterchck = new SqlDataAdapter("SELECT CV_No FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '" + txtWithdrawalSlipNo.Text + "'", con);
+                        DataTable dtchck = new DataTable();
+                        adapterchck.Fill(dtchck);
+
+                        status.Text = "FOR RELEASE - CV#" + dtchck.Rows[0].ItemArray[0].ToString();
+                        status.Visible = true;
+                        btnRelease.Enabled = false;
+
+                    }
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -760,7 +797,7 @@ namespace WindowsFormsApplication2
 
             if (txtWithdrawalSlipNo.Text == "")
             {
-                Alert.show("Select Withdrawal For Cancellation!", Alert.AlertType.error);
+                Alert.show("No withdrawal for cancellation.", Alert.AlertType.error);
                 return;
             }
 
@@ -779,7 +816,7 @@ namespace WindowsFormsApplication2
 
             if (txtNote.Text == "")
             {
-                Alert.show("Cancel Note is Required!", Alert.AlertType.warning);
+                Alert.show("Cancel note is required!", Alert.AlertType.warning);
                 txtNote.Focus();
                 return;
             }
@@ -788,30 +825,30 @@ namespace WindowsFormsApplication2
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_CancellationOfWithdrawal";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Withdrawal_Slip_No", txtWithdrawalSlipNo.Text);
-                cmd.Parameters.AddWithValue("@CancelledlNote", txtNote.Text);
-                cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
-               
-                cmd.ExecuteNonQuery();
-
-                if(txtCancelledBy.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Cancelled_By FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '"+ txtWithdrawalSlipNo.Text +"'", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    con.Open();
 
-                    txtCancelledBy.Text = dt.Rows[0].ItemArray[0].ToString();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_CancellationOfWithdrawal";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Withdrawal_Slip_No", txtWithdrawalSlipNo.Text);
+                    cmd.Parameters.AddWithValue("@CancelledlNote", txtNote.Text);
+                    cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
+
+                    cmd.ExecuteNonQuery();
+
+                    if (txtCancelledBy.Text == "")
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT Cancelled_By FROM Withdrawal_Slip WHERE Withdrawal_Slip_No = '" + txtWithdrawalSlipNo.Text + "'", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        txtCancelledBy.Text = dt.Rows[0].ItemArray[0].ToString();
+                    }
                 }
-
-
-                Alert.show("Successfully Cancelled!", Alert.AlertType.success);
+                Alert.show("Successfully cancelled.", Alert.AlertType.success);
 
                 status.Visible = true;
                 status.Text = "CANCELLED";
@@ -879,6 +916,7 @@ namespace WindowsFormsApplication2
             }
 
             btnSearch.Enabled = true;
+            btnRelease.Enabled = true;
 
             //Status Remove
             status.Visible = false;

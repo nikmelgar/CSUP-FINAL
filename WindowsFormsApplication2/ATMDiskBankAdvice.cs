@@ -90,20 +90,22 @@ namespace WindowsFormsApplication2
         {
             listView1.Items.Clear();
 
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("select Bank_Code,PURPOSE,sum(Amount) as Total FROM ATM WHERE Deposited is null and Bank_Code ='"+ cmbBank.Text +"' Group by Bank_Code,Purpose", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
-            
-            for (int i = 0; i < dt.Rows.Count; i++)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                listView1.Items.Add(dt.Rows[i].ItemArray[1].ToString() + " - " + Convert.ToDecimal(dt.Rows[i].ItemArray[2].ToString()).ToString("#,0.00")).Checked = true;
-            }
+                con.Open();
 
-            //Display Every Combobox Change
-            clsATMDiskAdvice.displayBrandAndCompanyCode(txtBranchCode, txtCompanyCOde, txtAccountNo, cmbBank.Text);
+                adapter = new SqlDataAdapter("select Bank_Code,PURPOSE,sum(Amount) as Total FROM ATM WHERE Deposited is null and Bank_Code ='" + cmbBank.Text + "' Group by Bank_Code,Purpose", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    listView1.Items.Add(dt.Rows[i].ItemArray[1].ToString() + " - " + Convert.ToDecimal(dt.Rows[i].ItemArray[2].ToString()).ToString("#,0.00")).Checked = true;
+                }
+
+                //Display Every Combobox Change
+                clsATMDiskAdvice.displayBrandAndCompanyCode(txtBranchCode, txtCompanyCOde, txtAccountNo, cmbBank.Text);
+            }
         }
 
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -121,14 +123,16 @@ namespace WindowsFormsApplication2
                 {
                     if(listView1.Items[i].Checked == true)
                     {
-                        con = new SqlConnection();
-                        global.connection(con);
+                        using (SqlConnection con = new SqlConnection(global.connectString()))
+                        {
+                            con.Open();
 
-                        adapter = new SqlDataAdapter("select Bank_Code,PURPOSE,sum(Amount) as Total FROM ATM WHERE Deposited is null and Bank_Code ='" + cmbBank.Text + "' Group by Bank_Code,Purpose", con);
-                        dt = new DataTable();
-                        adapter.Fill(dt);
+                            adapter = new SqlDataAdapter("select Bank_Code,PURPOSE,sum(Amount) as Total FROM ATM WHERE Deposited is null and Bank_Code ='" + cmbBank.Text + "' Group by Bank_Code,Purpose", con);
+                            dt = new DataTable();
+                            adapter.Fill(dt);
 
-                        sum += Convert.ToDecimal(dt.Rows[i].ItemArray[2].ToString());
+                            sum += Convert.ToDecimal(dt.Rows[i].ItemArray[2].ToString());
+                        }  
                     }
                 }
 
@@ -153,7 +157,7 @@ namespace WindowsFormsApplication2
         {
             if(dgvATM.Rows.Count == 0)
             {
-                Alert.show("No ATM transaction!", Alert.AlertType.error);
+                Alert.show("No ATM transaction.", Alert.AlertType.error);
                 return;
             }
 
@@ -218,45 +222,47 @@ namespace WindowsFormsApplication2
                 StreamWriter writer = new StreamWriter(fs1);
 
 
-                con = new SqlConnection();
-                global.connection(con);
-                
-                int cnt = 0;
-                int icount = 0;
-                foreach (ListViewItem lItem in listView1.Items)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    if (lItem.Checked == true)
-                    {
-                        icount = icount + 1;
-                    }
-                }
+                    con.Open();
 
-                for (int i = 0; i < listView1.Items.Count; i++)
-                {
-                    if (listView1.Items[i].Checked == true)
+                    int cnt = 0;
+                    int icount = 0;
+                    foreach (ListViewItem lItem in listView1.Items)
                     {
-                        purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
-                        if (i != icount - 1)
+                        if (lItem.Checked == true)
                         {
-                            purpose += " , ";
+                            icount = icount + 1;
                         }
                     }
+
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        if (listView1.Items[i].Checked == true)
+                        {
+                            purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
+                            if (i != icount - 1)
+                            {
+                                purpose += " , ";
+                            }
+                        }
+                    }
+
+                    string str = "select distinct account_No,sum(Amount) as total,Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Name Order by Name ASC";
+                    adapter = new SqlDataAdapter(str, con);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    while (cnt != dt.Rows.Count)
+                    {
+                        writer.Write(dt.Rows[cnt].ItemArray[0].ToString());
+                        writer.Write("\t");
+                        writer.Write(dt.Rows[cnt].ItemArray[1].ToString());
+                        cnt = cnt + 1;
+                    }
+
+                    writer.Close();
                 }
-
-                string str = "select distinct account_No,sum(Amount) as total,Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Name Order by Name ASC";
-                adapter = new SqlDataAdapter(str, con);
-                dt = new DataTable();
-                adapter.Fill(dt);
-
-                while (cnt != dt.Rows.Count)
-                {
-                    writer.Write(dt.Rows[cnt].ItemArray[0].ToString());
-                    writer.Write("\t");
-                    writer.Write(dt.Rows[cnt].ItemArray[1].ToString());
-                    cnt = cnt + 1;
-                }
-
-                writer.Close();
 
                 Alert.show("BDO DISK Successfully Created!", Alert.AlertType.success);
             }
@@ -277,133 +283,134 @@ namespace WindowsFormsApplication2
 
                 //GET TOTALS AND OTHER INFO
                 //===================================================================================================
-                con = new SqlConnection();
-                global.connection(con);
-
-                int icount = 0;
-                foreach (ListViewItem lItem in listView1.Items)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    if (lItem.Checked == true)
-                    {
-                        icount = icount + 1;
-                    }
-                }
+                    con.Open();
 
-                for (int i = 0; i < listView1.Items.Count; i++)
-                {
-                    if (listView1.Items[i].Checked == true)
+                    int icount = 0;
+                    foreach (ListViewItem lItem in listView1.Items)
                     {
-                        purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
-                        if (i != icount - 1)
+                        if (lItem.Checked == true)
                         {
-                            purpose += " , ";
+                            icount = icount + 1;
                         }
                     }
-                }
-                
-                
-                string str = "select distinct account_No,Bank_code,sum(Amount) as total , Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code,Name Order by Name ASC";
-                adapter = new SqlDataAdapter(str, con);
-                dt = new DataTable();
-                adapter.Fill(dt);
 
-                string str2 = "select distinct account_No,Bank_code,sum(Amount) as total FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code Order by total desc";
-                SqlDataAdapter adapter2 = new SqlDataAdapter(str2, con);
-                DataTable dt2 = new DataTable();
-                adapter2.Fill(dt2);
-
-
-                purpose = string.Empty;
-
-                ceil = Convert.ToDecimal(dt2.Rows[0].ItemArray[2].ToString()); //Ceil for Header
-                //Get Accnt No Count 5-10
-                String sp56;
-                String sp78;
-                String sp910;
-                               
-
-                //GET Total AMount
-                for (int x = 0; x < dt2.Rows.Count; x++)
-                {
-                    totalAmount += Convert.ToDecimal(dt2.Rows[x].ItemArray[2].ToString());
-                }
-                              
-                //====================================================================================================
-                //                              BPI HEADER
-                //====================================================================================================
-
-                writer.Write("H"); //Default Value
-                writer.Write(txtCompanyCOde.Text); //Company Code
-                writer.Write(dtDepDate.Value.ToString("MMddyy")); //Deposit Date
-                writer.Write(string.Format(txtTrans.Text, "00")); //Transaction or Batch Upload
-                writer.Write("1");  //Fix Value
-                writer.Write(txtAccountNo.Text); //Account Number
-                writer.Write(txtBranchCode.Text); //Branch Code                
-                writer.Write(String.Format("{0:000000000000}", ceil * 100)); //Highest Amount 
-                writer.Write(String.Format("{0:000000000000}", totalAmount * 100)); //Total Amount
-                writer.Write("1" + new string(' ', 75));
-                writer.Write(Environment.NewLine);
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        if (listView1.Items[i].Checked == true)
+                        {
+                            purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
+                            if (i != icount - 1)
+                            {
+                                purpose += " , ";
+                            }
+                        }
+                    }
 
 
-                //====================================================================================================
-                //                              BPI DETAILS
-                //====================================================================================================
-                cnt = 0;
-                double dHash = 0;
-                string sHash;
-                ttalAccntHash = 0;
-                ttalTrailerAmount = 0;
-                ttalTrailerHash = 0;
+                    string str = "select distinct account_No,Bank_code,sum(Amount) as total , Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code,Name Order by Name ASC";
+                    adapter = new SqlDataAdapter(str, con);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    string str2 = "select distinct account_No,Bank_code,sum(Amount) as total FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code Order by total desc";
+                    SqlDataAdapter adapter2 = new SqlDataAdapter(str2, con);
+                    DataTable dt2 = new DataTable();
+                    adapter2.Fill(dt2);
 
 
-                while (cnt != dt.Rows.Count)
-                {
-                    writer.Write("D"); //Fix Value
-                    writer.Write(txtCompanyCOde.Text);
+                    purpose = string.Empty;
+
+                    ceil = Convert.ToDecimal(dt2.Rows[0].ItemArray[2].ToString()); //Ceil for Header
+                                                                                   //Get Accnt No Count 5-10
+                    String sp56;
+                    String sp78;
+                    String sp910;
+
+
+                    //GET Total AMount
+                    for (int x = 0; x < dt2.Rows.Count; x++)
+                    {
+                        totalAmount += Convert.ToDecimal(dt2.Rows[x].ItemArray[2].ToString());
+                    }
+
+                    //====================================================================================================
+                    //                              BPI HEADER
+                    //====================================================================================================
+
+                    writer.Write("H"); //Default Value
+                    writer.Write(txtCompanyCOde.Text); //Company Code
                     writer.Write(dtDepDate.Value.ToString("MMddyy")); //Deposit Date
                     writer.Write(string.Format(txtTrans.Text, "00")); //Transaction or Batch Upload
-                    writer.Write("3"); //Fix Value
-                    writer.Write(dt.Rows[cnt].ItemArray[0].ToString());
-                    ttalAccntHash = ttalAccntHash + Convert.ToDecimal(dt.Rows[cnt].ItemArray[0].ToString());
-                    writer.Write(String.Format("{0:000000000000}", Convert.ToDecimal(dt.Rows[cnt].ItemArray[2].ToString()) * 100));
-                    ttalTrailerAmount = Convert.ToDecimal(String.Format("{0:000000000000}", Convert.ToDecimal(dt.Rows[cnt].ItemArray[2].ToString()) * 100)) + ttalTrailerAmount;
-                    sp56 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 5, 2);
-                    sp78 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 7, 2);
-                    sp910 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 9, 2);
-                    dHash = (Convert.ToInt32(sp56) + Convert.ToInt32(sp78) + Convert.ToInt32(sp910)) * Convert.ToDouble(dt.Rows[cnt].ItemArray[2].ToString());
-                    sHash = string.Format("{0:N}", dHash);
-                    sHash = sHash.Replace(",","");
-                    sHash = sHash.Replace(".", "");
-                    writer.Write(Convert.ToInt64(sHash).ToString("D12"));
-                    ttalTrailerHash = ttalTrailerHash + Convert.ToDouble((Convert.ToInt32(sp56) + Convert.ToInt32(sp78) + Convert.ToInt32(sp910)) * Convert.ToDouble(dt.Rows[cnt].ItemArray[2].ToString()));
-                    tHash = string.Format("{0:N}", ttalTrailerHash);
-                    tHash = tHash.Replace(",", "");
-                    tHash = tHash.Replace(".", "");
-                    tHash = Convert.ToInt64(tHash).ToString("D18");
-                    writer.Write(new string(' ', 79));
-                    cnt = cnt + 1;
+                    writer.Write("1");  //Fix Value
+                    writer.Write(txtAccountNo.Text); //Account Number
+                    writer.Write(txtBranchCode.Text); //Branch Code                
+                    writer.Write(String.Format("{0:000000000000}", ceil * 100)); //Highest Amount 
+                    writer.Write(String.Format("{0:000000000000}", totalAmount * 100)); //Total Amount
+                    writer.Write("1" + new string(' ', 75));
                     writer.Write(Environment.NewLine);
+
+
+                    //====================================================================================================
+                    //                              BPI DETAILS
+                    //====================================================================================================
+                    cnt = 0;
+                    double dHash = 0;
+                    string sHash;
+                    ttalAccntHash = 0;
+                    ttalTrailerAmount = 0;
+                    ttalTrailerHash = 0;
+
+
+                    while (cnt != dt.Rows.Count)
+                    {
+                        writer.Write("D"); //Fix Value
+                        writer.Write(txtCompanyCOde.Text);
+                        writer.Write(dtDepDate.Value.ToString("MMddyy")); //Deposit Date
+                        writer.Write(string.Format(txtTrans.Text, "00")); //Transaction or Batch Upload
+                        writer.Write("3"); //Fix Value
+                        writer.Write(dt.Rows[cnt].ItemArray[0].ToString());
+                        ttalAccntHash = ttalAccntHash + Convert.ToDecimal(dt.Rows[cnt].ItemArray[0].ToString());
+                        writer.Write(String.Format("{0:000000000000}", Convert.ToDecimal(dt.Rows[cnt].ItemArray[2].ToString()) * 100));
+                        ttalTrailerAmount = Convert.ToDecimal(String.Format("{0:000000000000}", Convert.ToDecimal(dt.Rows[cnt].ItemArray[2].ToString()) * 100)) + ttalTrailerAmount;
+                        sp56 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 5, 2);
+                        sp78 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 7, 2);
+                        sp910 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 9, 2);
+                        dHash = (Convert.ToInt32(sp56) + Convert.ToInt32(sp78) + Convert.ToInt32(sp910)) * Convert.ToDouble(dt.Rows[cnt].ItemArray[2].ToString());
+                        sHash = string.Format("{0:N}", dHash);
+                        sHash = sHash.Replace(",", "");
+                        sHash = sHash.Replace(".", "");
+                        writer.Write(Convert.ToInt64(sHash).ToString("D12"));
+                        ttalTrailerHash = ttalTrailerHash + Convert.ToDouble((Convert.ToInt32(sp56) + Convert.ToInt32(sp78) + Convert.ToInt32(sp910)) * Convert.ToDouble(dt.Rows[cnt].ItemArray[2].ToString()));
+                        tHash = string.Format("{0:N}", ttalTrailerHash);
+                        tHash = tHash.Replace(",", "");
+                        tHash = tHash.Replace(".", "");
+                        tHash = Convert.ToInt64(tHash).ToString("D18");
+                        writer.Write(new string(' ', 79));
+                        cnt = cnt + 1;
+                        writer.Write(Environment.NewLine);
+                    }
+
+
+                    //====================================================================================================
+                    //                              BPI TRAILER
+                    //====================================================================================================
+                    writer.Write("T"); //Default Value
+                    writer.Write(txtCompanyCOde.Text); //Company Code
+                    writer.Write(dtDepDate.Value.ToString("MMddyy")); //Deposit Date
+                    writer.Write(string.Format(txtTrans.Text, "00")); //Transaction or Batch Upload
+                    writer.Write("2");  //Fix Value
+                    writer.Write(txtAccountNo.Text); //Account Number
+                    writer.Write(String.Format("{0:000000000000000}", ttalAccntHash)); //Total account Hash
+                    writer.Write(String.Format("{0:000000000000000}", ttalTrailerAmount)); //Total 
+                    writer.Write(String.Format("{0:000000000000000000}", tHash)); //Total Amount
+                    int trailerTailCnt = Convert.ToInt32(dt.Rows.Count.ToString());
+                    writer.Write(String.Format("{0:00000}", trailerTailCnt));
+                    writer.Write(new string(' ', 50));
+
+                    writer.Close();
                 }
-
-
-                //====================================================================================================
-                //                              BPI TRAILER
-                //====================================================================================================
-                writer.Write("T"); //Default Value
-                writer.Write(txtCompanyCOde.Text); //Company Code
-                writer.Write(dtDepDate.Value.ToString("MMddyy")); //Deposit Date
-                writer.Write(string.Format(txtTrans.Text, "00")); //Transaction or Batch Upload
-                writer.Write("2");  //Fix Value
-                writer.Write(txtAccountNo.Text); //Account Number
-                writer.Write(String.Format("{0:000000000000000}", ttalAccntHash)); //Total account Hash
-                writer.Write(String.Format("{0:000000000000000}", ttalTrailerAmount)); //Total 
-                writer.Write(String.Format("{0:000000000000000000}", tHash)); //Total Amount
-                int trailerTailCnt = Convert.ToInt32(dt.Rows.Count.ToString());
-                writer.Write(String.Format("{0:00000}", trailerTailCnt));
-                writer.Write(new string(' ', 50));
-
-                writer.Close();
-
                 Alert.show("BPI DISK Successfully Created!", Alert.AlertType.success);
             }    
         }
@@ -422,11 +429,80 @@ namespace WindowsFormsApplication2
                 StreamWriter writer = new StreamWriter(fs1);
 
 
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                string CompName = "PECCI";
-                int cnt = 0;
+                    string CompName = "PECCI";
+                    int cnt = 0;
+                    int icount = 0;
+                    foreach (ListViewItem lItem in listView1.Items)
+                    {
+                        if (lItem.Checked == true)
+                        {
+                            icount = icount + 1;
+                        }
+                    }
+
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        if (listView1.Items[i].Checked == true)
+                        {
+                            purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
+                            if (i != icount - 1)
+                            {
+                                purpose += " , ";
+                            }
+                        }
+                    }
+
+                    string str = "select distinct account_No,Bank_code,sum(Amount) as total , Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code,Name Order by Name ASC";
+                    adapter = new SqlDataAdapter(str, con);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    while (cnt != dt.Rows.Count)
+                    {
+                        writer.Write("2"); //Fix Value
+                        writer.Write("096"); //Fix Value
+                        writer.Write("26"); //Fix Value
+                        writer.Write("001"); //Fix Value //Currency 001- peso , 002 - dollar
+                        if (Mid(dt.Rows[cnt].ItemArray[0].ToString(), 2, 3) == "722")
+                        {
+                            writer.Write("096");
+                        }
+                        else
+                        {
+                            writer.Write(Mid(dt.Rows[cnt].ItemArray[0].ToString(), 2, 3));
+                        }
+                        writer.Write("0000000");
+                        writer.Write(CompName);
+                        writer.Write(new string(' ', 35));
+                        writer.Write(String.Format("{0:0000000000}", dt.Rows[cnt].ItemArray[0].ToString())); //Account No.
+                        writer.Write(String.Format("{0:000000000000000}", Convert.ToDecimal(dt.Rows[cnt].ItemArray[2].ToString()) * 100));
+                        writer.Write("9");
+                        writer.Write(txtCompanyCOde.Text);
+                        writer.Write(dtDepDate.Value.ToString("MMddyyyy")); //Deposit Date
+                        cnt = cnt + 1;
+                    }
+
+                    writer.Close();
+                }
+
+                Alert.show("MBTC DISK Successfully Created!", Alert.AlertType.success);
+            }
+        }
+
+        //===============================================================================================
+        //                    Move to Temp Table for TempBPI : For Advice Report
+        //===============================================================================================
+        public void movetoTempBPI()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                purpose = "";
                 int icount = 0;
                 foreach (ListViewItem lItem in listView1.Items)
                 {
@@ -448,112 +524,48 @@ namespace WindowsFormsApplication2
                     }
                 }
 
-                string str = "select distinct account_No,Bank_code,sum(Amount) as total , Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code,Name Order by Name ASC";
-                adapter = new SqlDataAdapter(str, con);
-                dt = new DataTable();
+                SqlDataAdapter adapter = new SqlDataAdapter("select distinct account_No,Bank_code,sum(Amount) as total , Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code,Name Order by Name ASC", con);
+                DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
-                while(cnt != dt.Rows.Count)
+
+                //====================================================================================================
+                //                              BPI DETAILS
+                //====================================================================================================
+                String sp56;
+                String sp78;
+                String sp910;
+
+                cnt = 0;
+                double dHash = 0;
+                string sHash;
+
+                while (cnt != dt.Rows.Count)
                 {
-                    writer.Write("2"); //Fix Value
-                    writer.Write("096"); //Fix Value
-                    writer.Write("26"); //Fix Value
-                    writer.Write("001"); //Fix Value //Currency 001- peso , 002 - dollar
-                    if(Mid(dt.Rows[cnt].ItemArray[0].ToString(), 2, 3) == "722")
-                    {
-                        writer.Write("096");
-                    }
-                    else
-                    {
-                        writer.Write(Mid(dt.Rows[cnt].ItemArray[0].ToString(), 2, 3));
-                    }
-                    writer.Write("0000000");
-                    writer.Write(CompName);
-                    writer.Write(new string(' ', 35));
-                    writer.Write(String.Format("{0:0000000000}", dt.Rows[cnt].ItemArray[0].ToString())); //Account No.
-                    writer.Write(String.Format("{0:000000000000000}", Convert.ToDecimal(dt.Rows[cnt].ItemArray[2].ToString()) * 100));
-                    writer.Write("9");
-                    writer.Write(txtCompanyCOde.Text);
-                    writer.Write(dtDepDate.Value.ToString("MMddyyyy")); //Deposit Date
+
+                    sp56 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 5, 2);
+                    sp78 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 7, 2);
+                    sp910 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 9, 2);
+                    dHash = (Convert.ToInt32(sp56) + Convert.ToInt32(sp78) + Convert.ToInt32(sp910)) * Convert.ToDouble(dt.Rows[cnt].ItemArray[2].ToString());
+                    sHash = string.Format("{0:N}", dHash);
+                    sHash = sHash.Replace(",", "");
+                    sHash = sHash.Replace(".", "");
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertTempBPI";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@accntNo", dt.Rows[cnt].ItemArray[0].ToString());
+                    cmd.Parameters.AddWithValue("@Name", dt.Rows[cnt].ItemArray[3].ToString());
+                    cmd.Parameters.AddWithValue("@Amount", dt.Rows[cnt].ItemArray[2].ToString());
+                    cmd.Parameters.AddWithValue("@HorizontalHash", Convert.ToInt64(sHash).ToString("D12"));
+                    cmd.ExecuteNonQuery();
+
                     cnt = cnt + 1;
                 }
 
-                writer.Close();
-
-                Alert.show("MBTC DISK Successfully Created!", Alert.AlertType.success);
+                purpose = "";
             }
-        }
-
-        //===============================================================================================
-        //                    Move to Temp Table for TempBPI : For Advice Report
-        //===============================================================================================
-        public void movetoTempBPI()
-        {
-            con = new SqlConnection();
-            global.connection(con);
-            purpose = "";
-            int icount = 0;
-            foreach (ListViewItem lItem in listView1.Items)
-            {
-                if (lItem.Checked == true)
-                {
-                    icount = icount + 1;
-                }
-            }
-
-            for (int i = 0; i < listView1.Items.Count; i++)
-            {
-                if (listView1.Items[i].Checked == true)
-                {
-                    purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
-                    if (i != icount - 1)
-                    {
-                        purpose += " , ";
-                    }
-                }
-            }
-            
-            SqlDataAdapter adapter = new SqlDataAdapter("select distinct account_No,Bank_code,sum(Amount) as total , Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Bank_Code,Name Order by Name ASC", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-
-            //====================================================================================================
-            //                              BPI DETAILS
-            //====================================================================================================
-            String sp56;
-            String sp78;
-            String sp910;
-
-            cnt = 0;
-            double dHash = 0;
-            string sHash;
-            
-            while (cnt != dt.Rows.Count)
-            {
-               
-                sp56 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 5, 2);
-                sp78 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 7, 2);
-                sp910 = Mid(dt.Rows[cnt].ItemArray[0].ToString(), 9, 2);
-                dHash = (Convert.ToInt32(sp56) + Convert.ToInt32(sp78) + Convert.ToInt32(sp910)) * Convert.ToDouble(dt.Rows[cnt].ItemArray[2].ToString());
-                sHash = string.Format("{0:N}", dHash);
-                sHash = sHash.Replace(",", "");
-                sHash = sHash.Replace(".", "");
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertTempBPI";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@accntNo", dt.Rows[cnt].ItemArray[0].ToString());
-                cmd.Parameters.AddWithValue("@Name", dt.Rows[cnt].ItemArray[3].ToString());
-                cmd.Parameters.AddWithValue("@Amount", dt.Rows[cnt].ItemArray[2].ToString());
-                cmd.Parameters.AddWithValue("@HorizontalHash", Convert.ToInt64(sHash).ToString("D12"));
-                cmd.ExecuteNonQuery();
-
-                cnt = cnt + 1;
-            }
-
-            purpose = "";
         }
 
         public static string Mid(string s, int a, int b)
@@ -628,71 +640,73 @@ namespace WindowsFormsApplication2
                 if (result == DialogResult.Yes)
                 {
                     //GO Tag selected purpose
-                    con = new SqlConnection();
-                    global.connection(con);
-
-                    //===========================================================================================
-                    //              GET THE PURPOSE IF = SD OR SAVINGS
-                    //===========================================================================================
-                    if(purpose.Contains("SD") == true)
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
-                        //========================================================================
-                        // GET JV NO FROM ATM TABLE THEN UPDATE WITHDRAWAL AND JV HEADER
-                        //========================================================================
-                        SqlDataAdapter getAdapter = new SqlDataAdapter("SELECT DISTINCT(jv_no),bank_Code FROM Atm WHERE Purpose = 'SD' and bank_code = '" + cmbBank.Text + "' and Deposited is null", con);
-                        DataTable dtGet = new DataTable();
-                        getAdapter.Fill(dtGet);
+                        con.Open();
 
-                        //========================================================================
-                        //  UPDATE TABLE WITHDRAWAL AND JOURNAL HEADER
-                        //========================================================================
-                        int x = 0;
-                        while(x != dtGet.Rows.Count)
+                        //===========================================================================================
+                        //              GET THE PURPOSE IF = SD OR SAVINGS
+                        //===========================================================================================
+                        if (purpose.Contains("SD") == true)
                         {
-                            SqlCommand cmdwd = new SqlCommand();
-                            cmdwd.Connection = con;
-                            cmdwd.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[x].ItemArray[0].ToString() + "'";
-                            cmdwd.CommandType = CommandType.Text;
-                            cmdwd.ExecuteNonQuery();
+                            //========================================================================
+                            // GET JV NO FROM ATM TABLE THEN UPDATE WITHDRAWAL AND JV HEADER
+                            //========================================================================
+                            SqlDataAdapter getAdapter = new SqlDataAdapter("SELECT DISTINCT(jv_no),bank_Code FROM Atm WHERE Purpose = 'SD' and bank_code = '" + cmbBank.Text + "' and Deposited is null", con);
+                            DataTable dtGet = new DataTable();
+                            getAdapter.Fill(dtGet);
 
-                            SqlCommand cmdJv = new SqlCommand();
-                            cmdJv.Connection = con;
-                            cmdJv.CommandText = "UPDATE Journal_Header SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[x].ItemArray[0].ToString() + "'";
-                            cmdJv.CommandType = CommandType.Text;
-                            cmdJv.ExecuteNonQuery();
+                            //========================================================================
+                            //  UPDATE TABLE WITHDRAWAL AND JOURNAL HEADER
+                            //========================================================================
+                            int x = 0;
+                            while (x != dtGet.Rows.Count)
+                            {
+                                SqlCommand cmdwd = new SqlCommand();
+                                cmdwd.Connection = con;
+                                cmdwd.CommandText = "UPDATE Withdrawal_Slip SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[x].ItemArray[0].ToString() + "'";
+                                cmdwd.CommandType = CommandType.Text;
+                                cmdwd.ExecuteNonQuery();
 
-                            x = x + 1;
+                                SqlCommand cmdJv = new SqlCommand();
+                                cmdJv.Connection = con;
+                                cmdJv.CommandText = "UPDATE Journal_Header SET Posted = 1, Posted_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + dtGet.Rows[x].ItemArray[0].ToString() + "'";
+                                cmdJv.CommandType = CommandType.Text;
+                                cmdJv.ExecuteNonQuery();
+
+                                x = x + 1;
+                            }
                         }
-                    }
 
 
-                    //===========================================================================================
-                    //              UPDATING ATM TABLE DEPOSITED = DATE TODAY
-                    //===========================================================================================
+                        //===========================================================================================
+                        //              UPDATING ATM TABLE DEPOSITED = DATE TODAY
+                        //===========================================================================================
 
-                    string str = "UPDATE ATM SET Deposited ='"+ dtDepDate.Text +"' where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ")";
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = str;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
+                        string str = "UPDATE ATM SET Deposited ='" + dtDepDate.Text + "' where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ")";
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = str;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
 
-                    Alert.show("ATM Successfully Tagged!", Alert.AlertType.success);
+                        Alert.show("ATM Successfully Tagged!", Alert.AlertType.success);
 
-                    clsATMDiskAdvice.loadATMDiskAdvice(dgvATM);
-                    clsATMDiskAdvice.loadBankCode(cmbBank);
+                        clsATMDiskAdvice.loadATMDiskAdvice(dgvATM);
+                        clsATMDiskAdvice.loadBankCode(cmbBank);
 
-                    if(dgvATM.Rows.Count == 0)
-                    {
-                        cmbBank.Text = "";
-                        listView1.Items.Clear();
+                        if (dgvATM.Rows.Count == 0)
+                        {
+                            cmbBank.Text = "";
+                            listView1.Items.Clear();
+                        }
                     }
                 }
             }
             else
             {
                 //No Value
-                Alert.show("No ATM Transaction to be tag!", Alert.AlertType.error);
+                Alert.show("No ATM transaction to be tagged.", Alert.AlertType.error);
                 return;
             }
         }
@@ -701,7 +715,7 @@ namespace WindowsFormsApplication2
         {
             if(txtTrans.Text == "")
             {
-                Alert.show("Transaction No. is required!", Alert.AlertType.error);
+                Alert.show("Transaction number is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -725,15 +739,16 @@ namespace WindowsFormsApplication2
             if (cmbBank.Text == "BPI")
             {
                 //delete first atm temp BPI
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "Delete tempBPI";
-                cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
-
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "Delete tempBPI";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
                 //Print Report
                 loadBPIReport();
             }
@@ -748,246 +763,254 @@ namespace WindowsFormsApplication2
         }
         public void loadMBTCRepor()
         {
-            CrystalDecisions.Shared.TableLogOnInfo li;
-
-            //===============================================
-            //          GETTING BANK INFO
-            //===============================================
-            adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='MBTC'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            //===============================================
-            //          STRING QUERY
-            //===============================================
-            int icount = 0;
-            purpose = "";
-            foreach (ListViewItem lItem in listView1.Items)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                if (lItem.Checked == true)
-                {
-                    icount = icount + 1;
-                }
-            }
+                con.Open();
 
-            for (int i = 0; i < listView1.Items.Count; i++)
-            {
-                if (listView1.Items[i].Checked == true)
+                CrystalDecisions.Shared.TableLogOnInfo li;
+
+                //===============================================
+                //          GETTING BANK INFO
+                //===============================================
+                adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='MBTC'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                //===============================================
+                //          STRING QUERY
+                //===============================================
+                int icount = 0;
+                purpose = "";
+                foreach (ListViewItem lItem in listView1.Items)
                 {
-                    purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
-                    if (i != icount - 1)
+                    if (lItem.Checked == true)
                     {
-                        purpose += " , ";
+                        icount = icount + 1;
                     }
                 }
-            }
 
-            string str = "select distinct account_No,sum(Amount) as Amount,Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Name Order by Name ASC";
-            SqlDataAdapter adapter1 = new SqlDataAdapter(str, con);
-            DataTable dt1 = new DataTable();
-            DataSet ds = new DataSet();
-
-
-
-            string contactPerson = dt.Rows[0].ItemArray[7].ToString();
-            string bnkName = dt.Rows[0].ItemArray[1].ToString();
-            string branchName = dt.Rows[0].ItemArray[2].ToString();
-
-            ReportsForms.rptMBTCListing cr = new ReportsForms.rptMBTCListing();
-            ReportsForms.rptMBTC rpt = new ReportsForms.rptMBTC();
-
-            li = new TableLogOnInfo();
-
-            li.ConnectionInfo.IntegratedSecurity = false;
-
-            adapter1.Fill(ds, "ATM");
-            dt = ds.Tables["ATM"];
-            cr.SetDataSource(ds.Tables["ATM"]);
-
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-            cr.SetParameterValue("maincontactperson", contactPerson);
-            cr.SetParameterValue("mainbankName", bnkName);
-            cr.SetParameterValue("mainbranch", branchName);
-            
-            try
-            {
-                string num = txtDepositAmount.Text;
-
-                string word;
-
-
-                if (txtDepositAmount.Text == "")
+                for (int i = 0; i < listView1.Items.Count; i++)
                 {
-                    txtDepositAmount.Text = "";
-                }
-                else
-                {
-                    number = decimal.Parse(num.ToString());
-
-                    if (number.ToString() == "0")
+                    if (listView1.Items[i].Checked == true)
                     {
-                        MessageBox.Show("The number in currency fomat is \nZero Only");
+                        purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
+                        if (i != icount - 1)
+                        {
+                            purpose += " , ";
+                        }
+                    }
+                }
+
+                string str = "select distinct account_No,sum(Amount) as Amount,Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Name Order by Name ASC";
+                SqlDataAdapter adapter1 = new SqlDataAdapter(str, con);
+                DataTable dt1 = new DataTable();
+                DataSet ds = new DataSet();
+
+
+
+                string contactPerson = dt.Rows[0].ItemArray[7].ToString();
+                string bnkName = dt.Rows[0].ItemArray[1].ToString();
+                string branchName = dt.Rows[0].ItemArray[2].ToString();
+
+                ReportsForms.rptMBTCListing cr = new ReportsForms.rptMBTCListing();
+                ReportsForms.rptMBTC rpt = new ReportsForms.rptMBTC();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+                adapter1.Fill(ds, "ATM");
+                dt = ds.Tables["ATM"];
+                cr.SetDataSource(ds.Tables["ATM"]);
+
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                cr.SetParameterValue("maincontactperson", contactPerson);
+                cr.SetParameterValue("mainbankName", bnkName);
+                cr.SetParameterValue("mainbranch", branchName);
+
+                try
+                {
+                    string num = txtDepositAmount.Text;
+
+                    string word;
+
+
+                    if (txtDepositAmount.Text == "")
+                    {
+                        txtDepositAmount.Text = "";
                     }
                     else
                     {
-                        word = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString());
+                        number = decimal.Parse(num.ToString());
+
+                        if (number.ToString() == "0")
+                        {
+                            MessageBox.Show("The number in currency fomat is \nZero Only");
+                        }
+                        else
+                        {
+                            word = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString());
+                        }
                     }
+
+
+                    Console.ReadKey();
+                }
+                catch (System.Exception ex)
+                {
+
+
                 }
 
 
-                Console.ReadKey();
+                string Msg = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString()) + " (P " + txtDepositAmount.Text + ")";
+
+                cr.SetParameterValue("mainmsg", Msg);
+                cr.SetParameterValue("mainaccntNumber", txtAccountNo.Text);
+                cr.SetParameterValue("mainpurpose", "loans/savings/refund");
+                string dref = DateTime.Now.ToString("yyyy-MM-dd");
+                cr.SetParameterValue("mainrefno", "Reference No: MBTC" + dref.Replace("-", "") + txtTrans.Text);
+
+                //Signature
+                cr.SetParameterValue("mainsig1Name", sig1name.Text);
+                cr.SetParameterValue("mainsig1pos", sig1pos.Text);
+                cr.SetParameterValue("mainsig2name", sig2name.Text);
+                cr.SetParameterValue("mainsig2pos", sig2pos.Text);
+                cr.SetParameterValue("mainsig3name", sig3name.Text);
+                cr.SetParameterValue("mainsig3pos", sig3pos.Text);
+
+
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
             }
-            catch (System.Exception ex)
-            {
-
-
-            }
-
-
-            string Msg = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString()) + " (P " + txtDepositAmount.Text + ")";
-
-            cr.SetParameterValue("mainmsg", Msg);
-            cr.SetParameterValue("mainaccntNumber", txtAccountNo.Text);
-            cr.SetParameterValue("mainpurpose", "loans/savings/refund");
-            string dref = DateTime.Now.ToString("yyyy-MM-dd");
-            cr.SetParameterValue("mainrefno", "Reference No: MBTC" + dref.Replace("-", "") + txtTrans.Text);
-
-            //Signature
-            cr.SetParameterValue("mainsig1Name", sig1name.Text);
-            cr.SetParameterValue("mainsig1pos", sig1pos.Text);
-            cr.SetParameterValue("mainsig2name", sig2name.Text);
-            cr.SetParameterValue("mainsig2pos", sig2pos.Text);
-            cr.SetParameterValue("mainsig3name", sig3name.Text);
-            cr.SetParameterValue("mainsig3pos", sig3pos.Text);
-
-
-            rpt.crystalReportViewer1.ReportSource = cr;
-            rpt.ShowDialog();
-
         }
         public void loadBDOReport()
         {
-            CrystalDecisions.Shared.TableLogOnInfo li;
-
-            //===============================================
-            //          GETTING BANK INFO
-            //===============================================
-            adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='BDO'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-
-            //===============================================
-            //          STRING QUERY
-            //===============================================
-            int icount = 0;
-            purpose = "";
-            foreach (ListViewItem lItem in listView1.Items)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                if (lItem.Checked == true)
-                {
-                    icount = icount + 1;
-                }
-            }
+                con.Open();
 
-            for (int i = 0; i < listView1.Items.Count; i++)
-            {
-                if (listView1.Items[i].Checked == true)
+                CrystalDecisions.Shared.TableLogOnInfo li;
+
+                //===============================================
+                //          GETTING BANK INFO
+                //===============================================
+                adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='BDO'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+
+                //===============================================
+                //          STRING QUERY
+                //===============================================
+                int icount = 0;
+                purpose = "";
+                foreach (ListViewItem lItem in listView1.Items)
                 {
-                    purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
-                    if (i != icount - 1)
+                    if (lItem.Checked == true)
                     {
-                        purpose += " , ";
+                        icount = icount + 1;
                     }
                 }
-            }
 
-            string str = "select distinct account_No,sum(Amount) as Amount,Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Name Order by Name ASC";
-            SqlDataAdapter adapter1 = new SqlDataAdapter(str, con);
-            DataTable dt1 = new DataTable();
-            DataSet ds = new DataSet();
-
-
-
-            string contactPerson = dt.Rows[0].ItemArray[7].ToString();
-            string bnkName = dt.Rows[0].ItemArray[1].ToString();
-            string branchName = dt.Rows[0].ItemArray[2].ToString();
-
-            ReportsForms.rptBDOListing cr = new ReportsForms.rptBDOListing();
-            ReportsForms.rptBDO rpt = new ReportsForms.rptBDO();
-
-            li = new TableLogOnInfo();
-
-            li.ConnectionInfo.IntegratedSecurity = false;
-
-            adapter1.Fill(ds, "ATM");
-            dt = ds.Tables["ATM"];
-            cr.SetDataSource(ds.Tables["ATM"]);
-
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-            cr.SetParameterValue("maincontactperson", contactPerson);
-            cr.SetParameterValue("mainbankName", bnkName);
-            cr.SetParameterValue("mainbranch", branchName);
-
-            try
-            {
-                string num = txtDepositAmount.Text;
-
-                string word;
-
-
-                if (txtDepositAmount.Text == "")
+                for (int i = 0; i < listView1.Items.Count; i++)
                 {
-                    txtDepositAmount.Text = "";
-                }
-                else
-                {
-                    number = decimal.Parse(num.ToString());
-
-                    if (number.ToString() == "0")
+                    if (listView1.Items[i].Checked == true)
                     {
-                        MessageBox.Show("The number in currency fomat is \nZero Only");
+                        purpose += "'" + getBetween(listView1.Items[i].Text, "-") + "'";
+                        if (i != icount - 1)
+                        {
+                            purpose += " , ";
+                        }
+                    }
+                }
+
+                string str = "select distinct account_No,sum(Amount) as Amount,Name FROM ATM where Bank_Code='" + cmbBank.Text + "' and Deposited is null and purpose in (" + purpose + ") GROUP BY Account_No,Name Order by Name ASC";
+                SqlDataAdapter adapter1 = new SqlDataAdapter(str, con);
+                DataTable dt1 = new DataTable();
+                DataSet ds = new DataSet();
+
+
+
+                string contactPerson = dt.Rows[0].ItemArray[7].ToString();
+                string bnkName = dt.Rows[0].ItemArray[1].ToString();
+                string branchName = dt.Rows[0].ItemArray[2].ToString();
+
+                ReportsForms.rptBDOListing cr = new ReportsForms.rptBDOListing();
+                ReportsForms.rptBDO rpt = new ReportsForms.rptBDO();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+                adapter1.Fill(ds, "ATM");
+                dt = ds.Tables["ATM"];
+                cr.SetDataSource(ds.Tables["ATM"]);
+
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                cr.SetParameterValue("maincontactperson", contactPerson);
+                cr.SetParameterValue("mainbankName", bnkName);
+                cr.SetParameterValue("mainbranch", branchName);
+
+                try
+                {
+                    string num = txtDepositAmount.Text;
+
+                    string word;
+
+
+                    if (txtDepositAmount.Text == "")
+                    {
+                        txtDepositAmount.Text = "";
                     }
                     else
                     {
-                        word = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString());
+                        number = decimal.Parse(num.ToString());
+
+                        if (number.ToString() == "0")
+                        {
+                            MessageBox.Show("The number in currency fomat is \nZero Only");
+                        }
+                        else
+                        {
+                            word = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString());
+                        }
                     }
+
+
+                    Console.ReadKey();
+                }
+                catch (System.Exception ex)
+                {
+
+
                 }
 
 
-                Console.ReadKey();
+                string Msg = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString()) + " (P " + txtDepositAmount.Text + ")";
+
+                cr.SetParameterValue("mainmsg", Msg);
+                cr.SetParameterValue("mainaccntNumber", txtAccountNo.Text);
+                cr.SetParameterValue("mainpurpose", "loans/savings/refund");
+                string dref = DateTime.Now.ToString("yyyy-MM-dd");
+                cr.SetParameterValue("mainrefno", "Reference No: BDO" + dref.Replace("-", "") + txtTrans.Text);
+
+                //Signature
+                cr.SetParameterValue("mainsig1Name", sig1name.Text);
+                cr.SetParameterValue("mainsig1pos", sig1pos.Text);
+                cr.SetParameterValue("mainsig2name", sig2name.Text);
+                cr.SetParameterValue("mainsig2pos", sig2pos.Text);
+                cr.SetParameterValue("mainsig3name", sig3name.Text);
+                cr.SetParameterValue("mainsig3pos", sig3pos.Text);
+
+
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
             }
-            catch (System.Exception ex)
-            {
-
-
-            }
-
-
-            string Msg = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString()) + " (P " + txtDepositAmount.Text + ")";
-
-            cr.SetParameterValue("mainmsg", Msg);
-            cr.SetParameterValue("mainaccntNumber", txtAccountNo.Text);
-            cr.SetParameterValue("mainpurpose", "loans/savings/refund");
-            string dref = DateTime.Now.ToString("yyyy-MM-dd");
-            cr.SetParameterValue("mainrefno", "Reference No: BDO" + dref.Replace("-", "") + txtTrans.Text);
-
-            //Signature
-            cr.SetParameterValue("mainsig1Name", sig1name.Text);
-            cr.SetParameterValue("mainsig1pos", sig1pos.Text);
-            cr.SetParameterValue("mainsig2name", sig2name.Text);
-            cr.SetParameterValue("mainsig2pos", sig2pos.Text);
-            cr.SetParameterValue("mainsig3name", sig3name.Text);
-            cr.SetParameterValue("mainsig3pos", sig3pos.Text);
-
-
-            rpt.crystalReportViewer1.ReportSource = cr;
-            rpt.ShowDialog();
-
         }
         public void loadBPIReport()
         {
@@ -997,122 +1020,123 @@ namespace WindowsFormsApplication2
             CrystalDecisions.Shared.TableLogOnInfo li;
 
             //Get BPI Bank Information
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='BPI'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            //==========================================================================
-            //                  Ceiling
-            //==========================================================================
-            SqlDataAdapter adapterCeiling = new SqlDataAdapter("select min(Amount) from tempBPI", con);
-            DataTable dtCeling = new DataTable();
-            adapterCeiling.Fill(dtCeling);
-
-            //==========================================================================
-            //                  Get the total sum of accnt no
-            //==========================================================================
-            SqlDataAdapter adapterAccntNo = new SqlDataAdapter("SELECT sum(CONVERT(BIGINT,accntNo)) from TempBPI ", con);
-            DataTable dtAccnt = new DataTable();
-            adapterAccntNo.Fill(dtAccnt);
-
-            //==========================================================================
-            //                  Get the total sum of amount
-            //==========================================================================
-            SqlDataAdapter adpAmount = new SqlDataAdapter("SELECT sum(amount) from TempBPI ", con);
-            DataTable dtAmount = new DataTable();
-            adpAmount.Fill(dtAmount);
-
-            string contactPerson = dt.Rows[0].ItemArray[7].ToString();
-            string bnkName = dt.Rows[0].ItemArray[1].ToString();
-            string branchName = dt.Rows[0].ItemArray[2].ToString();
-
-            
-
-            ReportsForms.rptBPIListing cr = new ReportsForms.rptBPIListing();
-            ReportsForms.rptBPI rpt = new ReportsForms.rptBPI();
-
-            li = new TableLogOnInfo();
-
-            li.ConnectionInfo.IntegratedSecurity = false;
-
-
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-            cr.SetParameterValue("maincontactperson", contactPerson);
-            cr.SetParameterValue("mainbankName", bnkName);
-            cr.SetParameterValue("mainbranch", branchName);
-
-
-
-            //==============param for listing
-            cr.SetParameterValue("paramCompanyCode", txtCompanyCOde.Text);
-            cr.SetParameterValue("paramBatch", txtTrans.Text);
-            cr.SetParameterValue("paramAccntNo", txtAccountNo.Text);
-            cr.SetParameterValue("paramCeiling", Convert.ToDecimal(dtCeling.Rows[0].ItemArray[0].ToString()).ToString("#,0.00"));
-            cr.SetParameterValue("paramTotal", Convert.ToDecimal(dtAmount.Rows[0].ItemArray[0].ToString()).ToString("#,0.00"));
-
-            
-            cr.SetParameterValue("paramAccntSum", Convert.ToInt64(dtAccnt.Rows[0].ItemArray[0].ToString()));
-
-            try
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                string num = txtDepositAmount.Text;
+                con.Open();
 
-                string word;
-               
+                adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='BPI'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-                if (txtDepositAmount.Text == "")
+                //==========================================================================
+                //                  Ceiling
+                //==========================================================================
+                SqlDataAdapter adapterCeiling = new SqlDataAdapter("select min(Amount) from tempBPI", con);
+                DataTable dtCeling = new DataTable();
+                adapterCeiling.Fill(dtCeling);
+
+                //==========================================================================
+                //                  Get the total sum of accnt no
+                //==========================================================================
+                SqlDataAdapter adapterAccntNo = new SqlDataAdapter("SELECT sum(CONVERT(BIGINT,accntNo)) from TempBPI ", con);
+                DataTable dtAccnt = new DataTable();
+                adapterAccntNo.Fill(dtAccnt);
+
+                //==========================================================================
+                //                  Get the total sum of amount
+                //==========================================================================
+                SqlDataAdapter adpAmount = new SqlDataAdapter("SELECT sum(amount) from TempBPI ", con);
+                DataTable dtAmount = new DataTable();
+                adpAmount.Fill(dtAmount);
+
+                string contactPerson = dt.Rows[0].ItemArray[7].ToString();
+                string bnkName = dt.Rows[0].ItemArray[1].ToString();
+                string branchName = dt.Rows[0].ItemArray[2].ToString();
+
+
+
+                ReportsForms.rptBPIListing cr = new ReportsForms.rptBPIListing();
+                ReportsForms.rptBPI rpt = new ReportsForms.rptBPI();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                cr.SetParameterValue("maincontactperson", contactPerson);
+                cr.SetParameterValue("mainbankName", bnkName);
+                cr.SetParameterValue("mainbranch", branchName);
+
+
+
+                //==============param for listing
+                cr.SetParameterValue("paramCompanyCode", txtCompanyCOde.Text);
+                cr.SetParameterValue("paramBatch", txtTrans.Text);
+                cr.SetParameterValue("paramAccntNo", txtAccountNo.Text);
+                cr.SetParameterValue("paramCeiling", Convert.ToDecimal(dtCeling.Rows[0].ItemArray[0].ToString()).ToString("#,0.00"));
+                cr.SetParameterValue("paramTotal", Convert.ToDecimal(dtAmount.Rows[0].ItemArray[0].ToString()).ToString("#,0.00"));
+
+
+                cr.SetParameterValue("paramAccntSum", Convert.ToInt64(dtAccnt.Rows[0].ItemArray[0].ToString()));
+
+                try
                 {
-                    txtDepositAmount.Text = "";
-                }
-                else
-                {
-                    number = decimal.Parse(num.ToString());
+                    string num = txtDepositAmount.Text;
 
-                    if (number.ToString() == "0")
+                    string word;
+
+
+                    if (txtDepositAmount.Text == "")
                     {
-                        MessageBox.Show("The number in currency fomat is \nZero Only");
+                        txtDepositAmount.Text = "";
                     }
                     else
                     {
-                        word = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString());
+                        number = decimal.Parse(num.ToString());
+
+                        if (number.ToString() == "0")
+                        {
+                            MessageBox.Show("The number in currency fomat is \nZero Only");
+                        }
+                        else
+                        {
+                            word = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString());
+                        }
                     }
+
+
+                    Console.ReadKey();
+                }
+                catch (System.Exception ex)
+                {
+
+
                 }
 
 
-                Console.ReadKey();
+                string Msg = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString()) + " (P " + txtDepositAmount.Text + ")";
+
+                cr.SetParameterValue("mainmsg", Msg);
+                cr.SetParameterValue("mainaccntNumber", txtAccountNo.Text);
+                cr.SetParameterValue("mainpurpose", "loans/savings/refund");
+                string dref = DateTime.Now.ToString("yyyy-MM-dd");
+                cr.SetParameterValue("mainrefno", "Reference No: BPI" + dref.Replace("-", "") + txtTrans.Text);
+
+                //Signature
+                cr.SetParameterValue("mainsig1Name", sig1name.Text);
+                cr.SetParameterValue("mainsig1pos", sig1pos.Text);
+                cr.SetParameterValue("mainsig2name", sig2name.Text);
+                cr.SetParameterValue("mainsig2pos", sig2pos.Text);
+                cr.SetParameterValue("mainsig3name", sig3name.Text);
+                cr.SetParameterValue("mainsig3pos", sig3pos.Text);
+
+
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
             }
-            catch (System.Exception ex)
-            {
-
-
-            }
-
-            
-            string Msg = Classes.clsSavingsDataEntry.ConvertToWords(number.ToString()) + " (P "+ txtDepositAmount.Text +")";
-
-            cr.SetParameterValue("mainmsg", Msg);
-            cr.SetParameterValue("mainaccntNumber", txtAccountNo.Text);
-            cr.SetParameterValue("mainpurpose", "loans/savings/refund");
-            string dref = DateTime.Now.ToString("yyyy-MM-dd");
-            cr.SetParameterValue("mainrefno", "Reference No: BPI" + dref.Replace("-", "") + txtTrans.Text);
-
-            //Signature
-            cr.SetParameterValue("mainsig1Name", sig1name.Text);
-            cr.SetParameterValue("mainsig1pos", sig1pos.Text);
-            cr.SetParameterValue("mainsig2name", sig2name.Text);
-            cr.SetParameterValue("mainsig2pos", sig2pos.Text);
-            cr.SetParameterValue("mainsig3name", sig3name.Text);
-            cr.SetParameterValue("mainsig3pos", sig3pos.Text);
-
-            
-            rpt.crystalReportViewer1.ReportSource = cr;
-            rpt.ShowDialog();
-
         }
     }
 }

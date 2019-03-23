@@ -115,7 +115,7 @@ namespace WindowsFormsApplication2
 
             if(txtReason.Text == "")
             {
-                Alert.show("Reason field is required!", Alert.AlertType.error);
+                Alert.show("Reason is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -129,29 +129,33 @@ namespace WindowsFormsApplication2
                     //=======================================================================
                     //                     INSERT INTO HOLD ACCOUNTS
                     //=======================================================================
-                    con = new SqlConnection();
-                    global.connection(con);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_InsertHoldAccounts";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@userid", Classes.clsHoldAccounts.userid);
-                    cmd.Parameters.AddWithValue("@reason", txtReason.Text);
-                    cmd.Parameters.AddWithValue("@user_inserted", Classes.clsUser.Username);
-                    cmd.ExecuteNonQuery();
+                        cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_InsertHoldAccounts";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@userid", Classes.clsHoldAccounts.userid);
+                        cmd.Parameters.AddWithValue("@reason", txtReason.Text);
+                        cmd.Parameters.AddWithValue("@user_inserted", Classes.clsUser.Username);
+                        cmd.ExecuteNonQuery();
 
-                    //Display in time
-                    clsHoldAccount.displayHoldAccounts(dataGridView1);
+                        //Display in time
+                        clsHoldAccount.displayHoldAccounts(dataGridView1);
 
-                    //alert
-                    Alert.show("Members Account Successfully Locked!", Alert.AlertType.success);
+                        //alert
+                        Alert.show("Member's account successfully locked!", Alert.AlertType.success);
 
-                    btnCancel.Visible = false;
-                    txtID.Text = "";
-                    txtName.Text = "";
-                    txtReason.Text = "";
-                    Classes.clsHoldAccounts.userid = 0;
+                        btnCancel.Visible = false;
+                        txtID.Text = "";
+                        txtName.Text = "";
+                        txtReason.Text = "";
+                        Classes.clsHoldAccounts.userid = 0;
+                    }
+
+                     
 
                 }
                 else
@@ -159,29 +163,31 @@ namespace WindowsFormsApplication2
                     //============================================================================
                     //                          UN LOCK ACCOUNT
                     //============================================================================
-                    con = new SqlConnection();
-                    global.connection(con);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "DELETE Hold_Accounts WHERE userid = "+ Classes.clsHoldAccounts.userid;
-                    cmd.ExecuteNonQuery();
+                        cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "DELETE Hold_Accounts WHERE userid = " + Classes.clsHoldAccounts.userid;
+                        cmd.ExecuteNonQuery();
 
-                    //Alert
-                    Alert.show("Members Account Successfully UnLocked!", Alert.AlertType.success);
+                        //Alert
+                        Alert.show("Member's account successfully unlocked.", Alert.AlertType.success);
 
-                    btnCancel.Visible = false;
-                    txtID.Text = "";
-                    txtName.Text = "";
-                    txtReason.Text = "";
-                    Classes.clsHoldAccounts.userid = 0;
+                        btnCancel.Visible = false;
+                        txtID.Text = "";
+                        txtName.Text = "";
+                        txtReason.Text = "";
+                        Classes.clsHoldAccounts.userid = 0;
 
-                    btnLock.Image = imageList1.Images[0];
-                    btnLock.Text = "LOCK";
+                        btnLock.Image = imageList1.Images[0];
+                        btnLock.Text = "LOCK";
 
-                    //Display in time
-                    clsHoldAccount.displayHoldAccounts(dataGridView1);
+                        //Display in time
+                        clsHoldAccount.displayHoldAccounts(dataGridView1);
+                    }
                 }
             }
             else

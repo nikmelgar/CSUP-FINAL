@@ -217,17 +217,18 @@ namespace WindowsFormsApplication2
         {
             cmb.DataSource = null;
 
-            SqlConnection con = new SqlConnection();
-            Global global = new Global();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT (account_code + ' - ' + Account_description) as Account,Account_Code FROM  " + tableName + " WHERE isActive ='1'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT (account_code + ' - ' + Account_description) as Account,Account_Code FROM  " + tableName + " WHERE isActive ='1'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = Display;
-            cmb.ValueMember = "Account_Code";
-            cmb.DataSource = dt;
+                cmb.DisplayMember = Display;
+                cmb.ValueMember = "Account_Code";
+                cmb.DataSource = dt;
+            }
 
         }
 
@@ -235,18 +236,16 @@ namespace WindowsFormsApplication2
         {
             cmb.DataSource = null;
 
-            SqlConnection con = new SqlConnection();
-            Global global = new Global();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT (account_code + ' - ' + Account_description) as Account,Account_Code FROM  " + tableName + " WHERE isActive ='1' and Account_Code <> '" + accountCode + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT (account_code + ' - ' + Account_description) as Account,Account_Code FROM  " + tableName + " WHERE isActive ='1' and Account_Code <> '"+ accountCode +"'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            cmb.DisplayMember = Display;
-            cmb.ValueMember = "Account_Code";
-            cmb.DataSource = dt;
-
+                cmb.DisplayMember = Display;
+                cmb.ValueMember = "Account_Code";
+                cmb.DataSource = dt;
+            }
         }
 
         public void clearFields()
@@ -333,7 +332,7 @@ namespace WindowsFormsApplication2
                 //Check if all fields have value
                 if(checkFields() == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -345,68 +344,69 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_insertChartofAccounts";
-                cmd.Parameters.AddWithValue("@Account_Code", txtCode.Text);
-                cmd.Parameters.AddWithValue("@Account_Description", txtDescription.Text);
-                cmd.Parameters.AddWithValue("@Account_Group", cmbAccountGroup.Text);
-                cmd.Parameters.AddWithValue("@Account_Type", cmbAccountType.Text);
-                
-                //Check if Parent account is null
-                if(cmbParentAccount.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cmd.Parameters.AddWithValue("@Parent_Account", "0");
-                    cmd.Parameters.AddWithValue("@LevelNo", "0");
-                }
-                else
-                {
-                    //Get Parent And Level of Parent + 1
-                    cmd.Parameters.AddWithValue("@Parent_Account", cmbParentAccount.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("@LevelNo", clsChart.GetParentLevel(cmbParentAccount.SelectedValue.ToString()).ToString());
-                }
-                cmd.Parameters.AddWithValue("@Loan_Related", chckLoanRelated.Checked);
-                cmd.Parameters.AddWithValue("@active", chckActive.Checked);
-                cmd.ExecuteNonQuery();            
+                    con.Open();
 
-                //Load Treeview
-                _acountsTb.Rows.Add(txtCode.Text, txtDescription.Text,cmbAccountGroup.Text,cmbAccountType.Text,cmbParentAccount.Text, (chckLoanRelated.Checked ? 1 : 0), (chckActive.Checked ? 1 : 0));
-                TreeNode tn = new TreeNode();
-                tn.Text = txtCode.Text + " - " + txtDescription.Text;
-                tn.Name = txtCode.Text;
-                tn.Tag = _acountsTb.Rows.Count - 1;
-                
-                
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_insertChartofAccounts";
+                    cmd.Parameters.AddWithValue("@Account_Code", txtCode.Text);
+                    cmd.Parameters.AddWithValue("@Account_Description", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@Account_Group", cmbAccountGroup.Text);
+                    cmd.Parameters.AddWithValue("@Account_Type", cmbAccountType.Text);
 
-                if (cmbParentAccount.Text == "")
-                {
-                    //If parent is null add to last 
-                    treeView1.Nodes.Add(tn);
-                }
-                else
-                {
-                    //if have parent then insert into parent child
-
-                    //focus first on node
-                    //then get selected node
-                    foreach (TreeNode node in GetAllNodes(treeView1))
+                    //Check if Parent account is null
+                    if (cmbParentAccount.Text == "")
                     {
-                        if (node.Text == cmbParentAccount.Text)
+                        cmd.Parameters.AddWithValue("@Parent_Account", "0");
+                        cmd.Parameters.AddWithValue("@LevelNo", "0");
+                    }
+                    else
+                    {
+                        //Get Parent And Level of Parent + 1
+                        cmd.Parameters.AddWithValue("@Parent_Account", cmbParentAccount.SelectedValue.ToString());
+                        cmd.Parameters.AddWithValue("@LevelNo", clsChart.GetParentLevel(cmbParentAccount.SelectedValue.ToString()).ToString());
+                    }
+                    cmd.Parameters.AddWithValue("@Loan_Related", chckLoanRelated.Checked);
+                    cmd.Parameters.AddWithValue("@active", chckActive.Checked);
+                    cmd.ExecuteNonQuery();
+
+                    //Load Treeview
+                    _acountsTb.Rows.Add(txtCode.Text, txtDescription.Text, cmbAccountGroup.Text, cmbAccountType.Text, cmbParentAccount.Text, (chckLoanRelated.Checked ? 1 : 0), (chckActive.Checked ? 1 : 0));
+                    TreeNode tn = new TreeNode();
+                    tn.Text = txtCode.Text + " - " + txtDescription.Text;
+                    tn.Name = txtCode.Text;
+                    tn.Tag = _acountsTb.Rows.Count - 1;
+
+
+
+                    if (cmbParentAccount.Text == "")
+                    {
+                        //If parent is null add to last 
+                        treeView1.Nodes.Add(tn);
+                    }
+                    else
+                    {
+                        //if have parent then insert into parent child
+
+                        //focus first on node
+                        //then get selected node
+                        foreach (TreeNode node in GetAllNodes(treeView1))
                         {
-                            treeView1.SelectedNode = node;
-                            treeView1.Focus();
-                            _selectedNode.Nodes.Add(tn);
-                            treeView1.ExpandAll();
+                            if (node.Text == cmbParentAccount.Text)
+                            {
+                                treeView1.SelectedNode = node;
+                                treeView1.Focus();
+                                _selectedNode.Nodes.Add(tn);
+                                treeView1.ExpandAll();
+                            }
                         }
                     }
                 }
-
                 //MessageBox
-                Alert.show("Successfully Added", Alert.AlertType.success);
+                Alert.show("Successfully Added.", Alert.AlertType.success);
 
                 //load Parent for real time adding
                 loadParentNo(cmbParentAccount, "chart_of_accounts", "Account"); //Parent
@@ -476,7 +476,7 @@ namespace WindowsFormsApplication2
             //check if theres a data to be updated
             if (txtCode.Text == "")
             {
-                Alert.show("Please select data you want to edit!", Alert.AlertType.warning);
+                Alert.show("Please select account you want to edit.", Alert.AlertType.warning);
                 return;
             }
 
@@ -504,95 +504,95 @@ namespace WindowsFormsApplication2
                 //Check if all fields have value
                 if (checkFields() == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
                 //check for duplicate entry
                 //Call Stored Procedure
-                SqlConnection con = new SqlConnection();
-                Global global = new Global();
-                global.connection(con);
-
-
-                SqlDataAdapter adapterFIlter = new SqlDataAdapter("SELECT * from chart_of_accounts where account_Description = '" + txtDescription.Text + "' and account_code <> +'"+ txtCode.Text +"'", con);
-                DataTable dtFilter = new DataTable();
-                adapterFIlter.Fill(dtFilter);
-
-                if (dtFilter.Rows.Count > 0)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    Alert.show("Account Description Already Exist", Alert.AlertType.error);
-                    return;
-                }
+                    con.Open();
 
-                
-                
+                    SqlDataAdapter adapterFIlter = new SqlDataAdapter("SELECT * from chart_of_accounts where account_Description = '" + txtDescription.Text + "' and account_code <> +'" + txtCode.Text + "'", con);
+                    DataTable dtFilter = new DataTable();
+                    adapterFIlter.Fill(dtFilter);
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_UpdateChartofAccounts";
-                cmd.Parameters.AddWithValue("@Account_Code", txtCode.Text);
-                cmd.Parameters.AddWithValue("@Account_Description", txtDescription.Text);
-                cmd.Parameters.AddWithValue("@Account_Group", cmbAccountGroup.Text);
-                cmd.Parameters.AddWithValue("@Account_Type", cmbAccountType.Text);
-
-                //Check if Parent account is null
-                if (cmbParentAccount.Text == "")
-                {
-                    cmd.Parameters.AddWithValue("@Parent_Account", "0");
-                    cmd.Parameters.AddWithValue("@LevelNo", "0");
-                }
-                else
-                {
-                    //Get Parent And Level of Parent + 1
-                    cmd.Parameters.AddWithValue("@Parent_Account", cmbParentAccount.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("@LevelNo", clsChart.GetParentLevel(cmbParentAccount.SelectedValue.ToString()).ToString());
-                }
-                cmd.Parameters.AddWithValue("@Loan_Related", chckLoanRelated.Checked);
-                cmd.Parameters.AddWithValue("@active", chckActive.Checked);
-                cmd.ExecuteNonQuery();
-
-
-                //Load Treeview
-                _acountsTb.Rows.Add(txtCode.Text, txtDescription.Text, cmbAccountGroup.Text, cmbAccountType.Text, cmbParentAccount.Text, (chckLoanRelated.Checked ? 1 : 0), (chckActive.Checked ? 1 : 0));
-                TreeNode tn = new TreeNode();
-                tn.Text = txtCode.Text + " - " + txtDescription.Text;
-                tn.Name = txtCode.Text;
-                tn.Tag = _acountsTb.Rows.Count - 1;
-
-                
-                if (cmbParentAccount.Text == "")
-                {
-                    //If parent is null add to last 
-                    treeView1.Nodes.Add(tn);
-                }
-                else
-                {
-                    //_selectedNode.Text = tn.Text;
-                    //treeView1.Focus();
-                    //treeView1.ExpandAll();
-                    string container = cmbParentAccount.Text;
-                    _selectedNode.Remove();
-
-
-                    //Re-Arrange in Treeview
-                    foreach (TreeNode node in GetAllNodes(treeView1))
+                    if (dtFilter.Rows.Count > 0)
                     {
-                        if (node.Text == container)
-                        {
-                            treeView1.SelectedNode = node;
-                            treeView1.Focus();
-                            _selectedNode.Nodes.Add(tn);
-                            treeView1.ExpandAll();
-                        }
+                        Alert.show("Account Description Already Exist", Alert.AlertType.error);
+                        return;
                     }
-                    
-                    
+
+
+
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_UpdateChartofAccounts";
+                    cmd.Parameters.AddWithValue("@Account_Code", txtCode.Text);
+                    cmd.Parameters.AddWithValue("@Account_Description", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@Account_Group", cmbAccountGroup.Text);
+                    cmd.Parameters.AddWithValue("@Account_Type", cmbAccountType.Text);
+
+                    //Check if Parent account is null
+                    if (cmbParentAccount.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Parent_Account", "0");
+                        cmd.Parameters.AddWithValue("@LevelNo", "0");
+                    }
+                    else
+                    {
+                        //Get Parent And Level of Parent + 1
+                        cmd.Parameters.AddWithValue("@Parent_Account", cmbParentAccount.SelectedValue.ToString());
+                        cmd.Parameters.AddWithValue("@LevelNo", clsChart.GetParentLevel(cmbParentAccount.SelectedValue.ToString()).ToString());
+                    }
+                    cmd.Parameters.AddWithValue("@Loan_Related", chckLoanRelated.Checked);
+                    cmd.Parameters.AddWithValue("@active", chckActive.Checked);
+                    cmd.ExecuteNonQuery();
+
+
+                    //Load Treeview
+                    _acountsTb.Rows.Add(txtCode.Text, txtDescription.Text, cmbAccountGroup.Text, cmbAccountType.Text, cmbParentAccount.Text, (chckLoanRelated.Checked ? 1 : 0), (chckActive.Checked ? 1 : 0));
+                    TreeNode tn = new TreeNode();
+                    tn.Text = txtCode.Text + " - " + txtDescription.Text;
+                    tn.Name = txtCode.Text;
+                    tn.Tag = _acountsTb.Rows.Count - 1;
+
+
+                    if (cmbParentAccount.Text == "")
+                    {
+                        //If parent is null add to last 
+                        treeView1.Nodes.Add(tn);
+                    }
+                    else
+                    {
+                        //_selectedNode.Text = tn.Text;
+                        //treeView1.Focus();
+                        //treeView1.ExpandAll();
+                        string container = cmbParentAccount.Text;
+                        _selectedNode.Remove();
+
+
+                        //Re-Arrange in Treeview
+                        foreach (TreeNode node in GetAllNodes(treeView1))
+                        {
+                            if (node.Text == container)
+                            {
+                                treeView1.SelectedNode = node;
+                                treeView1.Focus();
+                                _selectedNode.Nodes.Add(tn);
+                                treeView1.ExpandAll();
+                            }
+                        }
+
+
+                    }
                 }
 
                 //MessageBox
-                Alert.show("Successfully Updated", Alert.AlertType.success);
+                Alert.show("Successfully updated.", Alert.AlertType.success);
 
                 //load Parent for real time adding
                 loadParentNo(cmbParentAccount, "chart_of_accounts", "Account"); //Parent
@@ -638,7 +638,7 @@ namespace WindowsFormsApplication2
             if(txtCode.Text == "")
             {
                 //No Data to be deleted
-                Alert.show("Please select Account you want to delete!", Alert.AlertType.error);
+                Alert.show("Please select account you want to delete.", Alert.AlertType.error);
                 return;
             }
 
@@ -649,16 +649,17 @@ namespace WindowsFormsApplication2
             {
                 //Delete or Tagged as Inactive goes here
                 //CONNECTION TO SQL SERVER AND STORED PROCEDURE
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InactiveChartOfAccounts";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Account_Code", txtCode.Text);
-                cmd.ExecuteNonQuery();
-
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InactiveChartOfAccounts";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Account_Code", txtCode.Text);
+                    cmd.ExecuteNonQuery();
+                }
                 //Message
                 Alert.show("Company Successfully Deleted", Alert.AlertType.success);
 

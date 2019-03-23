@@ -19,134 +19,59 @@ namespace WindowsFormsApplication2.Classes
         public void loadLookUpQuery(string tableName, DataGridView dgv)
         {
             //Open Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("SELECT * FROM " + tableName, con);
-            dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                dgv.DataSource = dt;
+                con.Open();
 
-                int colCnt = dt.Columns.Count;
-                int x = 0;
+                adapter = new SqlDataAdapter("SELECT * FROM " + tableName, con);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-
-                while (x != colCnt)
+                if (dt.Rows.Count > 0)
                 {
-                    dgv.Columns[x].Visible = false;
-                    x = x + 1;
+                    dgv.DataSource = dt;
+
+                    int colCnt = dt.Columns.Count;
+                    int x = 0;
+
+
+                    while (x != colCnt)
+                    {
+                        dgv.Columns[x].Visible = false;
+                        x = x + 1;
+                    }
+
+                    dgv.Columns["EmployeeID"].Visible = true;
+                    dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                    dgv.Columns["LastName"].Visible = true;
+                    dgv.Columns["LastName"].HeaderText = "Last Name";
+
+                    dgv.Columns["FirstName"].Visible = true;
+                    dgv.Columns["FirstName"].HeaderText = "First Name";
+
+                    dgv.Columns["MiddleName"].Visible = true;
+                    dgv.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                    dgv.Columns["Date_Of_Birth"].Visible = true;
+                    dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
                 }
-
-                dgv.Columns["EmployeeID"].Visible = true;
-                dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                dgv.Columns["LastName"].Visible = true;
-                dgv.Columns["LastName"].HeaderText = "Last Name";
-
-                dgv.Columns["FirstName"].Visible = true;
-                dgv.Columns["FirstName"].HeaderText = "First Name";
-
-                dgv.Columns["MiddleName"].Visible = true;
-                dgv.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                dgv.Columns["Date_Of_Birth"].Visible = true;
-                dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
             }
         }
 
         public void loadClient(DataGridView dgv)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("SELECT * FROM Client WHERE isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            dgv.DataSource = dt;
-
-            int colCnt = dt.Columns.Count;
-            int x = 0;
-
-
-            while (x != colCnt)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                dgv.Columns[x].Visible = false;
-                x = x + 1;
-            }
+                con.Open();
 
-            dgv.Columns["Client_Code"].Visible = true;
-            dgv.Columns["Client_Code"].HeaderText = "Code";
-            dgv.Columns["Client_Code"].FillWeight = 30;
 
-            dgv.Columns["Name"].Visible = true;
-            dgv.Columns["Name"].HeaderText = "Client Name";
-            dgv.Columns["Name"].FillWeight = 100;
-        }
+                adapter = new SqlDataAdapter("SELECT * FROM Client WHERE isActive = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-        public void SearchMember(string employeeid, string firstname, string lastname, DataGridView dgv)
-        {
-            //Open Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
-            {
                 dgv.DataSource = dt;
 
-                int colCnt = dt.Columns.Count;
-                int x = 0;
-
-
-                while (x != colCnt)
-                {
-                    dgv.Columns[x].Visible = false;
-                    x = x + 1;
-                }
-
-                dgv.Columns["EmployeeID"].Visible = true;
-                dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                dgv.Columns["LastName"].Visible = true;
-                dgv.Columns["LastName"].HeaderText = "Last Name";
-
-                dgv.Columns["FirstName"].Visible = true;
-                dgv.Columns["FirstName"].HeaderText = "First Name";
-
-                dgv.Columns["MiddleName"].Visible = true;
-                dgv.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                dgv.Columns["Date_Of_Birth"].Visible = true;
-                dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
-            }
-            else
-            {
-                Alert.show("No Records Found!", Alert.AlertType.warning);
-                return;
-            }
-        }
-
-        public void SearchClient(DataGridView dgv,string ClientId,string Name)
-        {
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("SELECT * FROM Client WHERE  Client_Code like '%"+ ClientId +"%' and [Name] like '%"+ Name +"%' and  isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            dgv.DataSource = dt;
-
-
-            if(dt.Rows.Count > 0)
-            {
                 int colCnt = dt.Columns.Count;
                 int x = 0;
 
@@ -165,12 +90,97 @@ namespace WindowsFormsApplication2.Classes
                 dgv.Columns["Name"].HeaderText = "Client Name";
                 dgv.Columns["Name"].FillWeight = 100;
             }
-            else
+
+        }
+
+        public void SearchMember(string employeeid, string firstname, string lastname, DataGridView dgv)
+        {
+            //Open Connection
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                Alert.show("No Records Found!", Alert.AlertType.warning);
-                return;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE EmployeeID like '%" + employeeid + "%' and LastName like '%" + lastname + "%' and FirstName like '%" + firstname + "%' and isActive = '1' and isApprove = '1'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    dgv.DataSource = dt;
+
+                    int colCnt = dt.Columns.Count;
+                    int x = 0;
+
+
+                    while (x != colCnt)
+                    {
+                        dgv.Columns[x].Visible = false;
+                        x = x + 1;
+                    }
+
+                    dgv.Columns["EmployeeID"].Visible = true;
+                    dgv.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                    dgv.Columns["LastName"].Visible = true;
+                    dgv.Columns["LastName"].HeaderText = "Last Name";
+
+                    dgv.Columns["FirstName"].Visible = true;
+                    dgv.Columns["FirstName"].HeaderText = "First Name";
+
+                    dgv.Columns["MiddleName"].Visible = true;
+                    dgv.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                    dgv.Columns["Date_Of_Birth"].Visible = true;
+                    dgv.Columns["Date_Of_Birth"].HeaderText = "Birthday";
+                }
+                else
+                {
+                    Alert.show("No record/s found.", Alert.AlertType.warning);
+                    return;
+                }
             }
-            
+        }
+
+        public void SearchClient(DataGridView dgv,string ClientId,string Name)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+
+                adapter = new SqlDataAdapter("SELECT * FROM Client WHERE  Client_Code like '%" + ClientId + "%' and [Name] like '%" + Name + "%' and  isActive = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                dgv.DataSource = dt;
+
+
+                if (dt.Rows.Count > 0)
+                {
+                    int colCnt = dt.Columns.Count;
+                    int x = 0;
+
+
+                    while (x != colCnt)
+                    {
+                        dgv.Columns[x].Visible = false;
+                        x = x + 1;
+                    }
+
+                    dgv.Columns["Client_Code"].Visible = true;
+                    dgv.Columns["Client_Code"].HeaderText = "Code";
+                    dgv.Columns["Client_Code"].FillWeight = 30;
+
+                    dgv.Columns["Name"].Visible = true;
+                    dgv.Columns["Name"].HeaderText = "Client Name";
+                    dgv.Columns["Name"].FillWeight = 100;
+                }
+                else
+                {
+                    Alert.show("No record/s found.", Alert.AlertType.warning);
+                    return;
+                }
+            }   
         }
     }
 }

@@ -21,72 +21,81 @@ namespace WindowsFormsApplication2.Classes
         {
             cmb.DataSource = null;
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT REPLACE(transaction_code, 'TRAN', '') +' - '+ [Description] as [Transaction] ,Transaction_Code From Transaction_Type where isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT REPLACE(transaction_code, 'TRAN', '') +' - '+ [Description] as [Transaction] ,Transaction_Code From Transaction_Type where isActive = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = "Transaction";
-            cmb.ValueMember = "Transaction_Code";
-            cmb.DataSource = dt;
+                cmb.DisplayMember = "Transaction";
+                cmb.ValueMember = "Transaction_Code";
+                cmb.DataSource = dt;
+            }
+
+            
 
         }
 
         public Boolean checkIfCancelled(string jv_no)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Journal_Header WHERE JV_No = '"+ jv_no +"' and Cancelled = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Journal_Header WHERE JV_No = '" + jv_no + "' and Cancelled = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+
         }
 
         public Boolean checkIfPosted(string jv_no)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Journal_Header WHERE JV_No = '"+ jv_no +"' and Posted = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                con.Open();
 
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Journal_Header WHERE JV_No = '" + jv_no + "' and Posted = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         public string returnLoanTypeDescription(string loan_no)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+                adapter = new SqlDataAdapter("SELECT Loan_Type FROM Loan WHERE Loan_No ='" + loan_no + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            adapter = new SqlDataAdapter("SELECT Loan_Type FROM Loan WHERE Loan_No ='"+ loan_no +"'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT Loan_Description FROM Loan_Type WHERE Loan_Type = '" + dt.Rows[0].ItemArray[0].ToString() + "'", con);
+                DataTable dt2 = new DataTable();
+                adapter2.Fill(dt2);
 
-            SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT Loan_Description FROM Loan_Type WHERE Loan_Type = '"+ dt.Rows[0].ItemArray[0].ToString() +"'", con);
-            DataTable dt2 = new DataTable();
-            adapter2.Fill(dt2);
-
-            return dt2.Rows[0].ItemArray[0].ToString();
+                return dt2.Rows[0].ItemArray[0].ToString();
+            }
         }
 
     }

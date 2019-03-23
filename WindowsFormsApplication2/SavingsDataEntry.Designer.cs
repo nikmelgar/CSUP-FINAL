@@ -50,6 +50,12 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
+            this.label49 = new System.Windows.Forms.Label();
+            this.txtBankCode = new System.Windows.Forms.TextBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.txtAccntNo = new System.Windows.Forms.TextBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
             this.txtdepositedCheque = new System.Windows.Forms.TextBox();
             this.label42 = new System.Windows.Forms.Label();
             this.label41 = new System.Windows.Forms.Label();
@@ -147,12 +153,6 @@
             this.panel23 = new System.Windows.Forms.Panel();
             this.panel24 = new System.Windows.Forms.Panel();
             this.panel25 = new System.Windows.Forms.Panel();
-            this.label46 = new System.Windows.Forms.Label();
-            this.label47 = new System.Windows.Forms.Label();
-            this.txtAccntNo = new System.Windows.Forms.TextBox();
-            this.label48 = new System.Windows.Forms.Label();
-            this.label49 = new System.Windows.Forms.Label();
-            this.txtBankCode = new System.Windows.Forms.TextBox();
             this.panelHeader.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -427,6 +427,74 @@
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(1185, 129);
             this.panel10.TabIndex = 57;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label49.Location = new System.Drawing.Point(1020, 90);
+            this.label49.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(15, 21);
+            this.label49.TabIndex = 94;
+            this.label49.Text = ":";
+            // 
+            // txtBankCode
+            // 
+            this.txtBankCode.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBankCode.Location = new System.Drawing.Point(1036, 87);
+            this.txtBankCode.Margin = new System.Windows.Forms.Padding(4);
+            this.txtBankCode.Name = "txtBankCode";
+            this.txtBankCode.ReadOnly = true;
+            this.txtBankCode.Size = new System.Drawing.Size(137, 28);
+            this.txtBankCode.TabIndex = 93;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label48.Location = new System.Drawing.Point(915, 93);
+            this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(104, 21);
+            this.label48.TabIndex = 92;
+            this.label48.Text = "Bank Code";
+            // 
+            // txtAccntNo
+            // 
+            this.txtAccntNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAccntNo.Location = new System.Drawing.Point(756, 87);
+            this.txtAccntNo.Margin = new System.Windows.Forms.Padding(4);
+            this.txtAccntNo.Name = "txtAccntNo";
+            this.txtAccntNo.ReadOnly = true;
+            this.txtAccntNo.Size = new System.Drawing.Size(137, 28);
+            this.txtAccntNo.TabIndex = 91;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label47.Location = new System.Drawing.Point(744, 90);
+            this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(15, 21);
+            this.label47.TabIndex = 90;
+            this.label47.Text = ":";
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label46.Location = new System.Drawing.Point(589, 90);
+            this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(159, 21);
+            this.label46.TabIndex = 88;
+            this.label46.Text = "Account Number ";
             // 
             // txtdepositedCheque
             // 
@@ -1332,9 +1400,9 @@
             this.radioDansalan.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioDansalan.Location = new System.Drawing.Point(61, 66);
             this.radioDansalan.Name = "radioDansalan";
-            this.radioDansalan.Size = new System.Drawing.Size(110, 25);
+            this.radioDansalan.Size = new System.Drawing.Size(92, 25);
             this.radioDansalan.TabIndex = 80;
-            this.radioDansalan.Text = "Dansalan";
+            this.radioDansalan.Text = "Teltech";
             this.radioDansalan.UseVisualStyleBackColor = true;
             this.radioDansalan.Click += new System.EventHandler(this.radioDansalan_Click);
             // 
@@ -1472,7 +1540,7 @@
             this.btnRelease.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRelease.Location = new System.Drawing.Point(272, 9);
             this.btnRelease.Name = "btnRelease";
-            this.btnRelease.Size = new System.Drawing.Size(123, 37);
+            this.btnRelease.Size = new System.Drawing.Size(191, 37);
             this.btnRelease.TabIndex = 7;
             this.btnRelease.Text = "RELEASE";
             this.btnRelease.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1556,74 +1624,6 @@
             this.panel25.Name = "panel25";
             this.panel25.Size = new System.Drawing.Size(1185, 3);
             this.panel25.TabIndex = 0;
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label46.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label46.Location = new System.Drawing.Point(589, 90);
-            this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(159, 21);
-            this.label46.TabIndex = 88;
-            this.label46.Text = "Account Number ";
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label47.Location = new System.Drawing.Point(744, 90);
-            this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(15, 21);
-            this.label47.TabIndex = 90;
-            this.label47.Text = ":";
-            // 
-            // txtAccntNo
-            // 
-            this.txtAccntNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAccntNo.Location = new System.Drawing.Point(756, 87);
-            this.txtAccntNo.Margin = new System.Windows.Forms.Padding(4);
-            this.txtAccntNo.Name = "txtAccntNo";
-            this.txtAccntNo.ReadOnly = true;
-            this.txtAccntNo.Size = new System.Drawing.Size(137, 28);
-            this.txtAccntNo.TabIndex = 91;
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label48.Location = new System.Drawing.Point(915, 93);
-            this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(104, 21);
-            this.label48.TabIndex = 92;
-            this.label48.Text = "Bank Code";
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label49.Location = new System.Drawing.Point(1020, 90);
-            this.label49.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(15, 21);
-            this.label49.TabIndex = 94;
-            this.label49.Text = ":";
-            // 
-            // txtBankCode
-            // 
-            this.txtBankCode.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBankCode.Location = new System.Drawing.Point(1036, 87);
-            this.txtBankCode.Margin = new System.Windows.Forms.Padding(4);
-            this.txtBankCode.Name = "txtBankCode";
-            this.txtBankCode.ReadOnly = true;
-            this.txtBankCode.Size = new System.Drawing.Size(137, 28);
-            this.txtBankCode.TabIndex = 93;
             // 
             // SavingsDataEntry
             // 

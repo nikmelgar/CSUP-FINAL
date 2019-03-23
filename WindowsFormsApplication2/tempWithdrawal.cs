@@ -15,5 +15,10 @@ namespace WindowsFormsApplication2
         {
             InitializeComponent();
         }
+
+        private void tempWithdrawal_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

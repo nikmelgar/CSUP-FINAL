@@ -65,7 +65,7 @@ namespace WindowsFormsApplication2.loanFrms
         {
             if (txtEmployeeID.Text == "" && txtLastName.Text == "" && txtFirstName.Text == "")
             {
-                Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                Alert.show("Please enter valid keyword in search box.", Alert.AlertType.warning);
                 return;
             }
             clsLookUp.search(txtEmployeeID.Text, txtFirstName.Text, txtLastName.Text, dataGridView1);

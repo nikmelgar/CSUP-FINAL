@@ -934,5 +934,59 @@ namespace WindowsFormsApplication2
             frm.Show();
             frm.MdiParent = this;
         }
+
+        private void button29_Click(object sender, EventArgs e)
+        {
+
+            //Hide sub menu filemaintenance
+            panelProcessSub.Visible = false;
+
+            //controls
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(CashTransactionViewing))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            CashTransactionViewing frm = new CashTransactionViewing();
+            frm.Show();
+            frm.MdiParent = this;
+        }
+
+        private void btnQuery_Click(object sender, EventArgs e)
+        {
+            sideVisible(btnQuery);
+
+
+            //Hide Panels
+            panelFileMaintenanceSub.Visible = false;
+            panelProcessSub.Visible = false;
+            panelSavings.Visible = false;
+            panelMembership.Visible = false;
+            panelMemberSettings.Visible = false;
+            panelReportSub.Visible = false;
+            panelLoan.Visible = false;
+
+            //controls
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(Query))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            Query frm = new Query();
+            frm.Show();
+            frm.MdiParent = this;
+        }
     }
 }

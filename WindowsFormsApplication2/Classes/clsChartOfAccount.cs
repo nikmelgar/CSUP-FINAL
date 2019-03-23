@@ -16,22 +16,24 @@ namespace WindowsFormsApplication2
         //Get Parent Level
         public int GetParentLevel(string accntCode)
         {
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT LevelNo FROM chart_of_accounts where Account_Code ='" + accntCode + "'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            int x = 0;
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return x = Convert.ToInt32(dt.Rows[0].ItemArray[0].ToString()) + 1;
-            }
-            else
-            {
-                return x = x + 1;
-            }
+                con.Open();
 
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT LevelNo FROM chart_of_accounts where Account_Code ='" + accntCode + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                int x = 0;
+                if (dt.Rows.Count > 0)
+                {
+                    return x = Convert.ToInt32(dt.Rows[0].ItemArray[0].ToString()) + 1;
+                }
+                else
+                {
+                    return x = x + 1;
+                }
+            }
         }
     }
 }

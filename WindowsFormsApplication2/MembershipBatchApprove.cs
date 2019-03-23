@@ -113,57 +113,59 @@ namespace WindowsFormsApplication2
 
         private void button6_Click(object sender, EventArgs e)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_SearchMemberForApproval";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@Keyword", txtSearch.Text);
-
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection())
             {
-                dataGridView1.DataSource = dt;
+                con.Open();
 
-                int colCnt = dt.Columns.Count;
-                int x = 0;
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_SearchMemberForApproval";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Keyword", txtSearch.Text);
 
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-                while (x != colCnt)
+                if (dt.Rows.Count > 0)
                 {
-                    dataGridView1.Columns[x].Visible = false;
-                    x = x + 1;
+                    dataGridView1.DataSource = dt;
+
+                    int colCnt = dt.Columns.Count;
+                    int x = 0;
+
+
+                    while (x != colCnt)
+                    {
+                        dataGridView1.Columns[x].Visible = false;
+                        x = x + 1;
+                    }
+
+                    dataGridView1.Columns["EmployeeID"].Visible = true;
+                    dataGridView1.Columns["EmployeeID"].HeaderText = "Employee ID";
+
+                    dataGridView1.Columns["LastName"].Visible = true;
+                    dataGridView1.Columns["LastName"].HeaderText = "Last Name";
+
+                    dataGridView1.Columns["FirstName"].Visible = true;
+                    dataGridView1.Columns["FirstName"].HeaderText = "First Name";
+
+                    dataGridView1.Columns["MiddleName"].Visible = true;
+                    dataGridView1.Columns["MiddleName"].HeaderText = "Middle Name";
+
+                    dataGridView1.Columns["Date_Of_Birth"].Visible = true;
+                    dataGridView1.Columns["Date_Of_Birth"].HeaderText = "Birthday";
+
+                    dataGridView1.Columns["IsApprove"].Visible = true;
+                    dataGridView1.Columns["IsApprove"].FillWeight = 60;
+                    dataGridView1.Columns["IsApprove"].HeaderText = "Approve";
+                    dataGridView1.Columns["IsApprove"].ReadOnly = false;
+
                 }
-
-                dataGridView1.Columns["EmployeeID"].Visible = true;
-                dataGridView1.Columns["EmployeeID"].HeaderText = "Employee ID";
-
-                dataGridView1.Columns["LastName"].Visible = true;
-                dataGridView1.Columns["LastName"].HeaderText = "Last Name";
-
-                dataGridView1.Columns["FirstName"].Visible = true;
-                dataGridView1.Columns["FirstName"].HeaderText = "First Name";
-
-                dataGridView1.Columns["MiddleName"].Visible = true;
-                dataGridView1.Columns["MiddleName"].HeaderText = "Middle Name";
-
-                dataGridView1.Columns["Date_Of_Birth"].Visible = true;
-                dataGridView1.Columns["Date_Of_Birth"].HeaderText = "Birthday";
-
-                dataGridView1.Columns["IsApprove"].Visible = true;
-                dataGridView1.Columns["IsApprove"].FillWeight = 60;
-                dataGridView1.Columns["IsApprove"].HeaderText = "Approve";
-                dataGridView1.Columns["IsApprove"].ReadOnly = false;
-
-            }
-            else
-            {
-                Alert.show("No Records Found!", Alert.AlertType.error);
+                else
+                {
+                    Alert.show("No record found.", Alert.AlertType.error);
+                }
             }
         }
 
@@ -213,65 +215,65 @@ namespace WindowsFormsApplication2
                     DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
-                        con = new SqlConnection();
-                        global.connection(con);
-
-
-                        //========================================================================
-                        //                  PROGRESSBAR
-                        //========================================================================
-
-                        progressBar1.Visible = true;
-
-                        //set progressbar
-                        progressBar1.Minimum = 0;
-                        progressBar1.Maximum = dataGridView1.Rows.Count;
-                        progressBar1.Value = 0;
-
-                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        using (SqlConnection con = new SqlConnection(global.connectString()))
                         {
-                            DataGridViewCheckBoxCell cell = row.Cells[0] as DataGridViewCheckBoxCell;
+                            con.Open();
 
-                            //We don't want a null exception!
-                            if (cell.Value != null)
+                            //========================================================================
+                            //                  PROGRESSBAR
+                            //========================================================================
+
+                            progressBar1.Visible = true;
+
+                            //set progressbar
+                            progressBar1.Minimum = 0;
+                            progressBar1.Maximum = dataGridView1.Rows.Count;
+                            progressBar1.Value = 0;
+
+                            foreach (DataGridViewRow row in dataGridView1.Rows)
                             {
-                                if (cell.Value.ToString() == "True")
-                                {
-                                    //It's checked!
-                                    //Code for saving all the check members approve
-                                    SqlCommand cmd = new SqlCommand();
-                                    cmd.Connection = con;
-                                    cmd.CommandText = "sp_ApproveMembers";
-                                    cmd.CommandType = CommandType.StoredProcedure;
-                                    cmd.Parameters.AddWithValue("@userID", row.Cells["userID"].Value.ToString());
-                                    cmd.Parameters.AddWithValue("@Approve_By", Classes.clsUser.Username);
-                                    cmd.ExecuteNonQuery();
+                                DataGridViewCheckBoxCell cell = row.Cells[0] as DataGridViewCheckBoxCell;
 
-                                    //Insert into members fee table
-                                    SqlCommand cmdFee = new SqlCommand();
-                                    cmdFee.Connection = con;
-                                    cmdFee.CommandText = "sp_InsertMembersFee";
-                                    cmdFee.CommandType = CommandType.StoredProcedure;
-                                    cmdFee.Parameters.AddWithValue("@userid", row.Cells["userID"].Value.ToString());
-                                    cmdFee.ExecuteNonQuery();
+                                //We don't want a null exception!
+                                if (cell.Value != null)
+                                {
+                                    if (cell.Value.ToString() == "True")
+                                    {
+                                        //It's checked!
+                                        //Code for saving all the check members approve
+                                        SqlCommand cmd = new SqlCommand();
+                                        cmd.Connection = con;
+                                        cmd.CommandText = "sp_ApproveMembers";
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.Parameters.AddWithValue("@userID", row.Cells["userID"].Value.ToString());
+                                        cmd.Parameters.AddWithValue("@Approve_By", Classes.clsUser.Username);
+                                        cmd.ExecuteNonQuery();
+
+                                        //Insert into members fee table
+                                        SqlCommand cmdFee = new SqlCommand();
+                                        cmdFee.Connection = con;
+                                        cmdFee.CommandText = "sp_InsertMembersFee";
+                                        cmdFee.CommandType = CommandType.StoredProcedure;
+                                        cmdFee.Parameters.AddWithValue("@userid", row.Cells["userID"].Value.ToString());
+                                        cmdFee.ExecuteNonQuery();
+                                    }
                                 }
+
+                                progressBar1.Value = progressBar1.Value + 1;
                             }
 
-                            progressBar1.Value = progressBar1.Value + 1;
+                            //ReLoad The Gridview for Real Time
+                            if (cmbView.Text == "Members for Approval")
+                            {
+                                clsBatch.loadAllMembersForApproval(dataGridView1);
+                            }
+                            else if (cmbView.Text == "Date / Month")
+                            {
+                                clsBatch.loadMembersByDate(dataGridView1, dtMonthFrom, dtMonthTo);
+                            }
                         }
-
-                        //ReLoad The Gridview for Real Time
-                        if (cmbView.Text == "Members for Approval")
-                        {
-                            clsBatch.loadAllMembersForApproval(dataGridView1);
-                        }
-                        else if (cmbView.Text == "Date / Month")
-                        {
-                            clsBatch.loadMembersByDate(dataGridView1, dtMonthFrom, dtMonthTo);
-                        }
-
                         //Success Message
-                        Alert.show("Successfully Approved", Alert.AlertType.success);
+                        Alert.show("Successfully approved.", Alert.AlertType.success);
                     } //End Question for continue
                     else
                     {
@@ -281,7 +283,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No Record Found!", Alert.AlertType.error);
+                Alert.show("No record found.", Alert.AlertType.error);
                 return;
             }
 
@@ -300,7 +302,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No Record Found!", Alert.AlertType.error);
+                Alert.show("No record found.", Alert.AlertType.error);
                 return;
             }
         }
@@ -318,7 +320,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No Record Found!", Alert.AlertType.error);
+                Alert.show("No record found.", Alert.AlertType.error);
                 return;
             }
         }
@@ -329,38 +331,39 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select members you want to delete!", Alert.AlertType.warning);
+                Alert.show("Please select members you want to delete.", Alert.AlertType.warning);
                 return;
             }
 
             //Code for delete of Members Pending
-            string msg = Environment.NewLine + "Are you sure you want to delete this Member?";
+            string msg = Environment.NewLine + "Are you sure you want to delete this member?";
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                
-                con = new SqlConnection();
-                global.connection(con);
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_DeleteMembershipInApproval";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@userID", dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
-                cmd.ExecuteNonQuery();
-
-                //Load Datagridview per COmbobox description
-                if (cmbView.Text == "Members for Approval")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    clsBatch.loadAllMembersForApproval(dataGridView1);
-                }
-                else if (cmbView.Text == "Date / Month")
-                {
-                    clsBatch.loadMembersByDate(dataGridView1, dtMonthFrom, dtMonthTo);
-                }
+                    con.Open();
 
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_DeleteMembershipInApproval";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userID", dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+                    cmd.ExecuteNonQuery();
+
+                    //Load Datagridview per COmbobox description
+                    if (cmbView.Text == "Members for Approval")
+                    {
+                        clsBatch.loadAllMembersForApproval(dataGridView1);
+                    }
+                    else if (cmbView.Text == "Date / Month")
+                    {
+                        clsBatch.loadMembersByDate(dataGridView1, dtMonthFrom, dtMonthTo);
+                    }
+                }
                 //Message
-                Alert.show("Member Successfully Deleted", Alert.AlertType.success);
+                Alert.show("Member successfully deleted", Alert.AlertType.success);
             }
 
         }

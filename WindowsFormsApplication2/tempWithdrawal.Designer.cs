@@ -64,6 +64,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "tempWithdrawal";
             this.Text = "tempWithdrawal";
+            this.Load += new System.EventHandler(this.tempWithdrawal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

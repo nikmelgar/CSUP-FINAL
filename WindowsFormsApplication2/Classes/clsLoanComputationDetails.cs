@@ -19,43 +19,49 @@ namespace WindowsFormsApplication2.Classes
 
         public void loadLoansDetails(string loan_No,string loan_type,DataGridView dgv)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_ReturnLoanComputationDetail";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@loan_no", loan_No);
-            cmd.Parameters.AddWithValue("@Loan_Type", loan_type);
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanComputationDetail";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@loan_no", loan_No);
+                cmd.Parameters.AddWithValue("@Loan_Type", loan_type);
 
-            adapter = new SqlDataAdapter(cmd);
-            dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-            dgv.DataSource = dt;
+                dgv.DataSource = dt;
 
-            dgv.Columns["Loan_Type_Loan_No"].HeaderText = "Loan No";
+                dgv.Columns["Loan_Type_Loan_No"].HeaderText = "Loan No";
+            }
+
+            
         }
 
         public void loadLoansDetailsOthers(string loan_No, DataGridView dgv)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_ReturnLoanComputationDetailOthers";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@loan_no", loan_No);
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanComputationDetailOthers";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@loan_no", loan_No);
 
-            adapter = new SqlDataAdapter(cmd);
-            dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter(cmd);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-            dgv.DataSource = dt;
+                dgv.DataSource = dt;
 
-            dgv.Columns["Shared_Capital"].HeaderText = "Share Capital";
+                dgv.Columns["Shared_Capital"].HeaderText = "Share Capital";
+            }
         }
     }
 }

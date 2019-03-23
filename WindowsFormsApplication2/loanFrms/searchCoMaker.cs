@@ -146,13 +146,13 @@ namespace WindowsFormsApplication2.loanFrms
 
                     if (Classes.clsLoanDataEntry.userID.ToString() == dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())
                     {
-                        Alert.show("You cannot be a CO-Maker to your own loan", Alert.AlertType.error);
+                        Alert.show("You cannot be a co-maker to your own loan.", Alert.AlertType.error);
                         return;
                     }
 
                     if (alreadyUsed == true)
                     {
-                        Alert.show("Member already used as Co-Maker", Alert.AlertType.error);
+                        Alert.show("Member already used as co-maker.", Alert.AlertType.error);
                         alreadyUsed = false;
                         return;
                     }

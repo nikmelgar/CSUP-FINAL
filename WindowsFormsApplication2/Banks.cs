@@ -100,7 +100,7 @@ namespace WindowsFormsApplication2
                 //Required Fields
                 if (RequiredFields(txtCode, txtDescription, txtBranch, txtAccountNo) == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -119,25 +119,27 @@ namespace WindowsFormsApplication2
                 }
 
                 //If all criteria is successfully meet we now proceed to saving code
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertBank";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Bank_Code", txtCode.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Bank_Name", txtDescription.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Branch", txtBranch.Text);
-                cmd.Parameters.AddWithValue("@Account_No", txtAccountNo.Text);
-                cmd.Parameters.AddWithValue("@Bank_Account_Code", cmbBankAccount.SelectedValue);
-                cmd.Parameters.AddWithValue("@Contact_Person", txtContactPerson.Text);
-                cmd.Parameters.AddWithValue("@Position", txtPosition.Text);
-                cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
-                cmd.ExecuteNonQuery();
-
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertBank";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Bank_Code", txtCode.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Bank_Name", txtDescription.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Branch", txtBranch.Text);
+                    cmd.Parameters.AddWithValue("@Account_No", txtAccountNo.Text);
+                    cmd.Parameters.AddWithValue("@Bank_Account_Code", cmbBankAccount.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Contact_Person", txtContactPerson.Text);
+                    cmd.Parameters.AddWithValue("@Position", txtPosition.Text);
+                    cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
+                    cmd.ExecuteNonQuery();
+                }
+                  
                 //Success Message
-                Alert.show("Successfully Added", Alert.AlertType.success);
+                Alert.show("Successfully Added.", Alert.AlertType.success);
 
                 //load Banks
                 clsbank.loadBanks(dataGridView1, "Bank");
@@ -239,7 +241,7 @@ namespace WindowsFormsApplication2
             if(txtCode.Text == "")
             {
                 //No Data to be edit
-                Alert.show("Please select Bank you want to edit!", Alert.AlertType.warning);
+                Alert.show("Please select bank you want to edit.", Alert.AlertType.warning);
                 return;
             }
             
@@ -261,7 +263,7 @@ namespace WindowsFormsApplication2
                 //Required Fields
                 if (RequiredFields(txtCode, txtDescription, txtBranch, txtAccountNo) == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -271,25 +273,27 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateBank";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Bank_Code", txtCode.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Bank_Name", txtDescription.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Branch", txtBranch.Text);
-                cmd.Parameters.AddWithValue("@Account_No", txtAccountNo.Text);
-                cmd.Parameters.AddWithValue("@Bank_Account_Code", cmbBankAccount.SelectedValue);
-                cmd.Parameters.AddWithValue("@Contact_Person", txtContactPerson.Text);
-                cmd.Parameters.AddWithValue("@Position", txtPosition.Text);
-                cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
-                cmd.ExecuteNonQuery();
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateBank";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Bank_Code", txtCode.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Bank_Name", txtDescription.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Branch", txtBranch.Text);
+                    cmd.Parameters.AddWithValue("@Account_No", txtAccountNo.Text);
+                    cmd.Parameters.AddWithValue("@Bank_Account_Code", cmbBankAccount.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Contact_Person", txtContactPerson.Text);
+                    cmd.Parameters.AddWithValue("@Position", txtPosition.Text);
+                    cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
+                    cmd.ExecuteNonQuery();
+                }
 
                 //Success Message
-                Alert.show("Successfully Updated", Alert.AlertType.success);
+                Alert.show("Successfully updated.", Alert.AlertType.success);
 
                 //load Banks
                 clsbank.loadBanks(dataGridView1, "Bank");
@@ -306,7 +310,7 @@ namespace WindowsFormsApplication2
             if (txtCode.Text == "")
             {
                 //No Data to be edit
-                Alert.show("Please select Bank you want to delete!", Alert.AlertType.warning);
+                Alert.show("Please select bank you want to delete.", Alert.AlertType.warning);
                 return;
             }
 
@@ -318,15 +322,17 @@ namespace WindowsFormsApplication2
             {
                 //Delete or Tagged as Inactive goes here
                 //CONNECTION TO SQL SERVER AND STORED PROCEDURE
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InactiveBank";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Bank_Code", txtCode.Text);
-                cmd.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InactiveBank";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Bank_Code", txtCode.Text);
+                    cmd.ExecuteNonQuery();
+                }
 
                 //Message
                 Alert.show("Company Successfully Deleted", Alert.AlertType.success);

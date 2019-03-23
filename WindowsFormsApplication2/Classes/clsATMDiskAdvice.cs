@@ -22,51 +22,53 @@ namespace WindowsFormsApplication2.Classes
         {
             dgv.Rows.Clear();
 
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("select distinct(bank_code) from ATM WHERE Deposited is null Group by Bank_Code,Purpose", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count >= 1)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                dgv.Rows.Add(dt.Rows.Count);
-                decimal ttlPerBankRight = 0;
-                decimal ttalLoans = 0;
-                decimal ttalSDPrBank = 0;
-                for (int i = 0; i < dt.Rows.Count; i++) //Loop for Banks
+                con.Open();
+
+                adapter = new SqlDataAdapter("select distinct(bank_code) from ATM WHERE Deposited is null Group by Bank_Code,Purpose", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count >= 1)
                 {
-                    dgv.Rows[i].Cells[0].Value = dt.Rows[i].ItemArray[0].ToString();
-
-                    //Put the SD or Loan Values
-                    SqlDataAdapter adapter2 = new SqlDataAdapter("select distinct purpose,sum(amount) from atm where Bank_Code ='" + dgv.Rows[i].Cells[0].Value.ToString() + "' and Deposited is null group by Purpose", con);
-                    DataTable dt2 = new DataTable();
-                    adapter2.Fill(dt2);
-
-                    for (int x = 0; x < dt2.Rows.Count; x++) //For Loans and SD
+                    dgv.Rows.Add(dt.Rows.Count);
+                    decimal ttlPerBankRight = 0;
+                    decimal ttalLoans = 0;
+                    decimal ttalSDPrBank = 0;
+                    for (int i = 0; i < dt.Rows.Count; i++) //Loop for Banks
                     {
-                        if (dt2.Rows[x].ItemArray[0].ToString() == "SD")
-                        {
-                            //SAVINGS
-                            dgv.Rows[i].Cells[1].Value = Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString()).ToString("#,0.00");
-                            ttalSDPrBank = Convert.ToDecimal(dgv.Rows[i].Cells[1].Value);
-                        }
-                        else
-                        {
-                            //LOANS
-                            ttalLoans += Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString());
-                        }
+                        dgv.Rows[i].Cells[0].Value = dt.Rows[i].ItemArray[0].ToString();
 
-                        //Total Amount Per Banks[Savings/Loans]
-                        ttlPerBankRight = ttalSDPrBank + ttalLoans;
+                        //Put the SD or Loan Values
+                        SqlDataAdapter adapter2 = new SqlDataAdapter("select distinct purpose,sum(amount) from atm where Bank_Code ='" + dgv.Rows[i].Cells[0].Value.ToString() + "' and Deposited is null group by Purpose", con);
+                        DataTable dt2 = new DataTable();
+                        adapter2.Fill(dt2);
 
-                        dgv.Rows[i].Cells[3].Value = ttlPerBankRight.ToString("#,0.00");
-                        dgv.Rows[i].Cells[2].Value = ttalLoans.ToString("#,0.00");
+                        for (int x = 0; x < dt2.Rows.Count; x++) //For Loans and SD
+                        {
+                            if (dt2.Rows[x].ItemArray[0].ToString() == "SD")
+                            {
+                                //SAVINGS
+                                dgv.Rows[i].Cells[1].Value = Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString()).ToString("#,0.00");
+                                ttalSDPrBank = Convert.ToDecimal(dgv.Rows[i].Cells[1].Value);
+                            }
+                            else
+                            {
+                                //LOANS
+                                ttalLoans += Convert.ToDecimal(dt2.Rows[x].ItemArray[1].ToString());
+                            }
+
+                            //Total Amount Per Banks[Savings/Loans]
+                            ttlPerBankRight = ttalSDPrBank + ttalLoans;
+
+                            dgv.Rows[i].Cells[3].Value = ttlPerBankRight.ToString("#,0.00");
+                            dgv.Rows[i].Cells[2].Value = ttalLoans.ToString("#,0.00");
+                        }
                     }
-                }
 
-                loadTotals(dgv);
+                    loadTotals(dgv);
+                }
             }
         }
         //Additional Row
@@ -100,30 +102,35 @@ namespace WindowsFormsApplication2.Classes
 
         public void loadBankCode(ComboBox cmb)
         {
-            SqlConnection con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("select distinct(bank_code) from ATM WHERE Deposited is null Group by Bank_Code,Purpose", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("select distinct(bank_code) from ATM WHERE Deposited is null Group by Bank_Code,Purpose", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = "Bank_Code";
-            cmb.ValueMember = "Bank_Code";
-            cmb.DataSource = dt;
+                cmb.DisplayMember = "Bank_Code";
+                cmb.ValueMember = "Bank_Code";
+                cmb.DataSource = dt;
+            }
         }
 
         public void displayBrandAndCompanyCode(TextBox brnch,TextBox company,TextBox accountNo,string bankcode)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='"+ bankcode +"'", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter("SELECT * FROM Bank WHERE Bank_Code ='" + bankcode + "'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-            brnch.Text = dt.Rows[0].ItemArray[6].ToString(); //Branch Code
-            company.Text = dt.Rows[0].ItemArray[5].ToString(); //Company Code
-            accountNo.Text = dt.Rows[0].ItemArray[3].ToString(); //Account number
+                brnch.Text = dt.Rows[0].ItemArray[6].ToString(); //Branch Code
+                company.Text = dt.Rows[0].ItemArray[5].ToString(); //Company Code
+                accountNo.Text = dt.Rows[0].ItemArray[3].ToString(); //Account number
+            }
+
         }
 
 

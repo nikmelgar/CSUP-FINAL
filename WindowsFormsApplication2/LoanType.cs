@@ -93,50 +93,50 @@ namespace WindowsFormsApplication2
                 //SAVE
                 if(txtLoanType.Text == "")
                 {
-                    Alert.show("Loan Type is Required!", Alert.AlertType.error);
                     txtLoanType.Focus();
+                    Alert.show("Loan Type is Required!", Alert.AlertType.error);
                     return;
                 }
                 
                 if(txtDescription.Text == "")
                 {
-                    Alert.show("Loan Description is Required!", Alert.AlertType.error);
                     txtDescription.Focus();
+                    Alert.show("Loan Description is Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinAmount.Text == "")
                 {
-                    Alert.show("Min. Loanable Amount is Required!", Alert.AlertType.error);
                     txtMinAmount.Focus();
+                    Alert.show("Min. Loanable Amount is Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxAmount.Text == "")
                 {
-                    Alert.show("Max. Loanable Amount is Required!", Alert.AlertType.error);
                     txtMaxAmount.Focus();
+                    Alert.show("Max. Loanable Amount is Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinTerm.Text == "")
                 {
-                    Alert.show("Min. Terms Required!", Alert.AlertType.error);
                     txtMinTerm.Focus();
+                    Alert.show("Min. Terms Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxTerm.Text == "")
                 {
-                    Alert.show("Max. Terms Required!", Alert.AlertType.error);
                     txtMaxTerm.Focus();
+                    Alert.show("Max. Terms Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtPercent.Text == "")
                 {
-                    Alert.show("Interest is Required!", Alert.AlertType.error);
                     txtPercent.Focus();
+                    Alert.show("Interest is Required!", Alert.AlertType.error);
                     return;
                 }
 
@@ -190,8 +190,8 @@ namespace WindowsFormsApplication2
 
                 if (txtPriority.Text == "")
                 {
-                    Alert.show("Priority is Required!", Alert.AlertType.error);
                     txtPriority.Focus();
+                    Alert.show("Priority is Required!", Alert.AlertType.error);
                     return;
                 }
 
@@ -208,31 +208,33 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertLoanType";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Loan_Type", txtLoanType.Text);
-                cmd.Parameters.AddWithValue("@Loan_Description", txtDescription.Text);
-                cmd.Parameters.AddWithValue("@MinAmount", txtMinAmount.Text);
-                cmd.Parameters.AddWithValue("@MaxAmount", txtMaxAmount.Text);
-                cmd.Parameters.AddWithValue("@MinTerm", txtMinTerm.Text);
-                cmd.Parameters.AddWithValue("@MaxTerm", txtMaxTerm.Text);
-                cmd.Parameters.AddWithValue("@Interest", Convert.ToDecimal(txtPercent.Text));
-                cmd.Parameters.AddWithValue("@Service_Factor_Code", cmbServicefactorCode.SelectedValue);
-                cmd.Parameters.AddWithValue("@Account_Dr", cmbDebitCreditAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Account_Cr", cmbDebitCreditAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Cash_Account", cmbCashAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Service_Fee_Account", cmbServiceFeeAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Current_Interest_Account", cmbCurrentInterestAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Deferred_Interest_Account", cmbDeferredAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Rebate_Account", cmbRefundAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@PastDue_Account", cmbPastDueAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Priority", txtPriority.Text);
-                cmd.ExecuteNonQuery();
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertLoanType";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Loan_Type", txtLoanType.Text);
+                    cmd.Parameters.AddWithValue("@Loan_Description", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@MinAmount", txtMinAmount.Text);
+                    cmd.Parameters.AddWithValue("@MaxAmount", txtMaxAmount.Text);
+                    cmd.Parameters.AddWithValue("@MinTerm", txtMinTerm.Text);
+                    cmd.Parameters.AddWithValue("@MaxTerm", txtMaxTerm.Text);
+                    cmd.Parameters.AddWithValue("@Interest", Convert.ToDecimal(txtPercent.Text));
+                    cmd.Parameters.AddWithValue("@Service_Factor_Code", cmbServicefactorCode.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Account_Dr", cmbDebitCreditAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Account_Cr", cmbDebitCreditAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Cash_Account", cmbCashAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Service_Fee_Account", cmbServiceFeeAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Current_Interest_Account", cmbCurrentInterestAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Deferred_Interest_Account", cmbDeferredAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Rebate_Account", cmbRefundAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@PastDue_Account", cmbPastDueAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Priority", txtPriority.Text);
+                    cmd.ExecuteNonQuery();
+                }
 
                 Alert.show("Successfully Inserted!", Alert.AlertType.success);
 
@@ -246,50 +248,50 @@ namespace WindowsFormsApplication2
                 //UPDATE
                 if (txtLoanType.Text == "")
                 {
-                    Alert.show("Loan Type is Required!", Alert.AlertType.error);
                     txtLoanType.Focus();
+                    Alert.show("Loan Type is Required!", Alert.AlertType.error);  
                     return;
                 }
 
                 if (txtDescription.Text == "")
                 {
-                    Alert.show("Loan Description is Required!", Alert.AlertType.error);
                     txtDescription.Focus();
+                    Alert.show("Loan Description is Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinAmount.Text == "")
                 {
-                    Alert.show("Min. Loanable Amount is Required!", Alert.AlertType.error);
                     txtMinAmount.Focus();
+                    Alert.show("Min. Loanable Amount is Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxAmount.Text == "")
                 {
-                    Alert.show("Max. Loanable Amount is Required!", Alert.AlertType.error);
                     txtMaxAmount.Focus();
+                    Alert.show("Max. Loanable Amount is Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinTerm.Text == "")
                 {
-                    Alert.show("Min. Terms Required!", Alert.AlertType.error);
                     txtMinTerm.Focus();
+                    Alert.show("Min. Terms Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxTerm.Text == "")
                 {
-                    Alert.show("Max. Terms Required!", Alert.AlertType.error);
                     txtMaxTerm.Focus();
+                    Alert.show("Max. Terms Required!", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtPercent.Text == "")
                 {
-                    Alert.show("Interest is Required!", Alert.AlertType.error);
                     txtPercent.Focus();
+                    Alert.show("Interest is Required!", Alert.AlertType.error);
                     return;
                 }
 
@@ -343,8 +345,8 @@ namespace WindowsFormsApplication2
 
                 if (txtPriority.Text == "")
                 {
-                    Alert.show("Priority is Required!", Alert.AlertType.error);
                     txtPriority.Focus();
+                    Alert.show("Priority is Required!", Alert.AlertType.error);
                     return;
                 }
 
@@ -353,33 +355,35 @@ namespace WindowsFormsApplication2
                 //=====================================================================
 
 
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateLoanType";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Loan_Type", txtLoanType.Text);
-                cmd.Parameters.AddWithValue("@Loan_Description", txtDescription.Text);
-                cmd.Parameters.AddWithValue("@MinAmount", txtMinAmount.Text);
-                cmd.Parameters.AddWithValue("@MaxAmount", txtMaxAmount.Text);
-                cmd.Parameters.AddWithValue("@MinTerm", txtMinTerm.Text);
-                cmd.Parameters.AddWithValue("@MaxTerm", txtMaxTerm.Text);
-                cmd.Parameters.AddWithValue("@Interest", Convert.ToDecimal(txtPercent.Text));
-                cmd.Parameters.AddWithValue("@Service_Factor_Code", cmbServicefactorCode.SelectedValue);
-                cmd.Parameters.AddWithValue("@Account_Dr", cmbDebitCreditAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Account_Cr", cmbDebitCreditAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Cash_Account", cmbCashAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Service_Fee_Account", cmbServiceFeeAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Current_Interest_Account", cmbCurrentInterestAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Deferred_Interest_Account", cmbDeferredAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Rebate_Account", cmbRefundAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@PastDue_Account", cmbPastDueAccnt.SelectedValue);
-                cmd.Parameters.AddWithValue("@Priority", txtPriority.Text);
-                cmd.ExecuteNonQuery();
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateLoanType";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Loan_Type", txtLoanType.Text);
+                    cmd.Parameters.AddWithValue("@Loan_Description", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@MinAmount", txtMinAmount.Text);
+                    cmd.Parameters.AddWithValue("@MaxAmount", txtMaxAmount.Text);
+                    cmd.Parameters.AddWithValue("@MinTerm", txtMinTerm.Text);
+                    cmd.Parameters.AddWithValue("@MaxTerm", txtMaxTerm.Text);
+                    cmd.Parameters.AddWithValue("@Interest", Convert.ToDecimal(txtPercent.Text));
+                    cmd.Parameters.AddWithValue("@Service_Factor_Code", cmbServicefactorCode.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Account_Dr", cmbDebitCreditAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Account_Cr", cmbDebitCreditAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Cash_Account", cmbCashAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Service_Fee_Account", cmbServiceFeeAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Current_Interest_Account", cmbCurrentInterestAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Deferred_Interest_Account", cmbDeferredAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Rebate_Account", cmbRefundAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@PastDue_Account", cmbPastDueAccnt.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Priority", txtPriority.Text);
+                    cmd.ExecuteNonQuery();
+                }
 
-                Alert.show("Successfully Updated!", Alert.AlertType.success);
+                Alert.show("Successfully updated.", Alert.AlertType.success);
 
                 clsLoanType.displayLoans(dataGridView1); //Dispaly Real Time
 

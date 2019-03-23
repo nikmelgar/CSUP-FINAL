@@ -34,6 +34,9 @@ namespace WindowsFormsApplication2
         public static string wdMode { get; set; }
         public static string searchBy { get; set; }
         public static string status { get; set; }
+        public static string criteria { get; set; }
+
+       
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -65,7 +68,10 @@ namespace WindowsFormsApplication2
 
             if(cmbMode.Text == "ALL Mode" && cmbStatus.Text == "ALL Status")
             {
-                searchBy = "*";
+                if(cmbSearchBy.Text == "All Withdrawal")
+                {
+                    searchBy = "*";
+                }
             }
             else
             {
@@ -109,66 +115,139 @@ namespace WindowsFormsApplication2
             CrystalDecisions.Shared.TableLogOnInfo li;
 
             //Print Purposes
-            con = new SqlConnection();
-            global.connection(con);
-
-
-            //=====================================================================================
-            //                  STRING QUERY BUILDER
-            //=====================================================================================
-            string str = "";
-            if(searchBy == "*")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                str = "SELECT * FROM vw_SavingsWithdrawal WHERE Withdrawal_Mode in " + wdMode +" and Status in " + status + " and wdDate Between '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                con.Open();
+
+
+                //=====================================================================================
+                //                  STRING QUERY BUILDER
+                //=====================================================================================
+                string str = "";
+                if (searchBy == "*")
+                {
+                    str = "SELECT * FROM vw_SavingsWithdrawal WHERE Withdrawal_Mode in " + wdMode + " and Status in " + status + " and wdDate Between '" + dtFrom.Text + "' and '" + dtTo.Text + "' ORDER BY Withdrawal_Slip_No ASC";
+                }
+                else
+                {
+                    str = "SELECT * FROM vw_SavingsWithdrawal WHERE Withdrawal_Mode in " + wdMode + " and " + searchBy + " like '%" + txtKeyWord.Text + "%' and Status in " + status + " and wdDate Between '" + dtFrom.Text + "' and '" + dtTo.Text + "' ORDER BY Withdrawal_Slip_No ASC";
+                }
+
+
+                SqlDataAdapter adapter = new SqlDataAdapter(str, con);
+                DataTable checkDT = new DataTable();
+                adapter.Fill(checkDT);
+
+                if (checkDT.Rows.Count == 0)
+                {
+                    Alert.show("No Record(s) Found!", Alert.AlertType.error);
+                    return;
+                }
+
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
+
+                //Generate Report according to MODE
+                if (cmbMode.Text == "ALL Mode") //ALL MODE
+                {
+                    ReportsForms.rptSavingsMainAllMode cr = new ReportsForms.rptSavingsMainAllMode();
+
+                    li = new TableLogOnInfo();
+
+                    li.ConnectionInfo.IntegratedSecurity = false;
+
+                    adapter.Fill(ds, "vw_SavingsWithdrawal");
+                    dt = ds.Tables["vw_SavingsWithdrawal"];
+                    cr.SetDataSource(ds.Tables["vw_SavingsWithdrawal"]);
+
+                    //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                    cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+
+                    cr.SetParameterValue("paramDateFrom", dtFrom.Text);
+                    cr.SetParameterValue("paramDateTo", dtTo.Text);
+
+
+                    cr.SetParameterValue("paramGenerateBy", Classes.clsUser.Username);
+
+
+                    crystalReportViewer1.ReportSource = cr;
+                }
+                else if (cmbMode.Text == "ATM - AT")//GENERATE ATM ONLY
+                {
+                    ReportsForms.rptSavingsMain cr = new ReportsForms.rptSavingsMain();
+
+                    li = new TableLogOnInfo();
+
+                    li.ConnectionInfo.IntegratedSecurity = false;
+
+                    adapter.Fill(ds, "vw_SavingsWithdrawal");
+                    dt = ds.Tables["vw_SavingsWithdrawal"];
+                    cr.SetDataSource(ds.Tables["vw_SavingsWithdrawal"]);
+
+                    //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                    cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+
+                    cr.SetParameterValue("paramDateFrom", dtFrom.Text);
+                    cr.SetParameterValue("paramDateTo", dtTo.Text);
+
+                    cr.SetParameterValue("paramGenerateBy", Classes.clsUser.Username);
+
+
+                    crystalReportViewer1.ReportSource = cr;
+                }
+                else if (cmbMode.Text == "CASH - CA")//GENERATE CASH ONLY
+                {
+                    ReportsForms.rptSavingsMainCash cr = new ReportsForms.rptSavingsMainCash();
+
+                    li = new TableLogOnInfo();
+
+                    li.ConnectionInfo.IntegratedSecurity = false;
+
+                    adapter.Fill(ds, "vw_SavingsWithdrawal");
+                    dt = ds.Tables["vw_SavingsWithdrawal"];
+                    cr.SetDataSource(ds.Tables["vw_SavingsWithdrawal"]);
+
+                    //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                    cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+
+                    cr.SetParameterValue("paramDateFrom", dtFrom.Text);
+                    cr.SetParameterValue("paramDateTo", dtTo.Text);
+
+                    cr.SetParameterValue("paramGenerateBy", Classes.clsUser.Username);
+
+
+                    crystalReportViewer1.ReportSource = cr;
+                }
+                else if (cmbMode.Text == "CHEQUE - CH")
+                {
+                    ReportsForms.rptSavingsMain_Cheque cr = new ReportsForms.rptSavingsMain_Cheque();
+
+                    li = new TableLogOnInfo();
+
+                    li.ConnectionInfo.IntegratedSecurity = false;
+
+                    adapter.Fill(ds, "vw_SavingsWithdrawal");
+                    dt = ds.Tables["vw_SavingsWithdrawal"];
+                    cr.SetDataSource(ds.Tables["vw_SavingsWithdrawal"]);
+
+                    //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                    cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+
+                    cr.SetParameterValue("paramDateFrom", dtFrom.Text);
+                    cr.SetParameterValue("paramDateTo", dtTo.Text);
+
+
+                    cr.SetParameterValue("paramGenerateBy", Classes.clsUser.Username);
+
+
+                    crystalReportViewer1.ReportSource = cr;
+                }
+
             }
-            else
-            {
-                str = "SELECT * FROM vw_SavingsWithdrawal WHERE Withdrawal_Mode in " + wdMode + " and " + searchBy + " like '%" + txtKeyWord.Text + "%' and Status in " + status + " and wdDate Between '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-            }
-            
-            SqlDataAdapter adapter = new SqlDataAdapter(str, con);
-            DataTable checkDT = new DataTable();
-            adapter.Fill(checkDT);
-
-            if(checkDT.Rows.Count == 0)
-            {
-                Alert.show("No Record(s) Found!", Alert.AlertType.error);
-                return;
-            }
-
-            DataTable dt = new DataTable();
-            DataSet ds = new DataSet();
-
-            ReportsForms.rptSavingsMain cr = new ReportsForms.rptSavingsMain();
-
-            li = new TableLogOnInfo();
-
-            li.ConnectionInfo.IntegratedSecurity = false;
-
-            adapter.Fill(ds, "vw_SavingsWithdrawal");
-            dt = ds.Tables["vw_SavingsWithdrawal"];
-            cr.SetDataSource(ds.Tables["vw_SavingsWithdrawal"]);
-
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-
-            cr.SetParameterValue("paramDateFrom", dtFrom.Text);
-            cr.SetParameterValue("paramDateTo", dtTo.Text);
-            if(cmbSearchBy.Text == "All Withdrawal")
-            {
-                cr.SetParameterValue("paramWithdrawalMode", cmbMode.Text + "( " + cmbSearchBy.Text + " )");
-            }
-            else
-            {
-                cr.SetParameterValue("paramWithdrawalMode", cmbMode.Text + " ( " + cmbSearchBy.Text + " - " + txtKeyWord.Text + " )");
-            }
-
-            cr.SetParameterValue("paramGenerateBy", Classes.clsUser.Username);
-
-
-            crystalReportViewer1.ReportSource = cr;
-
         }
 
         private void cmbSearchBy_SelectedValueChanged(object sender, EventArgs e)
@@ -265,6 +344,11 @@ namespace WindowsFormsApplication2
         private void btnClose_Click_1(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void rptSavingsMain_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

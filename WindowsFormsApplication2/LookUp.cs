@@ -149,13 +149,13 @@ namespace WindowsFormsApplication2
                     //Check for hold accounts
                     if (clsHoldAccount.checkIfHoldAccount(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == true)
                     {
-                        Alert.show("Members Account is on hold!", Alert.AlertType.error);
+                        Alert.show("Member's account is on hold.", Alert.AlertType.error);
                         return;
                     }
 
                     if (clsHoldAccount.checkIfTHeresADependent(dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString()) == true)
                     {
-                        Alert.show("Members Account is on hold!", Alert.AlertType.error);
+                        Alert.show("Member's account is on hold.", Alert.AlertType.error);
                         return;
                     }
                     //for dependent purposes

@@ -166,8 +166,17 @@ namespace WindowsFormsApplication2
 
                 if (dataGridView1.SelectedRows[0].Cells["Posted"].Value.ToString() == "True")
                 {
-                    cv.status.Visible = true;
-                    cv.status.Text = "POSTED";
+                    if(dataGridView1.SelectedRows[0].Cells["Released_By"].Value.ToString() != "")
+                    {
+                        cv.status.Visible = true;
+                        cv.status.Text = "POSTED and RELEASED";
+                    }
+                    else
+                    {
+                        cv.status.Visible = true;
+                        cv.status.Text = "POSTED";
+                    }
+                   
                 }
                 else if (dataGridView1.SelectedRows[0].Cells["Cancelled"].Value.ToString() == "True")
                 {
@@ -201,6 +210,7 @@ namespace WindowsFormsApplication2
                 cv.btnCancel.Enabled = true;
                 cv.btnPrint.Enabled = true;
                 cv.btnPrintCheque.Enabled = true;
+                cv.btnRelease.Enabled = true;
 
 
                 //CLOSE AFTER SELECTION OF JOURNAL VOUCHER

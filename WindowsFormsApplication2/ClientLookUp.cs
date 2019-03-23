@@ -61,32 +61,34 @@ namespace WindowsFormsApplication2
         //LOAD CLIENT
         public void loadClient()
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("SELECT * FROM Client WHERE isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            dataGridView1.DataSource = dt;
-
-            int colCnt = dt.Columns.Count;
-            int x = 0;
-
-
-            while (x != colCnt)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                dataGridView1.Columns[x].Visible = false;
-                x = x + 1;
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT * FROM Client WHERE isActive = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                dataGridView1.DataSource = dt;
+
+                int colCnt = dt.Columns.Count;
+                int x = 0;
+
+
+                while (x != colCnt)
+                {
+                    dataGridView1.Columns[x].Visible = false;
+                    x = x + 1;
+                }
+
+                dataGridView1.Columns["Client_Code"].Visible = true;
+                dataGridView1.Columns["Client_Code"].HeaderText = "Code";
+                dataGridView1.Columns["Client_Code"].FillWeight = 30;
+
+                dataGridView1.Columns["Name"].Visible = true;
+                dataGridView1.Columns["Name"].HeaderText = "Client Name";
+                dataGridView1.Columns["Name"].FillWeight = 100;
             }
-
-            dataGridView1.Columns["Client_Code"].Visible = true;
-            dataGridView1.Columns["Client_Code"].HeaderText = "Code";
-            dataGridView1.Columns["Client_Code"].FillWeight = 30;
-
-            dataGridView1.Columns["Name"].Visible = true;
-            dataGridView1.Columns["Name"].HeaderText = "Client Name";
-            dataGridView1.Columns["Name"].FillWeight = 100;
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -100,42 +102,42 @@ namespace WindowsFormsApplication2
         {
             if(txtClientID.Text != "" || txtName.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
-
-                adapter = new SqlDataAdapter("SELECT * FROM Client WHERE isActive = 1 and Client_Code like '%"+ txtClientID.Text +"%' and Name like '%"+ txtName.Text +"%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                dataGridView1.DataSource = dt;
-
-                if(dt.Rows.Count > 0)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    int colCnt = dt.Columns.Count;
-                    int x = 0;
+                    con.Open();
 
+                    adapter = new SqlDataAdapter("SELECT * FROM Client WHERE isActive = 1 and Client_Code like '%" + txtClientID.Text + "%' and Name like '%" + txtName.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    while (x != colCnt)
+                    dataGridView1.DataSource = dt;
+
+                    if (dt.Rows.Count > 0)
                     {
-                        dataGridView1.Columns[x].Visible = false;
-                        x = x + 1;
+                        int colCnt = dt.Columns.Count;
+                        int x = 0;
+
+
+                        while (x != colCnt)
+                        {
+                            dataGridView1.Columns[x].Visible = false;
+                            x = x + 1;
+                        }
+
+                        dataGridView1.Columns["Client_Code"].Visible = true;
+                        dataGridView1.Columns["Client_Code"].HeaderText = "Code";
+                        dataGridView1.Columns["Client_Code"].FillWeight = 30;
+
+                        dataGridView1.Columns["Name"].Visible = true;
+                        dataGridView1.Columns["Name"].HeaderText = "Client Name";
+                        dataGridView1.Columns["Name"].FillWeight = 100;
                     }
-
-                    dataGridView1.Columns["Client_Code"].Visible = true;
-                    dataGridView1.Columns["Client_Code"].HeaderText = "Code";
-                    dataGridView1.Columns["Client_Code"].FillWeight = 30;
-
-                    dataGridView1.Columns["Name"].Visible = true;
-                    dataGridView1.Columns["Name"].HeaderText = "Client Name";
-                    dataGridView1.Columns["Name"].FillWeight = 100;
-                }
-                else
-                {
-                    Alert.show("No Records Found!", Alert.AlertType.warning);
-                    return;
-                }
-
-                
+                    else
+                    {
+                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        return;
+                    }
+                }                
             }
             else
             {

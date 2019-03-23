@@ -68,54 +68,17 @@ namespace WindowsFormsApplication2
 
         public void loadClient()
         {
-            SqlConnection con = new SqlConnection();
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Client where isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            dataGridView1.DataSource = dt;
-
-
-            int colCnt = dt.Columns.Count;
-            int x = 1;
-
-            while (x != colCnt)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                if (x != 1)
-                {
-                    dataGridView1.Columns[x].Visible = false;
-                }
-                x = x + 1;
-            }
-        }
+                con.Open();
 
 
-        private void Client_Load(object sender, EventArgs e)
-        {
-            loadClient();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (txtSearch.Text != "")
-            {
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
-
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Client where isActive = 1 and Client_Code like '%" + txtSearch.Text + "%' or Name like '%" + txtSearch.Text + "%'", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Client where isActive = 1", con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
                 dataGridView1.DataSource = dt;
 
-                //Check if we got nothing
-                if(dt.Rows.Count == 0)
-                {
-                    Alert.show("No Records Found! Please search again.", Alert.AlertType.error);
-                    loadClient(); //Load default data
-                }
 
                 int colCnt = dt.Columns.Count;
                 int x = 1;
@@ -128,13 +91,56 @@ namespace WindowsFormsApplication2
                     }
                     x = x + 1;
                 }
+            }
+
+        }
+
+
+        private void Client_Load(object sender, EventArgs e)
+        {
+            loadClient();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (txtSearch.Text != "")
+            {
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Client where isActive = 1 and Client_Code like '%" + txtSearch.Text + "%' or Name like '%" + txtSearch.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    dataGridView1.DataSource = dt;
+
+                    //Check if we got nothing
+                    if (dt.Rows.Count == 0)
+                    {
+                        Alert.show("No record/s found. Please search again.", Alert.AlertType.error);
+                        loadClient(); //Load default data
+                    }
+
+                    int colCnt = dt.Columns.Count;
+                    int x = 1;
+
+                    while (x != colCnt)
+                    {
+                        if (x != 1)
+                        {
+                            dataGridView1.Columns[x].Visible = false;
+                        }
+                        x = x + 1;
+                    }
+                }
 
                 //Search field remove
                 txtSearch.Text = "";
             }
             else
             {
-                Alert.show("Please Input Data you want to search!", Alert.AlertType.error);
+                Alert.show("Please enter valid keyword in search box.", Alert.AlertType.error);
             }
         }
 
@@ -148,14 +154,10 @@ namespace WindowsFormsApplication2
         {
             if (btnNew.Text == "SAVE")
             {
-                //SAVE FUNCTION
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
-
                 //Check if all fields has a value
                 if (CheckAllTextFields() == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -173,19 +175,26 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertClient";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Client_Code", txtCode.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Name", txtName.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
-                cmd.Parameters.AddWithValue("@Telephone", txtTelephone.Text);
-                cmd.Parameters.AddWithValue("@Fax", txtFaxNumber.Text);
-                cmd.ExecuteNonQuery();
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertClient";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Client_Code", txtCode.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Name", txtName.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
+                    cmd.Parameters.AddWithValue("@Telephone", txtTelephone.Text);
+                    cmd.Parameters.AddWithValue("@Fax", txtFaxNumber.Text);
+                    cmd.ExecuteNonQuery();
+                }
+
+                   
 
                 //Success Message
-                Alert.show("Successfully Added", Alert.AlertType.success);
+                Alert.show("Successfully Added.", Alert.AlertType.success);
 
                 //Load Data
                 loadClient();
@@ -274,26 +283,29 @@ namespace WindowsFormsApplication2
                 //Check if all fields has a value
                 if (CheckAllTextFields() == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateClient";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Client_Code", txtCode.Text);
-                cmd.Parameters.AddWithValue("@Name", txtName.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
-                cmd.Parameters.AddWithValue("@Telephone", txtTelephone.Text);
-                cmd.Parameters.AddWithValue("@Fax", txtFaxNumber.Text);
-                cmd.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateClient";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Client_Code", txtCode.Text);
+                    cmd.Parameters.AddWithValue("@Name", txtName.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
+                    cmd.Parameters.AddWithValue("@Telephone", txtTelephone.Text);
+                    cmd.Parameters.AddWithValue("@Fax", txtFaxNumber.Text);
+                    cmd.ExecuteNonQuery();
+                }
+
 
                 //Success
-                Alert.show("Successfully Updated", Alert.AlertType.success);
+                Alert.show("Successfully updated.", Alert.AlertType.success);
 
                 //loadData
                 loadClient();
@@ -338,7 +350,7 @@ namespace WindowsFormsApplication2
             if (txtCode.Text == "")
             {
                 //No Data to be deleted
-                Alert.show("Please select client you want to delete!", Alert.AlertType.error);
+                Alert.show("Please select client you want to delete.", Alert.AlertType.error);
                 return;
             }
 
@@ -349,15 +361,17 @@ namespace WindowsFormsApplication2
             {
                 //Delete or Tagged as Inactive goes here
                 //CONNECTION TO SQL SERVER AND STORED PROCEDURE
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InactiveClient";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Client_Code", txtCode.Text);
-                cmd.ExecuteNonQuery();
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();    
+            
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InactiveClient";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Client_Code", txtCode.Text);
+                    cmd.ExecuteNonQuery();
+                }
 
                 //Message
                 Alert.show("Company Successfully Deleted", Alert.AlertType.success);

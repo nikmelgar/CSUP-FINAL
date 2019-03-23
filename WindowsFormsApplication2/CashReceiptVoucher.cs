@@ -117,15 +117,19 @@ namespace WindowsFormsApplication2
                     panelTrans.Visible = true;
 
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Transaction_Code, REPLACE(transaction_code, 'TRAN', '') as Code,[Description] From Transaction_Type where isActive = 1 and transaction_code ='TRAN021' or (transaction_Code between 'TRAN001' and 'TRAN007')", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    dgvTrans.DataSource = dt;
-                    dgvTrans.Columns["Transaction_Code"].Visible = false;
-                    dgvTrans.Columns["Code"].FillWeight = 30;
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT Transaction_Code, REPLACE(transaction_code, 'TRAN', '') as Code,[Description] From Transaction_Type where isActive = 1 and transaction_code ='TRAN021' or (transaction_Code between 'TRAN001' and 'TRAN007')", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        dgvTrans.DataSource = dt;
+                        dgvTrans.Columns["Transaction_Code"].Visible = false;
+                        dgvTrans.Columns["Code"].FillWeight = 30;
+                    }
+
 
                 }
                 else if(e.ColumnIndex == 1)
@@ -148,47 +152,48 @@ namespace WindowsFormsApplication2
 
 
                             //load database
-                            con = new SqlConnection();
-                            global.connection(con);
-                            
-                            if (txtPayorID.Text != "")
+                            using (SqlConnection con = new SqlConnection(global.connectString()))
                             {
-                                cmd = new SqlCommand();
-                                cmd.Connection = con;
-                                cmd.CommandText = "sp_ReturnLoanTypesPerUser";
-                                cmd.CommandType = CommandType.StoredProcedure;
-                                cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+                                con.Open();
 
-                                //Put in datatable
-                                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                                DataTable dt = new DataTable();
-                                adapter.Fill(dt);
-
-                                //If Theres a loan then make it visible
-                                // Now make it visible
-                                if (dt.Rows.Count > 0)
+                                if (txtPayorID.Text != "")
                                 {
-                                    panel38.Visible = true;
-                                }
-                                else
-                                {
-                                    panel38.Visible = false;
-                                }
+                                    cmd = new SqlCommand();
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "sp_ReturnLoanTypesPerUser";
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
 
-                                dataGridView2.DataSource = dt;
-                                dataGridView2.Columns["Loan_Type"].FillWeight = 30;
-                                dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
-                                dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+                                    //Put in datatable
+                                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                                    DataTable dt = new DataTable();
+                                    adapter.Fill(dt);
 
-                                //Hide other columns
-                                dataGridView2.Columns["Loan_No"].Visible = false;
-                                dataGridView2.Columns["userID"].Visible = false;
-                                dataGridView2.Columns["CurrentDr"].Visible = false;
-                                dataGridView2.Columns["PastDueDr"].Visible = false;
-                                dataGridView2.Columns["Balance"].Visible = false;
-                                dataGridView2.Columns["Deferred"].Visible = false;
+                                    //If Theres a loan then make it visible
+                                    // Now make it visible
+                                    if (dt.Rows.Count > 0)
+                                    {
+                                        panel38.Visible = true;
+                                    }
+                                    else
+                                    {
+                                        panel38.Visible = false;
+                                    }
+
+                                    dataGridView2.DataSource = dt;
+                                    dataGridView2.Columns["Loan_Type"].FillWeight = 30;
+                                    dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
+                                    dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+
+                                    //Hide other columns
+                                    dataGridView2.Columns["Loan_No"].Visible = false;
+                                    dataGridView2.Columns["userID"].Visible = false;
+                                    dataGridView2.Columns["CurrentDr"].Visible = false;
+                                    dataGridView2.Columns["PastDueDr"].Visible = false;
+                                    dataGridView2.Columns["Balance"].Visible = false;
+                                    dataGridView2.Columns["Deferred"].Visible = false;
+                                }
                             }
-                            
                         }
                     }
                     catch
@@ -210,19 +215,21 @@ namespace WindowsFormsApplication2
         {
             DataGridViewComboBoxColumn cbCell = (DataGridViewComboBoxColumn)datagridviewTransaction.Columns[0];
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT Transaction_Code, REPLACE(transaction_code, 'TRAN', '') as Code,[Description] From Transaction_Type where isActive = 1 and transaction_code ='TRAN021' or (transaction_Code between 'TRAN001' and 'TRAN007')", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Transaction_Code, REPLACE(transaction_code, 'TRAN', '') as Code,[Description] From Transaction_Type where isActive = 1 and transaction_code ='TRAN021' or (transaction_Code between 'TRAN001' and 'TRAN007')", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
 
-            cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
-            cbCell.AutoComplete = true;
-            cbCell.DisplayMember = "Code";
-            cbCell.ValueMember = "Code";
-            cbCell.DataSource = dt;
+                cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+                cbCell.AutoComplete = true;
+                cbCell.DisplayMember = "Code";
+                cbCell.ValueMember = "Code";
+                cbCell.DataSource = dt;
+            }
         }
 
         private void CashReceiptVoucher_Load(object sender, EventArgs e)
@@ -329,6 +336,15 @@ namespace WindowsFormsApplication2
         private void dgvTrans_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             datagridviewTransaction.Rows[selectedRow].Cells[selected].Value = dgvTrans.SelectedRows[0].Cells["Code"].Value.ToString();
+
+            if(dgvTrans.SelectedRows[0].Cells["Code"].Value.ToString() != "002")
+            {
+                datagridviewTransaction.Rows[selectedRow].Cells[selected + 1].Value = dgvTrans.SelectedRows[0].Cells["Description"].Value.ToString();
+            }
+            else
+            {
+                datagridviewTransaction.Rows[selectedRow].Cells[selected + 1].Value = "";
+            }
 
             datagridviewTransaction.CurrentRow.Cells[2].ReadOnly = false;
             panelTrans.Visible = false;
@@ -449,19 +465,23 @@ namespace WindowsFormsApplication2
                     panel14.Visible = false;
 
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    dgvDetails.DataSource = dt;
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                    dgvDetails.Columns["Account_code"].HeaderText = "Code";
-                    dgvDetails.Columns["Account_code"].FillWeight = 30;
+                        dgvDetails.DataSource = dt;
 
-                    dgvDetails.Columns["Account_Description"].HeaderText = "Description";
-                    txtSearch.Focus();
+                        dgvDetails.Columns["Account_code"].HeaderText = "Code";
+                        dgvDetails.Columns["Account_code"].FillWeight = 30;
+
+                        dgvDetails.Columns["Account_Description"].HeaderText = "Description";
+                        txtSearch.Focus();
+                    }
+                      
                 }
                 else if (e.ColumnIndex == 1)
                 {
@@ -481,21 +501,25 @@ namespace WindowsFormsApplication2
                     //disable panel account description
                     panelDetails.Visible = false;
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    dataGridView1.DataSource = dt;
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                    dataGridView1.Columns["userID"].Visible = false;
+                        dataGridView1.DataSource = dt;
 
-                    dataGridView1.Columns["EmployeeID"].HeaderText = "ID";
-                    dataGridView1.Columns["EmployeeID"].FillWeight = 30;
+                        dataGridView1.Columns["userID"].Visible = false;
+
+                        dataGridView1.Columns["EmployeeID"].HeaderText = "ID";
+                        dataGridView1.Columns["EmployeeID"].FillWeight = 30;
 
 
-                    textBox1.Focus();
+                        textBox1.Focus();
+                    }
+
                 }
                 else
                 {
@@ -621,19 +645,23 @@ namespace WindowsFormsApplication2
         {
             DataGridViewComboBoxColumn cbCell = (DataGridViewComboBoxColumn)dataGridView3.Columns[0];
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT account_Code,account_Description From chart_of_Accounts", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT account_Code,account_Description From chart_of_Accounts", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
 
-            cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
-            cbCell.AutoComplete = true;
-            cbCell.DisplayMember = "account_Description";
-            cbCell.ValueMember = "account_code";
-            cbCell.DataSource = dt;
+                cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+                cbCell.AutoComplete = true;
+                cbCell.DisplayMember = "account_Description";
+                cbCell.ValueMember = "account_code";
+                cbCell.DataSource = dt;
+            }
+
+              
         }
 
         private void dataGridView3_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -673,36 +701,42 @@ namespace WindowsFormsApplication2
         {
             if (txtSearch.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Account_Code,Account_Description from chart_of_accounts where Account_Code like '%" + txtSearch.Text + "%' or account_Description like '%" + txtSearch.Text + "%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Account_Code,Account_Description from chart_of_accounts where Account_Code like '%" + txtSearch.Text + "%' or account_Description like '%" + txtSearch.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dgvDetails.DataSource = dt;
+                    dgvDetails.DataSource = dt;
 
-                dgvDetails.Columns["Account_code"].HeaderText = "Code";
-                dgvDetails.Columns["Account_code"].FillWeight = 30;
+                    dgvDetails.Columns["Account_code"].HeaderText = "Code";
+                    dgvDetails.Columns["Account_code"].FillWeight = 30;
 
-                dgvDetails.Columns["Account_Description"].HeaderText = "Description";
-                txtSearch.Focus();
+                    dgvDetails.Columns["Account_Description"].HeaderText = "Description";
+                    txtSearch.Focus();
+                }
             }
             else
             {
-                con = new SqlConnection();
-                global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                dgvDetails.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dgvDetails.Columns["Account_code"].HeaderText = "Code";
-                dgvDetails.Columns["Account_code"].FillWeight = 30;
+                    dgvDetails.DataSource = dt;
 
-                dgvDetails.Columns["Account_Description"].HeaderText = "Description";
-                txtSearch.Focus();
+                    dgvDetails.Columns["Account_code"].HeaderText = "Code";
+                    dgvDetails.Columns["Account_code"].FillWeight = 30;
+
+                    dgvDetails.Columns["Account_Description"].HeaderText = "Description";
+                    txtSearch.Focus();
+                }
+                    
             }
         }
 
@@ -712,7 +746,7 @@ namespace WindowsFormsApplication2
             {
                 if(txtPayorID.Text == "")
                 {
-                    Alert.show("Please select Member first!", Alert.AlertType.warning);
+                    Alert.show("Please select member first.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -724,157 +758,158 @@ namespace WindowsFormsApplication2
 
                 if(radioMember.Checked == true)
                 {
-                    con = new SqlConnection();
-                    global.connection(con);
-
-                    dataGridView3.Rows.Clear();
-                    int x, y;
-                    x = datagridviewTransaction.Rows.Count - 1;
-                    y = 0; //Set Count
-
-
-                    //Change from last to first Record for Payment
-                    ArrayList row1 = new ArrayList();
-                    if (radioCash.Checked == true || radioPecciCheck.Checked == true)
+                    using (SqlConnection con = new SqlConnection (global.connectString()))
                     {
-                        //Cash
-                        row1.Add("101");
-                        row1.Add("");
-                        row1.Add("");
-                        row1.Add(txtTransAmount.Text);
-                        row1.Add("0.00");
-                        row1.Add("0");
-                        dataGridView3.Rows.Add(row1.ToArray());
-                    }
-                    else
-                    {
-                        //COCI
-                        row1.Add("105");
-                        row1.Add("");
-                        row1.Add("");
-                        row1.Add(txtTransAmount.Text);
-                        row1.Add("0.00");
-                        row1.Add("0");
-                        dataGridView3.Rows.Add(row1.ToArray());
-                    }
+                        con.Open();
 
-                    //Details Credit
-                    while (y != x)
-                    {
-                        //Savings || Loans || Share Capital
-                        if (datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "001" || datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "002" || datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "003")
+                        dataGridView3.Rows.Clear();
+                        int x, y;
+                        x = datagridviewTransaction.Rows.Count - 1;
+                        y = 0; //Set Count
+
+
+                        //Change from last to first Record for Payment
+                        ArrayList row1 = new ArrayList();
+                        if (radioCash.Checked == true || radioPecciCheck.Checked == true)
                         {
-                            ArrayList row = new ArrayList();
-                            switch (datagridviewTransaction.Rows[y].Cells[0].Value.ToString())
+                            //Cash
+                            row1.Add("101");
+                            row1.Add("");
+                            row1.Add("");
+                            row1.Add(txtTransAmount.Text);
+                            row1.Add("0.00");
+                            row1.Add("0");
+                            dataGridView3.Rows.Add(row1.ToArray());
+                        }
+                        else
+                        {
+                            //COCI
+                            row1.Add("105");
+                            row1.Add("");
+                            row1.Add("");
+                            row1.Add(txtTransAmount.Text);
+                            row1.Add("0.00");
+                            row1.Add("0");
+                            dataGridView3.Rows.Add(row1.ToArray());
+                        }
+
+                        //Details Credit
+                        while (y != x)
+                        {
+                            //Savings || Loans || Share Capital
+                            if (datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "001" || datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "002" || datagridviewTransaction.Rows[y].Cells[0].Value.ToString() == "003")
                             {
-                                case "001":
-                                    //Savings
-                                    row.Add("300.1");
-                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                    row.Add("");
-                                    row.Add("0.00");
-                                    row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
-                                    row.Add(Classes.clsCashReceipt.userID.ToString());
-                                    dataGridView3.Rows.Add(row.ToArray());
-                                    break;
-                                case "002":
-                                    //Loans
+                                ArrayList row = new ArrayList();
+                                switch (datagridviewTransaction.Rows[y].Cells[0].Value.ToString())
+                                {
+                                    case "001":
+                                        //Savings
+                                        row.Add("300.1");
+                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                        row.Add("");
+                                        row.Add("0.00");
+                                        row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                        dataGridView3.Rows.Add(row.ToArray());
+                                        break;
+                                    case "002":
+                                        //Loans
 
-                                    cmd = new SqlCommand();
-                                    cmd.Connection = con;
-                                    cmd.CommandText = "sp_ReturnLoanTypesPerUserSEARCH";
-                                    cmd.CommandType = CommandType.StoredProcedure;
-                                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
-                                    cmd.Parameters.AddWithValue("@description", datagridviewTransaction.Rows[y].Cells[1].Value.ToString());
+                                        cmd = new SqlCommand();
+                                        cmd.Connection = con;
+                                        cmd.CommandText = "sp_ReturnLoanTypesPerUserSEARCH";
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+                                        cmd.Parameters.AddWithValue("@description", datagridviewTransaction.Rows[y].Cells[1].Value.ToString());
 
-                                    //Put in datatable
-                                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                                    DataTable dt = new DataTable();
-                                    adapter.Fill(dt);
+                                        //Put in datatable
+                                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                                        DataTable dt = new DataTable();
+                                        adapter.Fill(dt);
 
-                                    //Declare Double first
-                                    Double balance, deferred, amountInput, Excess;
+                                        //Declare Double first
+                                        Double balance, deferred, amountInput, Excess;
 
-                                    //Set Variable Values
-                                    balance = Convert.ToDouble(dt.Rows[0].ItemArray[6].ToString());
-                                    deferred = Convert.ToDouble(dt.Rows[0].ItemArray[7].ToString());
-                                    amountInput = Convert.ToDouble(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                        //Set Variable Values
+                                        balance = Convert.ToDouble(dt.Rows[0].ItemArray[6].ToString());
+                                        deferred = Convert.ToDouble(dt.Rows[0].ItemArray[7].ToString());
+                                        amountInput = Convert.ToDouble(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
 
-                                    //Has a deferred loan
-                                    if(deferred != 0.00 || deferred != 0)
-                                    {
-                                        if(amountInput > deferred)
+                                        //Has a deferred loan
+                                        if (deferred != 0.00 || deferred != 0)
                                         {
-                                            //Payment is greater than deferred 
-                                            //Past Due First
-                                            Excess = amountInput - deferred;
+                                            if (amountInput > deferred)
+                                            {
+                                                //Payment is greater than deferred 
+                                                //Past Due First
+                                                Excess = amountInput - deferred;
 
-                                            row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
-                                            row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                            row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
-                                            row.Add("0.00");
-                                            row.Add(Convert.ToDecimal(deferred).ToString("#,0.00"));
-                                            row.Add(Classes.clsCashReceipt.userID.ToString());
-                                            dataGridView3.Rows.Add(row.ToArray());
+                                                row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
+                                                row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                                row.Add("0.00");
+                                                row.Add(Convert.ToDecimal(deferred).ToString("#,0.00"));
+                                                row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                dataGridView3.Rows.Add(row.ToArray());
 
+                                                //Current Loan
+                                                row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
+                                                row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                                row.Add("0.00");
+                                                row.Add(Convert.ToDecimal(Excess).ToString("#,0.00"));
+                                                row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                dataGridView3.Rows.Add(row.ToArray());
+                                            }
+                                            else //For exact and Less than the amount
+                                            {
+                                                //Exact Amount 
+                                                row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
+                                                row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                                row.Add("0.00");
+                                                row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                                row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                dataGridView3.Rows.Add(row.ToArray());
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //No Deferred Loan
                                             //Current Loan
                                             row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
                                             row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
                                             row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
                                             row.Add("0.00");
-                                            row.Add(Convert.ToDecimal(Excess).ToString("#,0.00"));
+                                            row.Add(Convert.ToDecimal(datagridviewTransaction.Rows[y].Cells[2].Value.ToString()).ToString("#,0.00"));
                                             row.Add(Classes.clsCashReceipt.userID.ToString());
                                             dataGridView3.Rows.Add(row.ToArray());
                                         }
-                                        else //For exact and Less than the amount
-                                        {
-                                            //Exact Amount 
-                                            row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
-                                            row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                            row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
-                                            row.Add("0.00");
-                                            row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
-                                            row.Add(Classes.clsCashReceipt.userID.ToString());
-                                            dataGridView3.Rows.Add(row.ToArray());
-                                        }
-                                    }
-                                    else
-                                    {
-                                        //No Deferred Loan
-                                        //Current Loan
-                                        row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
+
+
+                                        //Restore Variables to 0;
+                                        balance = 0;
+                                        deferred = 0;
+                                        amountInput = 0;
+                                        Excess = 0;
+                                        break;
+                                    case "003":
+                                        //Share Capital
+                                        row.Add("363");
                                         row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                        row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                        row.Add("");
                                         row.Add("0.00");
-                                        row.Add(Convert.ToDecimal(datagridviewTransaction.Rows[y].Cells[2].Value.ToString()).ToString("#,0.00"));
+                                        row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
                                         row.Add(Classes.clsCashReceipt.userID.ToString());
                                         dataGridView3.Rows.Add(row.ToArray());
-                                    }
+                                        break;
+                                }
 
-
-                                    //Restore Variables to 0;
-                                    balance = 0;
-                                    deferred = 0;
-                                    amountInput = 0;
-                                    Excess = 0;
-                                    break;
-                                case "003":
-                                    //Share Capital
-                                    row.Add("363");
-                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                    row.Add("");
-                                    row.Add("0.00");
-                                    row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
-                                    row.Add(Classes.clsCashReceipt.userID.ToString());
-                                    dataGridView3.Rows.Add(row.ToArray());
-                                    break;
                             }
 
+                            y = y + 1;
                         }
-
-                        y = y + 1;
                     }
-                    
                     //var index = dataGridView3.Rows.Add();
                     //dataGridView3.Rows[index].Cells[0].Value = "101";
                     //dataGridView3.Rows[index].Cells[3].Value = txtTransAmount.Text;
@@ -916,200 +951,212 @@ namespace WindowsFormsApplication2
                     //=================================================================================================
                     //                              SQL CONNECTION
                     //=================================================================================================
-                    con = new SqlConnection();
-                    global.connection(con);
-
-
-                    //=================================================================================================
-                    //                              FOR CASH TRANSACTION
-                    //=================================================================================================
-
-                    //=================================================================================================
-                    //                              CASH RECEIPT HEADER
-                    //=================================================================================================
-                    cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_InsertCashReceiptsHeader";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                    cmd.Parameters.AddWithValue("@Or_Date", dtOrDate.Text);
-
-                    //FOr Payee Type 
-                    //Member = 0 Client = 1
-                    if (radioMember.Checked == true)
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
-                        cmd.Parameters.AddWithValue("@Payor_Type", "0");
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Payor_Type", "1");
-                    }
+                        con.Open();
 
-                    //Check if Theres a Member or Client
-                    if (Classes.clsCashReceipt.userID.ToString() == "")
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        //=================================================================================================
+                        //                              FOR CASH TRANSACTION
+                        //=================================================================================================
 
-                    }
-                    else if (Classes.clsCashReceipt.userID == 0)
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@userID", Classes.clsCashReceipt.userID.ToString());
-                    }
+                        //=================================================================================================
+                        //                              CASH RECEIPT HEADER
+                        //=================================================================================================
+                        cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_InsertCashReceiptsHeader";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                        cmd.Parameters.AddWithValue("@Or_Date", dtOrDate.Text);
 
-                    cmd.Parameters.AddWithValue("@Payor", txtPayorID.Text);
-                    cmd.Parameters.AddWithValue("@Particulars", txtParticulars.Text);
-
-                    //============= FOr Collection Type
-                    //0 = Cash
-                    //1 = Pecci Check
-                    //2 = Non-Pecci Check
-                    if(radioCash.Checked == true)
-                    {
-                        //Cash
-                        cmd.Parameters.AddWithValue("@Collection_Type", "0");
-                        cmd.Parameters.AddWithValue("@Bank", DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
-                    }
-                    else if(radioPecciCheck.Checked == true)
-                    {
-                        //Pecci Check
-                        cmd.Parameters.AddWithValue("@Collection_Type", "1");
-                        cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
-                        
-                    }
-                    else
-                    {
-                        //Non-Pecci
-                        cmd.Parameters.AddWithValue("@Collection_Type", "2");
-                        cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
-                    }
-
-                    cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
-
-                    cmd.ExecuteNonQuery(); //SAVING CASH HEADER
-
-
-                    //=================================================================================================
-                    //                              CASH RECEIPT DETAIL
-                    //=================================================================================================
-                    if (dataGridView3.Rows.Count > 0) //DETAIL GRID
-                    {
-                        foreach (DataGridViewRow row in dataGridView3.Rows)
+                        //FOr Payee Type 
+                        //Member = 0 Client = 1
+                        if (radioMember.Checked == true)
                         {
-                            if (row.Cells[0].Value != null) //Not New ROW
+                            cmd.Parameters.AddWithValue("@Payor_Type", "0");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Payor_Type", "1");
+                        }
+
+                        //Check if Theres a Member or Client
+                        if (Classes.clsCashReceipt.userID.ToString() == "")
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                        }
+                        else if (Classes.clsCashReceipt.userID == 0)
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@userID", Classes.clsCashReceipt.userID.ToString());
+                        }
+
+                        cmd.Parameters.AddWithValue("@Payor", txtPayorID.Text);
+                        cmd.Parameters.AddWithValue("@Particulars", txtParticulars.Text);
+
+                        //============= FOr Collection Type
+                        //0 = Cash
+                        //1 = Pecci Check
+                        //2 = Non-Pecci Check
+                        if (radioCash.Checked == true)
+                        {
+                            //Cash
+                            cmd.Parameters.AddWithValue("@Collection_Type", "0");
+                            cmd.Parameters.AddWithValue("@Bank", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
+                        }
+                        else if (radioPecciCheck.Checked == true)
+                        {
+                            //Pecci Check
+                            cmd.Parameters.AddWithValue("@Collection_Type", "1");
+                            cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
+
+                        }
+                        else
+                        {
+                            //Non-Pecci
+                            cmd.Parameters.AddWithValue("@Collection_Type", "2");
+                            cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
+                        }
+
+                        cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
+
+                        //Adding Location as Per Maam Diane Request
+                        //Added 2019 March 03
+
+                        if (radioLocPerea.Checked == true)
+                        {
+                            cmd.Parameters.AddWithValue("@Location", radioLocPerea.Text);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Location", radioLocTeltech.Text);
+                        }
+
+                        cmd.ExecuteNonQuery(); //SAVING CASH HEADER
+
+
+                        //=================================================================================================
+                        //                              CASH RECEIPT DETAIL
+                        //=================================================================================================
+                        if (dataGridView3.Rows.Count > 0) //DETAIL GRID
+                        {
+                            foreach (DataGridViewRow row in dataGridView3.Rows)
                             {
-                                SqlCommand cmdDetail = new SqlCommand();
-                                cmdDetail.Connection = con;
-                                cmdDetail.CommandText = "sp_InsertCashReceiptsDetail";
-                                cmdDetail.CommandType = CommandType.StoredProcedure;
-                                cmdDetail.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                                cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+                                if (row.Cells[0].Value != null) //Not New ROW
+                                {
+                                    SqlCommand cmdDetail = new SqlCommand();
+                                    cmdDetail.Connection = con;
+                                    cmdDetail.CommandText = "sp_InsertCashReceiptsDetail";
+                                    cmdDetail.CommandType = CommandType.StoredProcedure;
+                                    cmdDetail.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                                    cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                                if (Convert.ToInt32(row.Cells[5].Value) == 0 || row.Cells[5].Value.ToString() == "")
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                                }
+                                    if (Convert.ToInt32(row.Cells[5].Value) == 0 || row.Cells[5].Value.ToString() == "")
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                    }
 
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                                }
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                    }
 
 
-                                if (row.Cells[2].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
+                                    if (row.Cells[2].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
 
-                                cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                                cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                                cmdDetail.ExecuteNonQuery(); //SAVING CASH DETAILS
+                                    cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                    cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                    cmdDetail.ExecuteNonQuery(); //SAVING CASH DETAILS
+                                }
                             }
                         }
-                    }
 
 
 
-                    //=================================================================================================
-                    //                              CASH TRANSACTION
-                    //=================================================================================================
-                    if(datagridviewTransaction.Rows.Count > 0)
-                    {
-                        foreach (DataGridViewRow row in datagridviewTransaction.Rows)
+                        //=================================================================================================
+                        //                              CASH TRANSACTION
+                        //=================================================================================================
+                        if (datagridviewTransaction.Rows.Count > 0)
                         {
-                            if(row.Cells[0].Value != null)
-                            {
-                                SqlCommand cmdTrans = new SqlCommand();
-                                cmdTrans.Connection = con;
-                                cmdTrans.CommandText = "sp_InsertCashReceiptsTrans";
-                                cmdTrans.CommandType = CommandType.StoredProcedure;
-                                cmdTrans.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                                cmdTrans.Parameters.AddWithValue("@Transaction_Type", row.Cells[0].Value);
-
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdTrans.Parameters.AddWithValue("@Loan_No", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdTrans.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
-
-                                cmdTrans.Parameters.AddWithValue("@Amount", Convert.ToDecimal(row.Cells[2].Value));
-                                cmdTrans.ExecuteNonQuery(); //SAVING TRANSACTION
-                            }
-                        }
-                    }
-
-                    //=================================================================================================
-                    //                         BANK FOR CHECK IF COLLECTION MODE IS NOT CASH
-                    //=================================================================================================
-
-                    if(radioPecciCheck.Checked == true || radioNonPecciCheck.Checked == true)
-                    {
-                        if (dgvChecks.Rows.Count > 0)
-                        {
-                            foreach (DataGridViewRow row in dgvChecks.Rows) 
+                            foreach (DataGridViewRow row in datagridviewTransaction.Rows)
                             {
                                 if (row.Cells[0].Value != null)
                                 {
-                                    SqlCommand cmdchek = new SqlCommand();
-                                    cmdchek.Connection = con;
-                                    cmdchek.CommandText = "sp_InsertCashReceiptsChecks";
-                                    cmdchek.CommandType = CommandType.StoredProcedure;
-                                    cmdchek.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                                    cmdchek.Parameters.AddWithValue("@Bank", row.Cells[0].Value);
-                                    cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value.ToString().Replace(",",""));
-                                    cmdchek.Parameters.AddWithValue("@Check_Date", row.Cells[2].Value);
-                                    cmdchek.Parameters.AddWithValue("@Check_No", row.Cells[3].Value);
-                                    cmdchek.ExecuteNonQuery(); //SAVING TRANSACTION
+                                    SqlCommand cmdTrans = new SqlCommand();
+                                    cmdTrans.Connection = con;
+                                    cmdTrans.CommandText = "sp_InsertCashReceiptsTrans";
+                                    cmdTrans.CommandType = CommandType.StoredProcedure;
+                                    cmdTrans.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                                    cmdTrans.Parameters.AddWithValue("@Transaction_Type", row.Cells[0].Value);
+
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdTrans.Parameters.AddWithValue("@Loan_No", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdTrans.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
+
+                                    cmdTrans.Parameters.AddWithValue("@Amount", Convert.ToDecimal(row.Cells[2].Value));
+                                    cmdTrans.ExecuteNonQuery(); //SAVING TRANSACTION
+                                }
+                            }
+                        }
+
+                        //=================================================================================================
+                        //                         BANK FOR CHECK IF COLLECTION MODE IS NOT CASH
+                        //=================================================================================================
+
+                        if (radioPecciCheck.Checked == true || radioNonPecciCheck.Checked == true)
+                        {
+                            if (dgvChecks.Rows.Count > 0)
+                            {
+                                foreach (DataGridViewRow row in dgvChecks.Rows)
+                                {
+                                    if (row.Cells[0].Value != null)
+                                    {
+                                        SqlCommand cmdchek = new SqlCommand();
+                                        cmdchek.Connection = con;
+                                        cmdchek.CommandText = "sp_InsertCashReceiptsChecks";
+                                        cmdchek.CommandType = CommandType.StoredProcedure;
+                                        cmdchek.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                                        cmdchek.Parameters.AddWithValue("@Bank", row.Cells[0].Value);
+                                        cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value.ToString().Replace(",", ""));
+                                        cmdchek.Parameters.AddWithValue("@Check_Date", row.Cells[2].Value);
+                                        cmdchek.Parameters.AddWithValue("@Check_No", row.Cells[3].Value);
+                                        cmdchek.ExecuteNonQuery(); //SAVING TRANSACTION
+                                    }
                                 }
                             }
                         }
                     }
-
-                    Alert.show("Cash Receipts Successfully Created!", Alert.AlertType.success);
+                    Alert.show("Receipt voucher successfully created.", Alert.AlertType.success);
                     //RESTORE COMMANDS AND TEXT
                     AfterSavingOrUpdating();
                 }
@@ -1171,34 +1218,39 @@ namespace WindowsFormsApplication2
         {
             if (textBox1.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView1.DataSource = dt;
+                    dataGridView1.DataSource = dt;
 
-                dataGridView1.Columns["userID"].Visible = false;
+                    dataGridView1.Columns["userID"].Visible = false;
 
-                dataGridView1.Columns["EmployeeID"].HeaderText = "ID";
-                dataGridView1.Columns["EmployeeID"].FillWeight = 30;
-                textBox1.Focus();
+                    dataGridView1.Columns["EmployeeID"].HeaderText = "ID";
+                    dataGridView1.Columns["EmployeeID"].FillWeight = 30;
+                    textBox1.Focus();
+                }
             }
             else
             {
-                con = new SqlConnection();
-                global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                dataGridView1.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(CASE WHEN Suffix is NOT NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix WHEN Suffix is NULL THEN LastName+', '+ FirstName + SPACE(1) + MiddleName END) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView1.Columns["EmployeeID"].HeaderText = "ID";
-                dataGridView1.Columns["EmployeeID"].FillWeight = 30;
-                textBox1.Focus();
+                    dataGridView1.DataSource = dt;
+
+                    dataGridView1.Columns["EmployeeID"].HeaderText = "ID";
+                    dataGridView1.Columns["EmployeeID"].FillWeight = 30;
+                    textBox1.Focus();
+                }
             }
         }
 
@@ -1216,6 +1268,7 @@ namespace WindowsFormsApplication2
             btnSearch.Enabled = false;
             btnClose.Text = "CANCEL";
             btnNew.Text = "SAVE";
+            radioLocPerea.Checked = true;
 
             status.Visible = false;
             //=======================================
@@ -1269,6 +1322,7 @@ namespace WindowsFormsApplication2
             //=======================================
             txtPostedBy.Text = "";
             txtCancelledBy.Text = "";
+            txtPreparedBy.Text = Classes.clsUser.Username;
 
         }
 
@@ -1345,14 +1399,14 @@ namespace WindowsFormsApplication2
             if(clsSearchCash.checkIfPosted(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Cash Receipt Already Posted!", Alert.AlertType.error);
+                Alert.show("Receipt voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
             if (clsSearchCash.checkIfCancelled(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Cash Receipt Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Receipt voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1361,20 +1415,20 @@ namespace WindowsFormsApplication2
             if (result == DialogResult.Yes)
             {
                 //Code for posting
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_PostingCashReceipt";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                cmd.Parameters.AddWithValue("@Posted_By", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
-
-
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_PostingCashReceipt";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                    cmd.Parameters.AddWithValue("@Posted_By", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
+                }
                 //Success Message
-                Alert.show("Cash Receipts Successfully Posted!", Alert.AlertType.success);
+                Alert.show("Receipt voucher successfully posted.", Alert.AlertType.success);
 
                 //Display Message
                 status.Visible = true;
@@ -1402,14 +1456,14 @@ namespace WindowsFormsApplication2
             if (clsSearchCash.checkIfPosted(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Cash Receipt Already Posted!", Alert.AlertType.error);
+                Alert.show("Receipt voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
             if (clsSearchCash.checkIfCancelled(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Cash Receipt Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Receipt voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1417,7 +1471,7 @@ namespace WindowsFormsApplication2
             txtParticulars.Enabled = true;
             if (txtParticulars.Text == "")
             {
-                Alert.show("Please put note on particulars before cancellation!", Alert.AlertType.error);
+                Alert.show("Please enter reason for cancellation at Particulars.", Alert.AlertType.error);
                 return;
             }
 
@@ -1432,20 +1486,22 @@ namespace WindowsFormsApplication2
 
 
                 //Code for posting
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_CancellationOfCashReceipt";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                cmd.Parameters.AddWithValue("@Cancel_Note", txtParticulars.Text);
-                cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_CancellationOfCashReceipt";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                    cmd.Parameters.AddWithValue("@Cancel_Note", txtParticulars.Text);
+                    cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
+                }
 
                 //Success Message
-                Alert.show("Cash Receipt Successfully Cancelled!", Alert.AlertType.success);
+                Alert.show("Receipt voucher successfully cancelled.", Alert.AlertType.success);
 
                 //Display Message
                 status.Visible = true;
@@ -1479,14 +1535,14 @@ namespace WindowsFormsApplication2
             if (clsSearchCash.checkIfPosted(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Cash Receipt Already Posted!", Alert.AlertType.error);
+                Alert.show("Receipt voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
             if (clsSearchCash.checkIfCancelled(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Cash Receipt Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Receipt voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1514,235 +1570,237 @@ namespace WindowsFormsApplication2
                     //=================================================================================================
                     //                              SQL CONNECTION
                     //=================================================================================================
-                    con = new SqlConnection();
-                    global.connection(con);
-
-
-                    //=================================================================================================
-                    //                              FOR CASH TRANSACTION
-                    //=================================================================================================
-
-                    //=================================================================================================
-                    //                              CASH RECEIPT HEADER
-                    //=================================================================================================
-                    cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_UpdateCashReceiptsHeader";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                    cmd.Parameters.AddWithValue("@Or_Date", dtOrDate.Text);
-
-                    //FOr Payee Type 
-                    //Member = 0 Client = 1
-                    if (radioMember.Checked == true)
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
-                        cmd.Parameters.AddWithValue("@Payor_Type", "0");
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Payor_Type", "1");
-                    }
+                        con.Open();
 
-                    //Check if Theres a Member or Client
-                    if (Classes.clsCashReceipt.userID.ToString() == "")
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        //=================================================================================================
+                        //                              FOR CASH TRANSACTION
+                        //=================================================================================================
 
-                    }
-                    else if (Classes.clsCashReceipt.userID == 0)
-                    {
-                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@userID", Classes.clsCashReceipt.userID.ToString());
-                    }
+                        //=================================================================================================
+                        //                              CASH RECEIPT HEADER
+                        //=================================================================================================
+                        cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_UpdateCashReceiptsHeader";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                        cmd.Parameters.AddWithValue("@Or_Date", dtOrDate.Text);
 
-                    cmd.Parameters.AddWithValue("@Payor", txtPayorID.Text);
-                    cmd.Parameters.AddWithValue("@Particulars", txtParticulars.Text);
-
-                    //============= FOr Collection Type
-                    //0 = Cash
-                    //1 = Pecci Check
-                    //2 = Non-Pecci Check
-                    if (radioCash.Checked == true)
-                    {
-                        //Cash
-                        cmd.Parameters.AddWithValue("@Collection_Type", "0");
-                        cmd.Parameters.AddWithValue("@Bank", DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
-                    }
-                    else if (radioPecciCheck.Checked == true)
-                    {
-                        //Pecci Check
-                        cmd.Parameters.AddWithValue("@Collection_Type", "1");
-                        cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
-
-                    }
-                    else
-                    {
-                        //Non-Pecci
-                        cmd.Parameters.AddWithValue("@Collection_Type", "2");
-                        cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
-                        cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
-                    }
-
-                    cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
-
-                    cmd.ExecuteNonQuery(); //SAVING CASH HEADER
-
-                    //=================================================================================================
-                    //                              Delete Details, Trans, Cheque
-                    //=================================================================================================
-
-                    SqlCommand cmdDeleteDetails = new SqlCommand();
-                    cmdDeleteDetails.Connection = con;
-                    cmdDeleteDetails.CommandText = "sp_DeleteCashReceiptDetail";
-                    cmdDeleteDetails.CommandType = CommandType.StoredProcedure;
-                    cmdDeleteDetails.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                    cmdDeleteDetails.ExecuteNonQuery();
-
-                    SqlCommand cmdDeleteTrans = new SqlCommand();
-                    cmdDeleteTrans.Connection = con;
-                    cmdDeleteTrans.CommandText = "sp_DeleteCashReceiptTrans";
-                    cmdDeleteTrans.CommandType = CommandType.StoredProcedure;
-                    cmdDeleteTrans.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                    cmdDeleteTrans.ExecuteNonQuery();
-
-                    SqlCommand cmdDeleteCheck = new SqlCommand();
-                    cmdDeleteCheck.Connection = con;
-                    cmdDeleteCheck.CommandText = "sp_DeleteCashReceiptChecks";
-                    cmdDeleteCheck.CommandType = CommandType.StoredProcedure;
-                    cmdDeleteCheck.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                    cmdDeleteCheck.ExecuteNonQuery();
-
-
-
-                    //=================================================================================================
-                    //                              CASH RECEIPT DETAIL
-                    //=================================================================================================
-                    if (dataGridView3.Rows.Count > 0) //DETAIL GRID
-                    {
-                        foreach (DataGridViewRow row in dataGridView3.Rows)
+                        //FOr Payee Type 
+                        //Member = 0 Client = 1
+                        if (radioMember.Checked == true)
                         {
-                            if (row.Cells[0].Value != null) //Not New ROW
+                            cmd.Parameters.AddWithValue("@Payor_Type", "0");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Payor_Type", "1");
+                        }
+
+                        //Check if Theres a Member or Client
+                        if (Classes.clsCashReceipt.userID.ToString() == "")
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                        }
+                        else if (Classes.clsCashReceipt.userID == 0)
+                        {
+                            cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@userID", Classes.clsCashReceipt.userID.ToString());
+                        }
+
+                        cmd.Parameters.AddWithValue("@Payor", txtPayorID.Text);
+                        cmd.Parameters.AddWithValue("@Particulars", txtParticulars.Text);
+
+                        //============= FOr Collection Type
+                        //0 = Cash
+                        //1 = Pecci Check
+                        //2 = Non-Pecci Check
+                        if (radioCash.Checked == true)
+                        {
+                            //Cash
+                            cmd.Parameters.AddWithValue("@Collection_Type", "0");
+                            cmd.Parameters.AddWithValue("@Bank", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
+                        }
+                        else if (radioPecciCheck.Checked == true)
+                        {
+                            //Pecci Check
+                            cmd.Parameters.AddWithValue("@Collection_Type", "1");
+                            cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
+
+                        }
+                        else
+                        {
+                            //Non-Pecci
+                            cmd.Parameters.AddWithValue("@Collection_Type", "2");
+                            cmd.Parameters.AddWithValue("@Bank", dgvChecks.Rows[0].Cells[0].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_Date", dgvChecks.Rows[0].Cells[2].Value.ToString());
+                            cmd.Parameters.AddWithValue("@Check_No", dgvChecks.Rows[0].Cells[3].Value.ToString());
+                        }
+
+                        cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
+
+                        cmd.ExecuteNonQuery(); //SAVING CASH HEADER
+
+                        //=================================================================================================
+                        //                              Delete Details, Trans, Cheque
+                        //=================================================================================================
+
+                        SqlCommand cmdDeleteDetails = new SqlCommand();
+                        cmdDeleteDetails.Connection = con;
+                        cmdDeleteDetails.CommandText = "sp_DeleteCashReceiptDetail";
+                        cmdDeleteDetails.CommandType = CommandType.StoredProcedure;
+                        cmdDeleteDetails.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                        cmdDeleteDetails.ExecuteNonQuery();
+
+                        SqlCommand cmdDeleteTrans = new SqlCommand();
+                        cmdDeleteTrans.Connection = con;
+                        cmdDeleteTrans.CommandText = "sp_DeleteCashReceiptTrans";
+                        cmdDeleteTrans.CommandType = CommandType.StoredProcedure;
+                        cmdDeleteTrans.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                        cmdDeleteTrans.ExecuteNonQuery();
+
+                        SqlCommand cmdDeleteCheck = new SqlCommand();
+                        cmdDeleteCheck.Connection = con;
+                        cmdDeleteCheck.CommandText = "sp_DeleteCashReceiptChecks";
+                        cmdDeleteCheck.CommandType = CommandType.StoredProcedure;
+                        cmdDeleteCheck.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                        cmdDeleteCheck.ExecuteNonQuery();
+
+
+
+                        //=================================================================================================
+                        //                              CASH RECEIPT DETAIL
+                        //=================================================================================================
+                        if (dataGridView3.Rows.Count > 0) //DETAIL GRID
+                        {
+                            foreach (DataGridViewRow row in dataGridView3.Rows)
                             {
-                                SqlCommand cmdDetail = new SqlCommand();
-                                cmdDetail.Connection = con;
-                                cmdDetail.CommandText = "sp_InsertCashReceiptsDetail";
-                                cmdDetail.CommandType = CommandType.StoredProcedure;
-                                cmdDetail.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                                cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+                                if (row.Cells[0].Value != null) //Not New ROW
+                                {
+                                    SqlCommand cmdDetail = new SqlCommand();
+                                    cmdDetail.Connection = con;
+                                    cmdDetail.CommandText = "sp_InsertCashReceiptsDetail";
+                                    cmdDetail.CommandType = CommandType.StoredProcedure;
+                                    cmdDetail.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                                    cmdDetail.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                                if (DBNull.Value.Equals(row.Cells[5]))
-                                {
-                                    //NULL
-                                    cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
-                                }
-                                else
-                                {
-                                    //Not Null
-                                    cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                                }
+                                    if (DBNull.Value.Equals(row.Cells[5]))
+                                    {
+                                        //NULL
+                                        cmdDetail.Parameters.AddWithValue("@userID", DBNull.Value);
+                                    }
+                                    else
+                                    {
+                                        //Not Null
+                                        cmdDetail.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                    }
 
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                                }
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                    }
 
 
-                                if (row.Cells[2].Value != null)
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                                }
-                                else
-                                {
-                                    cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
+                                    if (row.Cells[2].Value != null)
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdDetail.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
 
-                                cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                                cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                                cmdDetail.ExecuteNonQuery(); //SAVING CASH DETAILS
+                                    cmdDetail.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                    cmdDetail.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                    cmdDetail.ExecuteNonQuery(); //SAVING CASH DETAILS
+                                }
                             }
                         }
-                    }
 
 
 
-                    //=================================================================================================
-                    //                              CASH TRANSACTION
-                    //=================================================================================================
-                    if (datagridviewTransaction.Rows.Count > 0)
-                    {
-                        foreach (DataGridViewRow row in datagridviewTransaction.Rows)
+                        //=================================================================================================
+                        //                              CASH TRANSACTION
+                        //=================================================================================================
+                        if (datagridviewTransaction.Rows.Count > 0)
                         {
-                            if (row.Cells[0].Value != null)
-                            {
-                                SqlCommand cmdTrans = new SqlCommand();
-                                cmdTrans.Connection = con;
-                                cmdTrans.CommandText = "sp_InsertCashReceiptsTrans";
-                                cmdTrans.CommandType = CommandType.StoredProcedure;
-                                cmdTrans.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                                cmdTrans.Parameters.AddWithValue("@Transaction_Type", row.Cells[0].Value);
-
-                                if (row.Cells[1].Value != null)
-                                {
-                                    cmdTrans.Parameters.AddWithValue("@Loan_No", row.Cells[1].Value);
-                                }
-                                else
-                                {
-                                    cmdTrans.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                                }
-
-                                cmdTrans.Parameters.AddWithValue("@Amount", Convert.ToDecimal(row.Cells[2].Value));
-                                cmdTrans.ExecuteNonQuery(); //SAVING TRANSACTION
-                            }
-                        }
-                    }
-
-                    //=================================================================================================
-                    //                         BANK FOR CHECK IF COLLECTION MODE IS NOT CASH
-                    //=================================================================================================
-
-                    if (radioPecciCheck.Checked == true || radioNonPecciCheck.Checked == true)
-                    {
-                        if (dgvChecks.Rows.Count > 0)
-                        {
-                            //Delete First Records
-                            SqlCommand cmdDelete = new SqlCommand();
-                            cmdDelete.Connection = con;
-                            cmdDelete.CommandText = "DELETE Cash_Receipts_Checks Or_No = '"+ txtORNo.Text +"'";
-                            cmdDelete.CommandType = CommandType.Text;
-                            cmdDelete.ExecuteNonQuery();
-
-                            foreach (DataGridViewRow row in dgvChecks.Rows)
+                            foreach (DataGridViewRow row in datagridviewTransaction.Rows)
                             {
                                 if (row.Cells[0].Value != null)
                                 {
-                                    SqlCommand cmdchek = new SqlCommand();
-                                    cmdchek.Connection = con;
-                                    cmdchek.CommandText = "sp_InsertCashReceiptsChecks";
-                                    cmdchek.CommandType = CommandType.StoredProcedure;
-                                    cmdchek.Parameters.AddWithValue("@Or_No", txtORNo.Text);
-                                    cmdchek.Parameters.AddWithValue("@Bank", row.Cells[0].Value);
-                                    cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value.ToString().Replace(",",""));
-                                    cmdchek.Parameters.AddWithValue("@Check_Date", row.Cells[2].Value);
-                                    cmdchek.Parameters.AddWithValue("@Check_No", row.Cells[3].Value);
-                                    cmdchek.ExecuteNonQuery(); //SAVING TRANSACTION
+                                    SqlCommand cmdTrans = new SqlCommand();
+                                    cmdTrans.Connection = con;
+                                    cmdTrans.CommandText = "sp_InsertCashReceiptsTrans";
+                                    cmdTrans.CommandType = CommandType.StoredProcedure;
+                                    cmdTrans.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                                    cmdTrans.Parameters.AddWithValue("@Transaction_Type", row.Cells[0].Value);
+
+                                    if (row.Cells[1].Value != null)
+                                    {
+                                        cmdTrans.Parameters.AddWithValue("@Loan_No", row.Cells[1].Value);
+                                    }
+                                    else
+                                    {
+                                        cmdTrans.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                    }
+
+                                    cmdTrans.Parameters.AddWithValue("@Amount", Convert.ToDecimal(row.Cells[2].Value));
+                                    cmdTrans.ExecuteNonQuery(); //SAVING TRANSACTION
+                                }
+                            }
+                        }
+
+                        //=================================================================================================
+                        //                         BANK FOR CHECK IF COLLECTION MODE IS NOT CASH
+                        //=================================================================================================
+
+                        if (radioPecciCheck.Checked == true || radioNonPecciCheck.Checked == true)
+                        {
+                            if (dgvChecks.Rows.Count > 0)
+                            {
+                                //Delete First Records
+                                SqlCommand cmdDelete = new SqlCommand();
+                                cmdDelete.Connection = con;
+                                cmdDelete.CommandText = "DELETE Cash_Receipts_Checks Or_No = '" + txtORNo.Text + "'";
+                                cmdDelete.CommandType = CommandType.Text;
+                                cmdDelete.ExecuteNonQuery();
+
+                                foreach (DataGridViewRow row in dgvChecks.Rows)
+                                {
+                                    if (row.Cells[0].Value != null)
+                                    {
+                                        SqlCommand cmdchek = new SqlCommand();
+                                        cmdchek.Connection = con;
+                                        cmdchek.CommandText = "sp_InsertCashReceiptsChecks";
+                                        cmdchek.CommandType = CommandType.StoredProcedure;
+                                        cmdchek.Parameters.AddWithValue("@Or_No", txtORNo.Text);
+                                        cmdchek.Parameters.AddWithValue("@Bank", row.Cells[0].Value);
+                                        cmdchek.Parameters.AddWithValue("@Amount", row.Cells[1].Value.ToString().Replace(",", ""));
+                                        cmdchek.Parameters.AddWithValue("@Check_Date", row.Cells[2].Value);
+                                        cmdchek.Parameters.AddWithValue("@Check_No", row.Cells[3].Value);
+                                        cmdchek.ExecuteNonQuery(); //SAVING TRANSACTION
+                                    }
                                 }
                             }
                         }
                     }
 
-                    Alert.show("Cash Receipts Successfully Updated!", Alert.AlertType.success);
+                   
+                    Alert.show("Receipt voucher successfully updated.", Alert.AlertType.success);
                     //RESTORE COMMANDS AND TEXT
                     AfterSavingOrUpdating();
 
@@ -1786,65 +1844,67 @@ namespace WindowsFormsApplication2
         {
             if (txtPayorID.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
-
-                if (txtLoanTypeSearch.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    //Return all Loan Types possible for this user
-                    
-                    cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_ReturnLoanTypesPerUser";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+                    con.Open();
 
-                    //Put in datatable
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    if (txtLoanTypeSearch.Text == "")
+                    {
+                        //Return all Loan Types possible for this user
 
-                    dataGridView2.DataSource = dt;
-                    dataGridView2.Columns["Loan_Type"].FillWeight = 30;
-                    dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
-                    dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+                        cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_ReturnLoanTypesPerUser";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
 
-                    //Hide other columns
-                    dataGridView2.Columns["Loan_No"].Visible = false;
-                    dataGridView2.Columns["userID"].Visible = false;
-                    dataGridView2.Columns["CurrentDr"].Visible = false;
-                    dataGridView2.Columns["PastDueDr"].Visible = false;
-                    dataGridView2.Columns["Balance"].Visible = false;
-                    dataGridView2.Columns["Deferred"].Visible = false;
+                        //Put in datatable
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                }
-                else
-                {
-                    //Return the search loan
-                    cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_ReturnLoanTypesPerUserSEARCH";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
-                    cmd.Parameters.AddWithValue("@description", txtLoanTypeSearch.Text);
+                        dataGridView2.DataSource = dt;
+                        dataGridView2.Columns["Loan_Type"].FillWeight = 30;
+                        dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
+                        dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
 
-                    //Put in datatable
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                        //Hide other columns
+                        dataGridView2.Columns["Loan_No"].Visible = false;
+                        dataGridView2.Columns["userID"].Visible = false;
+                        dataGridView2.Columns["CurrentDr"].Visible = false;
+                        dataGridView2.Columns["PastDueDr"].Visible = false;
+                        dataGridView2.Columns["Balance"].Visible = false;
+                        dataGridView2.Columns["Deferred"].Visible = false;
 
-                    dataGridView2.DataSource = dt;
-                    dataGridView2.Columns["Loan_Type"].FillWeight = 30;
-                    dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
-                    dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+                    }
+                    else
+                    {
+                        //Return the search loan
+                        cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_ReturnLoanTypesPerUserSEARCH";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
+                        cmd.Parameters.AddWithValue("@description", txtLoanTypeSearch.Text);
 
-                    //Hide other columns
-                    dataGridView2.Columns["Loan_No"].Visible = false;
-                    dataGridView2.Columns["userID"].Visible = false;
-                    dataGridView2.Columns["CurrentDr"].Visible = false;
-                    dataGridView2.Columns["PastDueDr"].Visible = false;
-                    dataGridView2.Columns["Balance"].Visible = false;
-                    dataGridView2.Columns["Deferred"].Visible = false;
+                        //Put in datatable
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        dataGridView2.DataSource = dt;
+                        dataGridView2.Columns["Loan_Type"].FillWeight = 30;
+                        dataGridView2.Columns["Loan_Type"].HeaderText = "Type";
+                        dataGridView2.Columns["Loan_Description"].HeaderText = "Description";
+
+                        //Hide other columns
+                        dataGridView2.Columns["Loan_No"].Visible = false;
+                        dataGridView2.Columns["userID"].Visible = false;
+                        dataGridView2.Columns["CurrentDr"].Visible = false;
+                        dataGridView2.Columns["PastDueDr"].Visible = false;
+                        dataGridView2.Columns["Balance"].Visible = false;
+                        dataGridView2.Columns["Deferred"].Visible = false;
+                    }
                 }
             }
 
@@ -1855,6 +1915,16 @@ namespace WindowsFormsApplication2
             datagridviewTransaction.Rows[selectedRow].Cells[selected].Value = dataGridView2.SelectedRows[0].Cells["Loan_Description"].Value.ToString();
             
             panel38.Visible = false;
+        }
+
+        private void radioPecciCheck_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel19_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         public void forUpdating()

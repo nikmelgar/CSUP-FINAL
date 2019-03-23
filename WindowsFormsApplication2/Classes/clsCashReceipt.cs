@@ -22,42 +22,48 @@ namespace WindowsFormsApplication2.Classes
 
         public string returnCompanyDescription(String CompanyCode)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            adapter = new SqlDataAdapter("SELECT Description FROM Company WHERE Company_Code = '" + CompanyCode + "'", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter("SELECT Description FROM Company WHERE Company_Code = '" + CompanyCode + "'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-            return dt.Rows[0].ItemArray[0].ToString();
+                return dt.Rows[0].ItemArray[0].ToString();
+            }
         }
 
         public string returnCompanyCodeFromDescription(String CompanyDescription)
         {
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            adapter = new SqlDataAdapter("SELECT Company_Code FROM Company WHERE Description = '" + CompanyDescription + "'", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter("SELECT Company_Code FROM Company WHERE Description = '" + CompanyDescription + "'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
 
-            return dt.Rows[0].ItemArray[0].ToString();
+                return dt.Rows[0].ItemArray[0].ToString();
+            }  
         }
 
         public void loadBank(ComboBox cmb)
         {
             cmb.DataSource = null;
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            adapter = new SqlDataAdapter("SELECT (Bank_Code) as Bank_Name,Bank_Code FROM Bank WHERE isActive = 1", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                adapter = new SqlDataAdapter("SELECT (Bank_Code) as Bank_Name,Bank_Code FROM Bank WHERE isActive = 1", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = "Bank_Name";
-            cmb.ValueMember = "Bank_Code";
-            cmb.DataSource = dt;
+                cmb.DisplayMember = "Bank_Name";
+                cmb.ValueMember = "Bank_Code";
+                cmb.DataSource = dt;
+            }
         }
 
 
@@ -65,20 +71,22 @@ namespace WindowsFormsApplication2.Classes
 
         public bool orNumberDuplicate(TextBox or)
         {
-            con = new SqlConnection();
-            global.connection(con);
-
-            adapter = new SqlDataAdapter("SELECT * FROM Cash_Receipts_Header WHERE Or_No ='"+ or.Text +"'", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count >= 1)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT * FROM Cash_Receipts_Header WHERE Or_No ='" + or.Text + "'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count >= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         public bool CashValidation(TextBox or, TextBox payorid, TextBox totalTransaction, TextBox totalDebit, TextBox totalCredit, DataGridView dgvTrans, DataGridView dgvDetails, DataGridView dgvCheck, RadioButton radioCash, RadioButton radioPecciCheck, RadioButton radioNonPecci)
@@ -90,37 +98,37 @@ namespace WindowsFormsApplication2.Classes
 
                 if(orNumberDuplicate(or) == true)
                 {
-                    Alert.show("OR Number already used. Please try again!", Alert.AlertType.error);
+                    Alert.show("OR Number already used. Please try again.", Alert.AlertType.error);
                     return true;
                 }
                 else if (or.Text == "" || payorid.Text == "")
                 {
-                    Alert.show("All Fields with ( * ) are required!", Alert.AlertType.warning);
+                    Alert.show("All fields with ( * ) are required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalTransaction.Text == "" || totalTransaction.Text == "0.00")
                 {
-                    Alert.show("Transaction is required!", Alert.AlertType.warning);
+                    Alert.show("Transaction is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalDebit.Text == "" || totalCredit.Text == "")
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (dgvDetails.Rows.Count <= 1)
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Amount in transaction not equal to amount in details!", Alert.AlertType.error);
+                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                    Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                     return true;
                 }
                 else
@@ -133,42 +141,42 @@ namespace WindowsFormsApplication2.Classes
                 //Validation For Cash Transaction
                 if (orNumberDuplicate(or) == true)
                 {
-                    Alert.show("OR Number already used. Please try again!", Alert.AlertType.error);
+                    Alert.show("OR Number already used. Please try again.", Alert.AlertType.error);
                     return true;
                 }
                 else if (or.Text == "" || payorid.Text == "")
                 {
-                    Alert.show("All Fields with ( * ) are required!", Alert.AlertType.warning);
+                    Alert.show("All fields with ( * ) are required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalTransaction.Text == "" || totalTransaction.Text == "0.00")
                 {
-                    Alert.show("Transaction is required!", Alert.AlertType.warning);
+                    Alert.show("Transaction is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if(dgvCheck.Rows.Count == 0)
                 {
-                    Alert.show("Please Add Check Information!", Alert.AlertType.warning);
+                    Alert.show("Please add cheque information.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalDebit.Text == "" || totalCredit.Text == "")
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (dgvDetails.Rows.Count <= 1)
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Amount in transaction not equal to amount in details!", Alert.AlertType.error);
+                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                    Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                     return true;
                 }
                 else
@@ -188,32 +196,32 @@ namespace WindowsFormsApplication2.Classes
                 //Validation For Cash Transaction
                 if (or.Text == "" || payorid.Text == "")
                 {
-                    Alert.show("All Fields with ( * ) are required!", Alert.AlertType.warning);
+                    Alert.show("All fields with ( * ) are required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalTransaction.Text == "" || totalTransaction.Text == "0.00")
                 {
-                    Alert.show("Transaction is required!", Alert.AlertType.warning);
+                    Alert.show("Transaction is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalDebit.Text == "" || totalCredit.Text == "")
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (dgvDetails.Rows.Count <= 1)
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Amount in transaction not equal to amount in details!", Alert.AlertType.error);
+                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                    Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                     return true;
                 }
                 else
@@ -226,37 +234,37 @@ namespace WindowsFormsApplication2.Classes
                 //Validation For Cash Transaction
                 if (or.Text == "" || payorid.Text == "")
                 {
-                    Alert.show("All Fields with ( * ) are required!", Alert.AlertType.warning);
+                    Alert.show("All fields with ( * ) are required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalTransaction.Text == "" || totalTransaction.Text == "0.00")
                 {
-                    Alert.show("Transaction is required!", Alert.AlertType.warning);
+                    Alert.show("Transaction is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (dgvCheck.Rows.Count == 0)
                 {
-                    Alert.show("Please Add Check Information!", Alert.AlertType.warning);
+                    Alert.show("Please add Cheque information.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (totalDebit.Text == "" || totalCredit.Text == "")
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (dgvDetails.Rows.Count <= 1)
                 {
-                    Alert.show("Details information is required!", Alert.AlertType.warning);
+                    Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Amount in transaction not equal to amount in details!", Alert.AlertType.error);
+                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
-                    Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                    Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                     return true;
                 }
                 else

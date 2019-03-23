@@ -97,144 +97,145 @@ namespace WindowsFormsApplication2
         private void button2_Click(object sender, EventArgs e)
         {          
             LoanApproval loanApproval= new LoanApproval();
-                       
+
             //=============================================================================
             //                      MEMBERS INFORMATION
             //=============================================================================
-            
-            con = new SqlConnection();
-            global.connection(con);
 
-            cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_ReturnLoanMembersInformation";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID);
-
-            adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                loanApproval.txtEmployeeID.Text = dt.Rows[0].ItemArray[1].ToString();
+                con.Open();
 
-                if (dt.Rows[0].ItemArray[2].ToString() == "False")
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanMembersInformation";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID);
+
+                adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
                 {
-                    loanApproval.txtPrincipal.Text = clsLookUp.returnPrincipal(dt.Rows[0].ItemArray[1].ToString());
+                    loanApproval.txtEmployeeID.Text = dt.Rows[0].ItemArray[1].ToString();
+
+                    if (dt.Rows[0].ItemArray[2].ToString() == "False")
+                    {
+                        loanApproval.txtPrincipal.Text = clsLookUp.returnPrincipal(dt.Rows[0].ItemArray[1].ToString());
+                    }
+
+                    loanApproval.txtName.Text = dt.Rows[0].ItemArray[3].ToString();
+
+                    if (dt.Rows[0].ItemArray[4].ToString() != "")
+                    {
+                        loanApproval.txtSalary.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[4].ToString()).ToString("#,0.00");
+                    }
+
+                    loanApproval.txtDateHired.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[5].ToString()).ToShortDateString());
+                    loanApproval.txtMemberShipDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[6].ToString()).ToShortDateString());
+
+                    try
+                    {
+                        loanApproval.txtPMSDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[7].ToString()).ToShortDateString());
+                    }
+                    catch
+                    {
+
+                    }
+
+
+                    //For Getting the years in service
+                    var yrsDate = new DateTime();
+                    int yrsFrmDateHire, yrsToday, total;
+                    yrsDate = Convert.ToDateTime(loanApproval.txtDateHired.Text);
+                    yrsFrmDateHire = Convert.ToInt32(yrsDate.Date.Year.ToString());
+                    yrsToday = Convert.ToInt32(DateTime.Today.Year.ToString());
+                    total = yrsToday - yrsFrmDateHire;
+                    loanApproval.txtYrsInService.Text = total.ToString();
+
+                    loanApproval.txtCompany.Text = clsLoanDataEntry.returnCompanyDescription(Classes.clsLoanDataEntry.userID);
+
+                    //Share Capital Balance
+                    loanApproval.txtShareCapitalBalance.Text = clsLoanDataEntry.returnShareCapital(Classes.clsLoanDataEntry.userID).ToString("#,0.00");
                 }
 
-                loanApproval.txtName.Text = dt.Rows[0].ItemArray[3].ToString();
+                //==================================================================================================================
+                //                              END MEMBERS INFORMATION DETAIL
+                //==================================================================================================================
 
-                if (dt.Rows[0].ItemArray[4].ToString() != "")
+                //============================================================
+                //              DETAILS OF LOAN
+                //============================================================
+                loanApproval.txtLoanNo.Text = txtLoanNo.Text;
+                loanApproval.cmbLoanType.Text = cmbLoanType.SelectedValue.ToString();
+                loanApproval.txtLoanAmount.Text = txtLoanAmount.Text;
+                loanApproval.txtTermsInMonth.Text = txtTermsInMonth.Text;
+                loanApproval.txtMonthlyAmort.Text = txtMonthlyAmort.Text;
+                loanApproval.txtSemiMonthlyAmort.Text = txtSemiMonthlyAmort.Text;
+                loanApproval.txtInterest.Text = txtInterest.Text;
+                //============================================================
+                //              END DETAILS OF LOAN
+                //============================================================
+
+                //============================================================
+                //              END DETAILS OF LOAN
+                //============================================================
+
+                //Return Reason for Cancellation if Status = 7 //Cancelled
+                if (status.Text == "CANCELLED" || status.Text == "RELEASED")
                 {
-                    loanApproval.txtSalary.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[4].ToString()).ToString("#,0.00");
+                    SqlDataAdapter adapterCancelled = new SqlDataAdapter("SELECT Note,Cancelled_By,Cancelled_Date,Approved_By,Approved_Date,Disapproved_By,Disapproved_Date FROM Loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
+                    DataTable dt2 = new DataTable();
+                    adapterCancelled.Fill(dt2);
+
+                    loanApproval.txtReason.Text = dt2.Rows[0].ItemArray[0].ToString();
+                    if (dt2.Rows[0].ItemArray[2].ToString() != "")
+                    {
+                        loanApproval.txtDateCancelled.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[2].ToString()).ToShortDateString();
+                    }
+                    loanApproval.txtCancelledBy.Text = dt2.Rows[0].ItemArray[1].ToString();
+
+                    if (dt2.Rows[0].ItemArray[4].ToString() != "")
+                    {
+                        //Approved
+                        loanApproval.txtApprovedBy.Text = dt2.Rows[0].ItemArray[3].ToString();
+                        loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[4].ToString()).ToShortDateString();
+                    }
+
+                    if (dt2.Rows[0].ItemArray[6].ToString() != "")
+                    {
+                        //Disapproved
+                        loanApproval.txtDisapprovedBy.Text = dt2.Rows[0].ItemArray[5].ToString();
+                        loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[6].ToString()).ToShortDateString();
+                    }
+
+                }
+                else if (status.Text == "APPROVED")
+                {
+                    SqlDataAdapter adapterCancelled = new SqlDataAdapter("SELECT Note,Approved_By,Approved_Date FROM Loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
+                    DataTable dt2 = new DataTable();
+                    adapterCancelled.Fill(dt2);
+
+                    loanApproval.txtReason.Text = dt2.Rows[0].ItemArray[0].ToString();
+                    loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[2].ToString()).ToShortDateString();
+                    loanApproval.txtApprovedBy.Text = dt2.Rows[0].ItemArray[1].ToString();
+                }
+                else if (status.Text == "DISAPPROVED")
+                {
+                    SqlDataAdapter adapterCancelled = new SqlDataAdapter("SELECT Note,Disapproved_By,Disapproved_Date FROM Loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
+                    DataTable dt2 = new DataTable();
+                    adapterCancelled.Fill(dt2);
+
+                    loanApproval.txtReason.Text = dt2.Rows[0].ItemArray[0].ToString();
+                    loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[2].ToString()).ToShortDateString();
+                    loanApproval.txtDisapprovedBy.Text = dt2.Rows[0].ItemArray[1].ToString();
                 }
 
-                loanApproval.txtDateHired.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[5].ToString()).ToShortDateString());
-                loanApproval.txtMemberShipDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[6].ToString()).ToShortDateString());
+                ///Load Balances
 
-                try
-                {
-                    loanApproval.txtPMSDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[7].ToString()).ToShortDateString());
-                }
-                catch
-                {
-
-                }
-
-
-                //For Getting the years in service
-                var yrsDate = new DateTime();
-                int yrsFrmDateHire, yrsToday, total;
-                yrsDate = Convert.ToDateTime(loanApproval.txtDateHired.Text);
-                yrsFrmDateHire = Convert.ToInt32(yrsDate.Date.Year.ToString());
-                yrsToday = Convert.ToInt32(DateTime.Today.Year.ToString());
-                total = yrsToday - yrsFrmDateHire;
-                loanApproval.txtYrsInService.Text = total.ToString();
-
-                loanApproval.txtCompany.Text = clsLoanDataEntry.returnCompanyDescription(Classes.clsLoanDataEntry.userID);
-
-                //Share Capital Balance
-                loanApproval.txtShareCapitalBalance.Text = clsLoanDataEntry.returnShareCapital(Classes.clsLoanDataEntry.userID).ToString("#,0.00");
+                clsApproval.loadLoanBalances(Classes.clsLoanDataEntry.userID, loanApproval.dataGridView1, cmbLoanType.SelectedValue.ToString());
             }
-
-            //==================================================================================================================
-            //                              END MEMBERS INFORMATION DETAIL
-            //==================================================================================================================
-
-            //============================================================
-            //              DETAILS OF LOAN
-            //============================================================
-            loanApproval.txtLoanNo.Text = txtLoanNo.Text;
-            loanApproval.cmbLoanType.Text = cmbLoanType.SelectedValue.ToString();
-            loanApproval.txtLoanAmount.Text = txtLoanAmount.Text;
-            loanApproval.txtTermsInMonth.Text = txtTermsInMonth.Text;
-            loanApproval.txtMonthlyAmort.Text = txtMonthlyAmort.Text;
-            loanApproval.txtSemiMonthlyAmort.Text = txtSemiMonthlyAmort.Text;
-            loanApproval.txtInterest.Text = txtInterest.Text;
-            //============================================================
-            //              END DETAILS OF LOAN
-            //============================================================
-
-            //============================================================
-            //              END DETAILS OF LOAN
-            //============================================================
-
-            //Return Reason for Cancellation if Status = 7 //Cancelled
-            if(status.Text == "CANCELLED" || status.Text == "RELEASED")
-            {
-                SqlDataAdapter adapterCancelled = new SqlDataAdapter("SELECT Note,Cancelled_By,Cancelled_Date,Approved_By,Approved_Date,Disapproved_By,Disapproved_Date FROM Loan WHERE Loan_No = '"+ txtLoanNo.Text +"'", con);
-                DataTable dt2 = new DataTable();
-                adapterCancelled.Fill(dt2);
-
-                loanApproval.txtReason.Text = dt2.Rows[0].ItemArray[0].ToString();
-                if(dt2.Rows[0].ItemArray[2].ToString() != "")
-                {
-                    loanApproval.txtDateCancelled.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[2].ToString()).ToShortDateString();
-                }
-                loanApproval.txtCancelledBy.Text = dt2.Rows[0].ItemArray[1].ToString();
-
-                if(dt2.Rows[0].ItemArray[4].ToString() != "")
-                {
-                    //Approved
-                    loanApproval.txtApprovedBy.Text = dt2.Rows[0].ItemArray[3].ToString();
-                    loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[4].ToString()).ToShortDateString();
-                }
-                
-                if(dt2.Rows[0].ItemArray[6].ToString() != "")
-                {
-                    //Disapproved
-                    loanApproval.txtDisapprovedBy.Text = dt2.Rows[0].ItemArray[5].ToString();
-                    loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[6].ToString()).ToShortDateString();
-                }
-
-            }
-            else if(status.Text == "APPROVED")
-            {
-                SqlDataAdapter adapterCancelled = new SqlDataAdapter("SELECT Note,Approved_By,Approved_Date FROM Loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
-                DataTable dt2 = new DataTable();
-                adapterCancelled.Fill(dt2);
-
-                loanApproval.txtReason.Text = dt2.Rows[0].ItemArray[0].ToString();
-                loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[2].ToString()).ToShortDateString();
-                loanApproval.txtApprovedBy.Text = dt2.Rows[0].ItemArray[1].ToString();
-            }
-            else if (status.Text == "DISAPPROVED")
-            {
-                SqlDataAdapter adapterCancelled = new SqlDataAdapter("SELECT Note,Disapproved_By,Disapproved_Date FROM Loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
-                DataTable dt2 = new DataTable();
-                adapterCancelled.Fill(dt2);
-
-                loanApproval.txtReason.Text = dt2.Rows[0].ItemArray[0].ToString();
-                loanApproval.txtAppDissDate.Text = Convert.ToDateTime(dt2.Rows[0].ItemArray[2].ToString()).ToShortDateString();
-                loanApproval.txtDisapprovedBy.Text = dt2.Rows[0].ItemArray[1].ToString();
-            }
-
-            ///Load Balances
-
-            clsApproval.loadLoanBalances(Classes.clsLoanDataEntry.userID, loanApproval.dataGridView1);
-
             this.Close();
             loanApproval.ShowDialog();
         }
@@ -254,15 +255,16 @@ namespace WindowsFormsApplication2
                         }
                     }
                 }
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                adapter = new SqlDataAdapter("SELECT Interest FROM Loan_Type WHERE Loan_Type = '"+ cmbLoanType.SelectedValue.ToString() +"'", con);
-                dt = new DataTable();
-                adapter.Fill(dt);
+                    adapter = new SqlDataAdapter("SELECT Interest FROM Loan_Type WHERE Loan_Type = '" + cmbLoanType.SelectedValue.ToString() + "'", con);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
 
-                txtInterest.Text = dt.Rows[0].ItemArray[0].ToString();
-
+                    txtInterest.Text = dt.Rows[0].ItemArray[0].ToString();
+                }
                 //enable the fields
                 txtLoanAmount.Enabled = true;
                 txtTermsInMonth.Enabled = true;
@@ -467,12 +469,12 @@ namespace WindowsFormsApplication2
                         //Short Term
                         if (dataGridView1.Rows.Count < 6)
                         {
-                            Alert.show("Insufficient No.(6) of required Co-makers!", Alert.AlertType.error);
+                            Alert.show("Insufficient required number of co-makers (6)", Alert.AlertType.error);
                             return;
                         }
                         else if(dataGridView1.Rows.Count > 6)
                         {
-                            Alert.show("Already exceeds the No. of required Co-Makers.", Alert.AlertType.error);
+                            Alert.show("Already exceeds the required number of co-makers.", Alert.AlertType.error);
                             return;
                         }
 
@@ -499,13 +501,13 @@ namespace WindowsFormsApplication2
 
                         if (dataGridView1.Rows.Count != answer)
                         {
-                            Alert.show("Insufficient No.("+ answer.ToString() +") of required Co-makers!", Alert.AlertType.error);
+                            Alert.show("Insufficient required number of co-makers (" + answer.ToString() + ")", Alert.AlertType.error);
                             return;
                         }
 
                         if (dataGridView1.Rows.Count > answer)
                         {
-                            Alert.show("Already exceeds the No. of required Co-Makers.", Alert.AlertType.error);
+                            Alert.show("Already exceeds the required number of co-makers.", Alert.AlertType.error);
                             return;
                         }
                     }
@@ -513,657 +515,658 @@ namespace WindowsFormsApplication2
                
             }
 
-            //Success Validation Call 
-            con = new SqlConnection();
-            global.connection(con);
-
-            if (btnSave.Text == "SAVE")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                if (status.Text != "FOR RELEASE")
+                con.Open();
+
+                if (btnSave.Text == "SAVE")
                 {
-                    //Check first if existing 
-                    if (clsLoanDataEntry.checkIfSameLoanType(cmbLoanType.SelectedValue.ToString(), Classes.clsLoanDataEntry.userID) == true)
+                    if (status.Text != "FOR RELEASE")
                     {
+                        //Check first if existing 
+                        if (clsLoanDataEntry.checkIfSameLoanType(cmbLoanType.SelectedValue.ToString(), Classes.clsLoanDataEntry.userID) == true)
+                        {
+                            return;
+                        }
+                    }
+
+                    //========================================================================================
+                    //                      CREATION OF LOAN HEADER
+                    //========================================================================================
+
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertLoanHeader";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Payment_Option", comboBox1.Text);
+                    cmd.Parameters.AddWithValue("@Loan_Amount", txtLoanAmount.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
+                    cmd.Parameters.AddWithValue("@No_Payment", Convert.ToInt32(txtTermsInMonth.Text) * 2);
+                    cmd.Parameters.AddWithValue("@Monthly_Amort", txtMonthlyAmort.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@Semi_Monthly_Amort", txtSemiMonthlyAmort.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@Interest", txtInterest.Text);
+                    cmd.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID); //Stores the USERID of Subs or Members
+                    cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
+
+                    if (txtPrevLoanNo.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@Gross_Amount", txtPrevGrossAmount.Text.Replace(",", ""));
+                        cmd.Parameters.AddWithValue("@Outstanding_Balance", txtPrevOutstandingBalance.Text.Replace(",", ""));
+                        cmd.Parameters.AddWithValue("@Prev_Loan_No", txtPrevLoanNo.Text);
+
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Gross_Amount", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Outstanding_Balance", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Prev_Loan_No", DBNull.Value);
+                    }
+
+                    if (txtPrevDeferred.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@Deferred_Balance", txtPrevDeferred.Text.Replace(",", ""));
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Deferred_Balance", DBNull.Value);
+                    }
+
+                    cmd.Parameters.AddWithValue("@Encoded_By", txtEncodedBy.Text);
+                    cmd.Parameters.AddWithValue("@Status", Convert.ToInt32(1));
+                    cmd.ExecuteNonQuery();
+
+                    //====================================================================================
+                    //              END OF CREATING HEADER
+                    //====================================================================================
+
+                    //====================================================================================
+                    //              CALL LOAN NO ACCORDING TO THE USER INPUT
+                    //====================================================================================
+                    adapter = new SqlDataAdapter("SELECT top 1 loan_no FROM Loan where encoded_by = '" + txtEncodedBy.Text + "' ORDER BY loan_no DESC", con);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    txtLoanNo.Text = dt.Rows[0].ItemArray[0].ToString();
+
+                    //====================================================================================
+
+                    //====================================================================================
+                    //              SAVE CO MAKERS
+                    //====================================================================================
+                    if (dataGridView1.Rows.Count >= 1)
+                    {
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        {
+                            if (row.Cells[0].Value != null)
+                            {
+                                SqlCommand cmdCo = new SqlCommand();
+                                cmdCo.Connection = con;
+                                cmdCo.CommandType = CommandType.StoredProcedure;
+                                cmdCo.CommandText = "sp_InsertLoanCoMakers";
+                                cmdCo.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                                cmdCo.Parameters.AddWithValue("@Co_Maker_ID", row.Cells[0].Value);
+                                cmdCo.Parameters.AddWithValue("@Co_Maker_EmployeeID", row.Cells[1].Value);
+                                cmdCo.ExecuteNonQuery(); //SAVE CO MAKER
+                            }
+                        }
+                    }
+
+                    //====================================================================================
+                    //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
+                    //====================================================================================
+                    //CREATING LOAN DETAILS
+                    double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
+                    double rate = Convert.ToDouble(txtInterest.Text);
+                    double term = Convert.ToDouble(txtTermsInMonth.Text);
+                    double val1 = 1 + rate;
+                    double val2 = -term;
+                    double powResult = Math.Pow(val1, val2);
+                    double rightSide = 1 - powResult;
+                    double leftSide = PV * rate;
+                    double finalResult = leftSide / rightSide;
+
+                    double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
+                    decimal dec = Convert.ToDecimal(finalResult2);
+
+
+                    double z, i, ob;
+                    double interest, principal;
+                    dec = dec / 2;
+                    int noPay = 1;
+
+                    //=============================================
+                    //         DECLARATION FOR DATE
+                    //=============================================
+
+                    string str = txtDateEncoded.Text;
+                    string outputDate;
+                    str = str.Replace("/", "-");
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
+
+                    int year, month, day;
+
+                    year = Convert.ToInt32(dateTime13.Year.ToString());
+                    month = Convert.ToInt32(dateTime13.Month.ToString());
+                    day = Convert.ToInt32(dateTime13.Day.ToString());
+
+                    //=============================================
+
+                    //////////////////////////////////////
+
+                    int cnt = Convert.ToInt32(txtTermsInMonth.Text);
+                    for (int a = 0; a < cnt; a++)
+                    {
+                        z = PV * rate;
+                        i = finalResult2 - z;
+
+
+
+                        interest = z / 2;
+                        principal = i / 2;
+                        ob = PV - principal;
+
+
+                        //=====================
+                        //for date
+                        //=====================
+                        if (month == 12)
+                        {
+                            if (day <= 15)
+                            {
+                                day = 30;
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = 1;
+                                year = year + 1;
+                            }
+                        }
+                        else
+                        {
+                            if (day <= 15)
+                            {
+                                if (month == 2)
+                                {
+                                    day = 28;
+                                }
+                                else
+                                {
+                                    day = 30;
+                                }
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = month + 1;
+                            }
+                        }
+                        if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                        {
+                            outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                        }
+                        else
+                        {
+                            outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                        }
+                        IFormatProvider culture = new CultureInfo("en-US", true);
+                        DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+                        //================================================================
+
+                        SqlCommand cmdDetail1 = new SqlCommand();
+                        cmdDetail1.Connection = con;
+                        cmdDetail1.CommandText = "sp_InsertLoanDetails";
+                        cmdDetail1.CommandType = CommandType.StoredProcedure;
+                        cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                        cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                        cmdDetail1.Parameters.AddWithValue("@Payment", dec);
+                        cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                        cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                        cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                        cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
+                        cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
+                        cmdDetail1.ExecuteNonQuery();
+
+                        if (month == 12)
+                        {
+                            if (day <= 15)
+                            {
+                                day = 30;
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = 1;
+                                year = year + 1;
+                            }
+                        }
+                        else
+                        {
+                            if (day <= 15)
+                            {
+                                if (month == 2)
+                                {
+                                    day = 28;
+                                }
+                                else
+                                {
+                                    day = 30;
+                                }
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = month + 1;
+                            }
+                        }
+                        if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                        {
+                            outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                        }
+                        else
+                        {
+                            outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                        }
+                        DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+
+
+                        noPay = noPay + 1;
+                        SqlCommand cmd1 = new SqlCommand();
+                        cmd1.Connection = con;
+                        cmd1.CommandText = "sp_InsertLoanDetails";
+                        cmd1.CommandType = CommandType.StoredProcedure;
+                        cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                        cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                        cmd1.Parameters.AddWithValue("@Payment", dec);
+                        cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                        cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                        cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                        ob = ob - principal;
+                        cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                        cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
+                        cmd1.ExecuteNonQuery();
+
+                        noPay = noPay + 1;
+                        z = 0;
+                        PV = ob;
+                        ob = 0;
+                    }
+
+                    //===============================================================================
+                    //              FUNCTIONS AFTER SAVING
+                    //===============================================================================
+
+                    //==================================================
+                    //          REFRESH THE GRID FROM MAIN
+                    //==================================================
+                    try
+                    {
+                        loans = (Loans)Application.OpenForms["Loans"];
+                        loans.refreshData();
+                    }
+                    catch
+                    {
+
+                    }
+                    Alert.show("Successfully created.", Alert.AlertType.success);
+
+                    //===========================
+                    //  RETURN STATUTS
+                    //===========================
+                    SqlDataAdapter adapterStatus = new SqlDataAdapter("SELECT [Status] FROM Loan WHERE Loan_No ='" + txtLoanNo.Text + "'", con);
+                    DataTable dtStat = new DataTable();
+                    adapterStatus.Fill(dtStat);
+
+                    if (dtStat.Rows.Count > 0)
+                    {
+                        status.Text = clsLoanDataEntry.returnStatusDescription(Convert.ToInt32(dtStat.Rows[0].ItemArray[0].ToString()));
+                        status.Visible = true;
+                    }
+
+                    btnSave.Text = "NEW";
+                    btnClose.Text = "CLOSE";
+                    btnSearch.Enabled = false;
+                    button1.Enabled = false;
+                    txtLoanAmount.Enabled = false;
+                    txtTermsInMonth.Enabled = false;
+                    btnForward.Enabled = true;
+                    btnForward.Visible = true;
+
+
+                }
+                else if (btnSave.Text == "UPDATE")
+                {
+                    //========================================================================================
+                    //                      UPDATING OF LOAN HEADER
+                    //========================================================================================
+
+                    //Test First if have a Loan No
+                    if (txtLoanNo.Text == "")
+                    {
+                        Alert.show("Loan No is required!", Alert.AlertType.error);
                         return;
                     }
-                }
-                
-                //========================================================================================
-                //                      CREATION OF LOAN HEADER
-                //========================================================================================
 
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertLoanHeader";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
-                cmd.Parameters.AddWithValue("@Payment_Option", comboBox1.Text);
-                cmd.Parameters.AddWithValue("@Loan_Amount", txtLoanAmount.Text.Replace(",",""));
-                cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
-                cmd.Parameters.AddWithValue("@No_Payment", Convert.ToInt32(txtTermsInMonth.Text) * 2);
-                cmd.Parameters.AddWithValue("@Monthly_Amort", txtMonthlyAmort.Text.Replace(",",""));
-                cmd.Parameters.AddWithValue("@Semi_Monthly_Amort", txtSemiMonthlyAmort.Text.Replace(",",""));
-                cmd.Parameters.AddWithValue("@Interest", txtInterest.Text);
-                cmd.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID); //Stores the USERID of Subs or Members
-                cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
-                
-                if(txtPrevLoanNo.Text != "")
+
+                    if (Classes.clsLoanDataEntry.loan_amount != Convert.ToDecimal(txtLoanAmount.Text))
+                    {
+                        string msg = Environment.NewLine + "Are you sure you want to change loan amount?";
+                        msg = msg + Environment.NewLine + "FROM : " + Classes.clsLoanDataEntry.loan_amount.ToString("#,0.00") + " TO : " + txtLoanAmount.Text;
+                        DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.No)
+                        {
+                            txtLoanAmount.Text = Classes.clsLoanDataEntry.loan_amount.ToString("#,0.00");
+                            txtLoanAmount_Validated(sender, e); //Recall for the monthly and semi amort
+                            return;
+                        }
+                    }
+
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateLoanHeader";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                    cmd.Parameters.AddWithValue("@Payment_Option", comboBox1.Text);
+                    cmd.Parameters.AddWithValue("@Loan_Amount", txtLoanAmount.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
+                    cmd.Parameters.AddWithValue("@Monthly_Amort", txtMonthlyAmort.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@Semi_Monthly_Amort", txtSemiMonthlyAmort.Text.Replace(",", ""));
+                    cmd.ExecuteNonQuery();
+
+                    //=========================================================================================
+                    //                      END UPDATING HEADER
+                    //=========================================================================================
+
+
+                    //===================================================
+                    //           UPDATING CO MAKERS
+                    //===================================================
+
+                    //DELETE FIRST THEN SAVE IT AGAIN
+                    SqlCommand cmdDelete = new SqlCommand();
+                    cmdDelete.Connection = con;
+                    cmdDelete.CommandText = "DELETE [Loan_Co-Maker] WHERE Loan_No = '" + txtLoanNo.Text + "'";
+                    cmdDelete.CommandType = CommandType.Text;
+                    cmdDelete.ExecuteNonQuery();
+
+                    if (dataGridView1.Rows.Count >= 1)
+                    {
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        {
+                            if (row.Cells[0].Value != null)
+                            {
+                                SqlCommand cmdCo = new SqlCommand();
+                                cmdCo.Connection = con;
+                                cmdCo.CommandType = CommandType.StoredProcedure;
+                                cmdCo.CommandText = "sp_InsertLoanCoMakers";
+                                cmdCo.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                                cmdCo.Parameters.AddWithValue("@Co_Maker_ID", row.Cells[0].Value);
+                                cmdCo.Parameters.AddWithValue("@Co_Maker_EmployeeID", row.Cells[1].Value);
+                                cmdCo.ExecuteNonQuery(); //SAVE CO MAKERS
+                            }
+                        }
+                    }
+
+                    //===================================================
+                    //           END CO MAKERS
+                    //===================================================
+
+
+                    //===================================================
+                    //          CREATE LOAN DETAILS AGAIN
+                    //===================================================
+
+                    //DELETE FIRST THEN SAVE AGAIN
+                    SqlCommand cmdDetail = new SqlCommand();
+                    cmdDetail.Connection = con;
+                    cmdDetail.CommandText = "DELETE Loan_Details WHERE Loan_No = '" + txtLoanNo.Text + "'";
+                    cmdDetail.CommandType = CommandType.Text;
+                    cmdDetail.ExecuteNonQuery();
+
+                    //CREATING LOAN DETAILS
+                    double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
+                    double rate = Convert.ToDouble(txtInterest.Text);
+                    double term = Convert.ToDouble(txtTermsInMonth.Text);
+                    double val1 = 1 + rate;
+                    double val2 = -term;
+                    double powResult = Math.Pow(val1, val2);
+                    double rightSide = 1 - powResult;
+                    double leftSide = PV * rate;
+                    double finalResult = leftSide / rightSide;
+
+                    double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
+                    decimal dec = Convert.ToDecimal(finalResult2);
+
+
+                    double z, i, ob;
+                    double interest, principal;
+                    dec = dec / 2;
+                    int noPay = 1;
+
+                    //=============================================
+                    //         DECLARATION FOR DATE
+                    //=============================================
+
+                    string str = txtDateEncoded.Text;
+                    string outputDate;
+                    str = str.Replace("/", "-");
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
+
+                    int year, month, day;
+
+                    year = Convert.ToInt32(dateTime13.Year.ToString());
+                    month = Convert.ToInt32(dateTime13.Month.ToString());
+                    day = Convert.ToInt32(dateTime13.Day.ToString());
+
+                    //=============================================
+
+                    //////////////////////////////////////
+
+                    int cnt = Convert.ToInt32(txtTermsInMonth.Text);
+                    for (int a = 0; a < cnt; a++)
+                    {
+                        z = PV * rate;
+                        i = finalResult2 - z;
+
+
+
+                        interest = z / 2;
+                        principal = i / 2;
+                        ob = PV - principal;
+
+
+                        //=====================
+                        //for date
+                        //=====================
+                        if (month == 12)
+                        {
+                            if (day <= 15)
+                            {
+                                day = 30;
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = 1;
+                                year = year + 1;
+                            }
+                        }
+                        else
+                        {
+                            if (day <= 15)
+                            {
+                                if (month == 2)
+                                {
+                                    day = 28;
+                                }
+                                else
+                                {
+                                    day = 30;
+                                }
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = month + 1;
+                            }
+                        }
+                        if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                        {
+                            outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                        }
+                        else
+                        {
+                            outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                        }
+                        IFormatProvider culture = new CultureInfo("en-US", true);
+                        DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+                        //================================================================
+
+                        SqlCommand cmdDetail1 = new SqlCommand();
+                        cmdDetail1.Connection = con;
+                        cmdDetail1.CommandText = "sp_InsertLoanDetails";
+                        cmdDetail1.CommandType = CommandType.StoredProcedure;
+                        cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                        cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                        cmdDetail1.Parameters.AddWithValue("@Payment", dec);
+                        cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                        cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                        cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                        cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                        cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
+                        cmdDetail1.ExecuteNonQuery();
+
+                        if (month == 12)
+                        {
+                            if (day <= 15)
+                            {
+                                day = 30;
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = 1;
+                                year = year + 1;
+                            }
+                        }
+                        else
+                        {
+                            if (day <= 15)
+                            {
+                                if (month == 2)
+                                {
+                                    day = 28;
+                                }
+                                else
+                                {
+                                    day = 30;
+                                }
+                            }
+                            else
+                            {
+                                day = 15;
+                                month = month + 1;
+                            }
+                        }
+                        if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                        {
+                            outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                        }
+                        else
+                        {
+                            outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                        }
+                        DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+
+
+                        noPay = noPay + 1;
+                        SqlCommand cmd1 = new SqlCommand();
+                        cmd1.Connection = con;
+                        cmd1.CommandText = "sp_InsertLoanDetails";
+                        cmd1.CommandType = CommandType.StoredProcedure;
+                        cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                        cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                        cmd1.Parameters.AddWithValue("@Payment", dec);
+                        cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                        cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                        cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                        ob = ob - principal;
+                        cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                        cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
+                        cmd1.ExecuteNonQuery();
+
+                        noPay = noPay + 1;
+                        z = 0;
+                        PV = ob;
+                        ob = 0;
+                    }
+
+                    //===============================================================================
+                    //              FUNCTIONS AFTER SAVING
+                    //===============================================================================
+
+                    //==================================================
+                    //          REFRESH THE GRID FROM MAIN
+                    //==================================================
+                    try
+                    {
+                        loans = (Loans)Application.OpenForms["Loans"];
+                        loans.refreshData();
+                    }
+                    catch
+                    {
+
+                    }
+                    Alert.show("Successfully updated.", Alert.AlertType.success);
+
+                    //Put the updated amount 
+                    Classes.clsLoanDataEntry.loan_amount = Convert.ToDecimal(txtLoanAmount.Text);
+
+                    //CHange button TEXT
+                    btnSave.Text = "EDIT";
+                    btnClose.Text = "CLOSE";
+                    button1.Enabled = false;
+                    txtLoanAmount.Enabled = false;
+                    txtTermsInMonth.Enabled = false;
+                    btnForward.Enabled = true;
+
+                }
+                else if (btnSave.Text == "EDIT")
                 {
-                    cmd.Parameters.AddWithValue("@Gross_Amount", txtPrevGrossAmount.Text.Replace(",", ""));
-                    cmd.Parameters.AddWithValue("@Outstanding_Balance", txtPrevOutstandingBalance.Text.Replace(",", ""));
-                    cmd.Parameters.AddWithValue("@Prev_Loan_No", txtPrevLoanNo.Text);
+                    btnSave.Text = "UPDATE";
+                    btnClose.Text = "CANCEL";
+                    if (txtCompany.Text != "NON PAYROLL")
+                    {
+                        button1.Enabled = true;
+                        comboBox1.Enabled = true;
+                    }
+                    else
+                    {
+                        comboBox1.Enabled = false;
+                    }
+                    txtLoanAmount.Enabled = true;
+                    txtTermsInMonth.Enabled = true;
+                    btnForward.Enabled = false;
+
 
                 }
                 else
                 {
-                    cmd.Parameters.AddWithValue("@Gross_Amount", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Outstanding_Balance", DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Prev_Loan_No", DBNull.Value);
-                }
+                    clearFieldsForCancel();
 
-                if(txtPrevDeferred.Text != "")
-                {
-                    cmd.Parameters.AddWithValue("@Deferred_Balance", txtPrevDeferred.Text.Replace(",", ""));
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Deferred_Balance", DBNull.Value);
-                }
-                
-                cmd.Parameters.AddWithValue("@Encoded_By", txtEncodedBy.Text);
-                cmd.Parameters.AddWithValue("@Status", Convert.ToInt32(1));
-                cmd.ExecuteNonQuery();
-
-                //====================================================================================
-                //              END OF CREATING HEADER
-                //====================================================================================
-
-                //====================================================================================
-                //              CALL LOAN NO ACCORDING TO THE USER INPUT
-                //====================================================================================
-                adapter = new SqlDataAdapter("SELECT top 1 loan_no FROM Loan where encoded_by = '" + txtEncodedBy.Text + "' ORDER BY loan_no DESC", con);
-                dt = new DataTable();
-                adapter.Fill(dt);
-
-                txtLoanNo.Text = dt.Rows[0].ItemArray[0].ToString();
-
-                //====================================================================================
-
-                //====================================================================================
-                //              SAVE CO MAKERS
-                //====================================================================================
-                if (dataGridView1.Rows.Count >= 1)
-                {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
-                    {
-                        if (row.Cells[0].Value != null)
-                        {
-                            SqlCommand cmdCo = new SqlCommand();
-                            cmdCo.Connection = con;
-                            cmdCo.CommandType = CommandType.StoredProcedure;
-                            cmdCo.CommandText = "sp_InsertLoanCoMakers";
-                            cmdCo.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                            cmdCo.Parameters.AddWithValue("@Co_Maker_ID", row.Cells[0].Value);
-                            cmdCo.Parameters.AddWithValue("@Co_Maker_EmployeeID", row.Cells[1].Value);
-                            cmdCo.ExecuteNonQuery(); //SAVE CO MAKER
-                        }
-                    }
-                }
-
-                //====================================================================================
-                //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
-                //====================================================================================
-                //CREATING LOAN DETAILS
-                double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
-                double rate = Convert.ToDouble(txtInterest.Text);
-                double term = Convert.ToDouble(txtTermsInMonth.Text);
-                double val1 = 1 + rate;
-                double val2 = -term;
-                double powResult = Math.Pow(val1, val2);
-                double rightSide = 1 - powResult;
-                double leftSide = PV * rate;
-                double finalResult = leftSide / rightSide;
-
-                double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
-                decimal dec = Convert.ToDecimal(finalResult2);
-
-
-                double z, i, ob;
-                double interest, principal;
-                dec = dec / 2;
-                int noPay = 1;
-
-                //=============================================
-                //         DECLARATION FOR DATE
-                //=============================================
-
-                string str = txtDateEncoded.Text;
-                string outputDate;
-                str = str.Replace("/", "-");
-                CultureInfo provider = CultureInfo.InvariantCulture;
-                DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
-
-                int year, month, day;
-
-                year = Convert.ToInt32(dateTime13.Year.ToString());
-                month = Convert.ToInt32(dateTime13.Month.ToString());
-                day = Convert.ToInt32(dateTime13.Day.ToString());
-
-                //=============================================
-
-                //////////////////////////////////////
-
-                int cnt = Convert.ToInt32(txtTermsInMonth.Text);
-                for (int a = 0; a < cnt; a++)
-                {
-                    z = PV * rate;
-                    i = finalResult2 - z;
-
-
-
-                    interest = z / 2;
-                    principal = i / 2;
-                    ob = PV - principal;
-
-
-                    //=====================
-                    //for date
-                    //=====================
-                    if (month == 12)
-                    {
-                        if (day <= 15)
-                        {
-                            day = 30;
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = 1;
-                            year = year + 1;
-                        }
-                    }
-                    else
-                    {
-                        if (day <= 15)
-                        {
-                            if (month == 2)
-                            {
-                                day = 28;
-                            }
-                            else
-                            {
-                                day = 30;
-                            }
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = month + 1;
-                        }
-                    }
-                    if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
-                    {
-                        outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
-                    }
-                    else
-                    {
-                        outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
-                    }
-                    IFormatProvider culture = new CultureInfo("en-US", true);
-                    DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
-                    //================================================================
-
-                    SqlCommand cmdDetail1 = new SqlCommand();
-                    cmdDetail1.Connection = con;
-                    cmdDetail1.CommandText = "sp_InsertLoanDetails";
-                    cmdDetail1.CommandType = CommandType.StoredProcedure;
-                    cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                    cmdDetail1.Parameters.AddWithValue("@Payment", dec);
-                    cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                    cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                    cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
-                    cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
-                    cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
-                    cmdDetail1.ExecuteNonQuery();
-
-                    if (month == 12)
-                    {
-                        if (day <= 15)
-                        {
-                            day = 30;
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = 1;
-                            year = year + 1;
-                        }
-                    }
-                    else
-                    {
-                        if (day <= 15)
-                        {
-                            if (month == 2)
-                            {
-                                day = 28;
-                            }
-                            else
-                            {
-                                day = 30;
-                            }
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = month + 1;
-                        }
-                    }
-                    if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
-                    {
-                        outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
-                    }
-                    else
-                    {
-                        outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
-                    }
-                    DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
-
-                    
-                    noPay = noPay + 1;
-                    SqlCommand cmd1 = new SqlCommand();
-                    cmd1.Connection = con;
-                    cmd1.CommandText = "sp_InsertLoanDetails";
-                    cmd1.CommandType = CommandType.StoredProcedure;
-                    cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                    cmd1.Parameters.AddWithValue("@Payment", dec);
-                    cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                    cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                    cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                    ob = ob - principal;
-                    cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                    cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
-                    cmd1.ExecuteNonQuery();
-
-                    noPay = noPay + 1;
-                    z = 0;
-                    PV = ob;
-                    ob = 0;
-                }
-
-                //===============================================================================
-                //              FUNCTIONS AFTER SAVING
-                //===============================================================================
-
-                //==================================================
-                //          REFRESH THE GRID FROM MAIN
-                //==================================================
-                try
-                {
-                    loans = (Loans)Application.OpenForms["Loans"];
-                    loans.refreshData();
-                }
-                catch
-                {
-
-                }
-                Alert.show("Successfully Created!", Alert.AlertType.success);
-
-                //===========================
-                //  RETURN STATUTS
-                //===========================
-                SqlDataAdapter adapterStatus = new SqlDataAdapter("SELECT [Status] FROM Loan WHERE Loan_No ='"+ txtLoanNo.Text +"'", con);
-                DataTable dtStat = new DataTable();
-                adapterStatus.Fill(dtStat);
-
-                if(dtStat.Rows.Count > 0)
-                {
-                    status.Text = clsLoanDataEntry.returnStatusDescription(Convert.ToInt32(dtStat.Rows[0].ItemArray[0].ToString()));
-                    status.Visible = true;
-                }
-
-                btnSave.Text = "NEW";
-                btnClose.Text = "CLOSE";
-                btnSearch.Enabled = false;
-                button1.Enabled = false;
-                txtLoanAmount.Enabled = false;
-                txtTermsInMonth.Enabled = false;
-                btnForward.Enabled = true;
-                btnForward.Visible = true;
-
-
-            }
-            else if(btnSave.Text == "UPDATE")
-            {
-                //========================================================================================
-                //                      UPDATING OF LOAN HEADER
-                //========================================================================================
-
-                //Test First if have a Loan No
-                if(txtLoanNo.Text == "")
-                {
-                    Alert.show("Loan No is required!", Alert.AlertType.error);
-                    return;
-                }
-
-
-                if(Classes.clsLoanDataEntry.loan_amount != Convert.ToDecimal(txtLoanAmount.Text))
-                {
-                    string msg = Environment.NewLine + "Are you sure you want to change loan amount?";
-                    msg = msg + Environment.NewLine + "FROM : " + Classes.clsLoanDataEntry.loan_amount.ToString("#,0.00") + " TO : " + txtLoanAmount.Text;
-                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.No)
-                    {
-                        txtLoanAmount.Text = Classes.clsLoanDataEntry.loan_amount.ToString("#,0.00");
-                        txtLoanAmount_Validated(sender, e); //Recall for the monthly and semi amort
-                        return;
-                    }
-                }
-
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateLoanHeader";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                cmd.Parameters.AddWithValue("@Payment_Option", comboBox1.Text);
-                cmd.Parameters.AddWithValue("@Loan_Amount", txtLoanAmount.Text.Replace(",",""));
-                cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
-                cmd.Parameters.AddWithValue("@Monthly_Amort", txtMonthlyAmort.Text.Replace(",", ""));
-                cmd.Parameters.AddWithValue("@Semi_Monthly_Amort", txtSemiMonthlyAmort.Text.Replace(",", ""));
-                cmd.ExecuteNonQuery();
-
-                //=========================================================================================
-                //                      END UPDATING HEADER
-                //=========================================================================================
-
-
-                //===================================================
-                //           UPDATING CO MAKERS
-                //===================================================
-
-                //DELETE FIRST THEN SAVE IT AGAIN
-                SqlCommand cmdDelete = new SqlCommand();
-                cmdDelete.Connection = con;
-                cmdDelete.CommandText = "DELETE [Loan_Co-Maker] WHERE Loan_No = '" + txtLoanNo.Text +"'";
-                cmdDelete.CommandType = CommandType.Text;
-                cmdDelete.ExecuteNonQuery();
-
-                if (dataGridView1.Rows.Count >= 1)
-                {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
-                    {
-                        if (row.Cells[0].Value != null)
-                        {
-                            SqlCommand cmdCo = new SqlCommand();
-                            cmdCo.Connection = con;
-                            cmdCo.CommandType = CommandType.StoredProcedure;
-                            cmdCo.CommandText = "sp_InsertLoanCoMakers";
-                            cmdCo.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                            cmdCo.Parameters.AddWithValue("@Co_Maker_ID", row.Cells[0].Value);
-                            cmdCo.Parameters.AddWithValue("@Co_Maker_EmployeeID", row.Cells[1].Value);
-                            cmdCo.ExecuteNonQuery(); //SAVE CO MAKERS
-                        }
-                    }
-                }
-
-                //===================================================
-                //           END CO MAKERS
-                //===================================================
-
-
-                //===================================================
-                //          CREATE LOAN DETAILS AGAIN
-                //===================================================
-
-                //DELETE FIRST THEN SAVE AGAIN
-                SqlCommand cmdDetail = new SqlCommand();
-                cmdDetail.Connection = con;
-                cmdDetail.CommandText = "DELETE Loan_Details WHERE Loan_No = '"+ txtLoanNo.Text +"'";
-                cmdDetail.CommandType = CommandType.Text;
-                cmdDetail.ExecuteNonQuery();
-
-                //CREATING LOAN DETAILS
-                double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
-                double rate = Convert.ToDouble(txtInterest.Text);
-                double term = Convert.ToDouble(txtTermsInMonth.Text);
-                double val1 = 1 + rate;
-                double val2 = -term;
-                double powResult = Math.Pow(val1, val2);
-                double rightSide = 1 - powResult;
-                double leftSide = PV * rate;
-                double finalResult = leftSide / rightSide;
-
-                double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
-                decimal dec = Convert.ToDecimal(finalResult2);
-
-
-                double z, i, ob;
-                double interest, principal;
-                dec = dec / 2;
-                int noPay = 1;
-
-                //=============================================
-                //         DECLARATION FOR DATE
-                //=============================================
-
-                string str = txtDateEncoded.Text;
-                string outputDate;
-                str = str.Replace("/", "-");
-                CultureInfo provider = CultureInfo.InvariantCulture;
-                DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
-
-                int year, month, day;
-
-                year = Convert.ToInt32(dateTime13.Year.ToString());
-                month = Convert.ToInt32(dateTime13.Month.ToString());
-                day = Convert.ToInt32(dateTime13.Day.ToString());
-
-                //=============================================
-
-                //////////////////////////////////////
-
-                int cnt = Convert.ToInt32(txtTermsInMonth.Text);
-                for (int a = 0; a < cnt; a++)
-                {
-                    z = PV * rate;
-                    i = finalResult2 - z;
-
-
-
-                    interest = z / 2;
-                    principal = i / 2;
-                    ob = PV - principal;
-
-
-                    //=====================
-                    //for date
-                    //=====================
-                    if (month == 12)
-                    {
-                        if (day <= 15)
-                        {
-                            day = 30;
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = 1;
-                            year = year + 1;
-                        }
-                    }
-                    else
-                    {
-                        if (day <= 15)
-                        {
-                            if(month == 2)
-                            {
-                                day = 28;
-                            }
-                            else
-                            {
-                                day = 30;
-                            }
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = month + 1;
-                        }
-                    }
-                    if(Convert.ToInt32(Convert.ToString(month).Length) == 1)
-                    {
-                        outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
-                    }
-                    else
-                    {
-                        outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
-                    }
-                    IFormatProvider culture = new CultureInfo("en-US", true);
-                    DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
-                    //================================================================
-
-                    SqlCommand cmdDetail1 = new SqlCommand();
-                    cmdDetail1.Connection = con;
-                    cmdDetail1.CommandText = "sp_InsertLoanDetails";
-                    cmdDetail1.CommandType = CommandType.StoredProcedure;
-                    cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                    cmdDetail1.Parameters.AddWithValue("@Payment", dec);
-                    cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                    cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                    cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
-                    cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                    cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
-                    cmdDetail1.ExecuteNonQuery();
-
-                    if (month == 12)
-                    {
-                        if (day <= 15)
-                        {
-                            day = 30;
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = 1;
-                            year = year + 1;
-                        }
-                    }
-                    else
-                    {
-                        if (day <= 15)
-                        {
-                            if (month == 2)
-                            {
-                                day = 28;
-                            }
-                            else
-                            {
-                                day = 30;
-                            }
-                        }
-                        else
-                        {
-                            day = 15;
-                            month = month + 1;
-                        }
-                    }
-                    if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
-                    {
-                        outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
-                    }
-                    else
-                    {
-                        outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
-                    }
-                    DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
-
-                    
-                    noPay = noPay + 1;
-                    SqlCommand cmd1 = new SqlCommand();
-                    cmd1.Connection = con;
-                    cmd1.CommandText = "sp_InsertLoanDetails";
-                    cmd1.CommandType = CommandType.StoredProcedure;
-                    cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                    cmd1.Parameters.AddWithValue("@Payment", dec);
-                    cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                    cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                    cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
-                    ob = ob - principal;
-                    cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                    cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
-                    cmd1.ExecuteNonQuery();
-
-                    noPay = noPay + 1;
-                    z = 0;
-                    PV = ob;
-                    ob = 0;
-                }
-
-                //===============================================================================
-                //              FUNCTIONS AFTER SAVING
-                //===============================================================================
-
-                //==================================================
-                //          REFRESH THE GRID FROM MAIN
-                //==================================================
-                try
-                {
-                    loans = (Loans)Application.OpenForms["Loans"];
-                    loans.refreshData();
-                }
-                catch
-                {
-
-                }
-                Alert.show("Successfully Updated!", Alert.AlertType.success);
-
-                //Put the updated amount 
-                Classes.clsLoanDataEntry.loan_amount = Convert.ToDecimal(txtLoanAmount.Text);
-
-                //CHange button TEXT
-                btnSave.Text = "EDIT";
-                btnClose.Text = "CLOSE";
-                button1.Enabled = false;
-                txtLoanAmount.Enabled = false;
-                txtTermsInMonth.Enabled = false;
-                btnForward.Enabled = true;
-
-            }
-            else if(btnSave.Text == "EDIT")
-            {
-                btnSave.Text = "UPDATE";
-                btnClose.Text = "CANCEL";
-                if(txtCompany.Text != "NON PAYROLL")
-                {
+                    //For New 
                     button1.Enabled = true;
+                    btnSearch.Enabled = true;
                     comboBox1.Enabled = true;
-                }
-                else
-                {
-                    comboBox1.Enabled = false;
-                }
-                txtLoanAmount.Enabled = true;
-                txtTermsInMonth.Enabled = true;
-                btnForward.Enabled = false;
-                
 
-            }
-            else
-            {
-                clearFieldsForCancel();
-
-                //For New 
-                button1.Enabled = true;
-                btnSearch.Enabled = true;
-                comboBox1.Enabled = true;
-                
-                //Change button From NEw = Save
-                btnSave.Text = "SAVE";
-                btnClose.Text = "CANCEL";
-                cmbLoanType.Enabled = true;
+                    //Change button From NEw = Save
+                    btnSave.Text = "SAVE";
+                    btnClose.Text = "CANCEL";
+                    cmbLoanType.Enabled = true;
+                }
             }
         }
 
@@ -1282,42 +1285,44 @@ namespace WindowsFormsApplication2
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "7")
             {
                 //DISAPPROVED
-                Alert.show("This Loan already Cancelled!", Alert.AlertType.error);
+                Alert.show("Loan already cancelled.", Alert.AlertType.error);
                 return;
             }
 
-            string msg = Environment.NewLine + "Are you sure you want to Cancel this loan?";
+            string msg = Environment.NewLine + "Are you sure you want to cancel this loan?";
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 if (txtCancel.Text == "")
                 {
-                    Alert.show("Reason for cancellation of loan is required!", Alert.AlertType.error);
+                    Alert.show("Reason for cancellation of loan is required.", Alert.AlertType.error);
                     return;
                 }
 
-                con = new SqlConnection();
-                global.connection(con);
-
-                cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "UPDATE LOAN Set Status = '7',Cancelled_Date = GETDATE(), Cancelled_By = '" + Classes.clsUser.Username + "' ,Note = '" + txtCancel.Text + "' WHERE Loan_No ='" + txtLoanNo.Text + "'";
-                cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
-
-                Alert.show("Loan " + txtLoanNo.Text + " Successfully Cancelled!", Alert.AlertType.success);
-
-                status.Text = "CANCELLED";
-                //Refresh Grid
-                try
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    Loans frm = new Loans();
-                    frm = (Loans)Application.OpenForms["Loans"];
-                    frm.refreshData();
-                }
-                catch
-                {
+                    con.Open();
 
+                    cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "UPDATE LOAN Set Status = '7',Cancelled_Date = GETDATE(), Cancelled_By = '" + Classes.clsUser.Username + "' ,Note = '" + txtCancel.Text + "' WHERE Loan_No ='" + txtLoanNo.Text + "'";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+
+                    Alert.show("Loan " + txtLoanNo.Text + " successfully cancelled.", Alert.AlertType.success);
+
+                    status.Text = "CANCELLED";
+                    //Refresh Grid
+                    try
+                    {
+                        Loans frm = new Loans();
+                        frm = (Loans)Application.OpenForms["Loans"];
+                        frm.refreshData();
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
         }

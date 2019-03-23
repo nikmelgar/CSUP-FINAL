@@ -203,7 +203,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 89.83051F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.16949F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 514F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 528F));
             this.tableLayoutPanel1.Controls.Add(this.dtWithdrawalDate, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.label10, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 1);
@@ -226,7 +226,7 @@
             // 
             this.dtWithdrawalDate.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtWithdrawalDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtWithdrawalDate.Location = new System.Drawing.Point(214, 75);
+            this.dtWithdrawalDate.Location = new System.Drawing.Point(200, 75);
             this.dtWithdrawalDate.Name = "dtWithdrawalDate";
             this.dtWithdrawalDate.Size = new System.Drawing.Size(416, 28);
             this.dtWithdrawalDate.TabIndex = 14;
@@ -235,10 +235,10 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(193, 1);
+            this.label10.Location = new System.Drawing.Point(181, 1);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(13, 20);
+            this.label10.Size = new System.Drawing.Size(11, 20);
             this.label10.TabIndex = 4;
             this.label10.Text = ":";
             // 
@@ -246,10 +246,10 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(193, 38);
+            this.label12.Location = new System.Drawing.Point(181, 38);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(13, 20);
+            this.label12.Size = new System.Drawing.Size(11, 20);
             this.label12.TabIndex = 4;
             this.label12.Text = ":";
             // 
@@ -271,14 +271,14 @@
             this.label14.Location = new System.Drawing.Point(5, 38);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(170, 21);
+            this.label14.Size = new System.Drawing.Size(141, 33);
             this.label14.TabIndex = 2;
             this.label14.Text = "Withdrawal Slip No.";
             // 
             // txtWithdrawalSlipNo
             // 
             this.txtWithdrawalSlipNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtWithdrawalSlipNo.Location = new System.Drawing.Point(215, 42);
+            this.txtWithdrawalSlipNo.Location = new System.Drawing.Point(201, 42);
             this.txtWithdrawalSlipNo.Margin = new System.Windows.Forms.Padding(4);
             this.txtWithdrawalSlipNo.Name = "txtWithdrawalSlipNo";
             this.txtWithdrawalSlipNo.Size = new System.Drawing.Size(415, 26);
@@ -288,10 +288,10 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(193, 72);
+            this.label15.Location = new System.Drawing.Point(181, 72);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(13, 20);
+            this.label15.Size = new System.Drawing.Size(11, 20);
             this.label15.TabIndex = 10;
             this.label15.Text = ":";
             // 
@@ -315,7 +315,7 @@
             "ATM - AT",
             "CASH - CA",
             "CHEQUE - CH"});
-            this.cmbMode.Location = new System.Drawing.Point(214, 4);
+            this.cmbMode.Location = new System.Drawing.Point(200, 4);
             this.cmbMode.Name = "cmbMode";
             this.cmbMode.Size = new System.Drawing.Size(416, 29);
             this.cmbMode.TabIndex = 15;
@@ -957,6 +957,7 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1543, 3);
             this.panel4.TabIndex = 12;
+            this.panel4.Paint += new System.Windows.Forms.PaintEventHandler(this.panel4_Paint);
             // 
             // panel3
             // 
@@ -966,6 +967,7 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(3, 916);
             this.panel3.TabIndex = 11;
+            this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
             // panel2
             // 
@@ -975,6 +977,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(3, 916);
             this.panel2.TabIndex = 10;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // label2
             // 

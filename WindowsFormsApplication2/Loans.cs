@@ -150,184 +150,185 @@ namespace WindowsFormsApplication2
             //=============================================================================
             Classes.clsLoanDataEntry.userID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
 
-            con = new SqlConnection();
-            global.connection(con);
-
-            cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "sp_ReturnLoanMembersInformation";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID);
-
-            adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                loansDataEntry.txtEmployeeID.Text = dt.Rows[0].ItemArray[1].ToString();
+                con.Open();
 
-                if (dt.Rows[0].ItemArray[2].ToString() == "False")
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanMembersInformation";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID);
+
+                adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
                 {
-                    loansDataEntry.txtPrincipal.Text = clsLookUp.returnPrincipal(dt.Rows[0].ItemArray[1].ToString());
+                    loansDataEntry.txtEmployeeID.Text = dt.Rows[0].ItemArray[1].ToString();
+
+                    if (dt.Rows[0].ItemArray[2].ToString() == "False")
+                    {
+                        loansDataEntry.txtPrincipal.Text = clsLookUp.returnPrincipal(dt.Rows[0].ItemArray[1].ToString());
+                    }
+
+                    loansDataEntry.txtName.Text = dt.Rows[0].ItemArray[3].ToString();
+
+                    if (dt.Rows[0].ItemArray[4].ToString() != "")
+                    {
+                        loansDataEntry.txtSalary.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[4].ToString()).ToString("#,0.00");
+                    }
+
+                    loansDataEntry.txtDateHired.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[5].ToString()).ToShortDateString());
+                    loansDataEntry.txtMemberShipDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[6].ToString()).ToShortDateString());
+
+                    try
+                    {
+                        loansDataEntry.txtPMSDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[7].ToString()).ToShortDateString());
+                    }
+
+                    catch
+                    {
+
+                    }
+
+
+                    //For Getting the years in service
+                    var yrsDate = new DateTime();
+                    int yrsFrmDateHire, yrsToday, total;
+                    yrsDate = Convert.ToDateTime(loansDataEntry.txtDateHired.Text);
+                    yrsFrmDateHire = Convert.ToInt32(yrsDate.Date.Year.ToString());
+                    yrsToday = Convert.ToInt32(DateTime.Today.Year.ToString());
+                    total = yrsToday - yrsFrmDateHire;
+                    loansDataEntry.txtYrsInService.Text = total.ToString();
+
+                    loansDataEntry.txtCompany.Text = clsLoanDataEntry.returnCompanyDescription(Classes.clsLoanDataEntry.userID);
+
+                    //Share Capital Balance
+                    loansDataEntry.txtShareCapitalBalance.Text = clsLoanDataEntry.returnShareCapital(Classes.clsLoanDataEntry.userID).ToString("#,0.00");
                 }
 
-                loansDataEntry.txtName.Text = dt.Rows[0].ItemArray[3].ToString();
+                //==================================================================================================================
+                //                              END MEMBERS INFORMATION DETAIL
+                //==================================================================================================================
 
-                if (dt.Rows[0].ItemArray[4].ToString() != "")
+                //============================================================
+                //              DETAILS OF LOAN
+                //============================================================
+
+                loansDataEntry.txtLoanNo.Text = dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString();
+
+                loansDataEntry.txtTermsInMonth.Text = dataGridView1.SelectedRows[0].Cells["Terms"].Value.ToString();
+                loansDataEntry.txtMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
+                loansDataEntry.txtSemiMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Semi_Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
+                loansDataEntry.comboBox1.Text = dataGridView1.SelectedRows[0].Cells["Payment_Option"].Value.ToString();
+                loansDataEntry.comboBox1.Enabled = false;
+
+                //============================================================
+                //              END DETAILS OF LOAN
+                //============================================================
+
+                //============================================================
+                //              CO MAKERS DETAILS
+                //============================================================
+                loansDataEntry.dataGridView1.Rows.Clear();
+
+                adapter = new SqlDataAdapter("select * FROM vw_CoMakers WHERE Loan_No = '" + dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString() + "'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count >= 1)
                 {
-                    loansDataEntry.txtSalary.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[4].ToString()).ToString("#,0.00");
+                    loansDataEntry.dataGridView1.Rows.Add(dt.Rows.Count);
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        loansDataEntry.dataGridView1.Rows[i].Cells[0].Value = dt.Rows[i].ItemArray[1].ToString(); //UserID of CO Makers
+                        loansDataEntry.dataGridView1.Rows[i].Cells[1].Value = dt.Rows[i].ItemArray[2].ToString();
+                        loansDataEntry.dataGridView1.Rows[i].Cells[2].Value = dt.Rows[i].ItemArray[3].ToString();
+                        loansDataEntry.dataGridView1.Rows[i].Cells[3].Value = dt.Rows[i].ItemArray[4].ToString();
+                        loansDataEntry.dataGridView1.Rows[i].Cells[4].Value = dt.Rows[i].ItemArray[5].ToString();
+                    }
+
+                    loansDataEntry.lblTotalCntMakers.Text = dt.Rows.Count.ToString();
                 }
 
-                loansDataEntry.txtDateHired.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[5].ToString()).ToShortDateString());
-                loansDataEntry.txtMemberShipDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[6].ToString()).ToShortDateString());
-                
-                try
+                //============================================================
+                //              END CO MAKERS DETAILS
+                //============================================================
+
+                //===================================
+                //               FOOTER
+                //===================================
+                loansDataEntry.txtDateEncoded.Text = Convert.ToString(Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Encoded_Date"].Value).ToString("MM/dd/yyyy"));
+                loansDataEntry.txtEncodedBy.Text = dataGridView1.SelectedRows[0].Cells["Encoded_By"].Value.ToString();
+
+                //===================================
+                //           STATUS
+                //===================================
+                loansDataEntry.status.Visible = true;
+                loansDataEntry.status.Text = dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString();
+
+
+
+                //If Approve BtnForward visible = false and Cancel will be visible
+                if (dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString() == "APPROVED")
                 {
-                    loansDataEntry.txtPMSDate.Text = Convert.ToString(Convert.ToDateTime(dt.Rows[0].ItemArray[7].ToString()).ToShortDateString());
+                    loansDataEntry.btnForward.Visible = false;
+                    loansDataEntry.btnCancel.Visible = true;
+                    loansDataEntry.lblReason.Visible = true; //Label Reason
+                    loansDataEntry.txtCancel.Visible = true; //Text reason
+                }
+                else if (dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString() == "FOR APPROVAL" || dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString() == "FBA")
+                {
+                    loansDataEntry.btnForward.Visible = true;
+                    loansDataEntry.btnCancel.Visible = false;
+                    loansDataEntry.lblReason.Visible = false; //Label Reason
+                    loansDataEntry.txtCancel.Visible = false;
                 }
 
-                catch
-                {
 
+                if (dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "1" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "6")
+                {
+                    //1 = FOR APPROVAL
+                    loansDataEntry.btnSave.Text = "EDIT";
+                    loansDataEntry.btnClose.Text = "CLOSE";
+                    loansDataEntry.cmbLoanType.Enabled = false;
+                    loansDataEntry.btnSearch.Enabled = false;
+                    loansDataEntry.txtLoanAmount.Enabled = false;
+                    loansDataEntry.txtTermsInMonth.Enabled = false;
+
+                    //Put the Loan Amount to Class First
+                    Classes.clsLoanDataEntry.loan_amount = Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Loan_Amount"].Value.ToString());
+
+                }
+                else if (dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "2" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "3" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "5" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "7" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "8")
+                {
+                    //2 = APPROVED 3 = DISAPPROVED 5 = RELEASED 7 = CANCELLED
+                    loansDataEntry.btnSave.Text = "NEW";
+                    loansDataEntry.btnClose.Text = "CLOSE";
+                    loansDataEntry.cmbLoanType.Enabled = false;
+                    loansDataEntry.btnSearch.Enabled = false;
+                    loansDataEntry.txtLoanAmount.Enabled = false;
+                    loansDataEntry.txtTermsInMonth.Enabled = false;
                 }
 
 
-                //For Getting the years in service
-                var yrsDate = new DateTime();
-                int yrsFrmDateHire, yrsToday, total;
-                yrsDate = Convert.ToDateTime(loansDataEntry.txtDateHired.Text);
-                yrsFrmDateHire = Convert.ToInt32(yrsDate.Date.Year.ToString());
-                yrsToday = Convert.ToInt32(DateTime.Today.Year.ToString());
-                total = yrsToday - yrsFrmDateHire;
-                loansDataEntry.txtYrsInService.Text = total.ToString();
+                //Loan Details
+                loansDataEntry.cmbLoanType.SelectedValue = dataGridView1.SelectedRows[0].Cells["Type"].Value.ToString();
+                loansDataEntry.txtLoanAmount.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Loan_Amount"].Value.ToString()).ToString("#,0.00"));
 
-                loansDataEntry.txtCompany.Text = clsLoanDataEntry.returnCompanyDescription(Classes.clsLoanDataEntry.userID);
-
-                //Share Capital Balance
-                loansDataEntry.txtShareCapitalBalance.Text = clsLoanDataEntry.returnShareCapital(Classes.clsLoanDataEntry.userID).ToString("#,0.00");
-            }
-
-            //==================================================================================================================
-            //                              END MEMBERS INFORMATION DETAIL
-            //==================================================================================================================
-
-            //============================================================
-            //              DETAILS OF LOAN
-            //============================================================
-           
-            loansDataEntry.txtLoanNo.Text = dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString();
-            
-            loansDataEntry.txtTermsInMonth.Text = dataGridView1.SelectedRows[0].Cells["Terms"].Value.ToString();
-            loansDataEntry.txtMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
-            loansDataEntry.txtSemiMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Semi_Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
-            loansDataEntry.comboBox1.Text = dataGridView1.SelectedRows[0].Cells["Payment_Option"].Value.ToString();
-            loansDataEntry.comboBox1.Enabled = false;
-
-            //============================================================
-            //              END DETAILS OF LOAN
-            //============================================================
-
-            //============================================================
-            //              CO MAKERS DETAILS
-            //============================================================
-            loansDataEntry.dataGridView1.Rows.Clear();
-
-            adapter = new SqlDataAdapter("select * FROM vw_CoMakers WHERE Loan_No = '" + dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString() + "'", con);
-            dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count >= 1)
-            {
-                loansDataEntry.dataGridView1.Rows.Add(dt.Rows.Count);
-                for (int i = 0; i < dt.Rows.Count; i++)
+                //Disable If Company is Non payroll
+                if (clsLookUp.returnCompanyCode(loansDataEntry.txtCompany.Text) == "COMP010")
                 {
-                    loansDataEntry.dataGridView1.Rows[i].Cells[0].Value = dt.Rows[i].ItemArray[1].ToString(); //UserID of CO Makers
-                    loansDataEntry.dataGridView1.Rows[i].Cells[1].Value = dt.Rows[i].ItemArray[2].ToString();
-                    loansDataEntry.dataGridView1.Rows[i].Cells[2].Value = dt.Rows[i].ItemArray[3].ToString();
-                    loansDataEntry.dataGridView1.Rows[i].Cells[3].Value = dt.Rows[i].ItemArray[4].ToString();
-                    loansDataEntry.dataGridView1.Rows[i].Cells[4].Value = dt.Rows[i].ItemArray[5].ToString();
+                    //NON-PAYROLL
+                    loansDataEntry.button1.Enabled = false;
                 }
-
-                loansDataEntry.lblTotalCntMakers.Text = dt.Rows.Count.ToString();
+                else
+                {
+                    loansDataEntry.button1.Enabled = true;
+                }
             }
-
-            //============================================================
-            //              END CO MAKERS DETAILS
-            //============================================================
-
-            //===================================
-            //               FOOTER
-            //===================================
-            loansDataEntry.txtDateEncoded.Text = Convert.ToString(Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Encoded_Date"].Value).ToString("MM/dd/yyyy"));
-            loansDataEntry.txtEncodedBy.Text = dataGridView1.SelectedRows[0].Cells["Encoded_By"].Value.ToString();
-
-            //===================================
-            //           STATUS
-            //===================================
-            loansDataEntry.status.Visible = true;
-            loansDataEntry.status.Text = dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString();
-
-           
-
-            //If Approve BtnForward visible = false and Cancel will be visible
-            if (dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString() == "APPROVED")
-            {
-                loansDataEntry.btnForward.Visible = false;
-                loansDataEntry.btnCancel.Visible = true;
-                loansDataEntry.lblReason.Visible = true; //Label Reason
-                loansDataEntry.txtCancel.Visible = true; //Text reason
-            }
-            else if (dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString() == "FOR APPROVAL" || dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString() == "FBA")
-            {
-                loansDataEntry.btnForward.Visible = true;
-                loansDataEntry.btnCancel.Visible = false;
-                loansDataEntry.lblReason.Visible = false; //Label Reason
-                loansDataEntry.txtCancel.Visible = false;
-            }
-            
-
-            if (dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "1" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "6")
-            {
-                //1 = FOR APPROVAL
-                loansDataEntry.btnSave.Text = "EDIT";
-                loansDataEntry.btnClose.Text = "CLOSE";
-                loansDataEntry.cmbLoanType.Enabled = false;
-                loansDataEntry.btnSearch.Enabled = false;
-                loansDataEntry.txtLoanAmount.Enabled = false;
-                loansDataEntry.txtTermsInMonth.Enabled = false;
-
-                //Put the Loan Amount to Class First
-                Classes.clsLoanDataEntry.loan_amount = Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Loan_Amount"].Value.ToString());
-
-            }
-            else if (dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "2" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "3" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "5" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "7" || dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "8")
-            {
-                //2 = APPROVED 3 = DISAPPROVED 5 = RELEASED 7 = CANCELLED
-                loansDataEntry.btnSave.Text = "NEW";
-                loansDataEntry.btnClose.Text = "CLOSE";
-                loansDataEntry.cmbLoanType.Enabled = false;
-                loansDataEntry.btnSearch.Enabled = false;
-                loansDataEntry.txtLoanAmount.Enabled = false;
-                loansDataEntry.txtTermsInMonth.Enabled = false;
-            }
-
-
-            //Loan Details
-            loansDataEntry.cmbLoanType.SelectedValue = dataGridView1.SelectedRows[0].Cells["Type"].Value.ToString();
-            loansDataEntry.txtLoanAmount.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Loan_Amount"].Value.ToString()).ToString("#,0.00"));
-
-            //Disable If Company is Non payroll
-            if (clsLookUp.returnCompanyCode(loansDataEntry.txtCompany.Text) == "COMP010")
-            {
-                //NON-PAYROLL
-                loansDataEntry.button1.Enabled = false;
-            }
-            else
-            {
-                loansDataEntry.button1.Enabled = true;
-            }
-
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

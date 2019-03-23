@@ -271,14 +271,14 @@ namespace WindowsFormsApplication2
                 //=====================================================================
                 //                      Fields Validation for Entry (Membership)
                 //=====================================================================
-                if(ValidateChildren(ValidationConstraints.Enabled))
-                {
+                //if(ValidateChildren(ValidationConstraints.Enabled))
+                //{
 
-                }
+                //}
 
                 if (clsMembershipEntry.RequiredFields(txtLastName, txtFirstName,txtMiddleName, txtAddress, cmbGender, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup,cmbCostCenter, dtDateHired, txtContactName, txtOfficeTelNo,cmbBankName,txtAccountNo) == true)
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -332,7 +332,7 @@ namespace WindowsFormsApplication2
                     //EMAIL VALIDATION
                     if (txtEmail.Text.Contains("@") != true)
                     {
-                        Alert.show("Email address is invalid!", Alert.AlertType.warning);
+                        Alert.show("Email address is invalid.", Alert.AlertType.warning);
                         return;
                     }
                 }
@@ -348,224 +348,225 @@ namespace WindowsFormsApplication2
                         Alert.show("Employee ID No Already Exist", Alert.AlertType.error);
                         return;
                     }
-                }          
-
-                //Setup Connection
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_InsertMembership";
-                cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
-                cmd.Parameters.AddWithValue("@Principal", clsMembershipEntry.principal);
-                cmd.Parameters.AddWithValue("@PrincipalID", txtPrincipalNo.Text);
-                cmd.Parameters.AddWithValue("@LastName", txtLastName.Text);
-                cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text);
-                cmd.Parameters.AddWithValue("@MiddleName", txtMiddleName.Text);
-                cmd.Parameters.AddWithValue("@Suffix", txtSuffix.Text);
-                cmd.Parameters.AddWithValue("@Gender", cmbGender.Text);
-
-
-
-                //DropDownList            
-                if (cmbBankName.Text == "")
-                {
-                    cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
                 }
 
-                if (cmboPrevComp.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cmd.Parameters.AddWithValue("@Prev_Company_Code", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Prev_Company_Code", cmboPrevComp.SelectedValue);
-                }
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_InsertMembership";
+                    cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                    cmd.Parameters.AddWithValue("@Principal", clsMembershipEntry.principal);
+                    cmd.Parameters.AddWithValue("@PrincipalID", txtPrincipalNo.Text);
+                    cmd.Parameters.AddWithValue("@LastName", txtLastName.Text);
+                    cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text);
+                    cmd.Parameters.AddWithValue("@MiddleName", txtMiddleName.Text);
+                    cmd.Parameters.AddWithValue("@Suffix", txtSuffix.Text);
+                    cmd.Parameters.AddWithValue("@Gender", cmbGender.Text);
 
 
-                //For Image Saving
-                if (txtPath.Text != "")
-                {
-                    byte[] bImageData = GetImageData(openFileDialog1.FileName);
-                    cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
-                }
-                else
-                {
-                    byte[] bImageData = GetImageData("icons8-person-40.png");
-                    cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
-                }
 
-                cmd.Parameters.AddWithValue("@Residential_Address", txtAddress.Text);
-                cmd.Parameters.AddWithValue("@Date_Of_Birth", dtDateOfBirth.Text);
-                cmd.Parameters.AddWithValue("@Place_Of_Birth", txtPlaceOfBirth.Text);
-                cmd.Parameters.AddWithValue("@Civil_Status", cmbCivilStatus.Text);
-                cmd.Parameters.AddWithValue("@Name_Of_Spouse", txtSpouseName.Text);
-                if(cmbAreaCode.Text != "")
-                {
-                    cmd.Parameters.AddWithValue("@Area_Code", cmbAreaCode.SelectedValue);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Area_Code", DBNull.Value);
-                }
-                cmd.Parameters.AddWithValue("@Home_Tel_No", txtHomeTel.Text);
-                cmd.Parameters.AddWithValue("@Cellphone_No", txtCellNo.Text);
-                cmd.Parameters.AddWithValue("@TinNo", txtTINno.Text);
-                cmd.Parameters.AddWithValue("@SSSNo", txtSSSNo.Text);
-                cmd.Parameters.AddWithValue("@Email_Address", txtEmail.Text);
-
-                cmd.Parameters.AddWithValue("@Atm_Account_No", txtAccountNo.Text);
-                cmd.Parameters.AddWithValue("@Place_PMS", txtPlacePMS.Text);
-                cmd.Parameters.AddWithValue("@Date_Of_PMS", dtDatePMS.Text);
-                cmd.Parameters.AddWithValue("@Company_Code", cmbCompany.SelectedValue);
-                cmd.Parameters.AddWithValue("@Payroll_Code", cmbPayrollGroup.SelectedValue);
-                cmd.Parameters.AddWithValue("@Cost_Center_Code", cmbCostCenter.SelectedValue);
-                cmd.Parameters.AddWithValue("@Date_Hired", dtDateHired.Text);
-
-                //Check if Date Resigned is open
-                if (dtDateResigned.Checked == true)
-                {
-                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", dtDateResigned.Text);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", DBNull.Value);
-                }
-
-                //Check if Date Resigned From PECCI is open
-                if (dtResignedFromPecci.Checked == true)
-                {
-                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", dtResignedFromPecci.Text);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", DBNull.Value);
-                }
-
-                if (cmbOfficeArea.Text != "")
-                {
-                    cmd.Parameters.AddWithValue("@Office_Area_Code", cmbOfficeArea.SelectedValue);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Office_Area_Code", DBNull.Value);
-                }
-
-                cmd.Parameters.AddWithValue("@Office_Tel_No", txtOfficeTelNo.Text);
-                cmd.Parameters.AddWithValue("@Contact_Person", txtContactName.Text);
-
-                if (cmbContactAreaCode.Text != "")
-                {
-                    cmd.Parameters.AddWithValue("@Contact_Area_Code", cmbContactAreaCode.SelectedValue);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Contact_Area_Code", DBNull.Value);
-                }
-
-                
-                cmd.Parameters.AddWithValue("@Contact_No1", txtContactNo1.Text);
-                cmd.Parameters.AddWithValue("@Contact_No2", txtContactNo2.Text);
-                cmd.Parameters.AddWithValue("@Date_Of_Membership", dtDateMembership.Text);
-
-                cmd.Parameters.AddWithValue("@First_Deduction", dtFirstDeduction.Text);//First Deduction
-
-                //For Decimals
-                if (txtSalary.Text == "")
-                {
-                    cmd.Parameters.AddWithValue("@Salary", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Salary", Convert.ToDecimal(txtSalary.Text));
-                }
-
-                if (txtMembershipFee.Text == "")
-                {
-                    cmd.Parameters.AddWithValue("@Membership_Fee", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Membership_Fee", Convert.ToDecimal(txtMembershipFee.Text));
-                }
-
-                if (txtShareCapital.Text == "")
-                {
-                    cmd.Parameters.AddWithValue("@Share_Capital", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Share_Capital", Convert.ToDecimal(txtShareCapital.Text));
-                }
-
-                if (txtSavingsDeposit.Text == "")
-                {
-                    cmd.Parameters.AddWithValue("@Savings_Deposit", DBNull.Value);
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@Savings_Deposit", Convert.ToDecimal(txtSavingsDeposit.Text));
-                }
-
-
-                //Added Feb 17 2019 as per maam vangie
-                //Relationship and Remarks
-                
-                cmd.Parameters.AddWithValue("@Relationship", txtRelationship.Text);
-                cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
-
-                //Check if theres a beneficiary
-                if (dataGridView1.Rows.Count > 0)
-                {
-                    foreach (DataGridViewRow row1 in dataGridView1.Rows)
+                    //DropDownList            
+                    if (cmbBankName.Text == "")
                     {
-                        if(!row1.IsNewRow)
+                        cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
+                    }
+
+                    if (cmboPrevComp.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Prev_Company_Code", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Prev_Company_Code", cmboPrevComp.SelectedValue);
+                    }
+
+
+                    //For Image Saving
+                    if (txtPath.Text != "")
+                    {
+                        byte[] bImageData = GetImageData(openFileDialog1.FileName);
+                        cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
+                    }
+                    else
+                    {
+                        byte[] bImageData = GetImageData("icons8-person-40.png");
+                        cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
+                    }
+
+                    cmd.Parameters.AddWithValue("@Residential_Address", txtAddress.Text);
+                    cmd.Parameters.AddWithValue("@Date_Of_Birth", dtDateOfBirth.Text);
+                    cmd.Parameters.AddWithValue("@Place_Of_Birth", txtPlaceOfBirth.Text);
+                    cmd.Parameters.AddWithValue("@Civil_Status", cmbCivilStatus.Text);
+                    cmd.Parameters.AddWithValue("@Name_Of_Spouse", txtSpouseName.Text);
+                    if (cmbAreaCode.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@Area_Code", cmbAreaCode.SelectedValue);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Area_Code", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("@Home_Tel_No", txtHomeTel.Text);
+                    cmd.Parameters.AddWithValue("@Cellphone_No", txtCellNo.Text);
+                    cmd.Parameters.AddWithValue("@TinNo", txtTINno.Text);
+                    cmd.Parameters.AddWithValue("@SSSNo", txtSSSNo.Text);
+                    cmd.Parameters.AddWithValue("@Email_Address", txtEmail.Text);
+
+                    cmd.Parameters.AddWithValue("@Atm_Account_No", txtAccountNo.Text);
+                    cmd.Parameters.AddWithValue("@Place_PMS", txtPlacePMS.Text);
+                    cmd.Parameters.AddWithValue("@Date_Of_PMS", dtDatePMS.Text);
+                    cmd.Parameters.AddWithValue("@Company_Code", cmbCompany.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Payroll_Code", cmbPayrollGroup.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Cost_Center_Code", cmbCostCenter.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Date_Hired", dtDateHired.Text);
+
+                    //Check if Date Resigned is open
+                    if (dtDateResigned.Checked == true)
+                    {
+                        cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", dtDateResigned.Text);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", DBNull.Value);
+                    }
+
+                    //Check if Date Resigned From PECCI is open
+                    if (dtResignedFromPecci.Checked == true)
+                    {
+                        cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", dtResignedFromPecci.Text);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", DBNull.Value);
+                    }
+
+                    if (cmbOfficeArea.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@Office_Area_Code", cmbOfficeArea.SelectedValue);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Office_Area_Code", DBNull.Value);
+                    }
+
+                    cmd.Parameters.AddWithValue("@Office_Tel_No", txtOfficeTelNo.Text);
+                    cmd.Parameters.AddWithValue("@Contact_Person", txtContactName.Text);
+
+                    if (cmbContactAreaCode.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@Contact_Area_Code", cmbContactAreaCode.SelectedValue);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Contact_Area_Code", DBNull.Value);
+                    }
+
+
+                    cmd.Parameters.AddWithValue("@Contact_No1", txtContactNo1.Text);
+                    cmd.Parameters.AddWithValue("@Contact_No2", txtContactNo2.Text);
+                    cmd.Parameters.AddWithValue("@Date_Of_Membership", dtDateMembership.Text);
+
+                    cmd.Parameters.AddWithValue("@First_Deduction", dtFirstDeduction.Text);//First Deduction
+
+                    //For Decimals
+                    if (txtSalary.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Salary", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Salary", Convert.ToDecimal(txtSalary.Text));
+                    }
+
+                    if (txtMembershipFee.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Membership_Fee", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Membership_Fee", Convert.ToDecimal(txtMembershipFee.Text));
+                    }
+
+                    if (txtShareCapital.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Share_Capital", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Share_Capital", Convert.ToDecimal(txtShareCapital.Text));
+                    }
+
+                    if (txtSavingsDeposit.Text == "")
+                    {
+                        cmd.Parameters.AddWithValue("@Savings_Deposit", DBNull.Value);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Savings_Deposit", Convert.ToDecimal(txtSavingsDeposit.Text));
+                    }
+
+
+                    //Added Feb 17 2019 as per maam vangie
+                    //Relationship and Remarks
+
+                    cmd.Parameters.AddWithValue("@Relationship", txtRelationship.Text);
+                    cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
+
+                    //Check if theres a beneficiary
+                    if (dataGridView1.Rows.Count > 0)
+                    {
+                        foreach (DataGridViewRow row1 in dataGridView1.Rows)
                         {
-                            if (row1.Cells[2].Value == null || row1.Cells[2].Value.ToString() == "")
+                            if (!row1.IsNewRow)
                             {
-                                Alert.show("Beneficiary birthday is required!", Alert.AlertType.error);
-                                return;
+                                if (row1.Cells[2].Value == null || row1.Cells[2].Value.ToString() == "")
+                                {
+                                    Alert.show("Birthday of beneficiary is required.", Alert.AlertType.error);
+                                    return;
+                                }
                             }
                         }
-                    }                    
-                }
+                    }
 
-                if(dataGridView1.Rows.Count >= 2)
-                {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    if (dataGridView1.Rows.Count >= 2)
                     {
-                        if (row.Cells[0].Value != null)
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
-                            SqlCommand cmdBeneficiary = new SqlCommand();
-                            cmdBeneficiary.Connection = con;
-                            cmdBeneficiary.CommandType = CommandType.StoredProcedure;
-                            cmdBeneficiary.CommandText = "sp_InsertBeneficiaries";
-                            cmdBeneficiary.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
-                            cmdBeneficiary.Parameters.AddWithValue("@Full_Name", row.Cells[0].Value);
-                            cmdBeneficiary.Parameters.AddWithValue("@Relationship", row.Cells[1].Value);
-                            cmdBeneficiary.Parameters.AddWithValue("@Date_Of_Birth", row.Cells[2].Value);
-                            cmdBeneficiary.ExecuteNonQuery(); //SAVE BENEFICIARY
+                            if (row.Cells[0].Value != null)
+                            {
+                                SqlCommand cmdBeneficiary = new SqlCommand();
+                                cmdBeneficiary.Connection = con;
+                                cmdBeneficiary.CommandType = CommandType.StoredProcedure;
+                                cmdBeneficiary.CommandText = "sp_InsertBeneficiaries";
+                                cmdBeneficiary.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                                cmdBeneficiary.Parameters.AddWithValue("@Full_Name", row.Cells[0].Value);
+                                cmdBeneficiary.Parameters.AddWithValue("@Relationship", row.Cells[1].Value);
+                                cmdBeneficiary.Parameters.AddWithValue("@Date_Of_Birth", row.Cells[2].Value);
+                                cmdBeneficiary.ExecuteNonQuery(); //SAVE BENEFICIARY
+                            }
                         }
                     }
-                }
-                else
-                {
-                    if (clsMembershipEntry.principal == "1")
+                    else
                     {
-                        Alert.show("Please put at least 1 Beneficiary!", Alert.AlertType.error);
-                        return;
+                        if (clsMembershipEntry.principal == "1")
+                        {
+                            Alert.show("Please put at least 1 Beneficiary!", Alert.AlertType.error);
+                            return;
+                        }
                     }
+
+
+
+                    cmd.ExecuteNonQuery(); //SAVE MEMBER
                 }
-                               
-
-
-                cmd.ExecuteNonQuery(); //SAVE MEMBER
 
                 //Clear all fields
                 clearAllFields();
@@ -573,7 +574,7 @@ namespace WindowsFormsApplication2
                 dataGridView1.Rows.Clear();
                 btnNew.Text = "NEW";
 
-                Alert.show("Successfully Added", Alert.AlertType.success);
+                Alert.show("Member successfully added.", Alert.AlertType.success);
             }
         }
 
@@ -602,14 +603,14 @@ namespace WindowsFormsApplication2
             //=====================================================================
             //                      Fields Validation for Entry (Membership)
             //=====================================================================
-            if (ValidateChildren(ValidationConstraints.Enabled))
-            {
+            //if (ValidateChildren(ValidationConstraints.Enabled))
+            //{
 
-            }
+            //}
 
             if (clsMembershipEntry.RequiredFields(txtLastName, txtFirstName, txtMiddleName , txtAddress, cmbGender, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup, cmbCostCenter, dtDateHired, txtContactName, txtOfficeTelNo,cmbBankName,txtAccountNo) == true)
             {
-                Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                 return;
             }
 
@@ -660,7 +661,7 @@ namespace WindowsFormsApplication2
 
                 if (txtEmail.Text.Contains("@") != true)
                 {
-                    Alert.show("Email address is invalid!", Alert.AlertType.warning);
+                    Alert.show("Email address is invalid.", Alert.AlertType.warning);
                     return;
                 }
             }
@@ -704,296 +705,299 @@ namespace WindowsFormsApplication2
 
                         if (clsMembershipEntry.checkDependent(txtEmployeeIDNo.Text) == true)
                         {
-                            con = new SqlConnection();
-                            global.connection(con);
-
-                            SqlCommand cmdDependent = new SqlCommand();
-                            cmdDependent.Connection = con;
-                            cmdDependent.CommandText = "sp_ResignDependent";
-                            cmdDependent.CommandType = CommandType.StoredProcedure;
-
-                            if(dtResignedFromPecci.Checked == true)
+                            using (SqlConnection con = new SqlConnection(global.connectString()))
                             {
-                                cmdDependent.Parameters.AddWithValue("@dtPecciResign",dtResignedFromPecci.Text);
-                            }
-                            else
-                            {
-                                cmdDependent.Parameters.AddWithValue("@dtPecciResign", DBNull.Value);
-                            }
+                                con.Open();
 
-                            if(dtDateResigned.Checked == true)
-                            {
-                                cmdDependent.Parameters.AddWithValue("@dtCompResign",dtDateResigned.Text);
-                            }
-                            else
-                            {
-                                cmdDependent.Parameters.AddWithValue("@dtCompResign", DBNull.Value);
-                            }
+                                SqlCommand cmdDependent = new SqlCommand();
+                                cmdDependent.Connection = con;
+                                cmdDependent.CommandText = "sp_ResignDependent";
+                                cmdDependent.CommandType = CommandType.StoredProcedure;
 
-                            cmdDependent.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                                if (dtResignedFromPecci.Checked == true)
+                                {
+                                    cmdDependent.Parameters.AddWithValue("@dtPecciResign", dtResignedFromPecci.Text);
+                                }
+                                else
+                                {
+                                    cmdDependent.Parameters.AddWithValue("@dtPecciResign", DBNull.Value);
+                                }
 
-                            cmdDependent.ExecuteNonQuery();
+                                if (dtDateResigned.Checked == true)
+                                {
+                                    cmdDependent.Parameters.AddWithValue("@dtCompResign", dtDateResigned.Text);
+                                }
+                                else
+                                {
+                                    cmdDependent.Parameters.AddWithValue("@dtCompResign", DBNull.Value);
+                                }
+
+                                cmdDependent.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+
+                                cmdDependent.ExecuteNonQuery();
+                            }
                         }
-                        
                     }
                 }
             }
 
             //Setup Connection
-            con = new SqlConnection();
-            global.connection(con);
-
-            //If Principal changes his/her info dependent will also reflect the company info he/she change
-            if (clsMembershipEntry.principal == "1" || clsMembershipEntry.principal == "True")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                //CHeck if theres a dependent
-                SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT * FROM Membership WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "' and Principal <> 1", con);
-                DataTable dtCheck = new DataTable();
-                adapterCheck.Fill(dtCheck);
+                con.Open();
 
-                if(dtCheck.Rows.Count >= 1)
+                //If Principal changes his/her info dependent will also reflect the company info he/she change
+                if (clsMembershipEntry.principal == "1" || clsMembershipEntry.principal == "True")
                 {
-                    SqlCommand cmdUpdateDependent = new SqlCommand();
-                    cmdUpdateDependent.Connection = con;
-                    if (cmbOfficeArea.Text != "" && txtSalary.Text != "")
+                    //CHeck if theres a dependent
+                    SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT * FROM Membership WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "' and Principal <> 1", con);
+                    DataTable dtCheck = new DataTable();
+                    adapterCheck.Fill(dtCheck);
+
+                    if (dtCheck.Rows.Count >= 1)
                     {
-                        cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text + "', Salary ='" + Convert.ToDecimal(txtSalary.Text) + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
-                    }
-                    else if (cmbOfficeArea.Text == "" && txtSalary.Text != "")
-                    {
-                        cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + DBNull.Value + "', Salary ='" + Convert.ToDecimal(txtSalary.Text) + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
-                    }
-                    else if (cmbOfficeArea.Text != "" && txtSalary.Text == "")
-                    {
-                        cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text + "', Salary ='" + DBNull.Value + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
-                    }
-                    else
-                    {
-                        cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + DBNull.Value + "', Salary ='" + DBNull.Value + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
-                    }
-                    cmdUpdateDependent.CommandType = CommandType.Text;
-                    cmdUpdateDependent.ExecuteNonQuery();
-                }
-            }
-
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "sp_UpdateMembership";
-            cmd.Parameters.AddWithValue("@userID", clsMembershipEntry.userID);
-            cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
-            cmd.Parameters.AddWithValue("@PrincipalID", txtPrincipalNo.Text);
-            cmd.Parameters.AddWithValue("@LastName", txtLastName.Text);
-            cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text);
-            cmd.Parameters.AddWithValue("@MiddleName", txtMiddleName.Text);
-            cmd.Parameters.AddWithValue("@Suffix", txtSuffix.Text);
-            cmd.Parameters.AddWithValue("@Gender", cmbGender.Text);
-
-
-
-            //DropDownList            
-            if (cmbBankName.Text == "")
-            {
-                cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
-            }
-
-            if (cmboPrevComp.Text == "")
-            {
-                cmd.Parameters.AddWithValue("@Prev_Company_Code", DBNull.Value);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Prev_Company_Code", cmboPrevComp.SelectedValue);
-            }
-
-
-            //For Image Saving
-            if(picPicture.Image == null)
-            {
-                byte[] bImageData = GetImageData("icons8-person-40.png");
-                cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
-            }
-            if (txtPath.Text != "")
-            {
-                byte[] bImageData = GetImageData(openFileDialog1.FileName);
-                cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
-            }
-            else
-            {
-                Image myImage = picPicture.Image;
-                byte[] data;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    myImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    data = ms.ToArray();
-                }
-
-                cmd.Parameters.AddWithValue("@Member_Picture", data);
-            }
-
-            cmd.Parameters.AddWithValue("@Residential_Address", txtAddress.Text);
-            cmd.Parameters.AddWithValue("@Date_Of_Birth", dtDateOfBirth.Text);
-            cmd.Parameters.AddWithValue("@Place_Of_Birth", txtPlaceOfBirth.Text);
-            cmd.Parameters.AddWithValue("@Civil_Status", cmbCivilStatus.Text);
-            cmd.Parameters.AddWithValue("@Name_Of_Spouse", txtSpouseName.Text);
-            if (cmbAreaCode.Text != "")
-            {
-                cmd.Parameters.AddWithValue("@Area_Code", cmbAreaCode.SelectedValue);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Area_Code", DBNull.Value);
-            }
-            cmd.Parameters.AddWithValue("@Home_Tel_No", txtHomeTel.Text);
-            cmd.Parameters.AddWithValue("@Cellphone_No", txtCellNo.Text);
-            cmd.Parameters.AddWithValue("@TinNo", txtTINno.Text);
-            cmd.Parameters.AddWithValue("@SSSNo", txtSSSNo.Text);
-            cmd.Parameters.AddWithValue("@Email_Address", txtEmail.Text);
-
-            cmd.Parameters.AddWithValue("@Atm_Account_No", txtAccountNo.Text);
-            cmd.Parameters.AddWithValue("@Place_PMS", txtPlacePMS.Text);
-            cmd.Parameters.AddWithValue("@Date_Of_PMS", dtDatePMS.Text);
-            cmd.Parameters.AddWithValue("@Company_Code", cmbCompany.SelectedValue);
-            cmd.Parameters.AddWithValue("@Payroll_Code", cmbPayrollGroup.SelectedValue);
-            cmd.Parameters.AddWithValue("@Cost_Center_Code", cmbCostCenter.SelectedValue);
-            cmd.Parameters.AddWithValue("@Date_Hired", dtDateHired.Text);
-
-            //Check if Date Resigned is open
-            if (dtDateResigned.Checked == true)
-            {
-                cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", dtDateResigned.Text);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", DBNull.Value);
-            }
-
-            //Check if Date Resigned From PECCI is open
-            if (dtResignedFromPecci.Checked == true)
-            {
-                cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", dtResignedFromPecci.Text);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", DBNull.Value);
-            }
-
-            cmd.Parameters.AddWithValue("@Office_Area_Code", cmbOfficeArea.SelectedValue);
-            cmd.Parameters.AddWithValue("@Office_Tel_No", txtOfficeTelNo.Text);
-            cmd.Parameters.AddWithValue("@Contact_Person", txtContactName.Text);
-            cmd.Parameters.AddWithValue("@Contact_Area_Code", cmbContactAreaCode.SelectedValue);
-            cmd.Parameters.AddWithValue("@Contact_No1", txtContactNo1.Text);
-            cmd.Parameters.AddWithValue("@Contact_No2", txtContactNo2.Text);
-            cmd.Parameters.AddWithValue("@Date_Of_Membership", dtDateMembership.Text);
-
-            cmd.Parameters.AddWithValue("@First_Deduction", dtFirstDeduction.Text);//First Deduction
-
-            //For Decimals
-            if (txtSalary.Text == "")
-            {
-                cmd.Parameters.AddWithValue("@Salary", DBNull.Value);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Salary", Convert.ToDecimal(txtSalary.Text));
-            }
-
-            if (txtMembershipFee.Text == "")
-            {
-                cmd.Parameters.AddWithValue("@Membership_Fee", DBNull.Value);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Membership_Fee", Convert.ToDecimal(txtMembershipFee.Text));
-            }
-
-            if (txtShareCapital.Text == "")
-            {
-                cmd.Parameters.AddWithValue("@Share_Capital", DBNull.Value);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Share_Capital", Convert.ToDecimal(txtShareCapital.Text));
-            }
-
-            if (txtSavingsDeposit.Text == "")
-            {
-                cmd.Parameters.AddWithValue("@Savings_Deposit", DBNull.Value);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Savings_Deposit", Convert.ToDecimal(txtSavingsDeposit.Text));
-            }
-
-
-            //Added Feb 17 2019 as per maam vangie
-            //Relationship and Remarks
-            cmd.Parameters.AddWithValue("@Relationship", txtRelationship.Text);
-            cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
-
-            cmd.ExecuteNonQuery();
-
-            //Check if theres a beneficiary
-            if (dataGridView1.Rows.Count > 0)
-            {
-
-                //Delete First All Beneficiaries then Re-Insert
-                SqlCommand cmd1 = new SqlCommand();
-                cmd1.Connection = con;
-                cmd1.CommandText = "sp_DeleteBeneficiaries";
-                cmd1.CommandType = CommandType.StoredProcedure;
-                cmd1.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
-                cmd1.ExecuteNonQuery();
-
-                //Insert
-                foreach (DataGridViewRow row in dataGridView1.Rows)
-                {
-                    foreach (DataGridViewRow row1 in dataGridView1.Rows)
-                    {
-                        if (!row1.IsNewRow)
+                        SqlCommand cmdUpdateDependent = new SqlCommand();
+                        cmdUpdateDependent.Connection = con;
+                        if (cmbOfficeArea.Text != "" && txtSalary.Text != "")
                         {
-                            if (row1.Cells[2].Value == null || row1.Cells[2].Value.ToString() == "")
-                            {
-                                Alert.show("Beneficiary birthday is required!", Alert.AlertType.error);
-                                return;
-                            }
+                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text + "', Salary ='" + Convert.ToDecimal(txtSalary.Text) + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
                         }
+                        else if (cmbOfficeArea.Text == "" && txtSalary.Text != "")
+                        {
+                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + DBNull.Value + "', Salary ='" + Convert.ToDecimal(txtSalary.Text) + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
+                        }
+                        else if (cmbOfficeArea.Text != "" && txtSalary.Text == "")
+                        {
+                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text + "', Salary ='" + DBNull.Value + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
+                        }
+                        else
+                        {
+                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + DBNull.Value + "', Salary ='" + DBNull.Value + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
+                        }
+                        cmdUpdateDependent.CommandType = CommandType.Text;
+                        cmdUpdateDependent.ExecuteNonQuery();
                     }
                 }
 
-            }
 
-            if(clsMembershipEntry.principal.ToString() == "True")
-            {
-                if (dataGridView1.Rows.Count >= 2)
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "sp_UpdateMembership";
+                cmd.Parameters.AddWithValue("@userID", clsMembershipEntry.userID);
+                cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                cmd.Parameters.AddWithValue("@PrincipalID", txtPrincipalNo.Text);
+                cmd.Parameters.AddWithValue("@LastName", txtLastName.Text);
+                cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text);
+                cmd.Parameters.AddWithValue("@MiddleName", txtMiddleName.Text);
+                cmd.Parameters.AddWithValue("@Suffix", txtSuffix.Text);
+                cmd.Parameters.AddWithValue("@Gender", cmbGender.Text);
+
+
+
+                //DropDownList            
+                if (cmbBankName.Text == "")
                 {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
-                    {
-                        if (row.Cells[0].Value != null)
-                        {
-                            SqlCommand cmdBeneficiary = new SqlCommand();
-                            cmdBeneficiary.Connection = con;
-                            cmdBeneficiary.CommandType = CommandType.StoredProcedure;
-                            cmdBeneficiary.CommandText = "sp_InsertBeneficiaries";
-                            cmdBeneficiary.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
-                            cmdBeneficiary.Parameters.AddWithValue("@Full_Name", row.Cells[0].Value);
-                            cmdBeneficiary.Parameters.AddWithValue("@Relationship", row.Cells[1].Value);
-                            cmdBeneficiary.Parameters.AddWithValue("@Date_Of_Birth", row.Cells[2].Value);
-                            cmdBeneficiary.ExecuteNonQuery(); //SAVE BENEFICIARY
-                        }
-                    }
+                    cmd.Parameters.AddWithValue("@Bank_Code", DBNull.Value);
                 }
                 else
                 {
-                    if (clsMembershipEntry.principal == "1")
+                    cmd.Parameters.AddWithValue("@Bank_Code", cmbBankName.SelectedValue);
+                }
+
+                if (cmboPrevComp.Text == "")
+                {
+                    cmd.Parameters.AddWithValue("@Prev_Company_Code", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Prev_Company_Code", cmboPrevComp.SelectedValue);
+                }
+
+
+                //For Image Saving
+                if (picPicture.Image == null)
+                {
+                    byte[] bImageData = GetImageData("icons8-person-40.png");
+                    cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
+                }
+                if (txtPath.Text != "")
+                {
+                    byte[] bImageData = GetImageData(openFileDialog1.FileName);
+                    cmd.Parameters.AddWithValue("@Member_Picture", bImageData);
+                }
+                else
+                {
+                    Image myImage = picPicture.Image;
+                    byte[] data;
+                    using (MemoryStream ms = new MemoryStream())
                     {
-                        Alert.show("Please put at least 1 Beneficiary!", Alert.AlertType.error);
-                        return;
+                        myImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        data = ms.ToArray();
+                    }
+
+                    cmd.Parameters.AddWithValue("@Member_Picture", data);
+                }
+
+                cmd.Parameters.AddWithValue("@Residential_Address", txtAddress.Text);
+                cmd.Parameters.AddWithValue("@Date_Of_Birth", dtDateOfBirth.Text);
+                cmd.Parameters.AddWithValue("@Place_Of_Birth", txtPlaceOfBirth.Text);
+                cmd.Parameters.AddWithValue("@Civil_Status", cmbCivilStatus.Text);
+                cmd.Parameters.AddWithValue("@Name_Of_Spouse", txtSpouseName.Text);
+                if (cmbAreaCode.Text != "")
+                {
+                    cmd.Parameters.AddWithValue("@Area_Code", cmbAreaCode.SelectedValue);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Area_Code", DBNull.Value);
+                }
+                cmd.Parameters.AddWithValue("@Home_Tel_No", txtHomeTel.Text);
+                cmd.Parameters.AddWithValue("@Cellphone_No", txtCellNo.Text);
+                cmd.Parameters.AddWithValue("@TinNo", txtTINno.Text);
+                cmd.Parameters.AddWithValue("@SSSNo", txtSSSNo.Text);
+                cmd.Parameters.AddWithValue("@Email_Address", txtEmail.Text);
+
+                cmd.Parameters.AddWithValue("@Atm_Account_No", txtAccountNo.Text);
+                cmd.Parameters.AddWithValue("@Place_PMS", txtPlacePMS.Text);
+                cmd.Parameters.AddWithValue("@Date_Of_PMS", dtDatePMS.Text);
+                cmd.Parameters.AddWithValue("@Company_Code", cmbCompany.SelectedValue);
+                cmd.Parameters.AddWithValue("@Payroll_Code", cmbPayrollGroup.SelectedValue);
+                cmd.Parameters.AddWithValue("@Cost_Center_Code", cmbCostCenter.SelectedValue);
+                cmd.Parameters.AddWithValue("@Date_Hired", dtDateHired.Text);
+
+                //Check if Date Resigned is open
+                if (dtDateResigned.Checked == true)
+                {
+                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", dtDateResigned.Text);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Company", DBNull.Value);
+                }
+
+                //Check if Date Resigned From PECCI is open
+                if (dtResignedFromPecci.Checked == true)
+                {
+                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", dtResignedFromPecci.Text);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Date_Resigned_From_Pecci", DBNull.Value);
+                }
+
+                cmd.Parameters.AddWithValue("@Office_Area_Code", cmbOfficeArea.SelectedValue);
+                cmd.Parameters.AddWithValue("@Office_Tel_No", txtOfficeTelNo.Text);
+                cmd.Parameters.AddWithValue("@Contact_Person", txtContactName.Text);
+                cmd.Parameters.AddWithValue("@Contact_Area_Code", cmbContactAreaCode.SelectedValue);
+                cmd.Parameters.AddWithValue("@Contact_No1", txtContactNo1.Text);
+                cmd.Parameters.AddWithValue("@Contact_No2", txtContactNo2.Text);
+                cmd.Parameters.AddWithValue("@Date_Of_Membership", dtDateMembership.Text);
+
+                cmd.Parameters.AddWithValue("@First_Deduction", dtFirstDeduction.Text);//First Deduction
+
+                //For Decimals
+                if (txtSalary.Text == "")
+                {
+                    cmd.Parameters.AddWithValue("@Salary", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Salary", Convert.ToDecimal(txtSalary.Text));
+                }
+
+                if (txtMembershipFee.Text == "")
+                {
+                    cmd.Parameters.AddWithValue("@Membership_Fee", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Membership_Fee", Convert.ToDecimal(txtMembershipFee.Text));
+                }
+
+                if (txtShareCapital.Text == "")
+                {
+                    cmd.Parameters.AddWithValue("@Share_Capital", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Share_Capital", Convert.ToDecimal(txtShareCapital.Text));
+                }
+
+                if (txtSavingsDeposit.Text == "")
+                {
+                    cmd.Parameters.AddWithValue("@Savings_Deposit", DBNull.Value);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Savings_Deposit", Convert.ToDecimal(txtSavingsDeposit.Text));
+                }
+
+
+                //Added Feb 17 2019 as per maam vangie
+                //Relationship and Remarks
+                cmd.Parameters.AddWithValue("@Relationship", txtRelationship.Text);
+                cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
+
+                cmd.ExecuteNonQuery();
+
+                //Check if theres a beneficiary
+                if (dataGridView1.Rows.Count > 0)
+                {
+
+                    //Delete First All Beneficiaries then Re-Insert
+                    SqlCommand cmd1 = new SqlCommand();
+                    cmd1.Connection = con;
+                    cmd1.CommandText = "sp_DeleteBeneficiaries";
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                    cmd1.ExecuteNonQuery();
+
+                    //Insert
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        foreach (DataGridViewRow row1 in dataGridView1.Rows)
+                        {
+                            if (!row1.IsNewRow)
+                            {
+                                if (row1.Cells[2].Value == null || row1.Cells[2].Value.ToString() == "")
+                                {
+                                    Alert.show("Birthday of beneficiary is required.", Alert.AlertType.error);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                if (clsMembershipEntry.principal.ToString() == "True")
+                {
+                    if (dataGridView1.Rows.Count >= 2)
+                    {
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        {
+                            if (row.Cells[0].Value != null)
+                            {
+                                SqlCommand cmdBeneficiary = new SqlCommand();
+                                cmdBeneficiary.Connection = con;
+                                cmdBeneficiary.CommandType = CommandType.StoredProcedure;
+                                cmdBeneficiary.CommandText = "sp_InsertBeneficiaries";
+                                cmdBeneficiary.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                                cmdBeneficiary.Parameters.AddWithValue("@Full_Name", row.Cells[0].Value);
+                                cmdBeneficiary.Parameters.AddWithValue("@Relationship", row.Cells[1].Value);
+                                cmdBeneficiary.Parameters.AddWithValue("@Date_Of_Birth", row.Cells[2].Value);
+                                cmdBeneficiary.ExecuteNonQuery(); //SAVE BENEFICIARY
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (clsMembershipEntry.principal == "1")
+                        {
+                            Alert.show("Please put at least 1 Beneficiary!", Alert.AlertType.error);
+                            return;
+                        }
                     }
                 }
             }
@@ -1012,7 +1016,7 @@ namespace WindowsFormsApplication2
             Membership = (MembershipMain)Application.OpenForms["MembershipMain"];
             Membership.loadDatas();
 
-            Alert.show("Successfully Updated", Alert.AlertType.success);
+            Alert.show("Successfully updated.", Alert.AlertType.success);
 
         }
 
@@ -1466,6 +1470,11 @@ namespace WindowsFormsApplication2
             {
                 oDateTimePicker.Visible = false;
             }
+        }
+
+        private void label66_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

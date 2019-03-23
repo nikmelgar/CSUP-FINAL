@@ -68,100 +68,101 @@ namespace WindowsFormsApplication2
         private void btnNew_Click(object sender, EventArgs e)
         {
             //CONNECTION TO SQL SERVER AND STORED PROCEDURE
-            SqlConnection con = new SqlConnection();
-            global.connection(con);
-
-            saveTrigger = false;
-
-            if (btnNew.Text == "SAVE")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                //CHECK FIRST BEFORE SAVING
-                if (txtDescription.Text == "")
+                con.Open();
+                saveTrigger = false;
+
+                if (btnNew.Text == "SAVE")
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
-                    return;
+                    //CHECK FIRST BEFORE SAVING
+                    if (txtDescription.Text == "")
+                    {
+                        Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
+                        return;
+                    }
+                    else
+                    {
+
+                        //Check if theres a duplicate entry
+                        if (global.CheckDuplicateEntry(txtDescription.Text, "Company") == true)
+                        {
+                            Alert.show("Company Description Already Exist", Alert.AlertType.error);
+                            return;
+                        }
+
+                        //Saving here
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandText = "sp_InsertCompany";
+                        txtDescription.Text = txtDescription.Text.Trim(); //trim space first
+                        cmd.Parameters.AddWithValue("@Description", txtDescription.Text.ToUpper());
+                        cmd.Parameters.AddWithValue("@Remark", txtRemarks.Text);
+                        cmd.ExecuteNonQuery();
+
+                        //CLEAR TEXTFIELDS
+                        txtCode.Text = "";
+                        txtDescription.Text = "";
+                        txtRemarks.Text = "";
+
+                        //Enable Buttons
+                        btnEdit.Enabled = true;
+                        btnDelete.Enabled = true;
+                        btnClose.Text = "CLOSE";
+
+                        //Save here
+                        saveTrigger = true;
+                        btnNew.Text = "NEW";
+
+                        //load data
+                        global.loadDataForFileMaintenance(dataGridView1, "Company");
+                        //customize alert
+                        Alert.show("Successfully Added.", Alert.AlertType.success);
+
+                        txtDescription.Enabled = false;
+                        txtRemarks.Enabled = false;
+                    }
                 }
                 else
                 {
 
-                    //Check if theres a duplicate entry
-                    if (global.CheckDuplicateEntry(txtDescription.Text, "Company") == true)
-                    {
-                        Alert.show("Company Description Already Exist", Alert.AlertType.error);
-                        return;
-                    }
-
-                    //Saving here
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
+                    SqlCommand cmd = new SqlCommand("sp_AutoGenerateCompanyCode", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "sp_InsertCompany";
-                    txtDescription.Text = txtDescription.Text.Trim(); //trim space first
-                    cmd.Parameters.AddWithValue("@Description", txtDescription.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@Remark", txtRemarks.Text);
-                    cmd.ExecuteNonQuery();
 
-                    //CLEAR TEXTFIELDS
-                    txtCode.Text = "";
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    //REMOVE DESCRIPTION IF HAS A VALUE
                     txtDescription.Text = "";
                     txtRemarks.Text = "";
 
-                    //Enable Buttons
-                    btnEdit.Enabled = true;
-                    btnDelete.Enabled = true;
-                    btnClose.Text = "CLOSE";
+                    txtCode.Text = dt.Rows[0].ItemArray[0].ToString();    //Fill txtCode //Autogenerate
+                                                                          //ENABLED ALL FIELDS 
+                    txtDescription.Enabled = true;
+                    txtRemarks.Enabled = true;
 
-                    //Save here
-                    saveTrigger = true;
-                    btnNew.Text = "NEW";
+                    btnEdit.Enabled = false;
+                    btnDelete.Enabled = false;
 
-                    //load data
-                    global.loadDataForFileMaintenance(dataGridView1, "Company");
-                    //customize alert
-                    Alert.show("Successfully Added", Alert.AlertType.success);
+                    //Change Close to Cancel
+                    btnClose.Text = "CANCEL";
 
-                    txtDescription.Enabled = false;
-                    txtRemarks.Enabled = false;
+                    //SET FOCUS FIRST TO DESCRIPTION
+                    txtDescription.Focus();
+
                 }
-            }
-            else
-            {
 
-                SqlCommand cmd = new SqlCommand("sp_AutoGenerateCompanyCode", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                //REMOVE DESCRIPTION IF HAS A VALUE
-                txtDescription.Text = "";
-                txtRemarks.Text = "";
-
-                txtCode.Text = dt.Rows[0].ItemArray[0].ToString();    //Fill txtCode //Autogenerate
-                                                                      //ENABLED ALL FIELDS 
-                txtDescription.Enabled = true;
-                txtRemarks.Enabled = true;
-
-                btnEdit.Enabled = false;
-                btnDelete.Enabled = false;
-
-                //Change Close to Cancel
-                btnClose.Text = "CANCEL";
-
-                //SET FOCUS FIRST TO DESCRIPTION
-                txtDescription.Focus();
-
-            }
-
-            //Change New to Save
-            if (saveTrigger == true)
-            {
-                btnNew.Text = "NEW";
-            }
-            else
-            {
-                btnNew.Text = "SAVE";
+                //Change New to Save
+                if (saveTrigger == true)
+                {
+                    btnNew.Text = "NEW";
+                }
+                else
+                {
+                    btnNew.Text = "SAVE";
+                }
             }
         }
 
@@ -201,53 +202,53 @@ namespace WindowsFormsApplication2
                 //CHECK FIRST BEFORE SAVING
                 if (txtDescription.Text == "")
                 {
-                    Alert.show("All fields with (*) are required", Alert.AlertType.warning);
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
                 }
 
 
                 //CONNECTION TO SQL SERVER AND STORED PROCEDURE
-                Global global = new Global();
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+                    //UPDATE CODE HERE
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_UpdateCompany";
+                    cmd.Parameters.AddWithValue("@Company_Code", txtCode.Text);
+                    txtDescription.Text = txtDescription.Text.Trim(); //trim space first
+                    cmd.Parameters.AddWithValue("@Description", txtDescription.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
+                    cmd.ExecuteNonQuery();
 
-                //UPDATE CODE HERE
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_UpdateCompany";
-                cmd.Parameters.AddWithValue("@Company_Code", txtCode.Text);
-                txtDescription.Text = txtDescription.Text.Trim(); //trim space first
-                cmd.Parameters.AddWithValue("@Description", txtDescription.Text.ToUpper());
-                cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text);
-                cmd.ExecuteNonQuery();
-
-                //load data realtime
-                global.loadDataForFileMaintenance(dataGridView1, "Company");
-                //update trigger call
-                updateTrigger = true;
+                    //load data realtime
+                    global.loadDataForFileMaintenance(dataGridView1, "Company");
+                    //update trigger call
+                    updateTrigger = true;
 
 
-                //if successfully updated
-                //Disable textbox
-                txtDescription.Enabled = false;
-                txtRemarks.Enabled = false;
+                    //if successfully updated
+                    //Disable textbox
+                    txtDescription.Enabled = false;
+                    txtRemarks.Enabled = false;
 
-                //clear 
-                txtCode.Text = "";
-                txtDescription.Text = "";
-                txtRemarks.Text = "";
+                    //clear 
+                    txtCode.Text = "";
+                    txtDescription.Text = "";
+                    txtRemarks.Text = "";
 
-                //enable buttons
-                btnNew.Enabled = true;
-                btnDelete.Enabled = true;
+                    //enable buttons
+                    btnNew.Enabled = true;
+                    btnDelete.Enabled = true;
 
-                btnClose.Text = "CLOSE";
+                    btnClose.Text = "CLOSE";
 
-                //success
-                Alert.show("Successfully Updated", Alert.AlertType.success);
+                    //success
+                    Alert.show("Successfully updated.", Alert.AlertType.success);
 
-                btnEdit.Text = "EDIT";
+                    btnEdit.Text = "EDIT";
+                }
 
             }
             else
@@ -289,28 +290,28 @@ namespace WindowsFormsApplication2
             {
                 //Delete or Tagged as Inactive goes here
                 //CONNECTION TO SQL SERVER AND STORED PROCEDURE
-                Global global = new Global();
-                SqlConnection con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_InactiveCompany";
+                    cmd.Parameters.AddWithValue("@Company_Code", txtCode.Text);
+                    cmd.ExecuteNonQuery();
+
+                    txtCode.Text = "";
+                    txtDescription.Text = "";
+                    txtRemarks.Text = "";
 
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_InactiveCompany";
-                cmd.Parameters.AddWithValue("@Company_Code", txtCode.Text);
-                cmd.ExecuteNonQuery();
+                    //Load Real Time
+                    global.loadDataForFileMaintenance(dataGridView1, "Company");
 
-                txtCode.Text = "";
-                txtDescription.Text = "";
-                txtRemarks.Text = "";
-
-
-                //Load Real Time
-                global.loadDataForFileMaintenance(dataGridView1, "Company");
-
-                //Message
-                Alert.show("Company Successfully Deleted", Alert.AlertType.success);
+                    //Message
+                    Alert.show("Company Successfully Deleted", Alert.AlertType.success);
+                }   
             }
             else
             {

@@ -88,7 +88,7 @@ namespace WindowsFormsApplication2
         {
             if(txtSearchLoanNo.Text == "")
             {
-                Alert.show("Please put keyword to be search!", Alert.AlertType.error);
+                Alert.show("Please enter valid loan number.", Alert.AlertType.error);
                 return;
             }
 
@@ -153,39 +153,54 @@ namespace WindowsFormsApplication2
 
 
             //FOR PLAR RENEW 
-
-            if(cmbLoanType.Text == "PLAR")
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                con = new SqlConnection();
-                global.connection(con);
+                con.Open();
 
-                adapter = new SqlDataAdapter("select Prev_Loan_No from loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
-                dt = new DataTable();
-                adapter.Fill(dt);
-
-                if((!DBNull.Value.Equals(dt.Rows[0].ItemArray[0].ToString())))
+                if (cmbLoanType.Text == "PLAR")
                 {
-                    //Get first the Net Amount before we compute the service Fee
-                    //COmputation for Total deduction and net
-                    double ttalDeduction, ttalNet;
-                    double srvcFromNet;
-                    ttalDeduction = Convert.ToDouble(txtExistingBalance.Text.Replace(",", "")) + Convert.ToDouble(txtTotalDeferred.Text.Replace(",", "")) + Convert.ToDouble(txtOtherDeduction.Text.Replace(",", ""));
-                    ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
 
-                    //Charge Service fee for the net amount 
-                    srvcFromNet = Convert.ToDouble(txtLoanAmount.Text.Replace(",", "")) - Convert.ToDouble(txtExistingBalance.Text.Replace(",", ""));
-                    srvcFromNet = srvcFromNet * Convert.ToDouble(clsParameter.serviceFee());
+                    adapter = new SqlDataAdapter("select Prev_Loan_No from loan WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
+                    dt = new DataTable();
+                    adapter.Fill(dt);
 
-                    txtServiceFee.Text = Convert.ToDecimal(srvcFromNet).ToString("#,0.00");
-                    ttalDeduction = ttalDeduction + srvcFromNet;
-                    ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
+                    if ((!DBNull.Value.Equals(dt.Rows[0].ItemArray[0].ToString())))
+                    {
+                        //Get first the Net Amount before we compute the service Fee
+                        //COmputation for Total deduction and net
+                        double ttalDeduction, ttalNet;
+                        double srvcFromNet;
+                        ttalDeduction = Convert.ToDouble(txtExistingBalance.Text.Replace(",", "")) + Convert.ToDouble(txtTotalDeferred.Text.Replace(",", "")) + Convert.ToDouble(txtOtherDeduction.Text.Replace(",", ""));
+                        ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
 
-                    txtTotalDeduction.Text = Convert.ToString(Convert.ToDouble(ttalDeduction).ToString("#,0.00"));
-                    txtNetAmount.Text = Convert.ToString(Convert.ToDouble(ttalNet).ToString("#,0.00"));
+                        //Charge Service fee for the net amount 
+                        srvcFromNet = Convert.ToDouble(txtLoanAmount.Text.Replace(",", "")) - Convert.ToDouble(txtExistingBalance.Text.Replace(",", ""));
+                        srvcFromNet = srvcFromNet * Convert.ToDouble(clsParameter.serviceFee());
+
+                        txtServiceFee.Text = Convert.ToDecimal(srvcFromNet).ToString("#,0.00");
+                        ttalDeduction = ttalDeduction + srvcFromNet;
+                        ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
+
+                        txtTotalDeduction.Text = Convert.ToString(Convert.ToDouble(ttalDeduction).ToString("#,0.00"));
+                        txtNetAmount.Text = Convert.ToString(Convert.ToDouble(ttalNet).ToString("#,0.00"));
+                    }
+                    else
+                    {
+                        //PLAR NEW APPLICATION
+                        txtServiceFee.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Service_Fee"].Value.ToString()).ToString("#,0.00"));
+
+                        //COmputation for Total deduction and net
+                        double ttalDeduction, ttalNet;
+
+                        ttalDeduction = Convert.ToDouble(txtServiceFee.Text.Replace(",", "")) + Convert.ToDouble(txtExistingBalance.Text.Replace(",", "")) + Convert.ToDouble(txtTotalDeferred.Text.Replace(",", "")) + Convert.ToDouble(txtOtherDeduction.Text.Replace(",", ""));
+                        ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
+
+                        txtTotalDeduction.Text = Convert.ToString(Convert.ToDouble(ttalDeduction).ToString("#,0.00"));
+                        txtNetAmount.Text = Convert.ToString(Convert.ToDouble(ttalNet).ToString("#,0.00"));
+                    }
                 }
                 else
                 {
-                    //PLAR NEW APPLICATION
                     txtServiceFee.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Service_Fee"].Value.ToString()).ToString("#,0.00"));
 
                     //COmputation for Total deduction and net
@@ -198,20 +213,6 @@ namespace WindowsFormsApplication2
                     txtNetAmount.Text = Convert.ToString(Convert.ToDouble(ttalNet).ToString("#,0.00"));
                 }
             }
-            else
-            {
-                txtServiceFee.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Service_Fee"].Value.ToString()).ToString("#,0.00"));
-
-                //COmputation for Total deduction and net
-                double ttalDeduction, ttalNet;
-
-                ttalDeduction = Convert.ToDouble(txtServiceFee.Text.Replace(",", "")) + Convert.ToDouble(txtExistingBalance.Text.Replace(",", "")) + Convert.ToDouble(txtTotalDeferred.Text.Replace(",", "")) + Convert.ToDouble(txtOtherDeduction.Text.Replace(",", ""));
-                ttalNet = Convert.ToDouble(txtLoanReceivable.Text.Replace(",", "")) - ttalDeduction;
-
-                txtTotalDeduction.Text = Convert.ToString(Convert.ToDouble(ttalDeduction).ToString("#,0.00"));
-                txtNetAmount.Text = Convert.ToString(Convert.ToDouble(ttalNet).ToString("#,0.00"));
-            }
-
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -228,166 +229,167 @@ namespace WindowsFormsApplication2
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                con = new SqlConnection();
-                global.connection(con);
-
-                string jvNo;
-
-                //=================================================================================
-                //Create JV For Replenished Withdrawal
-                //=================================================================================
-
-                //=================================================================================
-                //JOURNAL HEADER
-                //=================================================================================
-                SqlCommand cmdHeader = new SqlCommand();
-                cmdHeader.Connection = con;
-                cmdHeader.CommandText = "sp_InsertJournalHeader";
-                cmdHeader.CommandType = CommandType.StoredProcedure;
-                cmdHeader.Parameters.AddWithValue("@JV_Date", DateTime.Today.ToShortDateString());
-                cmdHeader.Parameters.AddWithValue("@userID", userID);
-                cmdHeader.Parameters.AddWithValue("@AdjTo", txtEmployeeID.Text);
-                cmdHeader.Parameters.AddWithValue("@Particular", txtParticular.Text);
-                cmdHeader.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                cmdHeader.Parameters.AddWithValue("@Posted", false);
-                cmdHeader.Parameters.AddWithValue("@Transaction_Type", "TRAN002");
-                cmdHeader.Parameters.AddWithValue("@summarize", false);
-                cmdHeader.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-                cmdHeader.Parameters.AddWithValue("@Poseted_By", "");
-                cmdHeader.ExecuteNonQuery();
-                //=================================================================================
-                //GET JV
-                //=================================================================================
-
-                SqlCommand cmdJV = new SqlCommand();
-                cmdJV.Connection = con;
-                cmdJV.CommandText = "sp_GetJVNoAfterSaving";
-                cmdJV.CommandType = CommandType.StoredProcedure;
-                cmdJV.Parameters.AddWithValue("@jv_date", DateTime.Today.ToShortDateString());
-                cmdJV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-
-                SqlDataAdapter adapter = new SqlDataAdapter(cmdJV);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    jvNo = dt.Rows[0].ItemArray[0].ToString();
-                }
-                else
-                {
-                    return;
-                }
+                    con.Open();
 
-                //=================================================================================
-                //JOURNAL DETAILS FIRST CURRENT LOAN AND BANK OF MEMBERS
-                //=================================================================================
+                    string jvNo;
 
-                //FOR CURRENT LOAN - LOAN AVAIL BY THE MEMBER
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertJournalDetail";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@JV_No", jvNo);
-                cmd.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnChartAccountCode(cmbLoanType.Text));
-                cmd.Parameters.AddWithValue("@userID", userID);
-                cmd.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-                cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                cmd.Parameters.AddWithValue("@Debit", Convert.ToDecimal(txtLoanReceivable.Text.Replace(",", "")));
-                cmd.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
-                cmd.ExecuteNonQuery();
+                    //=================================================================================
+                    //Create JV For Replenished Withdrawal
+                    //=================================================================================
 
-                //FOR MEMBERS BANK INFORMATION
-                SqlCommand cmd1 = new SqlCommand();
-                cmd1.Connection = con;
-                cmd1.CommandText = "sp_InsertJournalDetail";
-                cmd1.CommandType = CommandType.StoredProcedure;
-                cmd1.Parameters.AddWithValue("@JV_No", jvNo);
-                cmd1.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnMemberBankCodeAccount(userID));
-                cmd1.Parameters.AddWithValue("@userID", userID);
-                cmd1.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-                cmd1.Parameters.AddWithValue("@Loan_No", "");
-                cmd1.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                cmd1.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtNetAmount.Text.Replace(",", "")));
-                cmd1.ExecuteNonQuery();
+                    //=================================================================================
+                    //JOURNAL HEADER
+                    //=================================================================================
+                    SqlCommand cmdHeader = new SqlCommand();
+                    cmdHeader.Connection = con;
+                    cmdHeader.CommandText = "sp_InsertJournalHeader";
+                    cmdHeader.CommandType = CommandType.StoredProcedure;
+                    cmdHeader.Parameters.AddWithValue("@JV_Date", DateTime.Today.ToShortDateString());
+                    cmdHeader.Parameters.AddWithValue("@userID", userID);
+                    cmdHeader.Parameters.AddWithValue("@AdjTo", txtEmployeeID.Text);
+                    cmdHeader.Parameters.AddWithValue("@Particular", txtParticular.Text);
+                    cmdHeader.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                    cmdHeader.Parameters.AddWithValue("@Posted", false);
+                    cmdHeader.Parameters.AddWithValue("@Transaction_Type", "TRAN002");
+                    cmdHeader.Parameters.AddWithValue("@summarize", false);
+                    cmdHeader.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+                    cmdHeader.Parameters.AddWithValue("@Poseted_By", "");
+                    cmdHeader.ExecuteNonQuery();
+                    //=================================================================================
+                    //GET JV
+                    //=================================================================================
 
-                //FOR SERVICE FEE
-                if (txtServiceFee.Text != "0.00")
-                {
-                    SqlCommand cmd2 = new SqlCommand();
-                    cmd2.Connection = con;
-                    cmd2.CommandText = "sp_InsertJournalDetail";
-                    cmd2.CommandType = CommandType.StoredProcedure;
-                    cmd2.Parameters.AddWithValue("@JV_No", jvNo);
-                    cmd2.Parameters.AddWithValue("@Account_Code", "405");
-                    cmd2.Parameters.AddWithValue("@userID", userID);
-                    cmd2.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-                    cmd2.Parameters.AddWithValue("@Loan_No", "");
-                    cmd2.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                    cmd2.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtServiceFee.Text.Replace(",", "")));
-                    cmd2.ExecuteNonQuery();
-                }
+                    SqlCommand cmdJV = new SqlCommand();
+                    cmdJV.Connection = con;
+                    cmdJV.CommandText = "sp_GetJVNoAfterSaving";
+                    cmdJV.CommandType = CommandType.StoredProcedure;
+                    cmdJV.Parameters.AddWithValue("@jv_date", DateTime.Today.ToShortDateString());
+                    cmdJV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
 
-                //===================================================================================================
-                //                  IF EVER HE HAS OTHER DEDUCTION MADE
-                //===================================================================================================
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmdJV);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT * FROM vw_loanDeductionToVoucher WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
-                DataTable dt2 = new DataTable();
-                adapter2.Fill(dt2);
-
-                if (dt2.Rows.Count > 0)
-                {
-                    int x = 0;
-                    while (x != dt2.Rows.Count)
+                    if (dt.Rows.Count > 0)
                     {
-                        SqlCommand cmdDeduction = new SqlCommand();
-                        cmdDeduction.Connection = con;
-                        cmdDeduction.CommandText = "sp_InsertJournalDetail";
-                        cmdDeduction.CommandType = CommandType.StoredProcedure;
-                        cmdDeduction.Parameters.AddWithValue("@JV_No", jvNo);
-                        cmdDeduction.Parameters.AddWithValue("@Account_Code", dt2.Rows[x].ItemArray[7].ToString());
-                        cmdDeduction.Parameters.AddWithValue("@userID", userID);
-                        cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-
-                        if (dt2.Rows[x].ItemArray[4].ToString() != "")
-                        {
-                            cmdDeduction.Parameters.AddWithValue("@Loan_No", dt2.Rows[x].ItemArray[4].ToString());
-                        }
-                        else
-                        {
-                            cmdDeduction.Parameters.AddWithValue("@Loan_No", "");
-                        }
-
-                        cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                        cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
-                        cmdDeduction.ExecuteNonQuery();
-
-                        x = x + 1;//Increment
+                        jvNo = dt.Rows[0].ItemArray[0].ToString();
                     }
+                    else
+                    {
+                        return;
+                    }
+
+                    //=================================================================================
+                    //JOURNAL DETAILS FIRST CURRENT LOAN AND BANK OF MEMBERS
+                    //=================================================================================
+
+                    //FOR CURRENT LOAN - LOAN AVAIL BY THE MEMBER
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertJournalDetail";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@JV_No", jvNo);
+                    cmd.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnChartAccountCode(cmbLoanType.Text));
+                    cmd.Parameters.AddWithValue("@userID", userID);
+                    cmd.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                    cmd.Parameters.AddWithValue("@Debit", Convert.ToDecimal(txtLoanReceivable.Text.Replace(",", "")));
+                    cmd.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
+                    cmd.ExecuteNonQuery();
+
+                    //FOR MEMBERS BANK INFORMATION
+                    SqlCommand cmd1 = new SqlCommand();
+                    cmd1.Connection = con;
+                    cmd1.CommandText = "sp_InsertJournalDetail";
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.AddWithValue("@JV_No", jvNo);
+                    cmd1.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnMemberBankCodeAccount(userID));
+                    cmd1.Parameters.AddWithValue("@userID", userID);
+                    cmd1.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd1.Parameters.AddWithValue("@Loan_No", "");
+                    cmd1.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                    cmd1.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtNetAmount.Text.Replace(",", "")));
+                    cmd1.ExecuteNonQuery();
+
+                    //FOR SERVICE FEE
+                    if (txtServiceFee.Text != "0.00")
+                    {
+                        SqlCommand cmd2 = new SqlCommand();
+                        cmd2.Connection = con;
+                        cmd2.CommandText = "sp_InsertJournalDetail";
+                        cmd2.CommandType = CommandType.StoredProcedure;
+                        cmd2.Parameters.AddWithValue("@JV_No", jvNo);
+                        cmd2.Parameters.AddWithValue("@Account_Code", "405");
+                        cmd2.Parameters.AddWithValue("@userID", userID);
+                        cmd2.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                        cmd2.Parameters.AddWithValue("@Loan_No", "");
+                        cmd2.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                        cmd2.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtServiceFee.Text.Replace(",", "")));
+                        cmd2.ExecuteNonQuery();
+                    }
+
+                    //===================================================================================================
+                    //                  IF EVER HE HAS OTHER DEDUCTION MADE
+                    //===================================================================================================
+
+                    SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT * FROM vw_loanDeductionToVoucher WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
+                    DataTable dt2 = new DataTable();
+                    adapter2.Fill(dt2);
+
+                    if (dt2.Rows.Count > 0)
+                    {
+                        int x = 0;
+                        while (x != dt2.Rows.Count)
+                        {
+                            SqlCommand cmdDeduction = new SqlCommand();
+                            cmdDeduction.Connection = con;
+                            cmdDeduction.CommandText = "sp_InsertJournalDetail";
+                            cmdDeduction.CommandType = CommandType.StoredProcedure;
+                            cmdDeduction.Parameters.AddWithValue("@JV_No", jvNo);
+                            cmdDeduction.Parameters.AddWithValue("@Account_Code", dt2.Rows[x].ItemArray[7].ToString());
+                            cmdDeduction.Parameters.AddWithValue("@userID", userID);
+                            cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+
+                            if (dt2.Rows[x].ItemArray[4].ToString() != "")
+                            {
+                                cmdDeduction.Parameters.AddWithValue("@Loan_No", dt2.Rows[x].ItemArray[4].ToString());
+                            }
+                            else
+                            {
+                                cmdDeduction.Parameters.AddWithValue("@Loan_No", "");
+                            }
+
+                            cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                            cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
+                            cmdDeduction.ExecuteNonQuery();
+
+                            x = x + 1;//Increment
+                        }
+                    }
+
+
+                    //Update loan net proceeds loan header
+                    SqlCommand cmdLoanHeader = new SqlCommand();
+                    cmdLoanHeader.Connection = con;
+                    cmdLoanHeader.CommandText = "UPDATE Loan SET NetProceeds = '" + txtNetAmount.Text.Replace(",", "") + "', jv_no = '" + jvNo + "', Status = '8' WHERE loan_no = '" + txtLoanNo.Text + "'";
+                    cmdLoanHeader.CommandType = CommandType.Text;
+                    cmdLoanHeader.ExecuteNonQuery();
+
+                    Alert.show("Loan# " + txtLoanNo.Text + " For ATM Preparation", Alert.AlertType.success);
+
+                    //Refresh the grid
+                    clsLoanComputation.loadLoanApprovedDetails(dataGridView1, lblTotalCount);
+
+                    //Set Loan Released Date
+                    SqlCommand cmdRelease = new SqlCommand();
+                    cmdRelease.Connection = con;
+                    cmdRelease.CommandText = "sp_LoanReleasedDate";
+                    cmdRelease.CommandType = CommandType.StoredProcedure;
+                    cmdRelease.Parameters.AddWithValue("@LoanNo", txtLoanNo.Text);
+                    cmdRelease.ExecuteNonQuery();
                 }
-
-
-                //Update loan net proceeds loan header
-                SqlCommand cmdLoanHeader = new SqlCommand();
-                cmdLoanHeader.Connection = con;
-                cmdLoanHeader.CommandText = "UPDATE Loan SET NetProceeds = '" + txtNetAmount.Text.Replace(",", "") + "', jv_no = '" + jvNo + "', Status = '8' WHERE loan_no = '" + txtLoanNo.Text + "'";
-                cmdLoanHeader.CommandType = CommandType.Text;
-                cmdLoanHeader.ExecuteNonQuery();
-
-                Alert.show("Loan# " + txtLoanNo.Text + " For ATM Preparation", Alert.AlertType.success);
-
-                //Refresh the grid
-                clsLoanComputation.loadLoanApprovedDetails(dataGridView1, lblTotalCount);
-
-                //Set Loan Released Date
-                SqlCommand cmdRelease = new SqlCommand();
-                cmdRelease.Connection = con;
-                cmdRelease.CommandText = "sp_LoanReleasedDate";
-                cmdRelease.CommandType = CommandType.StoredProcedure;
-                cmdRelease.Parameters.AddWithValue("@LoanNo", txtLoanNo.Text);
-                cmdRelease.ExecuteNonQuery();
-
                 clearTextFIelds();
             }
         }
@@ -398,225 +400,233 @@ namespace WindowsFormsApplication2
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                con = new SqlConnection();
-                global.connection(con);
-
-
-                string cvno;
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_InsertDisbursementHeader";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@CVDate", DateTime.Today.ToShortDateString());
-
-                //FOr Payee Type 
-                //Member = 0 Client = 1
-
-                cmd.Parameters.AddWithValue("@Payee_Type", "1");
-                cmd.Parameters.AddWithValue("@userID", userID);
-
-                cmd.Parameters.AddWithValue("@Payee", txtEmployeeID.Text);
-                cmd.Parameters.AddWithValue("@Payee_Name", txtName.Text);
-                cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
-                cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                cmd.Parameters.AddWithValue("@Bank_Code", clsLoanComputation.returnMemberBankCode(userID));
-                cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
-                cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtNetAmount.Text));
-                cmd.Parameters.AddWithValue("@Transaction_Type", "TRAN002");
-                cmd.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
-
-                //Get The CV NO.
-
-                SqlCommand cmdCV = new SqlCommand();
-                cmdCV.Connection = con;
-                cmdCV.CommandText = "sp_GetCVNoAfterSaving";
-                cmdCV.CommandType = CommandType.StoredProcedure;
-                cmdCV.Parameters.AddWithValue("@CV_Date", DateTime.Today.ToShortDateString());
-                cmdCV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-
-                SqlDataAdapter adapter = new SqlDataAdapter(cmdCV);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cvno = dt.Rows[0].ItemArray[0].ToString();
-                }
-                else
-                {
-                    return;
-                }
+                    con.Open();
 
-                //=================================================================================
-                //DISBURSEMENT DETAILS FIRST CURRENT LOAN AND BANK OF MEMBERS
-                //=================================================================================
+                    string cvno;
 
-                //FOR CURRENT LOAN - LOAN AVAIL BY THE MEMBER
-                SqlCommand cmd1 = new SqlCommand();
-                cmd1.Connection = con;
-                cmd1.CommandText = "sp_InsertDisbursementDetail";
-                cmd1.CommandType = CommandType.StoredProcedure;
-                cmd1.Parameters.AddWithValue("@CV_No", cvno);
-                cmd1.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnChartAccountCode(cmbLoanType.Text));
-                cmd1.Parameters.AddWithValue("@userID", userID);
-                cmd1.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-                cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                cmd1.Parameters.AddWithValue("@Debit", Convert.ToDecimal(txtLoanReceivable.Text.Replace(",", "")));
-                cmd1.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
-                cmd1.ExecuteNonQuery();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_InsertDisbursementHeader";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CVDate", DateTime.Today.ToShortDateString());
 
-                //FOR MEMBERS BANK INFORMATION
-                SqlCommand cmd2 = new SqlCommand();
-                cmd2.Connection = con;
-                cmd2.CommandText = "sp_InsertDisbursementDetail";
-                cmd2.CommandType = CommandType.StoredProcedure;
-                cmd2.Parameters.AddWithValue("@CV_No", cvno);
-                cmd2.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnMemberBankCodeAccount(userID));
-                cmd2.Parameters.AddWithValue("@userID", userID);
-                cmd2.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-                cmd2.Parameters.AddWithValue("@Loan_No", "");
-                cmd2.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                cmd2.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtNetAmount.Text.Replace(",", "")));
-                cmd2.ExecuteNonQuery();
+                    //FOr Payee Type 
+                    //Member = 0 Client = 1
 
-                //FOR SERVICE FEE
-                if (txtServiceFee.Text != "0.00")
-                {
-                    SqlCommand cmd3 = new SqlCommand();
-                    cmd3.Connection = con;
-                    cmd3.CommandText = "sp_InsertDisbursementDetail";
-                    cmd3.CommandType = CommandType.StoredProcedure;
-                    cmd3.Parameters.AddWithValue("@CV_No", cvno);
-                    cmd3.Parameters.AddWithValue("@Account_Code", "405");
-                    cmd3.Parameters.AddWithValue("@userID", userID);
-                    cmd3.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-                    cmd3.Parameters.AddWithValue("@Loan_No", "");
-                    cmd3.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                    cmd3.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtServiceFee.Text.Replace(",", "")));
-                    cmd3.ExecuteNonQuery();
-                }
+                    cmd.Parameters.AddWithValue("@Payee_Type", "1");
+                    cmd.Parameters.AddWithValue("@userID", userID);
 
-                //===================================================================================================
-                //                  IF EVER HE HAS OTHER DEDUCTION MADE
-                //===================================================================================================
+                    cmd.Parameters.AddWithValue("@Payee", txtEmployeeID.Text);
+                    cmd.Parameters.AddWithValue("@Payee_Name", txtName.Text);
+                    cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
+                    cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                    cmd.Parameters.AddWithValue("@Bank_Code", clsLoanComputation.returnMemberBankCode(userID));
+                    cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtNetAmount.Text));
+                    cmd.Parameters.AddWithValue("@Transaction_Type", "TRAN002");
+                    cmd.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
 
-                SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT * FROM vw_loanDeductionToVoucher WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
-                DataTable dt2 = new DataTable();
-                adapter2.Fill(dt2);
+                    //Get The CV NO.
 
-                if (dt2.Rows.Count > 0)
-                {
-                    int x = 0;
-                    while (x != dt2.Rows.Count)
+                    SqlCommand cmdCV = new SqlCommand();
+                    cmdCV.Connection = con;
+                    cmdCV.CommandText = "sp_GetCVNoAfterSaving";
+                    cmdCV.CommandType = CommandType.StoredProcedure;
+                    cmdCV.Parameters.AddWithValue("@CV_Date", DateTime.Today.ToShortDateString());
+                    cmdCV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmdCV);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
                     {
-                        SqlCommand cmdDeduction = new SqlCommand();
-                        cmdDeduction.Connection = con;
-                        cmdDeduction.CommandText = "sp_InsertDisbursementDetail";
-                        cmdDeduction.CommandType = CommandType.StoredProcedure;
-                        cmdDeduction.Parameters.AddWithValue("@CV_No", cvno);
-                        cmdDeduction.Parameters.AddWithValue("@Account_Code", dt2.Rows[x].ItemArray[7].ToString());
-                        cmdDeduction.Parameters.AddWithValue("@userID", userID);
-                        cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
-
-                        if (dt2.Rows[x].ItemArray[4].ToString() != "")
-                        {
-                            cmdDeduction.Parameters.AddWithValue("@Loan_No", dt2.Rows[x].ItemArray[4].ToString());
-                        }
-                        else
-                        {
-                            cmdDeduction.Parameters.AddWithValue("@Loan_No", "");
-                        }
-
-                        cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                        cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
-                        cmdDeduction.ExecuteNonQuery();
-
-                        x = x + 1;//Increment
+                        cvno = dt.Rows[0].ItemArray[0].ToString();
                     }
+                    else
+                    {
+                        return;
+                    }
+
+                    //=================================================================================
+                    //DISBURSEMENT DETAILS FIRST CURRENT LOAN AND BANK OF MEMBERS
+                    //=================================================================================
+
+                    //FOR CURRENT LOAN - LOAN AVAIL BY THE MEMBER
+                    SqlCommand cmd1 = new SqlCommand();
+                    cmd1.Connection = con;
+                    cmd1.CommandText = "sp_InsertDisbursementDetail";
+                    cmd1.CommandType = CommandType.StoredProcedure;
+                    cmd1.Parameters.AddWithValue("@CV_No", cvno);
+                    cmd1.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnChartAccountCode(cmbLoanType.Text));
+                    cmd1.Parameters.AddWithValue("@userID", userID);
+                    cmd1.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                    cmd1.Parameters.AddWithValue("@Debit", Convert.ToDecimal(txtLoanReceivable.Text.Replace(",", "")));
+                    cmd1.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
+                    cmd1.ExecuteNonQuery();
+
+                    //FOR MEMBERS BANK INFORMATION
+                    SqlCommand cmd2 = new SqlCommand();
+                    cmd2.Connection = con;
+                    cmd2.CommandText = "sp_InsertDisbursementDetail";
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@CV_No", cvno);
+                    cmd2.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnMemberBankCodeAccount(userID));
+                    cmd2.Parameters.AddWithValue("@userID", userID);
+                    cmd2.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd2.Parameters.AddWithValue("@Loan_No", "");
+                    cmd2.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                    cmd2.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtNetAmount.Text.Replace(",", "")));
+                    cmd2.ExecuteNonQuery();
+
+                    //FOR SERVICE FEE
+                    if (txtServiceFee.Text != "0.00")
+                    {
+                        SqlCommand cmd3 = new SqlCommand();
+                        cmd3.Connection = con;
+                        cmd3.CommandText = "sp_InsertDisbursementDetail";
+                        cmd3.CommandType = CommandType.StoredProcedure;
+                        cmd3.Parameters.AddWithValue("@CV_No", cvno);
+                        cmd3.Parameters.AddWithValue("@Account_Code", "405");
+                        cmd3.Parameters.AddWithValue("@userID", userID);
+                        cmd3.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                        cmd3.Parameters.AddWithValue("@Loan_No", "");
+                        cmd3.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                        cmd3.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtServiceFee.Text.Replace(",", "")));
+                        cmd3.ExecuteNonQuery();
+                    }
+
+                    //===================================================================================================
+                    //                  IF EVER HE HAS OTHER DEDUCTION MADE
+                    //===================================================================================================
+
+                    SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT * FROM vw_loanDeductionToVoucher WHERE Loan_No = '" + txtLoanNo.Text + "'", con);
+                    DataTable dt2 = new DataTable();
+                    adapter2.Fill(dt2);
+
+                    if (dt2.Rows.Count > 0)
+                    {
+                        int x = 0;
+                        while (x != dt2.Rows.Count)
+                        {
+                            SqlCommand cmdDeduction = new SqlCommand();
+                            cmdDeduction.Connection = con;
+                            cmdDeduction.CommandText = "sp_InsertDisbursementDetail";
+                            cmdDeduction.CommandType = CommandType.StoredProcedure;
+                            cmdDeduction.Parameters.AddWithValue("@CV_No", cvno);
+                            cmdDeduction.Parameters.AddWithValue("@Account_Code", dt2.Rows[x].ItemArray[7].ToString());
+                            cmdDeduction.Parameters.AddWithValue("@userID", userID);
+                            cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+
+                            if (dt2.Rows[x].ItemArray[4].ToString() != "")
+                            {
+                                cmdDeduction.Parameters.AddWithValue("@Loan_No", dt2.Rows[x].ItemArray[4].ToString());
+                            }
+                            else
+                            {
+                                cmdDeduction.Parameters.AddWithValue("@Loan_No", "");
+                            }
+
+                            cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                            cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
+                            cmdDeduction.ExecuteNonQuery();
+
+                            x = x + 1;//Increment
+                        }
+                    }
+
+
+                    //=====================================================================================================================
+                    //Display Disbursement Screen
+
+                    DisbursementVoucher cv = new DisbursementVoucher();
+                    cv.Show();
+                    //=========================================================================================
+                    //                              Header Information
+                    //=========================================================================================
+
+                    SqlDataAdapter adapter3 = new SqlDataAdapter("SELECT * FROM Disbursement_Header WHERE CV_No = '" + cvno + "'", con);
+                    DataTable dt3 = new DataTable();
+                    adapter3.Fill(dt3);
+
+
+                    cv.txtCVNo.Text = cvno;
+                    cv.dtCVDate.Text = dt3.Rows[0].ItemArray[1].ToString();
+
+
+                    if (dt3.Rows[0].ItemArray[3].ToString() == "True")
+                    {
+                        cv.radioClient.Checked = true;
+                    }
+                    else
+                    {
+                        cv.radioMember.Checked = true;
+                    }
+                    cv.txtPayee.Text = dt3.Rows[0].ItemArray[5].ToString();
+
+                    if (dt3.Rows[0].ItemArray[4].ToString() != "" || dt3.Rows[0].ItemArray[4].ToString() != string.Empty)
+                    {
+                        Classes.clsDisbursement.userID = Convert.ToInt32(dt3.Rows[0].ItemArray[4].ToString());
+                        cv.txtPayeeName.Text = clsDisbursement.fullName(Convert.ToInt32(dt3.Rows[0].ItemArray[4].ToString()));
+                    }
+                    else
+                    {
+                        cv.txtPayeeName.Text = clsDisbursement.ClientName(dt3.Rows[0].ItemArray[5].ToString());
+                    }
+
+
+
+                    cv.txtLoanNo.Text = dt3.Rows[0].ItemArray[8].ToString();
+
+                    cv.cmbTransaction.SelectedValue = dt3.Rows[0].ItemArray[13].ToString();
+                    cv.cmbBank.SelectedValue = dt3.Rows[0].ItemArray[9].ToString();
+                    cv.txtChequeNo.Text = dt3.Rows[0].ItemArray[10].ToString();
+                    cv.dtChequeDate.Text = dt3.Rows[0].ItemArray[11].ToString();
+                    cv.txtAmount.Text = Convert.ToDecimal(dt3.Rows[0].ItemArray[12].ToString()).ToString("#,0.00");
+                    cv.txtParticular.Text = dt3.Rows[0].ItemArray[7].ToString();
+
+
+                    //================================
+                    //      DISPLAY DETAILS
+                    //================================
+
+                    cv.dataGridView1.Rows.Clear();
+                    clsDisbursement.loadDetails(cv.dataGridView1, cv.txtCVNo.Text);
+
+                    //=========================================================================================
+                    //                              Enable Buttons
+                    //=========================================================================================
+                    cv.btnEdit.Enabled = true;
+                    cv.btnPost.Enabled = true;
+                    cv.btnCancel.Enabled = true;
+                    cv.btnPrint.Enabled = true;
+                    cv.btnPrintCheque.Enabled = true;
+
+                    Alert.show("Loan# " + txtLoanNo.Text + " For Cheque Release", Alert.AlertType.success);
+
+                    //Update loan net proceeds loan header
+                    SqlCommand cmdLoanHeader = new SqlCommand();
+                    cmdLoanHeader.Connection = con;
+                    cmdLoanHeader.CommandText = "UPDATE Loan SET NetProceeds = '" + txtNetAmount.Text.Replace(",", "") + "', cv_no = '" + cvno + "', Status = '5' WHERE loan_no = '" + txtLoanNo.Text + "'";
+                    cmdLoanHeader.CommandType = CommandType.Text;
+                    cmdLoanHeader.ExecuteNonQuery();
+
+                    //Refresh the grid
+                    clsLoanComputation.loadLoanApprovedDetails(dataGridView1, lblTotalCount);
+
+                    //Set Loan Released Date
+                    SqlCommand cmdRelease = new SqlCommand();
+                    cmdRelease.Connection = con;
+                    cmdRelease.CommandText = "sp_LoanReleasedDate";
+                    cmdRelease.CommandType = CommandType.StoredProcedure;
+                    cmdRelease.Parameters.AddWithValue("@LoanNo", txtLoanNo.Text);
+                    cmdRelease.ExecuteNonQuery();
                 }
-
-
-                //=====================================================================================================================
-                //Display Disbursement Screen
-
-                DisbursementVoucher cv = new DisbursementVoucher();
-                cv.Show();
-                //=========================================================================================
-                //                              Header Information
-                //=========================================================================================
-
-                SqlDataAdapter adapter3 = new SqlDataAdapter("SELECT * FROM Disbursement_Header WHERE CV_No = '" + cvno + "'", con);
-                DataTable dt3 = new DataTable();
-                adapter3.Fill(dt3);
-
-
-                cv.txtCVNo.Text = cvno;
-                cv.dtCVDate.Text = dt3.Rows[0].ItemArray[1].ToString();
-
-
-                if (dt3.Rows[0].ItemArray[3].ToString() == "True")
-                {
-                    cv.radioClient.Checked = true;
-                }
-                else
-                {
-                    cv.radioMember.Checked = true;
-                }
-                cv.txtPayee.Text = dt3.Rows[0].ItemArray[5].ToString();
-
-                if (dt3.Rows[0].ItemArray[4].ToString() != "" || dt3.Rows[0].ItemArray[4].ToString() != string.Empty)
-                {
-                    Classes.clsDisbursement.userID = Convert.ToInt32(dt3.Rows[0].ItemArray[4].ToString());
-                    cv.txtPayeeName.Text = clsDisbursement.fullName(Convert.ToInt32(dt3.Rows[0].ItemArray[4].ToString()));
-                }
-                else
-                {
-                    cv.txtPayeeName.Text = clsDisbursement.ClientName(dt3.Rows[0].ItemArray[5].ToString());
-                }
-
-
-
-                cv.txtLoanNo.Text = dt3.Rows[0].ItemArray[8].ToString();
-
-                cv.cmbTransaction.SelectedValue = dt3.Rows[0].ItemArray[13].ToString();
-                cv.cmbBank.SelectedValue = dt3.Rows[0].ItemArray[9].ToString();
-                cv.txtChequeNo.Text = dt3.Rows[0].ItemArray[10].ToString();
-                cv.dtChequeDate.Text = dt3.Rows[0].ItemArray[11].ToString();
-                cv.txtAmount.Text = Convert.ToDecimal(dt3.Rows[0].ItemArray[12].ToString()).ToString("#,0.00");
-                cv.txtParticular.Text = dt3.Rows[0].ItemArray[7].ToString();
-
-
-                //================================
-                //      DISPLAY DETAILS
-                //================================
-
-                cv.dataGridView1.Rows.Clear();
-                clsDisbursement.loadDetails(cv.dataGridView1, cv.txtCVNo.Text);
-
-                //=========================================================================================
-                //                              Enable Buttons
-                //=========================================================================================
-                cv.btnEdit.Enabled = true;
-                cv.btnPost.Enabled = true;
-                cv.btnCancel.Enabled = true;
-                cv.btnPrint.Enabled = true;
-                cv.btnPrintCheque.Enabled = true;
-
-                Alert.show("Loan# " + txtLoanNo.Text + " For Cheque Release", Alert.AlertType.success);
-
-                //Update loan net proceeds loan header
-                SqlCommand cmdLoanHeader = new SqlCommand();
-                cmdLoanHeader.Connection = con;
-                cmdLoanHeader.CommandText = "UPDATE Loan SET NetProceeds = '" + txtNetAmount.Text.Replace(",", "") + "', cv_no = '" + cvno + "', Status = '5' WHERE loan_no = '" + txtLoanNo.Text + "'";
-                cmdLoanHeader.CommandType = CommandType.Text;
-                cmdLoanHeader.ExecuteNonQuery();
-
-                //Refresh the grid
-                clsLoanComputation.loadLoanApprovedDetails(dataGridView1, lblTotalCount);
-
                 clearTextFIelds();
             }
         }

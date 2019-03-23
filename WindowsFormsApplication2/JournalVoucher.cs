@@ -106,19 +106,21 @@ namespace WindowsFormsApplication2
         {
             DataGridViewComboBoxColumn cbCell = (DataGridViewComboBoxColumn)dataGridView1.Columns[0];
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT account_Code,account_Description From chart_of_Accounts", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT account_Code,account_Description From chart_of_Accounts", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
 
-            cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
-            cbCell.AutoComplete = true;
-            cbCell.DisplayMember = "account_Description";
-            cbCell.ValueMember = "account_code";
-            cbCell.DataSource = dt;
+                cbCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox;
+                cbCell.AutoComplete = true;
+                cbCell.DisplayMember = "account_Description";
+                cbCell.ValueMember = "account_code";
+                cbCell.DataSource = dt;
+            }  
         }
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -198,19 +200,23 @@ namespace WindowsFormsApplication2
                     panel11.Visible = false;
 
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    dataGridView2.DataSource = dt;
 
-                    dataGridView2.Columns["Account_code"].HeaderText = "Code";
-                    dataGridView2.Columns["Account_code"].FillWeight = 30;
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                    dataGridView2.Columns["Account_Description"].HeaderText = "Description";
-                    txtSearch.Focus();
+                        dataGridView2.DataSource = dt;
+
+                        dataGridView2.Columns["Account_code"].HeaderText = "Code";
+                        dataGridView2.Columns["Account_code"].FillWeight = 30;
+
+                        dataGridView2.Columns["Account_Description"].HeaderText = "Description";
+                        txtSearch.Focus();
+                    }
                 }
                 else if(e.ColumnIndex == 1)
                 {
@@ -230,21 +236,25 @@ namespace WindowsFormsApplication2
                     //disable panel account description
                     panel22.Visible = false;
                     //load database
-                    con = new SqlConnection();
-                    global.connection(con);
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,CASE WHEN Suffix is not null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) WHEN Suffix is null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1)) END as Name From Membership where IsActive = 1 and IsApprove = 1", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
-                    dataGridView3.DataSource = dt;
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,CASE WHEN Suffix is not null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) WHEN Suffix is null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1)) END as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
 
-                    dataGridView3.Columns["userID"].Visible = false;
+                        dataGridView3.DataSource = dt;
 
-                    dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
-                    dataGridView3.Columns["EmployeeID"].FillWeight = 30;
+                        dataGridView3.Columns["userID"].Visible = false;
+
+                        dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
+                        dataGridView3.Columns["EmployeeID"].FillWeight = 30;
 
 
-                    textBox1.Focus();
+                        textBox1.Focus();
+                    }
+                       
                 }
                 else
                 {
@@ -280,36 +290,43 @@ namespace WindowsFormsApplication2
         {
             if(txtSearch.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Account_Code,Account_Description from chart_of_accounts where Account_Code like '%" + txtSearch.Text + "%' or account_Description like '%"+ txtSearch.Text +"%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
 
-                dataGridView2.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Account_Code,Account_Description from chart_of_accounts where Account_Code like '%" + txtSearch.Text + "%' or account_Description like '%" + txtSearch.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView2.Columns["Account_code"].HeaderText = "Code";
-                dataGridView2.Columns["Account_code"].FillWeight = 30;
+                    dataGridView2.DataSource = dt;
 
-                dataGridView2.Columns["Account_Description"].HeaderText = "Description";
-                txtSearch.Focus();
+                    dataGridView2.Columns["Account_code"].HeaderText = "Code";
+                    dataGridView2.Columns["Account_code"].FillWeight = 30;
+
+                    dataGridView2.Columns["Account_Description"].HeaderText = "Description";
+                    txtSearch.Focus();
+                }
+
             }
             else
             {
-                con = new SqlConnection();
-                global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                dataGridView2.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 Account_code,Account_Description from chart_of_Accounts", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView2.Columns["Account_code"].HeaderText = "Code";
-                dataGridView2.Columns["Account_code"].FillWeight = 30;
+                    dataGridView2.DataSource = dt;
 
-                dataGridView2.Columns["Account_Description"].HeaderText = "Description";
-                txtSearch.Focus();
+                    dataGridView2.Columns["Account_code"].HeaderText = "Code";
+                    dataGridView2.Columns["Account_code"].FillWeight = 30;
+
+                    dataGridView2.Columns["Account_Description"].HeaderText = "Description";
+                    txtSearch.Focus();
+                }
             }
         }
 
@@ -474,7 +491,7 @@ namespace WindowsFormsApplication2
 
                 if (dataGridView1.Rows.Count <= 1)
                 {
-                    Alert.show("Details Information is Required!", Alert.AlertType.error);
+                    Alert.show("Details Information is required.", Alert.AlertType.error);
                     return;
                 }
                 else
@@ -485,111 +502,112 @@ namespace WindowsFormsApplication2
                       return;
                    }                    
                 }
-                
+
 
                 //SAVE
                 //Save Header First
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmdHeader = new SqlCommand();
-                cmdHeader.Connection = con;
-                cmdHeader.CommandText = "sp_InsertJournalHeader";
-                cmdHeader.CommandType = CommandType.StoredProcedure;
-                cmdHeader.Parameters.AddWithValue("@JV_Date", dtJVDate.Text);
-
-                //Check if Theres a Member or Client
-                if(Classes.clsJournalVoucher.userId.ToString() == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cmdHeader.Parameters.AddWithValue("@userID", DBNull.Value);
-                    
-                }
-                else
-                {
-                    cmdHeader.Parameters.AddWithValue("@userID", Classes.clsJournalVoucher.userId.ToString());
-                }
+                    con.Open();
 
-                cmdHeader.Parameters.AddWithValue("@AdjTo", txtMember.Text);
-                cmdHeader.Parameters.AddWithValue("@Particular", txtParticulars.Text);
-                cmdHeader.Parameters.AddWithValue("@Loan_No", txtLoanNumber.Text);
-                cmdHeader.Parameters.AddWithValue("@Posted", false);
-                cmdHeader.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
-                cmdHeader.Parameters.AddWithValue("@summarize", checkBox1.Checked);
-                cmdHeader.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-                cmdHeader.Parameters.AddWithValue("@Poseted_By", DBNull.Value);
-                cmdHeader.ExecuteNonQuery();
+                    SqlCommand cmdHeader = new SqlCommand();
+                    cmdHeader.Connection = con;
+                    cmdHeader.CommandText = "sp_InsertJournalHeader";
+                    cmdHeader.CommandType = CommandType.StoredProcedure;
+                    cmdHeader.Parameters.AddWithValue("@JV_Date", dtJVDate.Text);
 
-                //Get JV#
-
-                SqlCommand cmdJV = new SqlCommand();
-                cmdJV.Connection = con;
-                cmdJV.CommandText = "sp_GetJVNoAfterSaving";
-                cmdJV.CommandType = CommandType.StoredProcedure;
-                cmdJV.Parameters.AddWithValue("@jv_date", dtJVDate.Text);
-                cmdJV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
-
-                SqlDataAdapter adapter = new SqlDataAdapter(cmdJV);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    txtJVNumber.Text = dt.Rows[0].ItemArray[0].ToString();
-                }
-                else
-                {
-                    return;
-                }
-
-                //SAVE DETAILS ============================================================================================
-                if (dataGridView1.Rows.Count > 0)
-                {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    //Check if Theres a Member or Client
+                    if (Classes.clsJournalVoucher.userId.ToString() == "")
                     {
-                        if(row.Cells[0].Value != null)
+                        cmdHeader.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                    }
+                    else
+                    {
+                        cmdHeader.Parameters.AddWithValue("@userID", Classes.clsJournalVoucher.userId.ToString());
+                    }
+
+                    cmdHeader.Parameters.AddWithValue("@AdjTo", txtMember.Text);
+                    cmdHeader.Parameters.AddWithValue("@Particular", txtParticulars.Text);
+                    cmdHeader.Parameters.AddWithValue("@Loan_No", txtLoanNumber.Text);
+                    cmdHeader.Parameters.AddWithValue("@Posted", false);
+                    cmdHeader.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
+                    cmdHeader.Parameters.AddWithValue("@summarize", checkBox1.Checked);
+                    cmdHeader.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+                    cmdHeader.Parameters.AddWithValue("@Poseted_By", DBNull.Value);
+                    cmdHeader.ExecuteNonQuery();
+
+                    //Get JV#
+
+                    SqlCommand cmdJV = new SqlCommand();
+                    cmdJV.Connection = con;
+                    cmdJV.CommandText = "sp_GetJVNoAfterSaving";
+                    cmdJV.CommandType = CommandType.StoredProcedure;
+                    cmdJV.Parameters.AddWithValue("@jv_date", dtJVDate.Text);
+                    cmdJV.Parameters.AddWithValue("@Prepared_By", Classes.clsUser.Username);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmdJV);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        txtJVNumber.Text = dt.Rows[0].ItemArray[0].ToString();
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    //SAVE DETAILS ============================================================================================
+                    if (dataGridView1.Rows.Count > 0)
+                    {
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
-                            SqlCommand cmd = new SqlCommand();
-                            cmd.Connection = con;
-                            cmd.CommandText = "sp_InsertJournalDetail";
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-                            cmd.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+                            if (row.Cells[0].Value != null)
+                            {
+                                SqlCommand cmd = new SqlCommand();
+                                cmd.Connection = con;
+                                cmd.CommandText = "sp_InsertJournalDetail";
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
+                                cmd.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                            if (Convert.ToInt32(row.Cells[5].Value) == 0)
-                            {
-                                cmd.Parameters.AddWithValue("@userID", DBNull.Value);
-                            }
-                            else
-                            {
-                                cmd.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                            }
+                                if (Convert.ToInt32(row.Cells[5].Value) == 0)
+                                {
+                                    cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                }
 
-                            if (row.Cells[1].Value != null)
-                            {
-                                cmd.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                            }
-                            else
-                            {
-                                cmd.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                            }
+                                if (row.Cells[1].Value != null)
+                                {
+                                    cmd.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                }
 
-                            
-                            if (row.Cells[2].Value != null)
-                            {
-                                cmd.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                            }
-                            else
-                            {
-                                cmd.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                            }
 
-                            cmd.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                            cmd.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                            cmd.ExecuteNonQuery();
+                                if (row.Cells[2].Value != null)
+                                {
+                                    cmd.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                }
+
+                                cmd.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                cmd.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
                 }
-
                 //SAVE MESSAGEBOX HERE
                 Alert.show("Journal Voucher Successfully Created!", Alert.AlertType.success);
 
@@ -684,7 +702,7 @@ namespace WindowsFormsApplication2
                 if (clsJournalVoucher.checkIfPosted(txtJVNumber.Text) == true)
                 {
                     //If Voucher already Posted
-                    Alert.show("Journal Voucher Already Posted!", Alert.AlertType.error);
+                    Alert.show("Journal voucher already posted.", Alert.AlertType.error);
                     return;
                 }
 
@@ -703,34 +721,34 @@ namespace WindowsFormsApplication2
                 DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    //Code for posting
-                    con = new SqlConnection();
-                    global.connection(con);
-
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_PostingJournal";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-                    cmd.Parameters.AddWithValue("@Posted_By", Classes.clsUser.Username);
-                    cmd.ExecuteNonQuery();
-
-                    //Success Message
-                    Alert.show("Journal Voucher Successfully Posted!", Alert.AlertType.success);
-
-                    //Display Message
-                    status.Visible = true;
-                    status.Text = "POSTED";
-
-                    //Get Whos Posted IT
-                    if (txtPostedBy.Text == "")
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
-                        SqlDataAdapter adapterPosted = new SqlDataAdapter("SELECT Posted_By FROM Journal_Header WHERE JV_No ='" + txtJVNumber.Text + "'", con);
-                        DataTable dtPosted = new DataTable();
-                        adapterPosted.Fill(dtPosted);
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_PostingJournal";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
+                        cmd.Parameters.AddWithValue("@Posted_By", Classes.clsUser.Username);
+                        cmd.ExecuteNonQuery();
 
-                        txtPostedBy.Text = dtPosted.Rows[0].ItemArray[0].ToString();
-                    }
+                        //Success Message
+                        Alert.show("Journal Voucher Successfully Posted!", Alert.AlertType.success);
+
+                        //Display Message
+                        status.Visible = true;
+                        status.Text = "POSTED";
+
+                        //Get Whos Posted IT
+                        if (txtPostedBy.Text == "")
+                        {
+                            SqlDataAdapter adapterPosted = new SqlDataAdapter("SELECT Posted_By FROM Journal_Header WHERE JV_No ='" + txtJVNumber.Text + "'", con);
+                            DataTable dtPosted = new DataTable();
+                            adapterPosted.Fill(dtPosted);
+
+                            txtPostedBy.Text = dtPosted.Rows[0].ItemArray[0].ToString();
+                        }
+                    }       
                 }
                 else
                 {
@@ -783,34 +801,42 @@ namespace WindowsFormsApplication2
         {
             if (textBox1.Text != "")
             {
-                con = new SqlConnection();
-                global.connection(con);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,CASE WHEN Suffix is not null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) WHEN Suffix is null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1)) END as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text +"%' or LastName like '%"+ textBox1.Text +"%' or FirstName like '%"+ textBox1.Text +"%' or MiddleName like '%"+ textBox1.Text +"%'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
 
-                dataGridView3.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT userID,EmployeeID,CASE WHEN Suffix is not null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) WHEN Suffix is null THEN (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1)) END as Name From Membership where IsActive = 1 and IsApprove = 1 and EmployeeID like '%" + textBox1.Text + "%' or LastName like '%" + textBox1.Text + "%' or FirstName like '%" + textBox1.Text + "%' or MiddleName like '%" + textBox1.Text + "%'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView3.Columns["userID"].Visible = false;
+                    dataGridView3.DataSource = dt;
 
-                dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
-                dataGridView3.Columns["EmployeeID"].FillWeight = 30;
-                textBox1.Focus();
+                    dataGridView3.Columns["userID"].Visible = false;
+
+                    dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
+                    dataGridView3.Columns["EmployeeID"].FillWeight = 30;
+                    textBox1.Focus();
+                }
+
             }
             else
             {
-                con = new SqlConnection();
-                global.connection(con);
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                dataGridView3.DataSource = dt;
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 25 userID,EmployeeID,(LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as Name From Membership where IsActive = 1 and IsApprove = 1", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
-                dataGridView3.Columns["EmployeeID"].FillWeight = 30;
-                textBox1.Focus();
+                    dataGridView3.DataSource = dt;
+
+                    dataGridView3.Columns["EmployeeID"].HeaderText = "ID";
+                    dataGridView3.Columns["EmployeeID"].FillWeight = 30;
+                    textBox1.Focus();
+                }
+                    
             }
         }
 
@@ -820,146 +846,146 @@ namespace WindowsFormsApplication2
             if(txtJVNumber.Text != "")
             {
                 //Print Purposes
-                con = new SqlConnection();
-                global.connection(con);
-
-
-
-                if(cmbTransaction.SelectedValue.ToString() == "TRAN002")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    //Check first if he has a other deduction
-                    SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT * FROM vw_GeneralJournalVoucher WHERE Loan_No ='"+ txtLoanNumber.Text +"'", con);
-                    DataTable dtCheck = new DataTable();
-                    adapterCheck.Fill(dtCheck);
+                    con.Open();
 
-                    if(dtCheck.Rows.Count > 0)
+                    if (cmbTransaction.SelectedValue.ToString() == "TRAN002")
                     {
-                        //Call vw_GeneralJournal
-                        //Generate GENERAL VOUCHER REPORT FOR LOANS
-                        SqlCommand cmdGeneral = new SqlCommand();
-                        cmdGeneral.Connection = con;
-                        cmdGeneral.CommandText = "SELECT * FROM vw_GeneralJournalVoucher WHERE Loan_No = '" + txtLoanNumber.Text + "'";
-                        cmdGeneral.CommandType = CommandType.Text;
-                        cmdGeneral.ExecuteNonQuery();
+                        //Check first if he has a other deduction
+                        SqlDataAdapter adapterCheck = new SqlDataAdapter("SELECT * FROM vw_GeneralJournalVoucher WHERE Loan_No ='" + txtLoanNumber.Text + "'", con);
+                        DataTable dtCheck = new DataTable();
+                        adapterCheck.Fill(dtCheck);
 
-                        SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
+                        if (dtCheck.Rows.Count > 0)
+                        {
+                            //Call vw_GeneralJournal
+                            //Generate GENERAL VOUCHER REPORT FOR LOANS
+                            SqlCommand cmdGeneral = new SqlCommand();
+                            cmdGeneral.Connection = con;
+                            cmdGeneral.CommandText = "SELECT * FROM vw_GeneralJournalVoucher WHERE Loan_No = '" + txtLoanNumber.Text + "'";
+                            cmdGeneral.CommandType = CommandType.Text;
+                            cmdGeneral.ExecuteNonQuery();
 
-
-
-                        DataTable dtGeneral = new DataTable();
-                        DataSet dsGeneral = new DataSet();
-
-                        ReportsForms.JournalGeneralVoucher cr = new ReportsForms.JournalGeneralVoucher();
-                        ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
-
-                        li = new TableLogOnInfo();
+                            SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
 
 
-                        adapterGeneral.Fill(dsGeneral, "vw_GeneralJournalVoucher");
-                        dtGeneral = dsGeneral.Tables["vw_GeneralJournalVoucher"];
-                        cr.SetDataSource(dsGeneral.Tables["vw_GeneralJournalVoucher"]);
 
-                        //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-                        cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+                            DataTable dtGeneral = new DataTable();
+                            DataSet dsGeneral = new DataSet();
 
-                        cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNumber.Text));
-                        cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNumber.Text));
-                        cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNumber.Text));
+                            ReportsForms.JournalGeneralVoucher cr = new ReportsForms.JournalGeneralVoucher();
+                            ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
 
-                        SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNumber.Text + "' ORDER BY Schedule_Payment ASC", con);
-                        DataTable dtBillDate = new DataTable();
-                        adapterBillDate.Fill(dtBillDate);
+                            li = new TableLogOnInfo();
 
-                        cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
 
-                        rpt.crystalReportViewer1.ReportSource = cr;
-                        rpt.ShowDialog();
+                            adapterGeneral.Fill(dsGeneral, "vw_GeneralJournalVoucher");
+                            dtGeneral = dsGeneral.Tables["vw_GeneralJournalVoucher"];
+                            cr.SetDataSource(dsGeneral.Tables["vw_GeneralJournalVoucher"]);
+
+                            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                            cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNumber.Text));
+                            cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNumber.Text));
+                            cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNumber.Text));
+
+                            SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNumber.Text + "' ORDER BY Schedule_Payment ASC", con);
+                            DataTable dtBillDate = new DataTable();
+                            adapterBillDate.Fill(dtBillDate);
+
+                            cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
+
+                            rpt.crystalReportViewer1.ReportSource = cr;
+                            rpt.ShowDialog();
+                        }
+                        else
+                        {
+                            //Call vw_GeneralJournalVoucherNoLoanDeduction
+                            //Generate GENERAL VOUCHER REPORT FOR LOANS
+                            SqlCommand cmdGeneral = new SqlCommand();
+                            cmdGeneral.Connection = con;
+                            cmdGeneral.CommandText = "SELECT * FROM vw_GeneralJournalVoucherNoLoanDeduction WHERE Loan_No = '" + txtLoanNumber.Text + "'";
+                            cmdGeneral.CommandType = CommandType.Text;
+                            cmdGeneral.ExecuteNonQuery();
+
+                            SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
+
+
+
+                            DataTable dtGeneral = new DataTable();
+                            DataSet dsGeneral = new DataSet();
+
+                            ReportsForms.JournalGeneralVoucherNoDeduction cr = new ReportsForms.JournalGeneralVoucherNoDeduction();
+                            ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
+
+                            li = new TableLogOnInfo();
+
+
+                            adapterGeneral.Fill(dsGeneral, "vw_GeneralJournalVoucherNoLoanDeduction");
+                            dtGeneral = dsGeneral.Tables["vw_GeneralJournalVoucherNoLoanDeduction"];
+                            cr.SetDataSource(dsGeneral.Tables["vw_GeneralJournalVoucherNoLoanDeduction"]);
+
+                            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+                            cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNumber.Text));
+                            cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNumber.Text));
+                            cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNumber.Text));
+
+                            SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNumber.Text + "' ORDER BY Schedule_Payment ASC", con);
+                            DataTable dtBillDate = new DataTable();
+                            adapterBillDate.Fill(dtBillDate);
+
+                            cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
+                            cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
+
+                            rpt.crystalReportViewer1.ReportSource = cr;
+                            rpt.ShowDialog();
+                        }
                     }
                     else
                     {
-                        //Call vw_GeneralJournalVoucherNoLoanDeduction
-                        //Generate GENERAL VOUCHER REPORT FOR LOANS
-                        SqlCommand cmdGeneral = new SqlCommand();
-                        cmdGeneral.Connection = con;
-                        cmdGeneral.CommandText = "SELECT * FROM vw_GeneralJournalVoucherNoLoanDeduction WHERE Loan_No = '" + txtLoanNumber.Text + "'";
-                        cmdGeneral.CommandType = CommandType.Text;
-                        cmdGeneral.ExecuteNonQuery();
+                        //=====================================================================================
+                        //                   THIS IS FOR JOURNAL NOT CREATED IN LOAN
+                        //=====================================================================================
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "sp_GetJournalDetailSummaryReport";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
 
-                        SqlDataAdapter adapterGeneral = new SqlDataAdapter(cmdGeneral);
+                        adapter = new SqlDataAdapter(cmd);
 
 
 
-                        DataTable dtGeneral = new DataTable();
-                        DataSet dsGeneral = new DataSet();
+                        DataTable dt = new DataTable();
+                        DataSet ds = new DataSet();
 
-                        ReportsForms.JournalGeneralVoucherNoDeduction cr = new ReportsForms.JournalGeneralVoucherNoDeduction();
-                        ReportsForms.GeneralVoucherJournal rpt = new ReportsForms.GeneralVoucherJournal();
+                        ReportsForms.crJournal cr = new ReportsForms.crJournal();
+                        Reports.rptJournal rpt = new Reports.rptJournal();
 
                         li = new TableLogOnInfo();
 
+                        li.ConnectionInfo.IntegratedSecurity = false;
 
-                        adapterGeneral.Fill(dsGeneral, "vw_GeneralJournalVoucherNoLoanDeduction");
-                        dtGeneral = dsGeneral.Tables["vw_GeneralJournalVoucherNoLoanDeduction"];
-                        cr.SetDataSource(dsGeneral.Tables["vw_GeneralJournalVoucherNoLoanDeduction"]);
+                        adapter.Fill(ds, "vw_Journal");
+                        dt = ds.Tables["vw_Journal"];
+                        cr.SetDataSource(ds.Tables["vw_Journal"]);
 
                         //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
                         cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
 
-                        cr.SetParameterValue("savings", clsGeneral.returnSavings(txtLoanNumber.Text));
-                        cr.SetParameterValue("sharecapital", clsGeneral.returnShareCapital(txtLoanNumber.Text));
-                        cr.SetParameterValue("totalDeduction", clsGeneral.returnTotalDeduction(txtLoanNumber.Text));
-
-                        SqlDataAdapter adapterBillDate = new SqlDataAdapter("SELECT top 3 Schedule_Payment FROM Loan_Details WHERE Loan_No = '" + txtLoanNumber.Text + "' ORDER BY Schedule_Payment ASC", con);
-                        DataTable dtBillDate = new DataTable();
-                        adapterBillDate.Fill(dtBillDate);
-
-                        cr.SetParameterValue("billDate1", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[0].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate2", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[1].ItemArray[0].ToString()).ToShortDateString()));
-                        cr.SetParameterValue("billDate3", Convert.ToString(Convert.ToDateTime(dtBillDate.Rows[2].ItemArray[0].ToString()).ToShortDateString()));
-
                         rpt.crystalReportViewer1.ReportSource = cr;
+                        rpt.crystalReportViewer1.RefreshReport();
+
                         rpt.ShowDialog();
                     }
-                }
-                else
-                {
-                    //=====================================================================================
-                    //                   THIS IS FOR JOURNAL NOT CREATED IN LOAN
-                    //=====================================================================================
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "sp_GetJournalDetailSummaryReport";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-
-                    adapter = new SqlDataAdapter(cmd);
-
-
-
-                    DataTable dt = new DataTable();
-                    DataSet ds = new DataSet();
-
-                    ReportsForms.crJournal cr = new ReportsForms.crJournal();
-                    Reports.rptJournal rpt = new Reports.rptJournal();
-
-                    li = new TableLogOnInfo();
-
-                    li.ConnectionInfo.IntegratedSecurity = false;
-
-                    adapter.Fill(ds, "vw_Journal");
-                    dt = ds.Tables["vw_Journal"];
-                    cr.SetDataSource(ds.Tables["vw_Journal"]);
-
-                    //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-                    cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-                    rpt.crystalReportViewer1.ReportSource = cr;
-                    rpt.crystalReportViewer1.RefreshReport();
-
-                    rpt.ShowDialog();
-                }
+                }    
             }
             else
             {
@@ -1044,7 +1070,7 @@ namespace WindowsFormsApplication2
                 if (clsJournalVoucher.checkIfPosted(txtJVNumber.Text) == true)
                 {
                     //If Voucher already Posted
-                    Alert.show("Journal Voucher Already Posted!", Alert.AlertType.error);
+                    Alert.show("Journal voucher already posted.", Alert.AlertType.error);
                     return;
                 }
 
@@ -1075,7 +1101,7 @@ namespace WindowsFormsApplication2
 
                 if (dataGridView1.Rows.Count <= 1)
                 {
-                    Alert.show("Details Information is Required!", Alert.AlertType.error);
+                    Alert.show("Details Information is required.", Alert.AlertType.error);
                     return;
                 }
                 else
@@ -1096,100 +1122,102 @@ namespace WindowsFormsApplication2
                 //==============================================================================================
                 //                          FOR JOURNAL HEADER
                 //==============================================================================================
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_UpdateJournalHeader";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-                cmd.Parameters.AddWithValue("@JV_Date", dtJVDate.Text);
-
-                //Check if Theres a Member or Client
-                if (Classes.clsJournalVoucher.userId.ToString() == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+                    con.Open();
 
-                }
-                else
-                {
-                    cmd.Parameters.AddWithValue("@userID", Classes.clsJournalVoucher.userId.ToString());
-                }
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_UpdateJournalHeader";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
+                    cmd.Parameters.AddWithValue("@JV_Date", dtJVDate.Text);
 
-                cmd.Parameters.AddWithValue("@AdjTo", txtMember.Text);
-                cmd.Parameters.AddWithValue("@Particulars", txtParticulars.Text);
-                cmd.Parameters.AddWithValue("@Loan_No", txtLoanNumber.Text);
-                cmd.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
-                cmd.Parameters.AddWithValue("@summarize", checkBox1.Checked);
-                cmd.ExecuteNonQuery();
-
-                //==============================================================================================
-                //                          FOR JOURNAL DETAILS
-                //==============================================================================================
-
-                SqlCommand cmdDelete = new SqlCommand();
-                cmdDelete.Connection = con;
-                cmdDelete.CommandText = "sp_DeleteJournalDetail";
-                cmdDelete.CommandType = CommandType.StoredProcedure;
-                cmdDelete.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-                cmdDelete.ExecuteNonQuery();
-
-                //==============================================================================================
-                //                          FOR JOURNAL DETAILS UPDATING
-                //==============================================================================================
-                if (dataGridView1.Rows.Count > 0)
-                {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    //Check if Theres a Member or Client
+                    if (Classes.clsJournalVoucher.userId.ToString() == "")
                     {
-                        if (row.Cells[0].Value != null)
+                        cmd.Parameters.AddWithValue("@userID", DBNull.Value);
+
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@userID", Classes.clsJournalVoucher.userId.ToString());
+                    }
+
+                    cmd.Parameters.AddWithValue("@AdjTo", txtMember.Text);
+                    cmd.Parameters.AddWithValue("@Particulars", txtParticulars.Text);
+                    cmd.Parameters.AddWithValue("@Loan_No", txtLoanNumber.Text);
+                    cmd.Parameters.AddWithValue("@Transaction_Type", cmbTransaction.SelectedValue);
+                    cmd.Parameters.AddWithValue("@summarize", checkBox1.Checked);
+                    cmd.ExecuteNonQuery();
+
+                    //==============================================================================================
+                    //                          FOR JOURNAL DETAILS
+                    //==============================================================================================
+
+                    SqlCommand cmdDelete = new SqlCommand();
+                    cmdDelete.Connection = con;
+                    cmdDelete.CommandText = "sp_DeleteJournalDetail";
+                    cmdDelete.CommandType = CommandType.StoredProcedure;
+                    cmdDelete.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
+                    cmdDelete.ExecuteNonQuery();
+
+                    //==============================================================================================
+                    //                          FOR JOURNAL DETAILS UPDATING
+                    //==============================================================================================
+                    if (dataGridView1.Rows.Count > 0)
+                    {
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
-                            SqlCommand cmdJD = new SqlCommand();
-                            cmdJD.Connection = con;
-                            cmdJD.CommandText = "sp_InsertJournalDetail";
-                            cmdJD.CommandType = CommandType.StoredProcedure;
-                            cmdJD.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-                            cmdJD.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
+                            if (row.Cells[0].Value != null)
+                            {
+                                SqlCommand cmdJD = new SqlCommand();
+                                cmdJD.Connection = con;
+                                cmdJD.CommandText = "sp_InsertJournalDetail";
+                                cmdJD.CommandType = CommandType.StoredProcedure;
+                                cmdJD.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
+                                cmdJD.Parameters.AddWithValue("@Account_Code", row.Cells[0].Value);
 
-                            if (DBNull.Value.Equals(row.Cells[5]))
-                            {
-                                //NULL
-                                cmdJD.Parameters.AddWithValue("@userID", DBNull.Value);
-                            }
-                            else
-                            {
-                                //Not Null
-                                cmdJD.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
-                            }
+                                if (DBNull.Value.Equals(row.Cells[5]))
+                                {
+                                    //NULL
+                                    cmdJD.Parameters.AddWithValue("@userID", DBNull.Value);
+                                }
+                                else
+                                {
+                                    //Not Null
+                                    cmdJD.Parameters.AddWithValue("@userID", Convert.ToInt32(row.Cells[5].Value));
+                                }
 
-                            if (row.Cells[1].Value != null)
-                            {
-                                cmdJD.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
-                            }
-                            else
-                            {
-                                cmdJD.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
-                            }
+                                if (row.Cells[1].Value != null)
+                                {
+                                    cmdJD.Parameters.AddWithValue("@Subsidiary_Code", row.Cells[1].Value);
+                                }
+                                else
+                                {
+                                    cmdJD.Parameters.AddWithValue("@Subsidiary_Code", DBNull.Value);
+                                }
 
 
-                            if (row.Cells[2].Value != null)
-                            {
-                                cmdJD.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
-                            }
-                            else
-                            {
-                                cmdJD.Parameters.AddWithValue("@Loan_No", DBNull.Value);
-                            }
+                                if (row.Cells[2].Value != null)
+                                {
+                                    cmdJD.Parameters.AddWithValue("@Loan_No", row.Cells[2].Value);
+                                }
+                                else
+                                {
+                                    cmdJD.Parameters.AddWithValue("@Loan_No", DBNull.Value);
+                                }
 
-                            cmdJD.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
-                            cmdJD.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
-                            cmdJD.ExecuteNonQuery();
+                                cmdJD.Parameters.AddWithValue("@Debit", Convert.ToDecimal(row.Cells[3].Value));
+                                cmdJD.Parameters.AddWithValue("@Credit", Convert.ToDecimal(row.Cells[4].Value));
+                                cmdJD.ExecuteNonQuery();
+                            }
                         }
                     }
                 }
-                
+
                 //Message Success Below
-                Alert.show("Journal Voucher Successfully Updated!", Alert.AlertType.success);
+                Alert.show("Journal Voucher Successfully Updated.", Alert.AlertType.success);
 
                 btnEdit.Text = "EDIT";
 
@@ -1241,7 +1269,7 @@ namespace WindowsFormsApplication2
             if (clsJournalVoucher.checkIfPosted(txtJVNumber.Text) == true)
             {
                 //If Voucher already Posted
-                Alert.show("Journal Voucher Already Posted!", Alert.AlertType.error);
+                Alert.show("Journal voucher already posted.", Alert.AlertType.error);
                 return;
             }
 
@@ -1271,39 +1299,40 @@ namespace WindowsFormsApplication2
             if (result == DialogResult.Yes)
             {
                 //Code for posting
-                con = new SqlConnection();
-                global.connection(con);
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandText = "sp_CancellationOfJournal";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
-                cmd.Parameters.AddWithValue("@Cancel_Note", txtParticulars.Text);
-                cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
-                cmd.ExecuteNonQuery();
-
-                //Success Message
-                Alert.show("Journal Voucher Successfully Cancelled!", Alert.AlertType.success);
-
-                //Display Message
-                status.Visible = true;
-                status.Text = "CANCELLED";
-
-                //Change particulars to readonly
-                txtParticulars.ReadOnly = true;
-                frmCancel = false;
-
-                //Get Cancelled By 
-                if(txtCancelled.Text == "")
+                using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
-                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Cancelled_By FROM Journal_Header WHERE JV_No = '"+ txtJVNumber.Text +"'", con);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    con.Open();
 
-                    txtCancelled.Text = dt.Rows[0].ItemArray[0].ToString();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_CancellationOfJournal";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@JV_No", txtJVNumber.Text);
+                    cmd.Parameters.AddWithValue("@Cancel_Note", txtParticulars.Text);
+                    cmd.Parameters.AddWithValue("@Cancelled_By", Classes.clsUser.Username);
+                    cmd.ExecuteNonQuery();
+
+                    //Success Message
+                    Alert.show("Journal Voucher Successfully Cancelled!", Alert.AlertType.success);
+
+                    //Display Message
+                    status.Visible = true;
+                    status.Text = "CANCELLED";
+
+                    //Change particulars to readonly
+                    txtParticulars.ReadOnly = true;
+                    frmCancel = false;
+
+                    //Get Cancelled By 
+                    if (txtCancelled.Text == "")
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT Cancelled_By FROM Journal_Header WHERE JV_No = '" + txtJVNumber.Text + "'", con);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+
+                        txtCancelled.Text = dt.Rows[0].ItemArray[0].ToString();
+                    }
                 }
-
             }
             else
             {

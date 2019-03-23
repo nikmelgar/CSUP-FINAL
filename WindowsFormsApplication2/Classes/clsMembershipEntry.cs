@@ -22,17 +22,18 @@ namespace WindowsFormsApplication2
         {
             cmb.DataSource = null;
 
-            con = new SqlConnection();
-            global.connection(con);
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
 
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT Distinct(" + Display + "), " + val + " FROM  " + tableName + " WHERE isActive ='1'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Distinct(" + Display + "), " + val + " FROM  " + tableName + " WHERE isActive ='1'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
 
-            cmb.DisplayMember = Display;
-            cmb.ValueMember = val;
-            cmb.DataSource = dt;
-
+                cmb.DisplayMember = Display;
+                cmb.ValueMember = val;
+                cmb.DataSource = dt;
+            }
         }
 
         //Checking for Data Entry upon Saving and Updating
@@ -82,58 +83,73 @@ namespace WindowsFormsApplication2
         //Checking for Duplicate EmployeeID
         public bool CheckDuplicateEmployeeID(String tableName,String stringToCompare)
         {
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " Where EmployeeID ='"+ stringToCompare +"'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
+                con.Open();
+
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " Where EmployeeID ='" + stringToCompare + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+
         }
 
         //Checking for Duplicate EmployeeID For Update 
         public bool CheckDuplicateEmployeeIDUpdate(String tableName, String stringToCompare,string userid,string EmployeeID)
         {
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " Where EmployeeID ='" + stringToCompare + "' and userID <> '"+ userid + "' and PrincipalID <> '"+ EmployeeID +"'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if (dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " Where EmployeeID ='" + stringToCompare + "' and userID <> '" + userid + "' and PrincipalID <> '" + EmployeeID + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+
+                
         }
 
         //Get Dependet
         public bool checkDependent(string EmployeeID)
         {
-            global.connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE Principal = 0 and EmployeeID = '" + EmployeeID + "'", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                return true;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE Principal = 0 and EmployeeID = '" + EmployeeID + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+
+             
         }
 
         public void RequiredFieldColor(TextBox lastname,TextBox firstname ,TextBox middleName, TextBox address,MaskedTextBox tin,TextBox atm,TextBox email, TextBox pms,TextBox empid)

@@ -194,6 +194,19 @@ namespace WindowsFormsApplication2
                 }
 
 
+                //Location of OR as Per Maam Diane Request
+                if(dataGridView1.SelectedRows[0].Cells["Location"].Value.ToString() == "PEREA")
+                {
+                    or.radioLocPerea.Checked = true;
+                }
+                else
+                {
+                    or.radioLocTeltech.Checked = true;
+                }
+
+                //Put Prepared By
+                or.txtPreparedBy.Text = dataGridView1.SelectedRows[0].Cells["Prepared_By"].Value.ToString();
+
                 //Enable Commands
                 or.btnEdit.Enabled = true;
                 or.btnPost.Enabled = true;
