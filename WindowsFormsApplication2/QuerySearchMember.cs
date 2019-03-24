@@ -36,7 +36,22 @@ namespace WindowsFormsApplication2
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Classes.clsQuery.searchUserID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+            if(dataGridView1.SelectedRows.Count > 0)
+            {
+                Classes.clsQuery.searchUserID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+                //Move to Membersprofile
+                foreach (Form form in Application.OpenForms)
+                {
+                    if (form.GetType() == typeof(Query))
+                    {
+                        form.Activate();
+                        Query query = new Query();
+                        query = (Query)Application.OpenForms["Query"];
+
+                        query.LoadDefault();
+                    }
+                }
+            }    
         }
     }
 }

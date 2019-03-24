@@ -214,5 +214,29 @@ namespace WindowsFormsApplication2.Classes
                 }
             }
         }
+
+        public string returnCompanyDescription(string CompanyCode)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Description FROM Company WHERE Company_Code = '"+ CompanyCode +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows[0].ItemArray[0].ToString();
+            }
+        }
+
+        public string returnPayrollDescription(string PayrollCode)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Description FROM Payroll_Group WHERE Payroll_Code = '" + PayrollCode + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return dt.Rows[0].ItemArray[0].ToString();
+            }
+        }
     }
 }

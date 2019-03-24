@@ -147,6 +147,7 @@
     <Compile Include="Classes\clsParameter.cs" />
     <Compile Include="Classes\clsPLBI.cs" />
     <Compile Include="Classes\clsQuery.cs" />
+    <Compile Include="Classes\clsQueryMember.cs" />
     <Compile Include="Classes\clsSavings.cs" />
     <Compile Include="Classes\clsSavingsDataEntry.cs" />
     <Compile Include="Classes\clsSearchCashReceipt.cs" />
