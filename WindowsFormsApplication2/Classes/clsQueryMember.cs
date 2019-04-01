@@ -35,6 +35,16 @@ namespace WindowsFormsApplication2.Classes
         public static string AccountNo { get; set; }
         public static string Savings { get; set; }
         public static string ShareCapital { get; set; }
+        public static string mobileNo { get; set; }
+        public static string emailAddress { get; set; }
+        public static string contactName { get; set; }
+        public static string contactRelationship { get; set; }
+        public static string contactMobileNo { get; set; }
+        public static string contactTelephone { get; set; }
+        public static string contactRemarks { get; set; }
+        public static Boolean principal { get; set; }
+
+
 
         public void loadMembersProfile(int userid)
         {
@@ -71,11 +81,55 @@ namespace WindowsFormsApplication2.Classes
                 PayrollGroup = clsQuery.returnPayrollDescription(dt.Rows[0].ItemArray[26].ToString());
                 bank = dt.Rows[0].ItemArray[21].ToString();
                 AccountNo = dt.Rows[0].ItemArray[22].ToString();
-                Savings = Convert.ToDecimal(dt.Rows[0].ItemArray[43].ToString()).ToString("#,0.00");
-                ShareCapital = Convert.ToDecimal(dt.Rows[0].ItemArray[42].ToString()).ToString("#,0.00");
+                mobileNo = dt.Rows[0].ItemArray[17].ToString();
+                emailAddress = dt.Rows[0].ItemArray[20].ToString();
+
+                if(dt.Rows[0].ItemArray[43].ToString() != "")
+                {
+                    Savings = Convert.ToDecimal(dt.Rows[0].ItemArray[43].ToString()).ToString("#,0.00");
+                }
+                
+                if(dt.Rows[0].ItemArray[42].ToString() != "")
+                {
+                    ShareCapital = Convert.ToDecimal(dt.Rows[0].ItemArray[42].ToString()).ToString("#,0.00");
+                }
+              
+                //Contact Information
+                //Contact 1 = Telephone
+                //Contact Area = Area Code LandLine
+                //Contact 2 = Mobile
+                contactName = dt.Rows[0].ItemArray[35].ToString();
+                contactRelationship = dt.Rows[0].ItemArray[51].ToString();
+                contactMobileNo = dt.Rows[0].ItemArray[38].ToString();
+                contactTelephone = dt.Rows[0].ItemArray[36].ToString()+ ' ' + dt.Rows[0].ItemArray[37].ToString();
+                contactRemarks = dt.Rows[0].ItemArray[52].ToString();
+
+                principal = Convert.ToBoolean(dt.Rows[0].ItemArray[2].ToString());
+
             }
 
         }
+
+        public void loadBeneficiaries(DataGridView dgv, string empid,Boolean principal)
+        {
+            if (empid.ToString() == "")
+            {
+                return;
+            }
+
+            if(principal == true)
+            {
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Beneficiaries WHERE EmployeeID = '"+ empid + "'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    dgv.DataSource = dt;
+                    dgv.Columns["EmployeeID"].Visible = false;
+
+                }
+            }
+        } 
 
     }
 }

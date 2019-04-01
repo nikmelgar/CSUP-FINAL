@@ -358,8 +358,17 @@ namespace WindowsFormsApplication2
            
             
 
-            //For Beneficiaries Panel
-            clsMembership.loadBeneficiaries(dataentry.dataGridView1, dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString());
+            //For Beneficiaries Panel Principal
+            if(dataentry.txtPrincipalNo.Text == "")
+            {
+                clsMembership.loadBeneficiaries(dataentry.dataGridView1, dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString());
+                clsMembership.empIDStored = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
+            }
+            else
+            {
+                //If Dependent remove stored emp id
+                clsMembership.empIDStored = "";
+            }
             clsMembership.loadPicture(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString(), dataentry.picPicture);
             dataentry = null;
            

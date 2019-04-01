@@ -999,7 +999,19 @@ namespace WindowsFormsApplication2
                             return;
                         }
                     }
+
+                    if (clsMembership.empIDStored != "")
+                    {
+                        //if empid is not null then he or she is a principal
+                        //UPDATE ALL DEPENDENT ID IF PRINCIPAL CHANGE ID
+                        SqlCommand cmdUpdateID = new SqlCommand();
+                        cmdUpdateID.Connection = con;
+                        cmdUpdateID.CommandText = "UPDATE Membership SET PrincipalID = '"+ txtEmployeeIDNo.Text +"', EmployeeID = '" + txtEmployeeIDNo.Text + "' WHERE EmployeeID = '" + clsMembership.empIDStored + "'";
+                        cmdUpdateID.CommandType = CommandType.Text;
+                        cmdUpdateID.ExecuteNonQuery();
+                    }
                 }
+               
             }
             
             //Clear all fields

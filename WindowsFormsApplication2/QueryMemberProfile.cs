@@ -17,6 +17,7 @@ namespace WindowsFormsApplication2
         }
 
         Global global = new Global();
+        Classes.clsQueryMember clsQueryMember = new Classes.clsQueryMember();
         
         private void QueryMemberProfile_Load(object sender, EventArgs e)
         {
@@ -41,6 +42,13 @@ namespace WindowsFormsApplication2
             txtAccntNo.Text = "";
             txtSavings.Text = "";
             txtShareCapital.Text = "";
+            txtEmailAddress.Text = "";
+            txtMobileNo.Text = "";
+            txtContactName.Text = "";
+            txtContactRelationShip.Text = "";
+            txtMobileNo.Text = "";
+            txtTelephone.Text = "";
+            txtContactRemarks.Text = "";
         }
 
         public void loadMembersInfo()
@@ -66,6 +74,15 @@ namespace WindowsFormsApplication2
             txtAccntNo.Text = Classes.clsQueryMember.AccountNo;
             txtSavings.Text = Classes.clsQueryMember.Savings;
             txtShareCapital.Text = Classes.clsQueryMember.ShareCapital;
+            txtMobileNo.Text = Classes.clsQueryMember.mobileNo;
+            txtEmailAddress.Text = Classes.clsQueryMember.emailAddress;
+            txtContactName.Text = Classes.clsQueryMember.contactName;
+            txtContactRelationShip.Text = Classes.clsQueryMember.contactRelationship;
+            txtContactMobileNo.Text = Classes.clsQueryMember.contactMobileNo;
+            txtContactTelephone.Text = Classes.clsQueryMember.contactTelephone;
+            txtContactRemarks.Text = Classes.clsQueryMember.contactRemarks;
+
+            clsQueryMember.loadBeneficiaries(dataGridView1, txtEmpID.Text, Classes.clsQueryMember.principal);
         }
     }
 }

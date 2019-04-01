@@ -53,5 +53,10 @@ namespace WindowsFormsApplication2
                 }
             }    
         }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            button2_Click(sender, e);
+        }
     }
 }

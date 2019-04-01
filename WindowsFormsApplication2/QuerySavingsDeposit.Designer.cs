@@ -69,9 +69,9 @@
             this.label1.ForeColor = System.Drawing.Color.SeaGreen;
             this.label1.Location = new System.Drawing.Point(35, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(590, 32);
+            this.label1.Size = new System.Drawing.Size(602, 32);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Savings Deposit (Last 15 months transaction)";
+            this.label1.Text = "Savings Deposit (Last 15 months transactions)";
             // 
             // panel2
             // 

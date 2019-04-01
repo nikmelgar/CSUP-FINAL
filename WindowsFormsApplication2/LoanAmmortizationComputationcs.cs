@@ -233,86 +233,90 @@ namespace WindowsFormsApplication2
             //=======================================================
             //                  for sub report
             //=======================================================
-
-            SqlDataAdapter subreportAdapter = new SqlDataAdapter(strSubreport, con);
-            DataTable dtsubreport = new DataTable();
-            DataSet dsSubreport = new DataSet();
-
-
-            //=======================================================
-            //              getting the less total
-            //=======================================================
-
-            SqlDataAdapter lessadapter = new SqlDataAdapter("SELECT sum(Amount) FROM loan_amort_less WHERE Loan_Type = '" + cmbLoanType.SelectedValue + "' and encoded_by ='" + Classes.clsUser.Username + "'", con);
-            DataTable dtLess = new DataTable();
-            lessadapter.Fill(dtLess);
-
-            less = 0;
-            if(dtLess.Rows[0].ItemArray[0].ToString() != DBNull.Value.ToString())
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                less = Convert.ToDouble(dtLess.Rows[0].ItemArray[0].ToString());
+                con.Open();
+
+                SqlDataAdapter subreportAdapter = new SqlDataAdapter(strSubreport, con);
+                DataTable dtsubreport = new DataTable();
+                DataSet dsSubreport = new DataSet();
+
+
+                //=======================================================
+                //              getting the less total
+                //=======================================================
+
+                SqlDataAdapter lessadapter = new SqlDataAdapter("SELECT sum(Amount) FROM loan_amort_less WHERE Loan_Type = '" + cmbLoanType.SelectedValue + "' and encoded_by ='" + Classes.clsUser.Username + "'", con);
+                DataTable dtLess = new DataTable();
+                lessadapter.Fill(dtLess);
+
+                less = 0;
+                if (dtLess.Rows[0].ItemArray[0].ToString() != DBNull.Value.ToString())
+                {
+                    less = Convert.ToDouble(dtLess.Rows[0].ItemArray[0].ToString());
+                }
+
+
+                SqlDataAdapter adapter1 = new SqlDataAdapter(str, con);
+                DataTable dt1 = new DataTable();
+                DataSet ds = new DataSet();
+
+                LoanReports.loanAmortization cr = new LoanReports.loanAmortization();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+
+                //=========================================
+                //          sub report
+                //=========================================
+                subreportAdapter.Fill(ds, "loan_amort_less");
+                dtsubreport = dsSubreport.Tables["loan_amort_less"];
+                cr.Subreports[0].SetDataSource(ds.Tables["loan_amort_less"]);
+
+
+                adapter1.Fill(ds, "Loan_Amortization");
+                dt = ds.Tables["Loan_Amortization"];
+                cr.SetDataSource(ds.Tables["Loan_Amortization"]);
+
+
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+
+
+                //Signature
+                cr.SetParameterValue("LoanAmount", txtLoanAmount.Text);
+                cr.SetParameterValue("AnnualInterest", interestRate.Text);
+                cr.SetParameterValue("TermInMons", txtTerminMos.Text);
+                cr.SetParameterValue("MonthlyPayment", txtMonthlyPayment.Text);
+                cr.SetParameterValue("NoOfPayments", txtTerminMos.Text);
+                cr.SetParameterValue("TotalPayments", txtTotalPayment.Text);
+                cr.SetParameterValue("TotalInterest", txtInterest.Text);
+                double lessTotal, netAmount;
+
+
+                //If Loan PLAR is RENEW then change the service fee amount
+
+                if (plarRenew == true)
+                {
+                    lessTotal = Convert.ToDouble(txtLoanAmount.Text) - plarExistingBalance;
+                    lessTotal = lessTotal * Convert.ToDouble(clsParameter.serviceFee());
+                }
+                else
+                {
+                    lessTotal = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
+                }
+
+
+                netAmount = Convert.ToDouble(txtLoanAmount.Text) - lessTotal;
+                netAmount = netAmount - less;
+
+                cr.SetParameterValue("LessServiceFee", Convert.ToString(Convert.ToDecimal(lessTotal).ToString("#,0.00")));
+                cr.SetParameterValue("TotalNet", Convert.ToString(Convert.ToDecimal(netAmount).ToString("#,0.00")));
+
+                crystalReportViewer1.ReportSource = cr;
             }
-
-
-            SqlDataAdapter adapter1 = new SqlDataAdapter(str, con);
-            DataTable dt1 = new DataTable();
-            DataSet ds = new DataSet();
-            
-            LoanReports.loanAmortization cr = new LoanReports.loanAmortization();
-
-            li = new TableLogOnInfo();
-
-            li.ConnectionInfo.IntegratedSecurity = false;
-
-
-            //=========================================
-            //          sub report
-            //=========================================
-            subreportAdapter.Fill(ds, "loan_amort_less");
-            dtsubreport = dsSubreport.Tables["loan_amort_less"];
-            cr.Subreports[0].SetDataSource(ds.Tables["loan_amort_less"]);
-
-
-            adapter1.Fill(ds, "Loan_Amortization");
-            dt = ds.Tables["Loan_Amortization"];
-            cr.SetDataSource(ds.Tables["Loan_Amortization"]);
-
-
-            //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
-            cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
-
-
-            //Signature
-            cr.SetParameterValue("LoanAmount", txtLoanAmount.Text);
-            cr.SetParameterValue("AnnualInterest", interestRate.Text);
-            cr.SetParameterValue("TermInMons", txtTerminMos.Text);
-            cr.SetParameterValue("MonthlyPayment", txtMonthlyPayment.Text);
-            cr.SetParameterValue("NoOfPayments", txtTerminMos.Text);
-            cr.SetParameterValue("TotalPayments", txtTotalPayment.Text);
-            cr.SetParameterValue("TotalInterest", txtInterest.Text);
-            double lessTotal,netAmount;
-
-
-            //If Loan PLAR is RENEW then change the service fee amount
-
-            if (plarRenew == true)
-            {
-                lessTotal = Convert.ToDouble(txtLoanAmount.Text) - plarExistingBalance; 
-                lessTotal = lessTotal * Convert.ToDouble(clsParameter.serviceFee());
-            }
-            else
-            {
-                lessTotal = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
-            }
-
-          
-            netAmount = Convert.ToDouble(txtLoanAmount.Text) - lessTotal;
-            netAmount = netAmount - less;
-
-            cr.SetParameterValue("LessServiceFee", Convert.ToString(Convert.ToDecimal(lessTotal).ToString("#,0.00")));
-            cr.SetParameterValue("TotalNet", Convert.ToString(Convert.ToDecimal(netAmount).ToString("#,0.00")));
-
-            crystalReportViewer1.ReportSource = cr;
         }
 
         private void txtTerminMos_Leave(object sender, EventArgs e)

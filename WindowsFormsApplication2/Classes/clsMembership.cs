@@ -15,7 +15,7 @@ namespace WindowsFormsApplication2
         SqlConnection con;
         SqlDataAdapter adapter;
         Global global = new Global();
-
+        public static string empIDStored { get; set; }
         public void loadMembership(DataGridView dgv)
         {
             using (SqlConnection con = new SqlConnection(global.connectString()))

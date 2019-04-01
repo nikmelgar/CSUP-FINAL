@@ -37,7 +37,7 @@ namespace WindowsFormsApplication2.Classes
                 else
                 {
                     string str;
-                    str = "SELECT TOP 50 userid,EmployeeID,Principal,LastName,FirstName,MiddleName,Suffix,Date_Of_Birth FROM Membership WHERE EmployeeID like '%" + EmployeeID.Text + "%' and LastName like '%" + LastName.Text + "%' and FirstName like '%" + FirstName.Text + "%'";
+                    str = "SELECT userid,EmployeeID,Principal,LastName,FirstName,MiddleName,Suffix,Date_Of_Birth FROM Membership WHERE EmployeeID like '%" + EmployeeID.Text + "%' and LastName like '%" + LastName.Text + "%' and FirstName like '%" + FirstName.Text + "%'";
 
                     adapter = new SqlDataAdapter(str, con);
                     dt = new DataTable();

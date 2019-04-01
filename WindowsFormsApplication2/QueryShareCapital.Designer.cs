@@ -74,9 +74,9 @@
             this.label1.ForeColor = System.Drawing.Color.SeaGreen;
             this.label1.Location = new System.Drawing.Point(35, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(563, 32);
+            this.label1.Size = new System.Drawing.Size(575, 32);
             this.label1.TabIndex = 9;
-            this.label1.Text = "Share Capital (Last 15 months transaction)";
+            this.label1.Text = "Share Capital (Last 15 months transactions)";
             // 
             // lblMember
             // 

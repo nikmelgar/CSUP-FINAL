@@ -21,21 +21,22 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            //conbd.DataSource = "192.168.255.176";
-            //conbd.InitialCatalog = "PECCI-NEW";
-            ////conbd.IntegratedSecurity = true;
-            //conbd.UserID = "sa";
-            //conbd.Password = "SYSADMIN";
-
-            //Local Connection House
-            conbd.DataSource = ".";
+            conbd.DataSource = "192.168.255.176";
             conbd.InitialCatalog = "PECCI-NEW";
-            conbd.IntegratedSecurity = true;
+            //conbd.IntegratedSecurity = true;
             conbd.UserID = "sa";
             conbd.Password = "SYSADMIN";
             conbd.MaxPoolSize = 20000;
 
-            
+            //Local Connection House
+            //conbd.DataSource = ".";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            //conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+            //conbd.MaxPoolSize = 20000;
+
+
 
             //Maam Vangie IP
 
@@ -64,19 +65,20 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            //conbd.DataSource = "192.168.255.176";
-            //conbd.InitialCatalog = "PECCI-NEW";
-            ////conbd.IntegratedSecurity = true;
-            //conbd.UserID = "sa";
-            //conbd.Password = "SYSADMIN";
-
-            //Local Connection House
-            conbd.DataSource = ".";
+            conbd.DataSource = "192.168.255.176";
             conbd.InitialCatalog = "PECCI-NEW";
-            conbd.IntegratedSecurity = true;
+            //conbd.IntegratedSecurity = true;
             conbd.UserID = "sa";
             conbd.Password = "SYSADMIN";
             conbd.MaxPoolSize = 20000;
+
+            //Local Connection House
+            //conbd.DataSource = ".";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            //conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+            //conbd.MaxPoolSize = 20000;
 
 
 
@@ -94,21 +96,23 @@ namespace WindowsFormsApplication2
         //For Resigned in PECCI cannot Transcat
         public Boolean checkMemberIfResignedTRUE(int id)
         {
-            SqlConnection con = new SqlConnection();
-            connection(con);
-
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE userID = '" + id + "' and Date_Resigned_From_Pecci is not null", con);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            if(dt.Rows.Count >= 1)
+            using (SqlConnection con = new SqlConnection(connectString()))
             {
-                //Meaning Member is already resigned
-                return true;
-            }
-            else
-            {
-                return false;
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE userID = '" + id + "' and Date_Resigned_From_Pecci is not null", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count >= 1)
+                {
+                    //Meaning Member is already resigned
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
