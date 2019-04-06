@@ -135,5 +135,10 @@ namespace WindowsFormsApplication2
         {
             e.Handled = !(char.IsLetter(e.KeyChar) || e.KeyChar == (char)Keys.Back || e.KeyChar == (char)Keys.Space);
         }
+
+        private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

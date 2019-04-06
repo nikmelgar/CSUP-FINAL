@@ -157,6 +157,9 @@
             this.label29 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.datagridviewTransaction = new System.Windows.Forms.DataGridView();
+            this.AccntDescription = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.subs = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel10 = new System.Windows.Forms.Panel();
@@ -185,9 +188,6 @@
             this.panel46 = new System.Windows.Forms.Panel();
             this.panel47 = new System.Windows.Forms.Panel();
             this.panel48 = new System.Windows.Forms.Panel();
-            this.AccntDescription = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.subs = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelHeader.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -374,9 +374,9 @@
             this.btnRemoveCheck.ForeColor = System.Drawing.Color.Red;
             this.btnRemoveCheck.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveCheck.Image")));
             this.btnRemoveCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRemoveCheck.Location = new System.Drawing.Point(526, 403);
+            this.btnRemoveCheck.Location = new System.Drawing.Point(523, 403);
             this.btnRemoveCheck.Name = "btnRemoveCheck";
-            this.btnRemoveCheck.Size = new System.Drawing.Size(127, 37);
+            this.btnRemoveCheck.Size = new System.Drawing.Size(137, 37);
             this.btnRemoveCheck.TabIndex = 148;
             this.btnRemoveCheck.Text = "REMOVE";
             this.btnRemoveCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -451,11 +451,11 @@
             this.btnAddCheck.ForeColor = System.Drawing.Color.Red;
             this.btnAddCheck.Image = ((System.Drawing.Image)(resources.GetObject("btnAddCheck.Image")));
             this.btnAddCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddCheck.Location = new System.Drawing.Point(526, 360);
+            this.btnAddCheck.Location = new System.Drawing.Point(523, 360);
             this.btnAddCheck.Name = "btnAddCheck";
-            this.btnAddCheck.Size = new System.Drawing.Size(127, 37);
+            this.btnAddCheck.Size = new System.Drawing.Size(137, 37);
             this.btnAddCheck.TabIndex = 146;
-            this.btnAddCheck.Text = "ADD CHECK";
+            this.btnAddCheck.Text = "ADD CHEQUE";
             this.btnAddCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnAddCheck.UseVisualStyleBackColor = true;
             this.btnAddCheck.Click += new System.EventHandler(this.btnAddCheck_Click);
@@ -488,7 +488,7 @@
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label23.Location = new System.Drawing.Point(444, 328);
+            this.label23.Location = new System.Drawing.Point(446, 329);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(15, 21);
@@ -500,7 +500,7 @@
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label22.Location = new System.Drawing.Point(444, 293);
+            this.label22.Location = new System.Drawing.Point(447, 293);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(15, 21);
@@ -512,7 +512,7 @@
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label21.Location = new System.Drawing.Point(116, 328);
+            this.label21.Location = new System.Drawing.Point(128, 328);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(15, 21);
@@ -524,7 +524,7 @@
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label19.Location = new System.Drawing.Point(116, 293);
+            this.label19.Location = new System.Drawing.Point(128, 293);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(15, 21);
@@ -536,9 +536,9 @@
             this.dtCheckDate.Enabled = false;
             this.dtCheckDate.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtCheckDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtCheckDate.Location = new System.Drawing.Point(134, 325);
+            this.dtCheckDate.Location = new System.Drawing.Point(143, 325);
             this.dtCheckDate.Name = "dtCheckDate";
-            this.dtCheckDate.Size = new System.Drawing.Size(162, 28);
+            this.dtCheckDate.Size = new System.Drawing.Size(138, 28);
             this.dtCheckDate.TabIndex = 139;
             // 
             // cmbBank
@@ -546,9 +546,9 @@
             this.cmbBank.Enabled = false;
             this.cmbBank.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbBank.FormattingEnabled = true;
-            this.cmbBank.Location = new System.Drawing.Point(134, 290);
+            this.cmbBank.Location = new System.Drawing.Point(143, 290);
             this.cmbBank.Name = "cmbBank";
-            this.cmbBank.Size = new System.Drawing.Size(215, 29);
+            this.cmbBank.Size = new System.Drawing.Size(206, 29);
             this.cmbBank.TabIndex = 138;
             // 
             // label18
@@ -568,12 +568,12 @@
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label17.Location = new System.Drawing.Point(303, 331);
+            this.label17.Location = new System.Drawing.Point(303, 329);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(136, 21);
+            this.label17.Size = new System.Drawing.Size(149, 21);
             this.label17.TabIndex = 136;
-            this.label17.Text = "Check Number";
+            this.label17.Text = "Cheque Number";
             // 
             // label16
             // 
@@ -583,9 +583,9 @@
             this.label16.Location = new System.Drawing.Point(10, 328);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(113, 21);
+            this.label16.Size = new System.Drawing.Size(126, 21);
             this.label16.TabIndex = 135;
-            this.label16.Text = "Check Date";
+            this.label16.Text = "Cheque Date";
             // 
             // label15
             // 
@@ -617,9 +617,9 @@
             this.label14.Location = new System.Drawing.Point(233, 7);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(161, 19);
+            this.label14.Size = new System.Drawing.Size(172, 19);
             this.label14.TabIndex = 4;
-            this.label14.Text = "Check Information";
+            this.label14.Text = "Cheque Information";
             // 
             // label13
             // 
@@ -1689,6 +1689,27 @@
             this.datagridviewTransaction.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.datagridviewTransaction_DataError);
             this.datagridviewTransaction.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.datagridviewTransaction_EditingControlShowing);
             // 
+            // AccntDescription
+            // 
+            this.AccntDescription.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.AccntDescription.FillWeight = 25F;
+            this.AccntDescription.HeaderText = "Code";
+            this.AccntDescription.Name = "AccntDescription";
+            this.AccntDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.AccntDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // subs
+            // 
+            this.subs.HeaderText = "Description";
+            this.subs.Name = "subs";
+            this.subs.ReadOnly = true;
+            // 
+            // Amount
+            // 
+            this.Amount.FillWeight = 60F;
+            this.Amount.HeaderText = "Amount";
+            this.Amount.Name = "Amount";
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -1989,27 +2010,6 @@
             this.panel48.Name = "panel48";
             this.panel48.Size = new System.Drawing.Size(535, 3);
             this.panel48.TabIndex = 0;
-            // 
-            // AccntDescription
-            // 
-            this.AccntDescription.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.AccntDescription.FillWeight = 25F;
-            this.AccntDescription.HeaderText = "Code";
-            this.AccntDescription.Name = "AccntDescription";
-            this.AccntDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.AccntDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // subs
-            // 
-            this.subs.HeaderText = "Description";
-            this.subs.Name = "subs";
-            this.subs.ReadOnly = true;
-            // 
-            // Amount
-            // 
-            this.Amount.FillWeight = 60F;
-            this.Amount.HeaderText = "Amount";
-            this.Amount.Name = "Amount";
             // 
             // CashReceiptVoucher
             // 

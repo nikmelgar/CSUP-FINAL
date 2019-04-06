@@ -168,7 +168,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.37736F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 439F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 127F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 662F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 664F));
             this.tableLayoutPanel1.Controls.Add(this.txtKeyWord, 4, 1);
             this.tableLayoutPanel1.Controls.Add(this.label4, 3, 1);
             this.tableLayoutPanel1.Controls.Add(this.cmbStatus, 4, 0);
@@ -196,7 +196,7 @@
             // txtKeyWord
             // 
             this.txtKeyWord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtKeyWord.Location = new System.Drawing.Point(865, 42);
+            this.txtKeyWord.Location = new System.Drawing.Point(863, 42);
             this.txtKeyWord.Margin = new System.Windows.Forms.Padding(4);
             this.txtKeyWord.Name = "txtKeyWord";
             this.txtKeyWord.Size = new System.Drawing.Size(415, 26);
@@ -206,7 +206,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(737, 38);
+            this.label4.Location = new System.Drawing.Point(735, 38);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(67, 21);
@@ -224,7 +224,7 @@
             "For Release",
             "Posted",
             "Cancelled"});
-            this.cmbStatus.Location = new System.Drawing.Point(864, 4);
+            this.cmbStatus.Location = new System.Drawing.Point(862, 4);
             this.cmbStatus.Name = "cmbStatus";
             this.cmbStatus.Size = new System.Drawing.Size(416, 29);
             this.cmbStatus.TabIndex = 26;
@@ -234,7 +234,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(737, 1);
+            this.label3.Location = new System.Drawing.Point(735, 1);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 21);
@@ -255,7 +255,7 @@
             "CV Number",
             "Posted By",
             "Cancelled By"});
-            this.cmbSearchBy.Location = new System.Drawing.Point(296, 41);
+            this.cmbSearchBy.Location = new System.Drawing.Point(294, 41);
             this.cmbSearchBy.Name = "cmbSearchBy";
             this.cmbSearchBy.Size = new System.Drawing.Size(416, 29);
             this.cmbSearchBy.TabIndex = 26;
@@ -265,7 +265,7 @@
             // 
             this.dtTo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtTo.Location = new System.Drawing.Point(864, 75);
+            this.dtTo.Location = new System.Drawing.Point(862, 75);
             this.dtTo.Name = "dtTo";
             this.dtTo.Size = new System.Drawing.Size(416, 28);
             this.dtTo.TabIndex = 26;
@@ -274,7 +274,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(737, 72);
+            this.label1.Location = new System.Drawing.Point(735, 72);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 21);
@@ -285,7 +285,7 @@
             // 
             this.dtFrom.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtFrom.Location = new System.Drawing.Point(296, 75);
+            this.dtFrom.Location = new System.Drawing.Point(294, 75);
             this.dtFrom.Name = "dtFrom";
             this.dtFrom.Size = new System.Drawing.Size(416, 28);
             this.dtFrom.TabIndex = 14;
@@ -294,7 +294,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(266, 1);
+            this.label10.Location = new System.Drawing.Point(265, 1);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(15, 20);
@@ -305,7 +305,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(266, 38);
+            this.label12.Location = new System.Drawing.Point(265, 38);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(15, 20);
@@ -338,7 +338,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(266, 72);
+            this.label15.Location = new System.Drawing.Point(265, 72);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(15, 20);
@@ -367,7 +367,7 @@
             "ATM - AT",
             "CASH - CA",
             "CHEQUE - CH"});
-            this.cmbMode.Location = new System.Drawing.Point(296, 4);
+            this.cmbMode.Location = new System.Drawing.Point(294, 4);
             this.cmbMode.Name = "cmbMode";
             this.cmbMode.Size = new System.Drawing.Size(416, 29);
             this.cmbMode.TabIndex = 15;

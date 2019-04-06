@@ -118,7 +118,7 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select you want to edit!", Alert.AlertType.warning);
+                Alert.show("Please select you want to edit.", Alert.AlertType.warning);
                 return;
             }
 

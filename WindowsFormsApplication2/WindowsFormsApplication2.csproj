@@ -145,9 +145,11 @@
     <Compile Include="Classes\clsMembersTotalBalances.cs" />
     <Compile Include="Classes\clsOpenTransaction.cs" />
     <Compile Include="Classes\clsParameter.cs" />
+    <Compile Include="Classes\clsPDCManagement.cs" />
     <Compile Include="Classes\clsPLBI.cs" />
     <Compile Include="Classes\clsQuery.cs" />
     <Compile Include="Classes\clsQueryMember.cs" />
+    <Compile Include="Classes\clsReminder.cs" />
     <Compile Include="Classes\clsSavings.cs" />
     <Compile Include="Classes\clsSavingsDataEntry.cs" />
     <Compile Include="Classes\clsSearchCashReceipt.cs" />
@@ -367,6 +369,24 @@
     <Compile Include="PayrollGroup.Designer.cs">
       <DependentUpon>PayrollGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="PDCFolder\loanPerMember.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCFolder\loanPerMember.Designer.cs">
+      <DependentUpon>loanPerMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDCManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCManagement.Designer.cs">
+      <DependentUpon>PDCManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDCFolder\searchMember.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCFolder\searchMember.Designer.cs">
+      <DependentUpon>searchMember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs">
@@ -398,6 +418,12 @@
     </Compile>
     <Compile Include="QueryShareCapital.Designer.cs">
       <DependentUpon>QueryShareCapital.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReminderPDC\reminder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReminderPDC\reminder.Designer.cs">
+      <DependentUpon>reminder.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportsForms\CashReceiptReportDetails.cs">
       <AutoGen>True</AutoGen>
@@ -800,6 +826,15 @@
     <EmbeddedResource Include="PayrollGroup.resx">
       <DependentUpon>PayrollGroup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PDCFolder\loanPerMember.resx">
+      <DependentUpon>loanPerMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCManagement.resx">
+      <DependentUpon>PDCManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCFolder\searchMember.resx">
+      <DependentUpon>searchMember.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -823,6 +858,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="QueryShareCapital.resx">
       <DependentUpon>QueryShareCapital.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReminderPDC\reminder.resx">
+      <DependentUpon>reminder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportsForms\CashReceiptReportDetails.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

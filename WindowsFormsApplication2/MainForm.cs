@@ -15,7 +15,9 @@ namespace WindowsFormsApplication2
         {
             InitializeComponent();
         }
-
+        private int counter = 3600;
+        private int checkCounter = 5;
+        Classes.clsReminder clsReminder = new Classes.clsReminder();
         private void Form1_Load(object sender, EventArgs e)
         {
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
@@ -23,6 +25,20 @@ namespace WindowsFormsApplication2
 
             //LoadName
             lblFullName.Text = Classes.clsUser.firstName + " " + Classes.clsUser.middleName + " " + Classes.clsUser.lastName;
+
+            if(clsReminder.pdcDue() == true)
+            {
+                ReminderPDC.reminder frm = new ReminderPDC.reminder();
+                //SHOW NOTIF BUTTON
+                clsReminder.getCntPDCdueToday(btnNotifPDC,frm.lblSpiel,frm.btnRemid);
+                
+                //FOR PDC MANAGEMENT
+                frm.ShowDialog();
+            }
+            else
+            {
+                btnNotifPDC.Visible = false;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -108,7 +124,7 @@ namespace WindowsFormsApplication2
         {
             if(panelMenu.Width == 341)
             {
-                panelMenu.Width = 107;
+                panelMenu.Width = 90;
                 
                 //check if sub panel is on
                 if(panelFileMaintenanceSub.Visible == true) //FIle Maintenance
@@ -988,5 +1004,105 @@ namespace WindowsFormsApplication2
             frm.Show();
             frm.MdiParent = this;
         }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            sideVisible(button30);
+
+
+            //Hide Panels
+            panelFileMaintenanceSub.Visible = false;
+            panelProcessSub.Visible = false;
+            panelSavings.Visible = false;
+            panelMembership.Visible = false;
+            panelMemberSettings.Visible = false;
+            panelReportSub.Visible = false;
+            panelLoan.Visible = false;
+
+            //controls
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(PDCManagement))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            PDCManagement frm = new PDCManagement();
+            frm.Show();
+            frm.MdiParent = this;
+        }
+
+
+        #region TimerNotificationForPDC
+    
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            counter--;
+            if (counter == 0)
+            {
+                if (clsReminder.pdcDue() == true)
+                {
+                    //REMIND USER AGAIN AFTER THE GIVEN PERIOD OF TIME
+                    counter = 3600;
+                    timer1.Stop();
+                    ReminderPDC.reminder frm = new ReminderPDC.reminder();
+                    clsReminder.getCntPDCdueToday(btnNotifPDC, frm.lblSpiel, frm.btnRemid);
+                    this.Activate();
+                    this.Show();
+                    frm.ShowDialog();
+                }
+                else
+                {
+                    counter = 0;
+                    timer1.Stop();
+                }
+            }
+            else
+            {
+                if(checkCounter == 0)
+                {
+                    //STOP 10 seconds and check in database
+                    //IF still there then reset again to 10 seconds
+                    if (clsReminder.pdcDue() == true)
+                    {
+                        checkCounter = 5;
+                        ReminderPDC.reminder frm = new ReminderPDC.reminder();
+                        clsReminder.getCntPDCdueToday(btnNotifPDC, frm.lblSpiel, frm.btnRemid);
+                    }
+                    else
+                    {
+                        counter = 0;
+                        //NO RECORDS 
+                        btnNotifPDC.Visible = false;
+                        timer1.Stop();
+                    }
+                }
+                else
+                {
+                    checkCounter--;
+                }
+            }
+        }
+
+        private void tmerTickIfClickOK_Tick(object sender, EventArgs e)
+        {
+            if (clsReminder.pdcDue() == true)
+            {
+                checkCounter = 5;
+                ReminderPDC.reminder frm = new ReminderPDC.reminder();
+                clsReminder.getCntPDCdueToday(btnNotifPDC, frm.lblSpiel, frm.btnRemid);
+            }
+            else
+            {
+                //NO RECORDS 
+                btnNotifPDC.Visible = false;
+                tmerTickIfClickOK.Stop();
+            }
+        }
     }
+    #endregion
 }

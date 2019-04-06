@@ -1,6 +1,6 @@
-﻿namespace WindowsFormsApplication2.LoanReports
+﻿namespace WindowsFormsApplication2.PDC
 {
-    partial class searchMemberAmort
+    partial class searchMember
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(searchMemberAmort));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(searchMember));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel3 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
@@ -151,17 +151,17 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(5, 38);
+            this.label14.Location = new System.Drawing.Point(5, 36);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(61, 33);
+            this.label14.Size = new System.Drawing.Size(100, 21);
             this.label14.TabIndex = 2;
             this.label14.Text = "Last Name";
             // 
             // txtLastName
             // 
             this.txtLastName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLastName.Location = new System.Drawing.Point(120, 42);
+            this.txtLastName.Location = new System.Drawing.Point(179, 40);
             this.txtLastName.Margin = new System.Windows.Forms.Padding(4);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(470, 26);
@@ -170,7 +170,7 @@
             // txtFirstName
             // 
             this.txtFirstName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFirstName.Location = new System.Drawing.Point(120, 76);
+            this.txtFirstName.Location = new System.Drawing.Point(179, 76);
             this.txtFirstName.Margin = new System.Windows.Forms.Padding(4);
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.Size = new System.Drawing.Size(470, 26);
@@ -180,10 +180,10 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(103, 72);
+            this.label15.Location = new System.Drawing.Point(159, 72);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(8, 20);
+            this.label15.Size = new System.Drawing.Size(11, 20);
             this.label15.TabIndex = 10;
             this.label15.Text = ":";
             // 
@@ -194,14 +194,14 @@
             this.label16.Location = new System.Drawing.Point(5, 72);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(61, 37);
+            this.label16.Size = new System.Drawing.Size(96, 21);
             this.label16.TabIndex = 3;
             this.label16.Text = "First Name";
             // 
             // txtEmployeeID
             // 
             this.txtEmployeeID.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmployeeID.Location = new System.Drawing.Point(120, 5);
+            this.txtEmployeeID.Location = new System.Drawing.Point(179, 5);
             this.txtEmployeeID.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmployeeID.Name = "txtEmployeeID";
             this.txtEmployeeID.Size = new System.Drawing.Size(470, 26);
@@ -225,7 +225,7 @@
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.Location = new System.Drawing.Point(14, 123);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(138, 37);
+            this.button1.Size = new System.Drawing.Size(135, 37);
             this.button1.TabIndex = 98;
             this.button1.Text = "REFRESH";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -238,9 +238,9 @@
             this.btnSearch.ForeColor = System.Drawing.Color.Red;
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSearch.Location = new System.Drawing.Point(158, 123);
+            this.btnSearch.Location = new System.Drawing.Point(155, 123);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(126, 37);
+            this.btnSearch.Size = new System.Drawing.Size(118, 37);
             this.btnSearch.TabIndex = 97;
             this.btnSearch.Text = "SEARCH";
             this.btnSearch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -251,9 +251,9 @@
             // 
             this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.27919F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.72081F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 613F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.72549F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.27451F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 554F));
             this.tableLayoutPanel1.Controls.Add(this.label10, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label13, 0, 0);
@@ -266,8 +266,8 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(14, 7);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52.11267F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 47.88733F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.29578F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.70422F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(731, 110);
             this.tableLayoutPanel1.TabIndex = 0;
@@ -276,10 +276,10 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(103, 1);
+            this.label10.Location = new System.Drawing.Point(159, 1);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(8, 20);
+            this.label10.Size = new System.Drawing.Size(11, 20);
             this.label10.TabIndex = 4;
             this.label10.Text = ":";
             // 
@@ -287,10 +287,10 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(103, 38);
+            this.label12.Location = new System.Drawing.Point(159, 36);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(8, 20);
+            this.label12.Size = new System.Drawing.Size(11, 20);
             this.label12.TabIndex = 4;
             this.label12.Text = ":";
             // 
@@ -301,7 +301,7 @@
             this.label13.Location = new System.Drawing.Point(5, 1);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(79, 36);
+            this.label13.Size = new System.Drawing.Size(142, 21);
             this.label13.TabIndex = 1;
             this.label13.Text = "Employee ID No";
             // 
@@ -326,7 +326,7 @@
             this.panel2.Size = new System.Drawing.Size(3, 556);
             this.panel2.TabIndex = 121;
             // 
-            // searchMemberAmort
+            // searchMember
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -339,10 +339,10 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "searchMemberAmort";
+            this.Name = "searchMember";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "searchMemberAmort";
-            this.Load += new System.EventHandler(this.searchMemberAmort_Load);
+            this.Text = "searchMember";
+            this.Load += new System.EventHandler(this.searchMember_Load);
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panelFields.ResumeLayout(false);

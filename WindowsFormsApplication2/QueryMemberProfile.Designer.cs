@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel55 = new System.Windows.Forms.Panel();
             this.txtEmpID = new System.Windows.Forms.Label();
@@ -168,6 +168,33 @@
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel90 = new System.Windows.Forms.Panel();
+            this.txtContactRemarks = new System.Windows.Forms.Label();
+            this.panel85 = new System.Windows.Forms.Panel();
+            this.label40 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel89 = new System.Windows.Forms.Panel();
+            this.txtContactMobileNo = new System.Windows.Forms.Label();
+            this.panel87 = new System.Windows.Forms.Panel();
+            this.txtContactTelephone = new System.Windows.Forms.Label();
+            this.panel82 = new System.Windows.Forms.Panel();
+            this.label34 = new System.Windows.Forms.Label();
+            this.panel83 = new System.Windows.Forms.Panel();
+            this.label35 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel86 = new System.Windows.Forms.Panel();
+            this.txtContactRelationShip = new System.Windows.Forms.Label();
+            this.panel84 = new System.Windows.Forms.Panel();
+            this.txtContactName = new System.Windows.Forms.Label();
+            this.panel81 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.panel88 = new System.Windows.Forms.Panel();
+            this.label41 = new System.Windows.Forms.Label();
+            this.panel80 = new System.Windows.Forms.Panel();
+            this.panel79 = new System.Windows.Forms.Panel();
+            this.panel66 = new System.Windows.Forms.Panel();
+            this.panel56 = new System.Windows.Forms.Panel();
             this.panel78 = new System.Windows.Forms.Panel();
             this.label38 = new System.Windows.Forms.Label();
             this.panel72 = new System.Windows.Forms.Panel();
@@ -181,33 +208,6 @@
             this.txtMobileNo = new System.Windows.Forms.Label();
             this.panel60 = new System.Windows.Forms.Panel();
             this.txtEmailAddress = new System.Windows.Forms.Label();
-            this.panel56 = new System.Windows.Forms.Panel();
-            this.panel66 = new System.Windows.Forms.Panel();
-            this.panel79 = new System.Windows.Forms.Panel();
-            this.panel80 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel88 = new System.Windows.Forms.Panel();
-            this.label41 = new System.Windows.Forms.Label();
-            this.panel81 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel82 = new System.Windows.Forms.Panel();
-            this.label34 = new System.Windows.Forms.Label();
-            this.panel83 = new System.Windows.Forms.Panel();
-            this.label35 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel85 = new System.Windows.Forms.Panel();
-            this.label40 = new System.Windows.Forms.Label();
-            this.panel84 = new System.Windows.Forms.Panel();
-            this.txtContactName = new System.Windows.Forms.Label();
-            this.panel86 = new System.Windows.Forms.Panel();
-            this.txtContactRelationShip = new System.Windows.Forms.Label();
-            this.panel87 = new System.Windows.Forms.Panel();
-            this.txtContactTelephone = new System.Windows.Forms.Label();
-            this.panel89 = new System.Windows.Forms.Panel();
-            this.txtContactMobileNo = new System.Windows.Forms.Label();
-            this.panel90 = new System.Windows.Forms.Panel();
-            this.txtContactRemarks = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel55.SuspendLayout();
             this.panel54.SuspendLayout();
@@ -290,6 +290,19 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.tableLayoutPanel13.SuspendLayout();
+            this.panel90.SuspendLayout();
+            this.panel85.SuspendLayout();
+            this.tableLayoutPanel12.SuspendLayout();
+            this.panel89.SuspendLayout();
+            this.panel87.SuspendLayout();
+            this.panel82.SuspendLayout();
+            this.panel83.SuspendLayout();
+            this.tableLayoutPanel11.SuspendLayout();
+            this.panel86.SuspendLayout();
+            this.panel84.SuspendLayout();
+            this.panel81.SuspendLayout();
+            this.panel88.SuspendLayout();
             this.panel78.SuspendLayout();
             this.panel72.SuspendLayout();
             this.panel73.SuspendLayout();
@@ -298,19 +311,6 @@
             this.tableLayoutPanel10.SuspendLayout();
             this.panel65.SuspendLayout();
             this.panel60.SuspendLayout();
-            this.tableLayoutPanel11.SuspendLayout();
-            this.panel88.SuspendLayout();
-            this.panel81.SuspendLayout();
-            this.tableLayoutPanel12.SuspendLayout();
-            this.panel82.SuspendLayout();
-            this.panel83.SuspendLayout();
-            this.tableLayoutPanel13.SuspendLayout();
-            this.panel85.SuspendLayout();
-            this.panel84.SuspendLayout();
-            this.panel86.SuspendLayout();
-            this.panel87.SuspendLayout();
-            this.panel89.SuspendLayout();
-            this.panel90.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -601,9 +601,9 @@
             this.label1.ForeColor = System.Drawing.Color.SeaGreen;
             this.label1.Location = new System.Drawing.Point(35, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(223, 32);
+            this.label1.Size = new System.Drawing.Size(229, 32);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Members Profile";
+            this.label1.Text = "Member\'s Profile";
             // 
             // panel9
             // 
@@ -630,8 +630,8 @@
             // 
             this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.94479F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.05521F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.63216F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.36784F));
             this.tableLayoutPanel2.Controls.Add(this.panel10, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.panel57, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(41, 196);
@@ -649,7 +649,7 @@
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel10.Location = new System.Drawing.Point(4, 4);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(282, 23);
+            this.panel10.Size = new System.Drawing.Size(234, 23);
             this.panel10.TabIndex = 1;
             // 
             // label8
@@ -670,9 +670,9 @@
             this.panel57.BackColor = System.Drawing.Color.White;
             this.panel57.Controls.Add(this.txtAddress);
             this.panel57.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel57.Location = new System.Drawing.Point(293, 4);
+            this.panel57.Location = new System.Drawing.Point(245, 4);
             this.panel57.Name = "panel57";
-            this.panel57.Size = new System.Drawing.Size(1153, 23);
+            this.panel57.Size = new System.Drawing.Size(1201, 23);
             this.panel57.TabIndex = 23;
             // 
             // txtAddress
@@ -1459,7 +1459,7 @@
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(81, 21);
             this.label23.TabIndex = 29;
-            this.label23.Text = "\tAcct No";
+            this.label23.Text = "Acct No";
             // 
             // panel34
             // 
@@ -1891,14 +1891,14 @@
             // 
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -1950,6 +1950,325 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Contact Person Information";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel13
+            // 
+            this.tableLayoutPanel13.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel13.ColumnCount = 2;
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.87862F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.12138F));
+            this.tableLayoutPanel13.Controls.Add(this.panel90, 1, 0);
+            this.tableLayoutPanel13.Controls.Add(this.panel85, 0, 0);
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(12, 91);
+            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
+            this.tableLayoutPanel13.RowCount = 1;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(1418, 66);
+            this.tableLayoutPanel13.TabIndex = 113;
+            // 
+            // panel90
+            // 
+            this.panel90.BackColor = System.Drawing.Color.White;
+            this.panel90.Controls.Add(this.txtContactRemarks);
+            this.panel90.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel90.Location = new System.Drawing.Point(229, 4);
+            this.panel90.Name = "panel90";
+            this.panel90.Size = new System.Drawing.Size(1185, 58);
+            this.panel90.TabIndex = 30;
+            // 
+            // txtContactRemarks
+            // 
+            this.txtContactRemarks.AutoSize = true;
+            this.txtContactRemarks.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtContactRemarks.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactRemarks.ForeColor = System.Drawing.Color.Black;
+            this.txtContactRemarks.Location = new System.Drawing.Point(0, 0);
+            this.txtContactRemarks.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.txtContactRemarks.Name = "txtContactRemarks";
+            this.txtContactRemarks.Size = new System.Drawing.Size(79, 21);
+            this.txtContactRemarks.TabIndex = 28;
+            this.txtContactRemarks.Text = "Remarks";
+            // 
+            // panel85
+            // 
+            this.panel85.BackColor = System.Drawing.Color.LightGreen;
+            this.panel85.Controls.Add(this.label40);
+            this.panel85.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel85.Location = new System.Drawing.Point(4, 4);
+            this.panel85.Name = "panel85";
+            this.panel85.Size = new System.Drawing.Size(218, 58);
+            this.panel85.TabIndex = 0;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label40.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label40.ForeColor = System.Drawing.Color.Black;
+            this.label40.Location = new System.Drawing.Point(0, 0);
+            this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(79, 21);
+            this.label40.TabIndex = 28;
+            this.label40.Text = "Remarks";
+            // 
+            // tableLayoutPanel12
+            // 
+            this.tableLayoutPanel12.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel12.ColumnCount = 4;
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.87862F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.01553F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.07833F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.95695F));
+            this.tableLayoutPanel12.Controls.Add(this.panel89, 1, 0);
+            this.tableLayoutPanel12.Controls.Add(this.panel87, 3, 0);
+            this.tableLayoutPanel12.Controls.Add(this.panel82, 2, 0);
+            this.tableLayoutPanel12.Controls.Add(this.panel83, 0, 0);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(12, 52);
+            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
+            this.tableLayoutPanel12.RowCount = 1;
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(1418, 33);
+            this.tableLayoutPanel12.TabIndex = 112;
+            // 
+            // panel89
+            // 
+            this.panel89.BackColor = System.Drawing.Color.White;
+            this.panel89.Controls.Add(this.txtContactMobileNo);
+            this.panel89.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel89.Location = new System.Drawing.Point(229, 4);
+            this.panel89.Name = "panel89";
+            this.panel89.Size = new System.Drawing.Size(474, 25);
+            this.panel89.TabIndex = 30;
+            // 
+            // txtContactMobileNo
+            // 
+            this.txtContactMobileNo.AutoSize = true;
+            this.txtContactMobileNo.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtContactMobileNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactMobileNo.ForeColor = System.Drawing.Color.Black;
+            this.txtContactMobileNo.Location = new System.Drawing.Point(0, 0);
+            this.txtContactMobileNo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.txtContactMobileNo.Name = "txtContactMobileNo";
+            this.txtContactMobileNo.Size = new System.Drawing.Size(96, 21);
+            this.txtContactMobileNo.TabIndex = 28;
+            this.txtContactMobileNo.Text = "Mobile No";
+            // 
+            // panel87
+            // 
+            this.panel87.BackColor = System.Drawing.Color.White;
+            this.panel87.Controls.Add(this.txtContactTelephone);
+            this.panel87.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel87.Location = new System.Drawing.Point(952, 4);
+            this.panel87.Name = "panel87";
+            this.panel87.Size = new System.Drawing.Size(462, 25);
+            this.panel87.TabIndex = 30;
+            // 
+            // txtContactTelephone
+            // 
+            this.txtContactTelephone.AutoSize = true;
+            this.txtContactTelephone.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtContactTelephone.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactTelephone.ForeColor = System.Drawing.Color.Black;
+            this.txtContactTelephone.Location = new System.Drawing.Point(0, 0);
+            this.txtContactTelephone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.txtContactTelephone.Name = "txtContactTelephone";
+            this.txtContactTelephone.Size = new System.Drawing.Size(97, 21);
+            this.txtContactTelephone.TabIndex = 28;
+            this.txtContactTelephone.Text = "Telephone";
+            // 
+            // panel82
+            // 
+            this.panel82.BackColor = System.Drawing.Color.LightGreen;
+            this.panel82.Controls.Add(this.label34);
+            this.panel82.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel82.Location = new System.Drawing.Point(710, 4);
+            this.panel82.Name = "panel82";
+            this.panel82.Size = new System.Drawing.Size(235, 25);
+            this.panel82.TabIndex = 112;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label34.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.ForeColor = System.Drawing.Color.Black;
+            this.label34.Location = new System.Drawing.Point(0, 0);
+            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(126, 21);
+            this.label34.TabIndex = 28;
+            this.label34.Text = "Telephone No";
+            // 
+            // panel83
+            // 
+            this.panel83.BackColor = System.Drawing.Color.LightGreen;
+            this.panel83.Controls.Add(this.label35);
+            this.panel83.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel83.Location = new System.Drawing.Point(4, 4);
+            this.panel83.Name = "panel83";
+            this.panel83.Size = new System.Drawing.Size(218, 25);
+            this.panel83.TabIndex = 0;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label35.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.ForeColor = System.Drawing.Color.Black;
+            this.label35.Location = new System.Drawing.Point(0, 0);
+            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(96, 21);
+            this.label35.TabIndex = 28;
+            this.label35.Text = "Mobile No";
+            // 
+            // tableLayoutPanel11
+            // 
+            this.tableLayoutPanel11.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel11.ColumnCount = 4;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.87862F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.01553F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.07833F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.95695F));
+            this.tableLayoutPanel11.Controls.Add(this.panel86, 3, 0);
+            this.tableLayoutPanel11.Controls.Add(this.panel84, 1, 0);
+            this.tableLayoutPanel11.Controls.Add(this.panel81, 2, 0);
+            this.tableLayoutPanel11.Controls.Add(this.panel88, 0, 0);
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(12, 17);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 1;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(1418, 33);
+            this.tableLayoutPanel11.TabIndex = 111;
+            // 
+            // panel86
+            // 
+            this.panel86.BackColor = System.Drawing.Color.White;
+            this.panel86.Controls.Add(this.txtContactRelationShip);
+            this.panel86.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel86.Location = new System.Drawing.Point(952, 4);
+            this.panel86.Name = "panel86";
+            this.panel86.Size = new System.Drawing.Size(462, 25);
+            this.panel86.TabIndex = 30;
+            // 
+            // txtContactRelationShip
+            // 
+            this.txtContactRelationShip.AutoSize = true;
+            this.txtContactRelationShip.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtContactRelationShip.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactRelationShip.ForeColor = System.Drawing.Color.Black;
+            this.txtContactRelationShip.Location = new System.Drawing.Point(0, 0);
+            this.txtContactRelationShip.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.txtContactRelationShip.Name = "txtContactRelationShip";
+            this.txtContactRelationShip.Size = new System.Drawing.Size(109, 21);
+            this.txtContactRelationShip.TabIndex = 28;
+            this.txtContactRelationShip.Text = "Relationship";
+            // 
+            // panel84
+            // 
+            this.panel84.BackColor = System.Drawing.Color.White;
+            this.panel84.Controls.Add(this.txtContactName);
+            this.panel84.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel84.Location = new System.Drawing.Point(229, 4);
+            this.panel84.Name = "panel84";
+            this.panel84.Size = new System.Drawing.Size(474, 25);
+            this.panel84.TabIndex = 30;
+            // 
+            // txtContactName
+            // 
+            this.txtContactName.AutoSize = true;
+            this.txtContactName.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtContactName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactName.ForeColor = System.Drawing.Color.Black;
+            this.txtContactName.Location = new System.Drawing.Point(0, 0);
+            this.txtContactName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.txtContactName.Name = "txtContactName";
+            this.txtContactName.Size = new System.Drawing.Size(61, 21);
+            this.txtContactName.TabIndex = 28;
+            this.txtContactName.Text = "Name";
+            // 
+            // panel81
+            // 
+            this.panel81.BackColor = System.Drawing.Color.LightGreen;
+            this.panel81.Controls.Add(this.label9);
+            this.panel81.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel81.Location = new System.Drawing.Point(710, 4);
+            this.panel81.Name = "panel81";
+            this.panel81.Size = new System.Drawing.Size(235, 25);
+            this.panel81.TabIndex = 112;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label9.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.Black;
+            this.label9.Location = new System.Drawing.Point(0, 0);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(109, 21);
+            this.label9.TabIndex = 28;
+            this.label9.Text = "Relationship";
+            // 
+            // panel88
+            // 
+            this.panel88.BackColor = System.Drawing.Color.LightGreen;
+            this.panel88.Controls.Add(this.label41);
+            this.panel88.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel88.Location = new System.Drawing.Point(4, 4);
+            this.panel88.Name = "panel88";
+            this.panel88.Size = new System.Drawing.Size(218, 25);
+            this.panel88.TabIndex = 0;
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label41.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label41.ForeColor = System.Drawing.Color.Black;
+            this.label41.Location = new System.Drawing.Point(0, 0);
+            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(61, 21);
+            this.label41.TabIndex = 28;
+            this.label41.Text = "Name";
+            // 
+            // panel80
+            // 
+            this.panel80.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            this.panel80.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel80.Location = new System.Drawing.Point(6, 168);
+            this.panel80.Name = "panel80";
+            this.panel80.Size = new System.Drawing.Size(1430, 3);
+            this.panel80.TabIndex = 3;
+            // 
+            // panel79
+            // 
+            this.panel79.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            this.panel79.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel79.Location = new System.Drawing.Point(6, 3);
+            this.panel79.Name = "panel79";
+            this.panel79.Size = new System.Drawing.Size(1430, 3);
+            this.panel79.TabIndex = 2;
+            // 
+            // panel66
+            // 
+            this.panel66.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            this.panel66.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel66.Location = new System.Drawing.Point(1436, 3);
+            this.panel66.Name = "panel66";
+            this.panel66.Size = new System.Drawing.Size(3, 168);
+            this.panel66.TabIndex = 1;
+            // 
+            // panel56
+            // 
+            this.panel56.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            this.panel56.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel56.Location = new System.Drawing.Point(3, 3);
+            this.panel56.Name = "panel56";
+            this.panel56.Size = new System.Drawing.Size(3, 168);
+            this.panel56.TabIndex = 0;
             // 
             // panel78
             // 
@@ -2108,325 +2427,6 @@
             this.txtEmailAddress.Size = new System.Drawing.Size(52, 21);
             this.txtEmailAddress.TabIndex = 28;
             this.txtEmailAddress.Text = "Email";
-            // 
-            // panel56
-            // 
-            this.panel56.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.panel56.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel56.Location = new System.Drawing.Point(3, 3);
-            this.panel56.Name = "panel56";
-            this.panel56.Size = new System.Drawing.Size(3, 168);
-            this.panel56.TabIndex = 0;
-            // 
-            // panel66
-            // 
-            this.panel66.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.panel66.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel66.Location = new System.Drawing.Point(1436, 3);
-            this.panel66.Name = "panel66";
-            this.panel66.Size = new System.Drawing.Size(3, 168);
-            this.panel66.TabIndex = 1;
-            // 
-            // panel79
-            // 
-            this.panel79.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.panel79.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel79.Location = new System.Drawing.Point(6, 3);
-            this.panel79.Name = "panel79";
-            this.panel79.Size = new System.Drawing.Size(1430, 3);
-            this.panel79.TabIndex = 2;
-            // 
-            // panel80
-            // 
-            this.panel80.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.panel80.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel80.Location = new System.Drawing.Point(6, 168);
-            this.panel80.Name = "panel80";
-            this.panel80.Size = new System.Drawing.Size(1430, 3);
-            this.panel80.TabIndex = 3;
-            // 
-            // tableLayoutPanel11
-            // 
-            this.tableLayoutPanel11.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel11.ColumnCount = 4;
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.87862F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.01553F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.07833F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.95695F));
-            this.tableLayoutPanel11.Controls.Add(this.panel86, 3, 0);
-            this.tableLayoutPanel11.Controls.Add(this.panel84, 1, 0);
-            this.tableLayoutPanel11.Controls.Add(this.panel81, 2, 0);
-            this.tableLayoutPanel11.Controls.Add(this.panel88, 0, 0);
-            this.tableLayoutPanel11.Location = new System.Drawing.Point(12, 17);
-            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
-            this.tableLayoutPanel11.RowCount = 1;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(1418, 33);
-            this.tableLayoutPanel11.TabIndex = 111;
-            // 
-            // panel88
-            // 
-            this.panel88.BackColor = System.Drawing.Color.LightGreen;
-            this.panel88.Controls.Add(this.label41);
-            this.panel88.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel88.Location = new System.Drawing.Point(4, 4);
-            this.panel88.Name = "panel88";
-            this.panel88.Size = new System.Drawing.Size(218, 25);
-            this.panel88.TabIndex = 0;
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label41.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label41.ForeColor = System.Drawing.Color.Black;
-            this.label41.Location = new System.Drawing.Point(0, 0);
-            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(61, 21);
-            this.label41.TabIndex = 28;
-            this.label41.Text = "Name";
-            // 
-            // panel81
-            // 
-            this.panel81.BackColor = System.Drawing.Color.LightGreen;
-            this.panel81.Controls.Add(this.label9);
-            this.panel81.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel81.Location = new System.Drawing.Point(710, 4);
-            this.panel81.Name = "panel81";
-            this.panel81.Size = new System.Drawing.Size(235, 25);
-            this.panel81.TabIndex = 112;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label9.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.Black;
-            this.label9.Location = new System.Drawing.Point(0, 0);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(109, 21);
-            this.label9.TabIndex = 28;
-            this.label9.Text = "Relationship";
-            // 
-            // tableLayoutPanel12
-            // 
-            this.tableLayoutPanel12.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel12.ColumnCount = 4;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.87862F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.01553F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.07833F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.95695F));
-            this.tableLayoutPanel12.Controls.Add(this.panel89, 1, 0);
-            this.tableLayoutPanel12.Controls.Add(this.panel87, 3, 0);
-            this.tableLayoutPanel12.Controls.Add(this.panel82, 2, 0);
-            this.tableLayoutPanel12.Controls.Add(this.panel83, 0, 0);
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(12, 52);
-            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-            this.tableLayoutPanel12.RowCount = 1;
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(1418, 33);
-            this.tableLayoutPanel12.TabIndex = 112;
-            // 
-            // panel82
-            // 
-            this.panel82.BackColor = System.Drawing.Color.LightGreen;
-            this.panel82.Controls.Add(this.label34);
-            this.panel82.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel82.Location = new System.Drawing.Point(710, 4);
-            this.panel82.Name = "panel82";
-            this.panel82.Size = new System.Drawing.Size(235, 25);
-            this.panel82.TabIndex = 112;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label34.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.ForeColor = System.Drawing.Color.Black;
-            this.label34.Location = new System.Drawing.Point(0, 0);
-            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(97, 21);
-            this.label34.TabIndex = 28;
-            this.label34.Text = "Telephone";
-            // 
-            // panel83
-            // 
-            this.panel83.BackColor = System.Drawing.Color.LightGreen;
-            this.panel83.Controls.Add(this.label35);
-            this.panel83.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel83.Location = new System.Drawing.Point(4, 4);
-            this.panel83.Name = "panel83";
-            this.panel83.Size = new System.Drawing.Size(218, 25);
-            this.panel83.TabIndex = 0;
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label35.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label35.ForeColor = System.Drawing.Color.Black;
-            this.label35.Location = new System.Drawing.Point(0, 0);
-            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(96, 21);
-            this.label35.TabIndex = 28;
-            this.label35.Text = "Mobile No";
-            // 
-            // tableLayoutPanel13
-            // 
-            this.tableLayoutPanel13.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel13.ColumnCount = 2;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.87862F));
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 84.12138F));
-            this.tableLayoutPanel13.Controls.Add(this.panel90, 1, 0);
-            this.tableLayoutPanel13.Controls.Add(this.panel85, 0, 0);
-            this.tableLayoutPanel13.Location = new System.Drawing.Point(12, 91);
-            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-            this.tableLayoutPanel13.RowCount = 1;
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(1418, 66);
-            this.tableLayoutPanel13.TabIndex = 113;
-            // 
-            // panel85
-            // 
-            this.panel85.BackColor = System.Drawing.Color.LightGreen;
-            this.panel85.Controls.Add(this.label40);
-            this.panel85.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel85.Location = new System.Drawing.Point(4, 4);
-            this.panel85.Name = "panel85";
-            this.panel85.Size = new System.Drawing.Size(218, 58);
-            this.panel85.TabIndex = 0;
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label40.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.ForeColor = System.Drawing.Color.Black;
-            this.label40.Location = new System.Drawing.Point(0, 0);
-            this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(79, 21);
-            this.label40.TabIndex = 28;
-            this.label40.Text = "Remarks";
-            // 
-            // panel84
-            // 
-            this.panel84.BackColor = System.Drawing.Color.White;
-            this.panel84.Controls.Add(this.txtContactName);
-            this.panel84.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel84.Location = new System.Drawing.Point(229, 4);
-            this.panel84.Name = "panel84";
-            this.panel84.Size = new System.Drawing.Size(474, 25);
-            this.panel84.TabIndex = 30;
-            // 
-            // txtContactName
-            // 
-            this.txtContactName.AutoSize = true;
-            this.txtContactName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContactName.ForeColor = System.Drawing.Color.Black;
-            this.txtContactName.Location = new System.Drawing.Point(0, 0);
-            this.txtContactName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtContactName.Name = "txtContactName";
-            this.txtContactName.Size = new System.Drawing.Size(61, 21);
-            this.txtContactName.TabIndex = 28;
-            this.txtContactName.Text = "Name";
-            // 
-            // panel86
-            // 
-            this.panel86.BackColor = System.Drawing.Color.White;
-            this.panel86.Controls.Add(this.txtContactRelationShip);
-            this.panel86.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel86.Location = new System.Drawing.Point(952, 4);
-            this.panel86.Name = "panel86";
-            this.panel86.Size = new System.Drawing.Size(462, 25);
-            this.panel86.TabIndex = 30;
-            // 
-            // txtContactRelationShip
-            // 
-            this.txtContactRelationShip.AutoSize = true;
-            this.txtContactRelationShip.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactRelationShip.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContactRelationShip.ForeColor = System.Drawing.Color.Black;
-            this.txtContactRelationShip.Location = new System.Drawing.Point(0, 0);
-            this.txtContactRelationShip.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtContactRelationShip.Name = "txtContactRelationShip";
-            this.txtContactRelationShip.Size = new System.Drawing.Size(109, 21);
-            this.txtContactRelationShip.TabIndex = 28;
-            this.txtContactRelationShip.Text = "Relationship";
-            // 
-            // panel87
-            // 
-            this.panel87.BackColor = System.Drawing.Color.White;
-            this.panel87.Controls.Add(this.txtContactTelephone);
-            this.panel87.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel87.Location = new System.Drawing.Point(952, 4);
-            this.panel87.Name = "panel87";
-            this.panel87.Size = new System.Drawing.Size(462, 25);
-            this.panel87.TabIndex = 30;
-            // 
-            // txtContactTelephone
-            // 
-            this.txtContactTelephone.AutoSize = true;
-            this.txtContactTelephone.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactTelephone.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContactTelephone.ForeColor = System.Drawing.Color.Black;
-            this.txtContactTelephone.Location = new System.Drawing.Point(0, 0);
-            this.txtContactTelephone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtContactTelephone.Name = "txtContactTelephone";
-            this.txtContactTelephone.Size = new System.Drawing.Size(97, 21);
-            this.txtContactTelephone.TabIndex = 28;
-            this.txtContactTelephone.Text = "Telephone";
-            // 
-            // panel89
-            // 
-            this.panel89.BackColor = System.Drawing.Color.White;
-            this.panel89.Controls.Add(this.txtContactMobileNo);
-            this.panel89.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel89.Location = new System.Drawing.Point(229, 4);
-            this.panel89.Name = "panel89";
-            this.panel89.Size = new System.Drawing.Size(474, 25);
-            this.panel89.TabIndex = 30;
-            // 
-            // txtContactMobileNo
-            // 
-            this.txtContactMobileNo.AutoSize = true;
-            this.txtContactMobileNo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactMobileNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContactMobileNo.ForeColor = System.Drawing.Color.Black;
-            this.txtContactMobileNo.Location = new System.Drawing.Point(0, 0);
-            this.txtContactMobileNo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtContactMobileNo.Name = "txtContactMobileNo";
-            this.txtContactMobileNo.Size = new System.Drawing.Size(96, 21);
-            this.txtContactMobileNo.TabIndex = 28;
-            this.txtContactMobileNo.Text = "Mobile No";
-            // 
-            // panel90
-            // 
-            this.panel90.BackColor = System.Drawing.Color.White;
-            this.panel90.Controls.Add(this.txtContactRemarks);
-            this.panel90.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel90.Location = new System.Drawing.Point(229, 4);
-            this.panel90.Name = "panel90";
-            this.panel90.Size = new System.Drawing.Size(1185, 58);
-            this.panel90.TabIndex = 30;
-            // 
-            // txtContactRemarks
-            // 
-            this.txtContactRemarks.AutoSize = true;
-            this.txtContactRemarks.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactRemarks.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContactRemarks.ForeColor = System.Drawing.Color.Black;
-            this.txtContactRemarks.Location = new System.Drawing.Point(0, 0);
-            this.txtContactRemarks.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtContactRemarks.Name = "txtContactRemarks";
-            this.txtContactRemarks.Size = new System.Drawing.Size(79, 21);
-            this.txtContactRemarks.TabIndex = 28;
-            this.txtContactRemarks.Text = "Remarks";
             // 
             // QueryMemberProfile
             // 
@@ -2588,6 +2588,29 @@
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            this.tableLayoutPanel13.ResumeLayout(false);
+            this.panel90.ResumeLayout(false);
+            this.panel90.PerformLayout();
+            this.panel85.ResumeLayout(false);
+            this.panel85.PerformLayout();
+            this.tableLayoutPanel12.ResumeLayout(false);
+            this.panel89.ResumeLayout(false);
+            this.panel89.PerformLayout();
+            this.panel87.ResumeLayout(false);
+            this.panel87.PerformLayout();
+            this.panel82.ResumeLayout(false);
+            this.panel82.PerformLayout();
+            this.panel83.ResumeLayout(false);
+            this.panel83.PerformLayout();
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.panel86.ResumeLayout(false);
+            this.panel86.PerformLayout();
+            this.panel84.ResumeLayout(false);
+            this.panel84.PerformLayout();
+            this.panel81.ResumeLayout(false);
+            this.panel81.PerformLayout();
+            this.panel88.ResumeLayout(false);
+            this.panel88.PerformLayout();
             this.panel78.ResumeLayout(false);
             this.panel78.PerformLayout();
             this.panel72.ResumeLayout(false);
@@ -2601,29 +2624,6 @@
             this.panel65.PerformLayout();
             this.panel60.ResumeLayout(false);
             this.panel60.PerformLayout();
-            this.tableLayoutPanel11.ResumeLayout(false);
-            this.panel88.ResumeLayout(false);
-            this.panel88.PerformLayout();
-            this.panel81.ResumeLayout(false);
-            this.panel81.PerformLayout();
-            this.tableLayoutPanel12.ResumeLayout(false);
-            this.panel82.ResumeLayout(false);
-            this.panel82.PerformLayout();
-            this.panel83.ResumeLayout(false);
-            this.panel83.PerformLayout();
-            this.tableLayoutPanel13.ResumeLayout(false);
-            this.panel85.ResumeLayout(false);
-            this.panel85.PerformLayout();
-            this.panel84.ResumeLayout(false);
-            this.panel84.PerformLayout();
-            this.panel86.ResumeLayout(false);
-            this.panel86.PerformLayout();
-            this.panel87.ResumeLayout(false);
-            this.panel87.PerformLayout();
-            this.panel89.ResumeLayout(false);
-            this.panel89.PerformLayout();
-            this.panel90.ResumeLayout(false);
-            this.panel90.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
