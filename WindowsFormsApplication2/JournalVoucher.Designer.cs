@@ -354,6 +354,7 @@
             this.btnSearchLoan.Text = "SEARCH";
             this.btnSearchLoan.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSearchLoan.UseVisualStyleBackColor = true;
+            this.btnSearchLoan.Click += new System.EventHandler(this.btnSearchLoan_Click);
             // 
             // btnSearchMember
             // 

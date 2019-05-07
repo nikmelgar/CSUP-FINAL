@@ -68,11 +68,13 @@ namespace WindowsFormsApplication2.PDCFolder
 
                     pdc.txtLoanNumber.Text = dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString();
                     pdc.txtLoanType.Text = dataGridView1.SelectedRows[0].Cells["Loan_Type"].Value.ToString();
+                    pdc.txtGross.Text = Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Loan_Amount"].Value.ToString()).ToString("#,0.00");
                 }
             }
 
             pdc.txtLoanNumber.Text = dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString();
             pdc.txtLoanType.Text = dataGridView1.SelectedRows[0].Cells["Loan_Type"].Value.ToString();
+            pdc.txtGross.Text = Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Loan_Amount"].Value.ToString()).ToString("#,0.00");
             this.Close();
         }
     }

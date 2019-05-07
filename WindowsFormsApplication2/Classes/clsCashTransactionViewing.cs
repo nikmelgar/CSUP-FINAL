@@ -23,7 +23,7 @@ namespace WindowsFormsApplication2.Classes
 
 
       
-        public void loadSearchCollection(DataGridView dgv,DataGridView dgvAccnt,DataGridView dgvCancelled,Label totalNo,Label totalAccountNo,Label lblTotalCancel,TextBox orNumber,CheckBox chckMember, CheckBox chckNonMember, CheckBox chckPerea, CheckBox chckTeltech, DateTimePicker dtFrom, DateTimePicker dtTo)
+        public void loadSearchCollection(DataGridView dgv,DataGridView dgvAccnt,DataGridView dgvCancelled,Label totalNo,Label totalAccountNo,Label lblTotalCancel,TextBox orNumber,CheckBox chckMember, CheckBox chckNonMember, CheckBox chckPerea, CheckBox chckTeltech, DateTimePicker dtFrom, DateTimePicker dtTo,TextBox keyword, ComboBox searchBy)
         {
             dgv.Rows.Clear();
 
@@ -33,63 +33,92 @@ namespace WindowsFormsApplication2.Classes
 
                 str = ""; //Default value
 
-                if (orNumber.Text != "")
+                /*
+                By Name
+                Prepared By
+                Posted By
+                */
+
+                if (searchBy.Text != "")
                 {
-                    str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Or_No ='" + orNumber.Text + "' and Status <> 'CANCELLED'";
-                    strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Or_No ='" + orNumber.Text + "' and Status = 'CANCELLED'";
-                    strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount,0) + COALESCE(Cash,0)) as TotalAmount from vw_Cash_Receipts_Report WHERE or_no = '" + orNumber.Text + "' group by Account_Code,account_Description order by account_description";
+                    if(searchBy.Text == "By Name")
+                    {
+                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Name like  '%" + keyword.Text + "%' and Status <> 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Name like '%" + keyword.Text + "%' and Status = 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                        strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount,0) + COALESCE(Cash,0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Name like '%" + keyword.Text + "%' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "' group by Account_Code,account_Description order by account_description";
+                    }
+                    else if (searchBy.Text == "Prepared By")
+                    {
+                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Prepared_By like  '%" + keyword.Text + "%' and Status <> 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Prepared_By like '%" + keyword.Text + "%' and Status = 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                        strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount,0) + COALESCE(Cash,0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Prepared_By like '%" + keyword.Text + "%' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "' group by Account_Code,account_Description order by account_description";
+                    }
+                    else
+                    {
+                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Posted_By like  '%" + keyword.Text + "%' and Status <> 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Posted_By like '%" + keyword.Text + "%' and Status = 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                        strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount,0) + COALESCE(Cash,0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Posted_By like '%" + keyword.Text + "%' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "' group by Account_Code,account_Description order by account_description";
+                    }
                 }
                 else
                 {
-                    //FOR OTHER CRITERIA [MEMBER - NON MEMBER]
-                    if (chckMember.Checked == true && chckNonMember.Checked == false)
+                    if (orNumber.Text != "")
                     {
-                        //FOR MEMBERS ONLY
-                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Payor_Type = 'Member' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status = 'CANCELLED' and Payor_Type = 'Member' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-                        strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount, 0) + COALESCE(Cash, 0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Or_Date between '" + dtFrom.Text + "' and '" + dtTo.Text + "' and Payor_Type ='Member' ";
-                    }
-                    else if (chckMember.Checked == false && chckNonMember.Checked == true)
-                    {
-                        //FOR NON MEMBERS ONLY
-                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Payor_Type = 'Client' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status = 'CANCELLED' and Payor_Type = 'Client' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-                        strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount, 0) + COALESCE(Cash, 0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Or_Date between '" + dtFrom.Text + "' and '" + dtTo.Text + "' and Payor_Type ='Client' ";
+                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Or_No ='" + orNumber.Text + "' and Status <> 'CANCELLED'";
+                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Or_No ='" + orNumber.Text + "' and Status = 'CANCELLED'";
+                        strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount,0) + COALESCE(Cash,0)) as TotalAmount from vw_Cash_Receipts_Report WHERE or_no = '" + orNumber.Text + "' group by Account_Code,account_Description order by account_description";
                     }
                     else
                     {
-                        //FOR BOTH CHECKBOX IF TRUE OR FALSE SAME 
-                        str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-                        strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status = 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
-                        strAccountCode = strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount, 0) + COALESCE(Cash, 0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Or_Date between '" + dtFrom.Text + "' and '" + dtTo.Text + "' ";
-                    }
+                        //FOR OTHER CRITERIA [MEMBER - NON MEMBER]
+                        if (chckMember.Checked == true && chckNonMember.Checked == false)
+                        {
+                            //FOR MEMBERS ONLY
+                            str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Payor_Type = 'Member' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                            strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status = 'CANCELLED' and Payor_Type = 'Member' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                            strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount, 0) + COALESCE(Cash, 0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Or_Date between '" + dtFrom.Text + "' and '" + dtTo.Text + "' and Payor_Type ='Member' ";
+                        }
+                        else if (chckMember.Checked == false && chckNonMember.Checked == true)
+                        {
+                            //FOR NON MEMBERS ONLY
+                            str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Payor_Type = 'Client' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                            strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status = 'CANCELLED' and Payor_Type = 'Client' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                            strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount, 0) + COALESCE(Cash, 0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Or_Date between '" + dtFrom.Text + "' and '" + dtTo.Text + "' and Payor_Type ='Client' ";
+                        }
+                        else
+                        {
+                            //FOR BOTH CHECKBOX IF TRUE OR FALSE SAME 
+                            str = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status <> 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                            strCancelled = "SELECT * FROM vw_Cash_Receipts_Report WHERE Status = 'CANCELLED' and Or_Date BETWEEN '" + dtFrom.Text + "' and '" + dtTo.Text + "'";
+                            strAccountCode = strAccountCode = "select account_code,account_Description,sum(COALESCE(Amount, 0) + COALESCE(Cash, 0)) as TotalAmount from vw_Cash_Receipts_Report WHERE Or_Date between '" + dtFrom.Text + "' and '" + dtTo.Text + "' ";
+                        }
 
 
-                    //FOR OTHER CRITERIA [PEREA - TELTECH] LOCATION
-                    if (chckPerea.Checked == true && chckTeltech.Checked == false)
-                    {
-                        //FOR PEREA LOCATION
-                        str = str + " and Location = 'PEREA'";
-                        strCancelled = strCancelled + " and Location = 'PEREA'";
-                        strAccountCode = strAccountCode + " and Location = 'PEREA' group by Account_Code,account_Description order by account_description";
-                    }
-                    else if (chckPerea.Checked == false && chckTeltech.Checked == true)
-                    {
-                        //FOR TELTECH LOCATION
-                        str = str + " and Location = 'TELTECH'";
-                        strCancelled = strCancelled + " and Location = 'TELTECH'";
-                        strAccountCode = strAccountCode + " and Location = 'TELTECH' group by Account_Code,account_Description order by account_description";
-                    }
-                    else
-                    {
-                        //FOR BOTH CHECKBOX IF TRUE OR FALSE
-                        strAccountCode = strAccountCode + " group by Account_Code,account_Description order by account_description";
-                    }
+                        //FOR OTHER CRITERIA [PEREA - TELTECH] LOCATION
+                        if (chckPerea.Checked == true && chckTeltech.Checked == false)
+                        {
+                            //FOR PEREA LOCATION
+                            str = str + " and Location = 'PEREA'";
+                            strCancelled = strCancelled + " and Location = 'PEREA'";
+                            strAccountCode = strAccountCode + " and Location = 'PEREA' group by Account_Code,account_Description order by account_description";
+                        }
+                        else if (chckPerea.Checked == false && chckTeltech.Checked == true)
+                        {
+                            //FOR TELTECH LOCATION
+                            str = str + " and Location = 'TELTECH'";
+                            strCancelled = strCancelled + " and Location = 'TELTECH'";
+                            strAccountCode = strAccountCode + " and Location = 'TELTECH' group by Account_Code,account_Description order by account_description";
+                        }
+                        else
+                        {
+                            //FOR BOTH CHECKBOX IF TRUE OR FALSE
+                            strAccountCode = strAccountCode + " group by Account_Code,account_Description order by account_description";
+                        }
 
 
+                    }
                 }
-
-
+                
                 adapter = new SqlDataAdapter(str, con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
@@ -115,6 +144,11 @@ namespace WindowsFormsApplication2.Classes
                     if (dtCancelled.Rows.Count == 0)
                     {
                         Alert.show("No Records Found.", Alert.AlertType.error);
+                        dgvAccnt.DataSource = "";
+                        dgvCancelled.DataSource = "";
+                        lblTotalCancel.Text = "0";
+                        totalNo.Text = "0";
+                        totalAccountNo.Text = "0";
                         return;
                     }
                 }
@@ -156,38 +190,39 @@ namespace WindowsFormsApplication2.Classes
                     SqlDataAdapter adapterAccount = new SqlDataAdapter(cmdAccount);
                     DataTable dtAccount = new DataTable();
                     adapterAccount.Fill(dtAccount);
+                    
+                        dgvAccnt.DataSource = dtAccount;
 
-                    dgvAccnt.DataSource = dtAccount;
+                        dgvAccnt.Columns["account_code"].Visible = true;
+                        dgvAccnt.Columns["account_code"].HeaderText = "Account Code";
+                        dgvAccnt.Columns["account_code"].FillWeight = 50;
 
-                    dgvAccnt.Columns["account_code"].Visible = true;
-                    dgvAccnt.Columns["account_code"].HeaderText = "Account Code";
-                    dgvAccnt.Columns["account_code"].FillWeight = 50;
+                        dgvAccnt.Columns["Account_Description"].Visible = true;
+                        dgvAccnt.Columns["Account_Description"].HeaderText = "Account Description";
+                        dgvAccnt.Columns["Account_Description"].FillWeight = 150;
 
-                    dgvAccnt.Columns["Account_Description"].Visible = true;
-                    dgvAccnt.Columns["Account_Description"].HeaderText = "Account Description";
-                    dgvAccnt.Columns["Account_Description"].FillWeight = 150;
+                        dgvAccnt.Columns["TotalAmount"].Visible = true;
+                        dgvAccnt.Columns["TotalAmount"].HeaderText = "Total Amount";
+                        dgvAccnt.Columns["TotalAmount"].FillWeight = 150;
+                        dgvAccnt.Columns["TotalAmount"].DefaultCellStyle.Format = "#,0.00";
 
-                    dgvAccnt.Columns["TotalAmount"].Visible = true;
-                    dgvAccnt.Columns["TotalAmount"].HeaderText = "Total Amount";
-                    dgvAccnt.Columns["TotalAmount"].FillWeight = 150;
-                    dgvAccnt.Columns["TotalAmount"].DefaultCellStyle.Format = "#,0.00";
+                        //TOTAL AMOUNT
+                        decimal sumTotal = 0;
 
-                    //TOTAL AMOUNT
-                    decimal sumTotal = 0;
-
-                    if (dgvAccnt.Rows.Count > 0)
-                    {
-
-                        for (int i = 0; i < dgvAccnt.Rows.Count; ++i)
+                        if (dgvAccnt.Rows.Count > 0)
                         {
-                            sumTotal += Convert.ToDecimal(dgvAccnt.Rows[i].Cells["TotalAmount"].Value);
+
+                            for (int i = 0; i < dgvAccnt.Rows.Count; ++i)
+                            {
+                                sumTotal += Convert.ToDecimal(dgvAccnt.Rows[i].Cells["TotalAmount"].Value);
+                            }
                         }
-                    }
 
-                    totalAccountNo.Text = sumTotal.ToString("#,0.00");
+                        totalAccountNo.Text = sumTotal.ToString("#,0.00");
+                    
+
+                   
                 }
-
-
 
                 dgvCancelled.DataSource = dtCancelled;
                 lblTotalCancel.Text = dtCancelled.Rows.Count.ToString();

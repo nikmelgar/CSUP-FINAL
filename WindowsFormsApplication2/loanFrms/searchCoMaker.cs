@@ -84,7 +84,7 @@ namespace WindowsFormsApplication2.loanFrms
             //Disable If Company is Non payroll
             if (clsLookUp.returnCompanyCode(loanDataEntry.txtCompany.Text) != "COMP010")
             {
-                //NON-PAYROLL
+                //NOT NON-PAYROLL
                 //Validation For Co Makers
                 if (clsLoanDataEntry.isShortTerm(loanDataEntry.cmbLoanType.SelectedValue.ToString()) == true)
                 {
@@ -98,25 +98,33 @@ namespace WindowsFormsApplication2.loanFrms
                 else
                 {
                     //Long Term
-                    string str = loanDataEntry.txtLoanAmount.Text;
-                    str = str.Replace(",", "");
-                    decimal answer;
-                    double ttalCO = Convert.ToDouble(loanDataEntry.txtLoanAmount.Text) / 500000.00;
-                    answer = Convert.ToDecimal(ttalCO);
-
-                    if ((answer % 1) > 0)
+                    if(loanDataEntry.txtLoanAmount.Text != "" && loanDataEntry.txtTermsInMonth.Text != "")
                     {
-                        //is decimal
-                        answer = clsLoanDataEntry.GetDot(Convert.ToString(ttalCO)) * 6;
+                        string str = loanDataEntry.txtLoanAmount.Text;
+                        str = str.Replace(",", "");
+                        decimal answer;
+                        double ttalCO = Convert.ToDouble(loanDataEntry.txtLoanAmount.Text) / 500000.00;
+                        answer = Convert.ToDecimal(ttalCO);
+
+                        if ((answer % 1) > 0)
+                        {
+                            //is decimal
+                            answer = clsLoanDataEntry.GetDot(Convert.ToString(ttalCO)) * 6;
+                        }
+                        else
+                        {
+                            answer = answer * 6;
+                        }
+
+                        if (loanDataEntry.dataGridView1.Rows.Count >= answer)
+                        {
+                            Alert.show("Already exceeds the No. of required Co-Makers.", Alert.AlertType.error);
+                            return;
+                        }
                     }
                     else
                     {
-                        answer = answer * 6;
-                    }
-                    
-                    if (loanDataEntry.dataGridView1.Rows.Count >= answer)
-                    {
-                        Alert.show("Already exceeds the No. of required Co-Makers.", Alert.AlertType.error);
+                        Alert.show("Please fill up loan amount and loan terms in mos.", Alert.AlertType.error);
                         return;
                     }
                 }

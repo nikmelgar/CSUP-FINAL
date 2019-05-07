@@ -14,8 +14,6 @@ namespace WindowsFormsApplication2.ReminderPDC
         public reminder()
         {
             InitializeComponent();
-
-            
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -41,6 +39,7 @@ namespace WindowsFormsApplication2.ReminderPDC
             frm.timer1.Interval = 1000;
             frm.timer1.Start();
             this.Close();
+
         }
     }
 }

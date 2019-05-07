@@ -54,6 +54,52 @@ namespace WindowsFormsApplication2.Classes
 
               
         }
+
+        public string dateHired(string loan_no)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT Date_Hired FROM Membership WHERE userid = '"+ userid(loan_no).ToString() +"'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDateTime(dt.Rows[0].ItemArray[0].ToString()).ToShortDateString();
+
+            }
+        }
+
+        public string noOfyearsService(string loan_no)
+        {
+            DateTime dt = Convert.ToDateTime(dateHired(loan_no));
+
+            int cntService = Convert.ToInt32(DateTime.Today.Year) - Convert.ToInt32(dt.Year.ToString());
+
+            return cntService.ToString();
+        }
+
+        public string salary(string loan_no)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT Salary FROM Membership WHERE userid = '"+ userid(loan_no).ToString() +"'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                try
+                {
+                    return Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString()).ToString("#,0.00");
+                }
+                catch
+                {
+                    return "";
+                }
+                
+            }
+        }
         public string empid(string loan_no)
         {
             using (SqlConnection con = new SqlConnection(global.connectString()))
@@ -138,7 +184,14 @@ namespace WindowsFormsApplication2.Classes
                 DataTable dt2 = new DataTable();
                 adapter2.Fill(dt2);
 
-                return Convert.ToDateTime(dt2.Rows[0].ItemArray[0].ToString()).ToString("MM/dd/yyyy");
+                try
+                {
+                    return Convert.ToDateTime(dt2.Rows[0].ItemArray[0].ToString()).ToString("MM/dd/yyyy");
+                }
+                catch
+                {
+                    return "";
+                }
             }
             
         }

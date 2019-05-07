@@ -30,7 +30,7 @@ namespace WindowsFormsApplication2.Classes
                     dtNowFrom = new DateTime(yr, mos, 09);
                     dtNowTo = new DateTime(yr, mos, 15);
                 }
-                else if (day <= 31 && day > 24)
+                else if (day <= 31 && day > 23)
                 {
                     
                     dtNowFrom = new DateTime(yr, mos, 25);
@@ -64,7 +64,7 @@ namespace WindowsFormsApplication2.Classes
                 }
             }
         }
-
+        //FOR PDC DUE TRUE
         public void getCntPDCdueToday(Button btnNotif,Label lblSpiel,Button btnReminder)
         {
             using (SqlConnection con = new SqlConnection(global.connectString()))
@@ -134,7 +134,7 @@ namespace WindowsFormsApplication2.Classes
                         }
                         btnReminder.Visible = true;
                     }
-                    else if(day < DateTime.DaysInMonth(yr, mos) && day > 24)
+                    else if(day < DateTime.DaysInMonth(yr, mos) && day > 23)
                     {
                         if (dt.Rows.Count == 1)
                         {

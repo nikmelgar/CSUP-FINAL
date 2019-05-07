@@ -89,6 +89,10 @@ namespace WindowsFormsApplication2
             ////conbd.IntegratedSecurity = true;
             //conbd.UserID = "sa";
             //conbd.Password = "SYSADMIN";
+            datasource = conbd.DataSource;
+            initialCatalog = conbd.InitialCatalog;
+            username = conbd.UserID;
+            pass = conbd.Password;
 
             return conbd.ToString();
         }

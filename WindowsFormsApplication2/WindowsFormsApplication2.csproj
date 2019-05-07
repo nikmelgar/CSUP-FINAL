@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bunifu_UI_v1.5.3">
+      <HintPath>..\..\SchoolSystem\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Bunifu_UI_v1.5.3.dll</HintPath>
+    </Reference>
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
     <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
@@ -44,9 +47,12 @@
     <Reference Include="MetroFramework">
       <HintPath>..\..\MetroFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
@@ -248,6 +254,13 @@
     <Compile Include="loanFrms\loanComputationDetails.Designer.cs">
       <DependentUpon>loanComputationDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="LoanLookUpProcess\clsLoanLookUpMember.cs" />
+    <Compile Include="LoanLookUpProcess\LoanLookUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoanLookUpProcess\LoanLookUp.Designer.cs">
+      <DependentUpon>LoanLookUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="loanReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -374,6 +387,30 @@
     </Compile>
     <Compile Include="PDCFolder\loanPerMember.Designer.cs">
       <DependentUpon>loanPerMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDCFolder\PDCLoanListing.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PDCLoanListing.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PDCFolder\PDCManagementCR.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PDCManagementCR.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PDCFolder\PDCReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCFolder\PDCReport.Designer.cs">
+      <DependentUpon>PDCReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDCLoanListing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCLoanListing.Designer.cs">
+      <DependentUpon>PDCLoanListing.cs</DependentUpon>
     </Compile>
     <Compile Include="PDCManagement.cs">
       <SubType>Form</SubType>
@@ -770,6 +807,9 @@
     <EmbeddedResource Include="loanFrms\searchCoMaker.resx">
       <DependentUpon>searchCoMaker.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LoanLookUpProcess\LoanLookUp.resx">
+      <DependentUpon>LoanLookUp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="loanReport.resx">
       <DependentUpon>loanReport.cs</DependentUpon>
     </EmbeddedResource>
@@ -828,6 +868,20 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PDCFolder\loanPerMember.resx">
       <DependentUpon>loanPerMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCFolder\PDCLoanListing.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PDCLoanListing.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCFolder\PDCManagementCR.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PDCManagementCR.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCFolder\PDCReport.resx">
+      <DependentUpon>PDCReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCLoanListing.resx">
+      <DependentUpon>PDCLoanListing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PDCManagement.resx">
       <DependentUpon>PDCManagement.cs</DependentUpon>
@@ -1041,11 +1095,13 @@
     <Content Include="Images\icons8-person-40.png" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

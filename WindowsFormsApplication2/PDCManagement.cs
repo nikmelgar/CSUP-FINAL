@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using CrystalDecisions.Windows.Forms;
 
 namespace WindowsFormsApplication2
 {
@@ -16,6 +18,7 @@ namespace WindowsFormsApplication2
         public PDCManagement()
         {
             InitializeComponent();
+            str = "";
         }
 
         private bool m_firstClick = false;
@@ -27,6 +30,8 @@ namespace WindowsFormsApplication2
         Classes.clsPDCManagement clsPDCManagement = new Classes.clsPDCManagement();
         Classes.clsLoan clsLoan = new Classes.clsLoan();
 
+        public string str; //FOR REPORT AND SEARCH PURPOSE
+        
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -79,7 +84,7 @@ namespace WindowsFormsApplication2
             //Search Panel
             clsMembershipEntry.loadComboBox(cmbSearchBank, "Bank", "Bank_Name", "Bank_Code");
             clsLoan.loadComboBox(cmbLoanType);
-
+            
             cmbLoanType.SelectedIndex = -1;
             cmbSearchBank.SelectedIndex = -1;
             cmbBank.SelectedIndex = -1;
@@ -127,36 +132,88 @@ namespace WindowsFormsApplication2
 
         private void btnAddCheck_Click(object sender, EventArgs e)
         {
-            if(txtEmployeeID.Text == "")
+            if (txtEmployeeID.Text == "")
             {
                 Alert.show("Please select member first.", Alert.AlertType.error);
                 return;
             }
 
-            if(txtLoanType.Text == "")
+            if (radioLoan.Checked == true)
             {
-                Alert.show("Please select loan first.", Alert.AlertType.error);
-                return;
+                if (txtLoanType.Text == "")
+                {
+                    Alert.show("Please select loan first.", Alert.AlertType.error);
+                    return;
+                }
             }
 
-            if(cmbBank.Text == "")
+            if (cmbBank.Text == "")
             {
                 Alert.show("Please select bank first.", Alert.AlertType.error);
                 return;
             }
 
-            if(txtChequeNo.Text == "")
+            if (txtChequeNo.Text == "")
             {
                 Alert.show("Cheque number is required.", Alert.AlertType.error);
                 return;
             }
 
-            if(txtAmount.Text == "")
+            if (txtAmount.Text == "")
             {
                 Alert.show("Amount is required.", Alert.AlertType.error);
                 return;
             }
 
+            string ssl;
+
+            //Check for validation for the same cheque no.
+            if (clsPDCManagement.CheckChequeNoIfUsed(txtChequeNo.Text) == true)
+            {
+                //cheque no already used, check if the category is the same.
+                //if category is the same end else continue
+                if (radioLoan.Checked == true)
+                {
+                    if (clsPDCManagement.checkCategory(radioLoan.Text, txtChequeNo.Text, txtLoanType.Text) == true)
+                    {
+                        //Error
+                        ssl = "Cheque number cannot be used for " + System.Environment.NewLine + "2 or more loans of the same type.";
+                        Alert.show(ssl, Alert.AlertType.error);
+                        return;
+                    }
+                }
+                else if (radioSavings.Checked == true)
+                {
+                    if (clsPDCManagement.checkCategory(radioSavings.Text, txtChequeNo.Text, "") == true)
+                    {
+                        //Error
+                        ssl = "Cheque number cannot be used for " + System.Environment.NewLine + "same category (SD).";
+                        Alert.show(ssl, Alert.AlertType.error);
+                        return;
+                    }
+                }
+                else
+                {
+                    if (clsPDCManagement.checkCategory(radioShareCapital.Text, txtChequeNo.Text, "") == true)
+                    {
+                        //Error
+                        ssl = "Cheque number cannot be used for " + System.Environment.NewLine + "same category (SC).";
+                        Alert.show(ssl, Alert.AlertType.error);
+                        return;
+                    }
+                }
+            }
+
+
+            if (clsPDCManagement.CheckChequeNoIfUsedByOthers(txtChequeNo.Text) == true)
+            {
+                string msg = Environment.NewLine + "Cheque number already used, " + Environment.NewLine + "Do you want to proceed?";
+                DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
 
             using (SqlConnection con = new SqlConnection(global.connectString()))
             {
@@ -169,12 +226,27 @@ namespace WindowsFormsApplication2
                 cmd.Parameters.AddWithValue("@userid", Classes.clsPDCManagement.userid);
                 cmd.Parameters.AddWithValue("@EmployeeID", txtEmployeeID.Text);
                 cmd.Parameters.AddWithValue("@EmpName", txtName.Text);
-                cmd.Parameters.AddWithValue("@LoanType", txtLoanType.Text);
-                cmd.Parameters.AddWithValue("@LoanNumber", txtLoanNumber.Text);
+
+                if (radioLoan.Checked == true)
+                {
+                    cmd.Parameters.AddWithValue("@LoanType", txtLoanType.Text);
+                    cmd.Parameters.AddWithValue("@LoanNumber", txtLoanNumber.Text);
+                }
+                else if (radioSavings.Checked == true)
+                {
+                    cmd.Parameters.AddWithValue("@LoanType", "SD");
+                    cmd.Parameters.AddWithValue("@LoanNumber", txtLoanNumber.Text);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@LoanType", "SC");
+                    cmd.Parameters.AddWithValue("@LoanNumber", txtLoanNumber.Text);
+                }
+
                 cmd.Parameters.AddWithValue("@Bank", cmbBank.SelectedValue);
                 cmd.Parameters.AddWithValue("@ChequeDate", dtChequeDate.Text);
                 cmd.Parameters.AddWithValue("@ChequeNo", txtChequeNo.Text);
-                cmd.Parameters.AddWithValue("@Amount", txtAmount.Text.Replace(",",""));
+                cmd.Parameters.AddWithValue("@Amount", txtAmount.Text.Replace(",", ""));
                 cmd.Parameters.AddWithValue("@DatePrepared", dtDatePrepared.Text);
                 cmd.Parameters.AddWithValue("@PreparedBy", Classes.clsUser.Username);
                 cmd.ExecuteNonQuery();
@@ -188,7 +260,6 @@ namespace WindowsFormsApplication2
                 //Refresh Datagridview
                 clsPDCManagement.loadPDC(dataGridView1);
             }
-
         }
 
         private void txtAmount_KeyPress(object sender, KeyPressEventArgs e)
@@ -229,6 +300,7 @@ namespace WindowsFormsApplication2
             dtChequeDateTO.Checked = false;
             txtKeyword.Text = "";
             cmbSearchBank.SelectedIndex = -1;
+            str = "";
             
         }
 
@@ -245,11 +317,35 @@ namespace WindowsFormsApplication2
             {
                 return;
             }
-
+            Classes.clsPDCManagement.id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id"].Value.ToString());
             Classes.clsPDCManagement.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userid"].Value.ToString());
             txtEmployeeID.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
             txtName.Text = dataGridView1.SelectedRows[0].Cells["EmpName"].Value.ToString();
-            txtLoanType.Text = dataGridView1.SelectedRows[0].Cells["LoanType"].Value.ToString();
+
+            //for category
+
+            if(dataGridView1.SelectedRows[0].Cells["LoanType"].Value.ToString() == "SD")
+            {
+                //Savings
+                radioSavings.Checked = true;
+                txtLoanType.Text = "";
+                txtLoanNumber.Text = "";
+            }
+            else if(dataGridView1.SelectedRows[0].Cells["LoanType"].Value.ToString() == "SC")
+            {
+                //Share Capital
+                radioShareCapital.Checked = true;
+                txtLoanType.Text = "";
+                txtLoanNumber.Text = "";
+            }
+            else
+            {
+                //Loans
+                radioLoan.Checked = true;
+                txtLoanType.Text = dataGridView1.SelectedRows[0].Cells["LoanType"].Value.ToString();
+            }
+
+            
             txtLoanNumber.Text = dataGridView1.SelectedRows[0].Cells["LoanNumber"].Value.ToString();
             dtDatePrepared.Text = dataGridView1.SelectedRows[0].Cells["DatePrepared"].Value.ToString();
             cmbBank.Text = clsMembership.returnBankName(dataGridView1.SelectedRows[0].Cells["Bank"].Value.ToString());
@@ -269,7 +365,6 @@ namespace WindowsFormsApplication2
             btnSearchPayee.Enabled = false;
             button3.Enabled = false;
             dtDatePrepared.Enabled = false;
-            dtChequeDate.Enabled = false;
 
         }
 
@@ -303,10 +398,7 @@ namespace WindowsFormsApplication2
                     cmd.Connection = con;
                     cmd.CommandText = "sp_UpdatePDC";
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@userid", Classes.clsPDCManagement.userid);
-                    cmd.Parameters.AddWithValue("@DatePrepared", dtDatePrepared.Text);
-                    cmd.Parameters.AddWithValue("@loanType", txtLoanType.Text);
-                    cmd.Parameters.AddWithValue("@LoanNumber", txtLoanNumber.Text);
+                    cmd.Parameters.AddWithValue("@id", Classes.clsPDCManagement.id.ToString());
                     cmd.Parameters.AddWithValue("@Bank", cmbBank.SelectedValue.ToString());
                     cmd.Parameters.AddWithValue("@ChequeDate", dtChequeDate.Text);
                     cmd.Parameters.AddWithValue("@ChequeNo", txtChequeNo.Text);
@@ -347,14 +439,25 @@ namespace WindowsFormsApplication2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string str;
+            str = "";
+
             if(cmbSearchBy.Text == "OR Number")
             {
                 str = "SELECT * FROM vw_PDCManagement WHERE ORNumber = '" + txtKeyword.Text +"'";
             }
             else if(cmbSearchBy.Text == "EmployeeID")
             {
-                str = "SELECT * FROM vw_PDCManagement WHERE EmployeeID = '" + txtKeyword.Text +"'";
+                if(cmbLoanType.Text != "")
+                {
+                    //Search with loan type
+                    str = "SELECT * FROM vw_PDCManagement WHERE EmployeeID = '" + txtKeyword.Text + "' and LoanType like '%"+ cmbLoanType.SelectedValue +"%'";
+                }
+                else
+                {
+                    //Without loan type
+                    str = "SELECT * FROM vw_PDCManagement WHERE EmployeeID = '" + txtKeyword.Text + "'";
+                }
+               
             }
             else if(cmbSearchBy.Text == "Name")
             {
@@ -419,7 +522,7 @@ namespace WindowsFormsApplication2
                         }
                         else
                         {
-                            str = "SELECT TOP 50 * FROM vw_PDCManagement ORDER BY DatePrepared DESC";
+                            str = "SELECT TOP 50 * FROM vw_PDCManagement ";
                         }
                     }
                 }
@@ -428,7 +531,7 @@ namespace WindowsFormsApplication2
             using (SqlConnection con = new SqlConnection(global.connectString()))
             {
                 con.Open();
-
+                str = str + " ORDER BY ChequeDate,EmpName ASC";
                 SqlDataAdapter adapter = new SqlDataAdapter(str, con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
@@ -553,11 +656,7 @@ namespace WindowsFormsApplication2
                                         cmd.Connection = con;
                                         cmd.CommandText = "sp_DeletePDC";
                                         cmd.CommandType = CommandType.StoredProcedure;
-                                        cmd.Parameters.AddWithValue("@userid", row.Cells["userid"].Value.ToString());
-                                        cmd.Parameters.AddWithValue("@DatePrepared", row.Cells["DatePrepared"].Value.ToString());
-                                        cmd.Parameters.AddWithValue("@loanType", row.Cells["loanType"].Value.ToString());
-                                        cmd.Parameters.AddWithValue("@LoanNumber", row.Cells["LoanNumber"].Value.ToString());
-                                        cmd.Parameters.AddWithValue("@ChequeDate", row.Cells["ChequeDate"].Value.ToString());
+                                        cmd.Parameters.AddWithValue("@id", row.Cells["id"].Value.ToString());
                                         cmd.ExecuteNonQuery();
                                     }
 
@@ -583,6 +682,119 @@ namespace WindowsFormsApplication2
                 Alert.show("Please check record you want to delete.", Alert.AlertType.error);
                 return;
             }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+
+            /*
+                Getting the min and max of date for parameter
+            */
+
+            var dateTimes = dataGridView1.Rows.Cast<DataGridViewRow>()
+            //.Select(x => (DateTime) x.Cells["ColumnName"].Value); //if column type datetime
+            //or    
+            .Select(x => Convert.ToDateTime(x.Cells["ChequeDate"].Value));
+
+            var minValue = dateTimes.Min();
+            var maxValue = dateTimes.Max();
+
+            //ATM REPORT
+            CrystalDecisions.Shared.TableLogOnInfo li;
+
+            //Print Purposes
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+                string qry;
+                if (str == "")
+                {
+                    qry = "SELECT TOP 50 * FROM vw_PDCManagement ORDER BY ChequeDate,EmpName ASC";
+                }
+                else
+                {
+                    qry = str;
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(qry, con);
+                
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
+
+                PDCFolder.PDCManagementCR cr = new PDCFolder.PDCManagementCR();
+                PDCFolder.PDCReport rpt = new PDCFolder.PDCReport();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+                adapter.Fill(ds, "vw_PDCManagement");
+                dt = ds.Tables["vw_PDCManagement"];
+                cr.SetDataSource(ds.Tables["vw_PDCManagement"]);
+
+                if(str != "" && dtChequeDateFrom.Checked == true && dtChequeDateTO.Checked == true)
+                {
+                    cr.SetParameterValue("pdcDUe", "PDC Due From " + dtChequeDateFrom.Text + " To " + dtChequeDateTO.Text);
+                }
+                else
+                {
+                    cr.SetParameterValue("pdcDUe", "PDC Due From " + minValue.ToShortDateString() + " To " + maxValue.ToShortDateString());
+                }
+
+                cr.SetParameterValue("printedBy", Classes.clsUser.Username);
+                //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
+                cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
+                
+
+                rpt.crystalReportViewer1.ReportSource = cr;
+                rpt.ShowDialog();
+            }
+        }
+        
+        private void radioLoan_CheckedChanged(object sender, EventArgs e)
+        {
+            if(radioLoan.Checked == true)
+            {
+                button3.Enabled = true;
+            }
+        }
+
+        private void radioShareCapital_CheckedChanged(object sender, EventArgs e)
+        {
+            if(radioShareCapital.Checked == true)
+            {
+                button3.Enabled = false;
+                txtLoanNumber.Text = "";
+                txtLoanType.Text = "";
+            }
+        }
+
+        private void radioSavings_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioSavings.Checked == true)
+            {
+                button3.Enabled = false;
+                txtLoanNumber.Text = "";
+                txtLoanType.Text = "";
+            }
+        }
+
+        private void panelHeader_Click(object sender, EventArgs e)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(PDCManagement))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            PDCManagement frm = new PDCManagement();
+            frm.Show();
+            frm.MdiParent = this;
         }
     }
 }

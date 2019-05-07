@@ -132,7 +132,9 @@ namespace WindowsFormsApplication2.ReportsForms
                 cr.SetParameterValue("sc_date", "10/15/2017");
                 cr.SetParameterValue("sd_date", "10/15/2017");
                 cr.SetParameterValue("@userid", clsPLBI.userid(txtLoanNo.Text));
-
+                cr.SetParameterValue("dateHired", clsPLBI.dateHired(txtLoanNo.Text));
+                cr.SetParameterValue("Salary", clsPLBI.salary(txtLoanNo.Text));
+                cr.SetParameterValue("yearsInService", clsPLBI.noOfyearsService(txtLoanNo.Text));
 
                 crystalReportViewer1.ReportSource = cr;
             }

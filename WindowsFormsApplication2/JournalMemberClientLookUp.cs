@@ -139,14 +139,26 @@ namespace WindowsFormsApplication2
                         //===============================================================================
                         form.Activate();
                         jv = (JournalVoucher)Application.OpenForms["JournalVoucher"];
+                        LoanLookUpProcess.clsLoanLookUpMember.userid = 0; //no record
                         jv.txtMember.Text = dataGridView1.SelectedRows[0].Cells["Client_Code"].Value.ToString();
                         jv.txtName.Text = dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString();
+
+                        //clear loan first
+                        jv.txtLoanNumber.Text = "";
+                        jv.txtLoanType.Text = "";
+
                         this.Close();
                         return;
                     }
                 }
+                LoanLookUpProcess.clsLoanLookUpMember.userid = 0; //no record
                 jv.txtMember.Text = dataGridView1.SelectedRows[0].Cells["Client_Code"].Value.ToString();
                 jv.txtName.Text = dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString();
+
+                //clear loan first
+                jv.txtLoanNumber.Text = "";
+                jv.txtLoanType.Text = "";
+
                 jv.Show();
                 this.Close();
             }
@@ -166,16 +178,30 @@ namespace WindowsFormsApplication2
                         form.Activate();
                         jv = (JournalVoucher)Application.OpenForms["JournalVoucher"];
                         Classes.clsJournalVoucher.userId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+                        //Adding to get the loan of member
+                        LoanLookUpProcess.clsLoanLookUpMember.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
                         jv.txtMember.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
                         jv.txtName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
+
+                        //clear loan first
+                        jv.txtLoanNumber.Text = "";
+                        jv.txtLoanType.Text = "";
+
                         this.Close();
                         return;
                     }
                 }
 
                 Classes.clsJournalVoucher.userId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+                //Adding to get the loan of member
+                LoanLookUpProcess.clsLoanLookUpMember.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
                 jv.txtMember.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
                 jv.txtName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
+
+                //clear loan first
+                jv.txtLoanNumber.Text = "";
+                jv.txtLoanType.Text = "";
+
                 jv.Show();
                 this.Close();
             }

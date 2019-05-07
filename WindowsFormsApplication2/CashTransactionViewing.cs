@@ -87,6 +87,9 @@ namespace WindowsFormsApplication2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            txtKeyword.Enabled = false;
+            txtKeyword.Text = "";
+            cmbSearchBy.SelectedIndex = -1;
             txtORNumber.Text = "";
             chckMember.Checked = false;
             chckNonMember.Checked = false;
@@ -94,16 +97,49 @@ namespace WindowsFormsApplication2
             chckTeltech.Checked = false;
             dtFrom.Value = DateTime.Today;
             dtTo.Value = DateTime.Today;
+            txtORNumber.Enabled = true;
+            chckMember.Enabled = true;
+            chckNonMember.Enabled = true;
+            chckPerea.Enabled = true;
+            chckTeltech.Enabled = true;
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            clsCashTransactionViewing.loadSearchCollection(dataGridView1,dataGridView3, dataGridView2, lblCountTransaction, lblTotalAmountChartAccounts, lblCountCancelledTransaction, txtORNumber, chckMember, chckNonMember, chckPerea, chckTeltech, dtFrom, dtTo);
+            clsCashTransactionViewing.loadSearchCollection(dataGridView1,dataGridView3, dataGridView2, lblCountTransaction, lblTotalAmountChartAccounts, lblCountCancelledTransaction, txtORNumber, chckMember, chckNonMember, chckPerea, chckTeltech, dtFrom, dtTo,txtKeyword,cmbSearchBy);
             //Put Label on Date
             lblDateFrom.Text = dtFrom.Text;
             lblDateTo.Text = dtTo.Text;
         }
 
-        
+        private void cmbSearchBy_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cmbSearchBy.Text != "")
+            {
+                txtKeyword.Enabled = true;
+                txtKeyword.Text = "";
+
+                //Disable other fields
+                txtORNumber.Enabled = false;
+                chckMember.Enabled = false;
+                chckNonMember.Enabled = false;
+                chckPerea.Enabled = false;
+                chckTeltech.Enabled = false;
+                txtORNumber.Text = "";
+            }
+            else
+            {
+                txtORNumber.Text = "";
+                txtKeyword.Enabled = false;
+                txtKeyword.Text = "";
+
+                //Enable 
+                txtORNumber.Enabled = true;
+                chckMember.Enabled = true;
+                chckNonMember.Enabled = true;
+                chckPerea.Enabled = true;
+                chckTeltech.Enabled = true;
+            }
+        }
     }
 }

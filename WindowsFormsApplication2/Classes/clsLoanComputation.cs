@@ -284,7 +284,14 @@ namespace WindowsFormsApplication2.Classes
                 DataTable dt2 = new DataTable();
                 adapter2.Fill(dt2);
 
-                return dt2.Rows[0].ItemArray[0].ToString();
+                try
+                {
+                    return dt2.Rows[0].ItemArray[0].ToString();
+                }
+                catch
+                {
+                    return "";
+                }
             } 
         }
 

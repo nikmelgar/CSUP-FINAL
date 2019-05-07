@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using MetroFramework.Forms;
 
 namespace WindowsFormsApplication2.LoginForm
 {
@@ -33,8 +34,7 @@ namespace WindowsFormsApplication2.LoginForm
         private Point m_firstClickLoc;
         private void Login_Load(object sender, EventArgs e)
         {
-            
-
+            txtUsername.Focus();
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -55,20 +55,6 @@ namespace WindowsFormsApplication2.LoginForm
             else
             {
                 m_firstClick = false;
-            }
-        }
-
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            string msg = Environment.NewLine + "Are you sure you want to close this program?";
-            DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
-            {
-                this.Close();
-            }
-            else
-            {
-                return;
             }
         }
 
@@ -142,12 +128,68 @@ namespace WindowsFormsApplication2.LoginForm
             LoginScript();
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
+            if(label3.Text == "Show password")
+            {
+                label3.Text = "Hide";
+                txtPassword.isPassword = false;
+            }
+            else
+            {
+                label3.Text = "Show password";
+                txtPassword.isPassword = true;
+            }
+        }
+
+        private void txtUsername_Enter(object sender, EventArgs e)
+        {
+            if(txtUsername.Text == "Username")
+            {
+                txtUsername.Text = "";
+            }
+        }
+
+        private void txtUsername_Leave(object sender, EventArgs e)
+        {
+            if(txtUsername.Text == "")
+            {
+                txtUsername.Text = "Username";
+            }
+        }
+
         private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 LoginScript();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void txtPassword_Enter(object sender, EventArgs e)
+        {
+            if(txtPassword.Text == "Password")
+            {
+                txtPassword.Text = "";
+            }
+        }
+
+        private void txtPassword_Leave(object sender, EventArgs e)
+        {
+            if(txtPassword.Text == "")
+            {
+                txtPassword.Text = "Password";
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

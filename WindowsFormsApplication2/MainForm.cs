@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace WindowsFormsApplication2
 {
@@ -18,6 +19,9 @@ namespace WindowsFormsApplication2
         private int counter = 3600;
         private int checkCounter = 5;
         Classes.clsReminder clsReminder = new Classes.clsReminder();
+
+        Global global = new Global();
+
         private void Form1_Load(object sender, EventArgs e)
         {
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
@@ -57,6 +61,7 @@ namespace WindowsFormsApplication2
             panelReportSub.Visible = false;
             panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
 
         }
 
@@ -98,9 +103,10 @@ namespace WindowsFormsApplication2
             panelFileMaintenanceSub.Visible = false;
             panelSavings.Visible = false;
             panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
             panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
         }
 
         private void btnReports_Click(object sender, EventArgs e)
@@ -112,11 +118,12 @@ namespace WindowsFormsApplication2
             panelReportSub.Height = panelMenu.Bottom;
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
+            panelProcessSub.Visible = false;
             panelSavings.Visible = false;
             panelMembership.Visible = false;
             panelMemberSettings.Visible = false;
-            panelProcessSub.Visible = false;
+            panelFileMaintenanceSub.Visible = false;
+            panelPDCManagement.Visible = false;
             panelLoan.Visible = false;
         }
 
@@ -146,6 +153,21 @@ namespace WindowsFormsApplication2
                 {
                     panelMembership.Left = panelMenu.Right;
                 }
+
+                if(panelLoan.Visible ==  true)
+                {
+                    panelLoan.Left = panelMenu.Right;
+                }
+
+                if(panelPDCManagement.Visible == true)
+                {
+                    panelPDCManagement.Left = panelMenu.Right;
+                }
+
+                if(panelReportSub.Visible == true)
+                {
+                    panelReportSub.Left = panelMenu.Right;
+                }
             }
             else
             {
@@ -171,6 +193,21 @@ namespace WindowsFormsApplication2
                 {
                     panelMembership.Left = panelMenu.Right;
                 }
+
+                if (panelLoan.Visible == true)
+                {
+                    panelLoan.Left = panelMenu.Right;
+                }
+
+                if (panelPDCManagement.Visible == true)
+                {
+                    panelPDCManagement.Left = panelMenu.Right;
+                }
+
+                if (panelReportSub.Visible == true)
+                {
+                    panelReportSub.Left = panelMenu.Right;
+                }
             }
         }
 
@@ -183,12 +220,13 @@ namespace WindowsFormsApplication2
             panelMembership.Height = panelMenu.Bottom;
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
             panelProcessSub.Visible = false;
             panelSavings.Visible = false;
-            panelMemberSettings.Visible = false;
+            panelFileMaintenanceSub.Visible = false;
             panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
 
         }
 
@@ -372,12 +410,13 @@ namespace WindowsFormsApplication2
 
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
             panelProcessSub.Visible = false;
+            panelFileMaintenanceSub.Visible = false;
             panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
             panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
 
 
         }
@@ -393,12 +432,13 @@ namespace WindowsFormsApplication2
 
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
             panelProcessSub.Visible = false;
-            panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelReportSub.Visible = false;
             panelSavings.Visible = false;
+            panelMembership.Visible = false;
+            panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
+            panelFileMaintenanceSub.Visible = false;
+            panelPDCManagement.Visible = false;
         }
 
         private void btnReplenishment_Click(object sender, EventArgs e)
@@ -454,13 +494,13 @@ namespace WindowsFormsApplication2
 
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
             panelProcessSub.Visible = false;
             panelSavings.Visible = false;
             panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
             panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
 
             //controls
             foreach (Form form in Application.OpenForms)
@@ -537,6 +577,7 @@ namespace WindowsFormsApplication2
                 panelMemberSettings.Visible = false;
                 panelReportSub.Visible = false;
                 panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
             }
         }
 
@@ -926,13 +967,13 @@ namespace WindowsFormsApplication2
 
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
             panelProcessSub.Visible = false;
             panelSavings.Visible = false;
             panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
             panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
 
             //controls
             foreach (Form form in Application.OpenForms)
@@ -980,13 +1021,13 @@ namespace WindowsFormsApplication2
 
 
             //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
             panelProcessSub.Visible = false;
             panelSavings.Visible = false;
             panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
             panelReportSub.Visible = false;
+            panelMemberSettings.Visible = false;
             panelLoan.Visible = false;
+            panelPDCManagement.Visible = false;
 
             //controls
             foreach (Form form in Application.OpenForms)
@@ -1009,31 +1050,19 @@ namespace WindowsFormsApplication2
         {
             sideVisible(button30);
 
+            panelPDCManagement.Visible = true;
+            panelPDCManagement.Top = button30.Bottom;
+            panelPDCManagement.Left = panelMenu.Right;
+            panelPDCManagement.Height = panelMenu.Bottom;
 
             //Hide Panels
             panelFileMaintenanceSub.Visible = false;
-            panelProcessSub.Visible = false;
             panelSavings.Visible = false;
             panelMembership.Visible = false;
             panelMemberSettings.Visible = false;
             panelReportSub.Visible = false;
             panelLoan.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
-            {
-
-
-                if (form.GetType() == typeof(PDCManagement))
-                {
-                    form.Activate();
-                    return;
-                }
-            }
-
-            PDCManagement frm = new PDCManagement();
-            frm.Show();
-            frm.MdiParent = this;
+            panelProcessSub.Visible = false;
         }
 
 
@@ -1102,6 +1131,107 @@ namespace WindowsFormsApplication2
                 btnNotifPDC.Visible = false;
                 tmerTickIfClickOK.Stop();
             }
+        }
+
+        private void btnNotifPDC_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                var mos = DateTime.Today.Month;
+                var yr = DateTime.Today.Year;
+                var day = DateTime.Today.Day;
+
+                DateTime dtNowFrom;
+                DateTime dtNowTo;
+
+
+                if (day <= 15)
+                {
+                    dtNowFrom = new DateTime(yr, mos, 09);
+                    dtNowTo = new DateTime(yr, mos, 15);
+                }
+                else
+                {
+                    dtNowFrom = new DateTime(yr, mos, 25);
+                    dtNowTo = new DateTime(yr, mos, DateTime.DaysInMonth(yr, mos));
+                }
+
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_GetChequeDateDueToday";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ChequeDateFrom", dtNowFrom);
+                cmd.Parameters.AddWithValue("@ChequeDateTo", dtNowTo);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                PDCManagement frm = new PDCManagement();
+
+                foreach (Form form in Application.OpenForms)
+                {
+
+
+                    if (form.GetType() == typeof(PDCManagement))
+                    {
+                        form.Activate();
+                        frm = (PDCManagement)Application.OpenForms["PDCManagement"];
+                        frm.dataGridView1.DataSource = dt;
+                        frm.str = "";
+                        frm.str = "SELECT * FROM vw_PDCManagement WHERE ORNumber is NULL and ChequeDate between '" + dtNowFrom.ToShortDateString() + "' and '" + dtNowTo.ToShortDateString() + "'";
+                        return;
+                    }
+                }
+                frm.str = "";
+                frm.str = "SELECT * FROM vw_PDCManagement WHERE ORNumber is NULL and ChequeDate between '" + dtNowFrom.ToShortDateString() + "' and '" + dtNowTo.ToShortDateString() + "'";
+                frm.Show();
+                frm.MdiParent = this;
+                frm.dataGridView1.DataSource = dt;
+            }
+        }
+
+        private void button33_Click(object sender, EventArgs e)
+        {
+            panelPDCManagement.Visible = false;
+            //controls
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(PDCManagement))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            PDCManagement frm = new PDCManagement();
+            frm.Show();
+            frm.MdiParent = this;
+        }
+
+        private void button31_Click(object sender, EventArgs e)
+        {
+            panelPDCManagement.Visible = false;
+            //controls
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(PDCLoanListing))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            PDCLoanListing frm = new PDCLoanListing();
+            frm.Show();
+            frm.MdiParent = this;
         }
     }
     #endregion

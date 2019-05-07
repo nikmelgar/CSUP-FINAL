@@ -320,12 +320,13 @@ namespace WindowsFormsApplication2
         private void cmbBank_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Code to Display in datagridview automatic depends on bank
-
-            if (cmbBank.Text != "" && fromReplenishment == false)
+            if(btnNew.Text != "NEW")
             {
-                dataGridView1.Rows[0].Cells[0].Value = clsDisbursement.accountCodeFromBanks(cmbBank.SelectedValue.ToString());
+                if (cmbBank.Text != "" && fromReplenishment == false)
+                {
+                    dataGridView1.Rows[0].Cells[0].Value = clsDisbursement.accountCodeFromBanks(cmbBank.SelectedValue.ToString());
+                }
             }
-
             //==========================================================================
             //object[] rowData = new object[dataGridView1.Columns.Count];
             //rowData[0] = dataGridView1.Rows.Count;
@@ -1703,6 +1704,23 @@ namespace WindowsFormsApplication2
         private void btnRelease_Click(object sender, EventArgs e)
         {
             clsDisbursement.ReleaseDisbursement(txtCVNo.Text,status);
+        }
+
+        private void btnSearchLoan_Click(object sender, EventArgs e)
+        {
+            if (LoanLookUpProcess.clsLoanLookUpMember.userid != 0)
+            {
+                //has a value 
+                LoanLookUpProcess.LoanLookUp frm = new LoanLookUpProcess.LoanLookUp();
+                LoanLookUpProcess.clsLoanLookUpMember.frmPass = "Disbursement";
+                frm.ShowDialog();
+            }
+            else
+            {
+                //No Record(s)9561473002
+                Alert.show("Please select member first.", Alert.AlertType.error);
+                return;
+            }
         }
 
         public void ForReplenishment()

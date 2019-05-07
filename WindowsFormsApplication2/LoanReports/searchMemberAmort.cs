@@ -69,8 +69,14 @@ namespace WindowsFormsApplication2.LoanReports
                     LoanAmmortizationComputationcs.userID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
                     loanAmort.txtEmployeeID.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
                     loanAmort.txtName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
+                    loanAmort.txtDateHired.Text = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Date_Hired"].Value.ToString()).ToShortDateString();
 
-                    
+                    //Compute no of years in service
+                    int noYrs;
+                    DateTime dt = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Date_Hired"].Value.ToString());
+                    noYrs = Convert.ToInt32(DateTime.Today.Year) - Convert.ToInt32(dt.Year.ToString());
+
+                    loanAmort.txtNoOfServiceInYears.Text = noYrs.ToString();
                     this.Close();
                     return;
                 }

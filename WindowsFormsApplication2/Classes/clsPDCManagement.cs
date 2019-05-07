@@ -13,8 +13,12 @@ namespace WindowsFormsApplication2.Classes
     {
         Global global = new Global();
         public static int userid { get; set; }
+        public static int id { get; set; }
+
         public static string LastValueChequeNo { get; set; }
         public static decimal LastValueAmount { get; set; }
+        public static string typeFromChecking { get; set; }
+
 
         public void loadPDC(DataGridView dgv)
         {
@@ -22,7 +26,7 @@ namespace WindowsFormsApplication2.Classes
             {
                 con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT TOP 50 * FROM vw_PDCManagement ORDER BY DatePrepared DESC", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT TOP 50 * FROM vw_PDCManagement ORDER BY ChequeDate,EmpName ASC", con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
@@ -31,6 +35,7 @@ namespace WindowsFormsApplication2.Classes
                 dgv.Columns["DatePrepared"].Visible = false;
                 dgv.Columns["userid"].Visible = false;
                 dgv.Columns["LoanNumber"].Visible = false;
+                dgv.Columns["id"].Visible = false;
 
                 dgv.Columns["isCheck"].HeaderText = "";
                 dgv.Columns["ORNumber"].HeaderText = "OR #";
@@ -96,5 +101,90 @@ namespace WindowsFormsApplication2.Classes
                 dgv.Columns["Loan_Type"].FillWeight = 50;
             }
         }
+
+        //FOR SAME USER ONLY
+        public bool CheckChequeNoIfUsed(string chequeNo)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM PDCManagement WHERE ChequeNo = '"+ chequeNo +"' and userid ='"+ userid +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    //Already Used                      
+                    return true;
+                }
+                else
+                {
+                    //Not Use
+                    return false;
+                }
+            }
+        }
+
+        //FOR ALL USERS
+        public bool CheckChequeNoIfUsedByOthers(string chequeNo)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM PDCManagement WHERE ChequeNo = '" + chequeNo + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    //Already Used                      
+                    return true;
+                }
+                else
+                {
+                    //Not Use
+                    return false;
+                }
+            }
+        }
+
+        public bool checkCategory(string category,string chequeNo,string loanType)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                string str = "";
+                switch (category) {
+                    case "Savings":
+                        str = "SELECT * FROM PDCManagement WHERE ChequeNo = '" + chequeNo + "' and userid ='" + userid + "' and LoanType = 'SD'";
+                        break;
+                    case "Share Capital":
+                        str = "SELECT * FROM PDCManagement WHERE ChequeNo = '" + chequeNo + "' and userid ='" + userid + "' and LoanType = 'SC'";
+                        break;
+                    case "Loan":
+                        str = "SELECT * FROM PDCManagement WHERE ChequeNo = '" + chequeNo + "' and userid ='" + userid + "' and LoanType = '"+ loanType +"'";
+                        break;
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(str, con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    //Stop cant be used twice for the same category
+                    return true;
+                }
+                else
+                {
+                    //He/She can proceed
+                    return false;
+                }
+            }
+        }
+        
     }
 }

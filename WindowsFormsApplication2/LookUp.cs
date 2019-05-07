@@ -282,6 +282,11 @@ namespace WindowsFormsApplication2
                             form.Activate();
                             disbursement = (DisbursementVoucher)Application.OpenForms["DisbursementVoucher"];
                             Classes.clsDisbursement.userID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+                            LoanLookUpProcess.clsLoanLookUpMember.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+
+                            disbursement.txtLoanNo.Text = "";
+                            disbursement.txtLoanType.Text = "";
+
                             disbursement.txtPayee.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
                             disbursement.txtPayeeName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
                             this.Close();
@@ -290,7 +295,11 @@ namespace WindowsFormsApplication2
                     }
 
                     Classes.clsDisbursement.userID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
-                    Classes.clsDisbursement.userID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+                    LoanLookUpProcess.clsLoanLookUpMember.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
+
+                    disbursement.txtLoanNo.Text = "";
+                    disbursement.txtLoanType.Text = "";
+
                     disbursement.txtPayee.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
                     disbursement.txtPayeeName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
                     disbursement.Show();

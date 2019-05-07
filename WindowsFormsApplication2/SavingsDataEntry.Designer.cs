@@ -523,12 +523,12 @@
             this.label41.AutoSize = true;
             this.label41.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label41.Location = new System.Drawing.Point(68, 22);
+            this.label41.Location = new System.Drawing.Point(91, 22);
             this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(241, 21);
+            this.label41.Size = new System.Drawing.Size(218, 21);
             this.label41.TabIndex = 85;
-            this.label41.Text = "Deposited Cheque Amount";
+            this.label41.Text = "Cheque Deposit Amount\r\n";
             // 
             // label17
             // 
@@ -716,12 +716,12 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label5.Location = new System.Drawing.Point(591, 19);
+            this.label5.Location = new System.Drawing.Point(615, 19);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(145, 21);
+            this.label5.Size = new System.Drawing.Size(133, 21);
             this.label5.TabIndex = 74;
-            this.label5.Text = "Deposited Date";
+            this.label5.Text = "Deposite Date";
             // 
             // label11
             // 
@@ -1119,9 +1119,9 @@
             this.label30.Location = new System.Drawing.Point(10, 6);
             this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(174, 21);
+            this.label30.Size = new System.Drawing.Size(187, 21);
             this.label30.TabIndex = 74;
-            this.label30.Text = "Check Information :";
+            this.label30.Text = "Cheque Information :";
             // 
             // panel37
             // 

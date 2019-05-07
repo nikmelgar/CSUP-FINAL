@@ -422,7 +422,7 @@ namespace WindowsFormsApplication2
                     cmd.Parameters.AddWithValue("@Payee_Name", txtName.Text);
                     cmd.Parameters.AddWithValue("@Particulars", txtParticular.Text);
                     cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmd.Parameters.AddWithValue("@Bank_Code", clsLoanComputation.returnMemberBankCode(userID));
+                    cmd.Parameters.AddWithValue("@Bank_Code", "BDO");
                     cmd.Parameters.AddWithValue("@Check_No", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Check_Date", DBNull.Value);
                     cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtNetAmount.Text));

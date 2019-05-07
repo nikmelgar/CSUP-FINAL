@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
+
 namespace WindowsFormsApplication2
 {
     public partial class SavingsDataEntry : Form
@@ -35,37 +36,51 @@ namespace WindowsFormsApplication2
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (status.Text == "FOR RELEASE")
-            {
-                if(txtEmployeeID.Text != "" || txtAmountWithdrawn.Text != "")
-                {
-                    string msg = Environment.NewLine + "Are you sure you want to Cancel this Entry?";
-                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
-                    {
+            /*
+            *   05/06/2019
+            *   as per maam vangie request
+            *   Remove  the dialog box once button clicked
+            */
 
-                        //============================================================
-                        //              REMOVE OPEN FORM
-                        //============================================================
-                        clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
+            //if (status.Text == "FOR RELEASE")
+            //{
+            //    if(txtEmployeeID.Text != "" || txtAmountWithdrawn.Text != "")
+            //    {
+            //        string msg = Environment.NewLine + "Are you sure you want to Cancel this Entry?";
+            //        DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //        if (result == DialogResult.Yes)
+            //        {
 
-                        this.Close();
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                //============================================================
-                //              REMOVE OPEN FORM
-                //============================================================
-                clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
+            //            //============================================================
+            //            //              REMOVE OPEN FORM
+            //            //============================================================
+            //            clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
 
-                this.Close();
-            }
+            //            this.Close();
+            //        }
+            //        else
+            //        {
+            //            return;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    //============================================================
+            //    //              REMOVE OPEN FORM
+            //    //============================================================
+            //    clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
+
+            //    this.Close();
+            //}
+
+
+            //============================================================
+            //              REMOVE OPEN FORM
+            //============================================================
+            clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
+
+            this.Close();
         }
 
         private void panelHeader_MouseMove(object sender, MouseEventArgs e)

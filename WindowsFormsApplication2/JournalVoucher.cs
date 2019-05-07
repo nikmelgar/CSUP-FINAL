@@ -26,7 +26,8 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         Classes.clsJournalVoucher clsJournalVoucher = new Classes.clsJournalVoucher();
         Classes.clsGeneralVoucher clsGeneral = new Classes.clsGeneralVoucher();
-     
+
+
         SqlConnection con;
         SqlDataAdapter adapter;
         CrystalDecisions.Shared.TableLogOnInfo li;
@@ -1360,6 +1361,23 @@ namespace WindowsFormsApplication2
             else
             {
                 txtLoanType.Text = "";
+            }
+        }
+
+        private void btnSearchLoan_Click(object sender, EventArgs e)
+        {
+           if(LoanLookUpProcess.clsLoanLookUpMember.userid != 0)
+            {
+                //has a value 
+                LoanLookUpProcess.LoanLookUp frm = new LoanLookUpProcess.LoanLookUp();
+                LoanLookUpProcess.clsLoanLookUpMember.frmPass = "Journal";
+                frm.ShowDialog();
+            }
+            else
+            {
+                //No Record(s)
+                Alert.show("Please select member first.", Alert.AlertType.error);
+                return;
             }
         }
 
