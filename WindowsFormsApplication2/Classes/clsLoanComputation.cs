@@ -109,7 +109,7 @@ namespace WindowsFormsApplication2.Classes
             {
                 con.Open();
 
-                adapter = new SqlDataAdapter("SELECT (LastName+', '+ FirstName + SPACE(1) + MiddleName + SPACE(1) + Suffix) as FullName From Membership WHERE userID = '" + userid + "'", con);
+                adapter = new SqlDataAdapter("SELECT (CASE WHEN membership.suffix IS NOT NULL THEN dbo.Membership.LastName + ', ' + dbo.Membership.FirstName + SPACE(1) + dbo.Membership.MiddleName + SPACE(1) + dbo.Membership.Suffix ELSE dbo.Membership.LastName + ', ' + dbo.Membership.FirstName + SPACE(1) + dbo.Membership.MiddleName END) as FullName From Membership WHERE userID = '" + userid + "'", con);
                 dt = new DataTable();
                 adapter.Fill(dt);
 

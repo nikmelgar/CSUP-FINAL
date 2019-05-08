@@ -462,5 +462,30 @@ namespace WindowsFormsApplication2.Classes
                 dgv.Columns["Encoded_By"].FillWeight = 60;
             }
         }
+
+        public Boolean invalidBankAccount(int userid)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Bank_Code,Atm_Account_No FROM Membership WHERE userID ='"+ userid +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                //dt.Rows[0].ItemArray[0].ToString() - Bank Code
+                //dt.Rows[0].ItemArray[1].ToString() - Atm Account No
+
+                if(dt.Rows[0].ItemArray[0].ToString() == "" || dt.Rows[0].ItemArray[1].ToString() == "")
+                {
+                    Alert.show("Please update members bank account.", Alert.AlertType.error);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }

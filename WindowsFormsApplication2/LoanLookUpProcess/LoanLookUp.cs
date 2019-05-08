@@ -24,7 +24,7 @@ namespace WindowsFormsApplication2.LoanLookUpProcess
         private Point m_firstClickLoc;
         private void label1_Click(object sender, EventArgs e)
         {
-            this.Close();
+
         }
 
         private void LoanLookUp_Load(object sender, EventArgs e)
@@ -104,6 +104,11 @@ namespace WindowsFormsApplication2.LoanLookUpProcess
                     this.Close();
                 }
             }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

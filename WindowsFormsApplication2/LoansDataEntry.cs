@@ -433,20 +433,34 @@ namespace WindowsFormsApplication2
                     Alert.show("Please select member first!", Alert.AlertType.error);
                     return;
                 }
-                else if(txtLoanAmount.Text == "")
+                if(txtLoanAmount.Text == "")
                 {
                     Alert.show("Loan Amount is required!", Alert.AlertType.error);
                     return;
                 }
-                else if(txtTermsInMonth.Text == "")
+                if(txtTermsInMonth.Text == "")
                 {
                     Alert.show("Loan Terms in Mos is required!", Alert.AlertType.error);
                     return;
                 }
-                else if(comboBox1.Text == "")
+                if(comboBox1.Text == "")
                 {
                     Alert.show("Please select Payment Option", Alert.AlertType.error);
                     return;
+                }
+                if(cmbReleaseOption.Text == "")
+                {
+                    Alert.show("Please select Release Option", Alert.AlertType.error);
+                    return;
+                }
+
+
+                if (cmbReleaseOption.Text == "ATM")
+                {
+                    if(clsLoan.invalidBankAccount(Classes.clsLoanDataEntry.userID) == true)
+                    {
+                        return;
+                    }
                 }
 
                 //Check Max Amount if > to Loan input amount
@@ -574,6 +588,7 @@ namespace WindowsFormsApplication2
 
                     cmd.Parameters.AddWithValue("@Encoded_By", txtEncodedBy.Text);
                     cmd.Parameters.AddWithValue("@Status", Convert.ToInt32(1));
+                    cmd.Parameters.AddWithValue("@ReleaseOption", cmbReleaseOption.Text);
                     cmd.ExecuteNonQuery();
 
                     //====================================================================================
@@ -810,7 +825,7 @@ namespace WindowsFormsApplication2
                     {
 
                     }
-                    Alert.show("Successfully created.", Alert.AlertType.success);
+                    Alert.show("Loan No. "+ txtLoanNo.Text +" successfully created.", Alert.AlertType.success);
 
                     //===========================
                     //  RETURN STATUTS
@@ -852,8 +867,8 @@ namespace WindowsFormsApplication2
 
                     if (Classes.clsLoanDataEntry.loan_amount != Convert.ToDecimal(txtLoanAmount.Text))
                     {
-                        string msg = Environment.NewLine + "Are you sure you want to change loan amount?";
-                        msg = msg + Environment.NewLine + "FROM : " + Classes.clsLoanDataEntry.loan_amount.ToString("#,0.00") + " TO : " + txtLoanAmount.Text;
+                        string msg = Environment.NewLine + "Are you sure you want to change loan amount";
+                        msg = msg + Environment.NewLine + "FROM P" + Classes.clsLoanDataEntry.loan_amount.ToString("#,0.00") + " TO P" + txtLoanAmount.Text + "?";
                         DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (result == DialogResult.No)
                         {
@@ -873,6 +888,7 @@ namespace WindowsFormsApplication2
                     cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
                     cmd.Parameters.AddWithValue("@Monthly_Amort", txtMonthlyAmort.Text.Replace(",", ""));
                     cmd.Parameters.AddWithValue("@Semi_Monthly_Amort", txtSemiMonthlyAmort.Text.Replace(",", ""));
+                    cmd.Parameters.AddWithValue("@ReleaseOption", cmbReleaseOption.Text);
                     cmd.ExecuteNonQuery();
 
                     //=========================================================================================
@@ -1132,6 +1148,8 @@ namespace WindowsFormsApplication2
                     txtLoanAmount.Enabled = false;
                     txtTermsInMonth.Enabled = false;
                     btnForward.Enabled = true;
+                    comboBox1.Enabled = false;
+                    cmbReleaseOption.Enabled = false;
 
                 }
                 else if (btnSave.Text == "EDIT")
@@ -1142,10 +1160,12 @@ namespace WindowsFormsApplication2
                     {
                         button1.Enabled = true;
                         comboBox1.Enabled = true;
+                        cmbReleaseOption.Enabled = true;
                     }
                     else
                     {
                         comboBox1.Enabled = false;
+                        cmbReleaseOption.Enabled = false;
                     }
                     txtLoanAmount.Enabled = true;
                     txtTermsInMonth.Enabled = true;
@@ -1166,6 +1186,9 @@ namespace WindowsFormsApplication2
                     btnSave.Text = "SAVE";
                     btnClose.Text = "CANCEL";
                     cmbLoanType.Enabled = true;
+                    btnCancel.Visible = false;
+                    lblReason.Visible = false;
+                    txtCancel.Visible = false;
                 }
             }
         }
@@ -1323,6 +1346,17 @@ namespace WindowsFormsApplication2
                     {
 
                     }
+                }
+            }
+        }
+
+        private void cmbReleaseOption_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if(cmbReleaseOption.Text != "")
+            {
+                if(cmbReleaseOption.Text == "ATM")
+                {
+                    clsLoan.invalidBankAccount(Classes.clsLoanDataEntry.userID);
                 }
             }
         }

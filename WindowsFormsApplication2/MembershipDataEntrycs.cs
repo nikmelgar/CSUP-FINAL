@@ -1431,14 +1431,17 @@ namespace WindowsFormsApplication2
 
         private void cmbCostCenter_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(cmbCostCenter.Text))
+            if(cmbCostCenter.DataSource != null)
             {
-                cmbCostCenter.Focus();
-                errorProvider1.SetError(cmbCostCenter, "This should not be left blank!");
-            }
-            else
-            {
-                errorProvider1.SetError(cmbCostCenter, "");
+                if (string.IsNullOrWhiteSpace(cmbCostCenter.Text))
+                {
+                    cmbCostCenter.Focus();
+                    errorProvider1.SetError(cmbCostCenter, "This should not be left blank!");
+                }
+                else
+                {
+                    errorProvider1.SetError(cmbCostCenter, "");
+                }
             }
         }
 

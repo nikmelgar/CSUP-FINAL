@@ -29,15 +29,20 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoanAmmortizationComputationcs));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label21 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txtNoOfServiceInYears = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txtDateHired = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
@@ -79,7 +84,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtDescriptionLESS = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel11 = new System.Windows.Forms.Panel();
@@ -108,12 +112,13 @@
             this.crystalReportViewer1 = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
             this.button1 = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.txtDateHired = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.txtNoOfServiceInYears = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.txtSC = new System.Windows.Forms.TextBox();
+            this.txtSD = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.cmbLessType = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel15.SuspendLayout();
@@ -129,7 +134,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(141)))), ((int)(((byte)(188)))));
-            this.panel1.Controls.Add(this.label21);
+            this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 0);
@@ -138,19 +143,6 @@
             this.panel1.TabIndex = 54;
             this.panel1.Click += new System.EventHandler(this.panel1_Click);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
-            // 
-            // label21
-            // 
-            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Century Gothic", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.ForeColor = System.Drawing.Color.White;
-            this.label21.Location = new System.Drawing.Point(1539, 9);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(30, 29);
-            this.label21.TabIndex = 6;
-            this.label21.Text = "X";
-            this.label21.Click += new System.EventHandler(this.label21_Click);
             // 
             // label2
             // 
@@ -229,6 +221,74 @@
             this.panel5.Size = new System.Drawing.Size(494, 307);
             this.panel5.TabIndex = 58;
             this.panel5.Paint += new System.Windows.Forms.PaintEventHandler(this.panel5_Paint);
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label34.Location = new System.Drawing.Point(349, 268);
+            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(15, 21);
+            this.label34.TabIndex = 127;
+            this.label34.Text = ":";
+            // 
+            // txtNoOfServiceInYears
+            // 
+            this.txtNoOfServiceInYears.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNoOfServiceInYears.Location = new System.Drawing.Point(372, 265);
+            this.txtNoOfServiceInYears.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNoOfServiceInYears.Name = "txtNoOfServiceInYears";
+            this.txtNoOfServiceInYears.ReadOnly = true;
+            this.txtNoOfServiceInYears.Size = new System.Drawing.Size(106, 28);
+            this.txtNoOfServiceInYears.TabIndex = 126;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label33.Location = new System.Drawing.Point(269, 268);
+            this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(85, 21);
+            this.label33.TabIndex = 125;
+            this.label33.Text = "No. of yrs";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label27.Location = new System.Drawing.Point(134, 265);
+            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(15, 21);
+            this.label27.TabIndex = 124;
+            this.label27.Text = ":";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label28.Location = new System.Drawing.Point(12, 265);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(106, 21);
+            this.label28.TabIndex = 122;
+            this.label28.Text = "Date Hired ";
+            // 
+            // txtDateHired
+            // 
+            this.txtDateHired.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDateHired.Location = new System.Drawing.Point(157, 265);
+            this.txtDateHired.Margin = new System.Windows.Forms.Padding(4);
+            this.txtDateHired.Name = "txtDateHired";
+            this.txtDateHired.ReadOnly = true;
+            this.txtDateHired.Size = new System.Drawing.Size(106, 28);
+            this.txtDateHired.TabIndex = 123;
             // 
             // label25
             // 
@@ -331,6 +391,7 @@
             this.interestRate.Location = new System.Drawing.Point(157, 193);
             this.interestRate.Margin = new System.Windows.Forms.Padding(4);
             this.interestRate.Name = "interestRate";
+            this.interestRate.ReadOnly = true;
             this.interestRate.Size = new System.Drawing.Size(321, 28);
             this.interestRate.TabIndex = 110;
             this.interestRate.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLoanAmount_KeyPress);
@@ -466,13 +527,13 @@
             // cmbLoanType
             // 
             this.cmbLoanType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLoanType.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbLoanType.Font = new System.Drawing.Font("Century Gothic", 9F);
             this.cmbLoanType.FormattingEnabled = true;
             this.cmbLoanType.IntegralHeight = false;
             this.cmbLoanType.Location = new System.Drawing.Point(157, 88);
             this.cmbLoanType.Margin = new System.Windows.Forms.Padding(4);
             this.cmbLoanType.Name = "cmbLoanType";
-            this.cmbLoanType.Size = new System.Drawing.Size(321, 25);
+            this.cmbLoanType.Size = new System.Drawing.Size(321, 28);
             this.cmbLoanType.TabIndex = 101;
             this.cmbLoanType.SelectedValueChanged += new System.EventHandler(this.cmbLoanType_SelectedValueChanged);
             // 
@@ -550,7 +611,7 @@
             // 
             this.panel17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(115)))), ((int)(((byte)(70)))));
             this.panel17.Controls.Add(this.label12);
-            this.panel17.Location = new System.Drawing.Point(19, 596);
+            this.panel17.Location = new System.Drawing.Point(19, 587);
             this.panel17.Margin = new System.Windows.Forms.Padding(4);
             this.panel17.Name = "panel17";
             this.panel17.Size = new System.Drawing.Size(494, 31);
@@ -570,21 +631,26 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.cmbLessType);
+            this.panel6.Controls.Add(this.label37);
+            this.panel6.Controls.Add(this.label35);
+            this.panel6.Controls.Add(this.label21);
+            this.panel6.Controls.Add(this.txtSD);
+            this.panel6.Controls.Add(this.txtSC);
             this.panel6.Controls.Add(this.dataGridView1);
             this.panel6.Controls.Add(this.txtAmountLESS);
             this.panel6.Controls.Add(this.label1);
             this.panel6.Controls.Add(this.label11);
             this.panel6.Controls.Add(this.btnSave);
             this.panel6.Controls.Add(this.label9);
-            this.panel6.Controls.Add(this.txtDescriptionLESS);
             this.panel6.Controls.Add(this.label10);
             this.panel6.Controls.Add(this.panel10);
             this.panel6.Controls.Add(this.panel11);
             this.panel6.Controls.Add(this.panel12);
             this.panel6.Controls.Add(this.panel14);
-            this.panel6.Location = new System.Drawing.Point(19, 632);
+            this.panel6.Location = new System.Drawing.Point(19, 622);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(494, 270);
+            this.panel6.Size = new System.Drawing.Size(494, 285);
             this.panel6.TabIndex = 65;
             // 
             // dataGridView1
@@ -592,27 +658,27 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.contact,
             this.address});
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridView1.EnableHeadersVisualStyles = false;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 124);
+            this.dataGridView1.Location = new System.Drawing.Point(3, 158);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(488, 143);
+            this.dataGridView1.Size = new System.Drawing.Size(488, 124);
             this.dataGridView1.TabIndex = 146;
             // 
             // contact
@@ -647,19 +713,20 @@
             // txtAmountLESS
             // 
             this.txtAmountLESS.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAmountLESS.Location = new System.Drawing.Point(157, 47);
+            this.txtAmountLESS.Location = new System.Drawing.Point(163, 80);
             this.txtAmountLESS.Margin = new System.Windows.Forms.Padding(4);
             this.txtAmountLESS.Name = "txtAmountLESS";
             this.txtAmountLESS.Size = new System.Drawing.Size(321, 28);
             this.txtAmountLESS.TabIndex = 142;
             this.txtAmountLESS.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLoanAmount_KeyPress);
+            this.txtAmountLESS.Leave += new System.EventHandler(this.txtAmountLESS_Leave);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label1.Location = new System.Drawing.Point(134, 47);
+            this.label1.Location = new System.Drawing.Point(147, 47);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(15, 21);
@@ -671,7 +738,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label11.Location = new System.Drawing.Point(12, 47);
+            this.label11.Location = new System.Drawing.Point(18, 83);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(76, 21);
@@ -683,7 +750,7 @@
             this.btnSave.ForeColor = System.Drawing.Color.Red;
             this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
             this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(367, 82);
+            this.btnSave.Location = new System.Drawing.Point(374, 115);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(111, 37);
             this.btnSave.TabIndex = 145;
@@ -697,28 +764,19 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label9.Location = new System.Drawing.Point(134, 14);
+            this.label9.Location = new System.Drawing.Point(147, 83);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(15, 21);
             this.label9.TabIndex = 108;
             this.label9.Text = ":";
             // 
-            // txtDescriptionLESS
-            // 
-            this.txtDescriptionLESS.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescriptionLESS.Location = new System.Drawing.Point(157, 13);
-            this.txtDescriptionLESS.Margin = new System.Windows.Forms.Padding(4);
-            this.txtDescriptionLESS.Name = "txtDescriptionLESS";
-            this.txtDescriptionLESS.Size = new System.Drawing.Size(321, 28);
-            this.txtDescriptionLESS.TabIndex = 107;
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label10.Location = new System.Drawing.Point(12, 13);
+            this.label10.Location = new System.Drawing.Point(18, 47);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(103, 21);
@@ -729,7 +787,7 @@
             // 
             this.panel10.BackColor = System.Drawing.Color.SeaGreen;
             this.panel10.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel10.Location = new System.Drawing.Point(3, 267);
+            this.panel10.Location = new System.Drawing.Point(3, 282);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(488, 3);
             this.panel10.TabIndex = 10;
@@ -749,7 +807,7 @@
             this.panel12.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel12.Location = new System.Drawing.Point(0, 0);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(3, 270);
+            this.panel12.Size = new System.Drawing.Size(3, 285);
             this.panel12.TabIndex = 8;
             // 
             // panel14
@@ -758,7 +816,7 @@
             this.panel14.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel14.Location = new System.Drawing.Point(491, 0);
             this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(3, 270);
+            this.panel14.Size = new System.Drawing.Size(3, 285);
             this.panel14.TabIndex = 7;
             // 
             // panel16
@@ -779,7 +837,7 @@
             this.panel16.Controls.Add(this.panel19);
             this.panel16.Controls.Add(this.panel20);
             this.panel16.Controls.Add(this.panel21);
-            this.panel16.Location = new System.Drawing.Point(19, 434);
+            this.panel16.Location = new System.Drawing.Point(19, 426);
             this.panel16.Name = "panel16";
             this.panel16.Size = new System.Drawing.Size(494, 157);
             this.panel16.TabIndex = 66;
@@ -960,7 +1018,7 @@
             // 
             this.panel22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(115)))), ((int)(((byte)(70)))));
             this.panel22.Controls.Add(this.label23);
-            this.panel22.Location = new System.Drawing.Point(19, 396);
+            this.panel22.Location = new System.Drawing.Point(19, 392);
             this.panel22.Margin = new System.Windows.Forms.Padding(4);
             this.panel22.Name = "panel22";
             this.panel22.Size = new System.Drawing.Size(494, 31);
@@ -1024,73 +1082,89 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // label27
+            // button2
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label27.Location = new System.Drawing.Point(134, 265);
-            this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(15, 21);
-            this.label27.TabIndex = 124;
-            this.label27.Text = ":";
+            this.button2.ForeColor = System.Drawing.Color.Red;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(1458, 3);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(111, 37);
+            this.button2.TabIndex = 143;
+            this.button2.Text = "CLOSE";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label28
+            // txtSC
             // 
-            this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label28.Location = new System.Drawing.Point(12, 265);
-            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(106, 21);
-            this.label28.TabIndex = 122;
-            this.label28.Text = "Date Hired ";
+            this.txtSC.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSC.Location = new System.Drawing.Point(163, 10);
+            this.txtSC.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSC.Name = "txtSC";
+            this.txtSC.Size = new System.Drawing.Size(108, 28);
+            this.txtSC.TabIndex = 147;
+            this.txtSC.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLoanAmount_KeyPress);
+            this.txtSC.Leave += new System.EventHandler(this.textBox1_Leave);
             // 
-            // txtDateHired
+            // txtSD
             // 
-            this.txtDateHired.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDateHired.Location = new System.Drawing.Point(157, 265);
-            this.txtDateHired.Margin = new System.Windows.Forms.Padding(4);
-            this.txtDateHired.Name = "txtDateHired";
-            this.txtDateHired.ReadOnly = true;
-            this.txtDateHired.Size = new System.Drawing.Size(106, 28);
-            this.txtDateHired.TabIndex = 123;
+            this.txtSD.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSD.Location = new System.Drawing.Point(366, 10);
+            this.txtSD.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSD.Name = "txtSD";
+            this.txtSD.Size = new System.Drawing.Size(118, 28);
+            this.txtSD.TabIndex = 148;
+            this.txtSD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLoanAmount_KeyPress);
+            this.txtSD.Leave += new System.EventHandler(this.txtSD_Leave);
             // 
-            // label33
+            // label21
             // 
-            this.label33.AutoSize = true;
-            this.label33.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label33.Location = new System.Drawing.Point(269, 268);
-            this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(85, 21);
-            this.label33.TabIndex = 125;
-            this.label33.Text = "No. of yrs";
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label21.Location = new System.Drawing.Point(18, 13);
+            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(124, 21);
+            this.label21.TabIndex = 149;
+            this.label21.Text = "Share Capital";
             // 
-            // label34
+            // label35
             // 
-            this.label34.AutoSize = true;
-            this.label34.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label34.Location = new System.Drawing.Point(349, 268);
-            this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(15, 21);
-            this.label34.TabIndex = 127;
-            this.label34.Text = ":";
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label35.Location = new System.Drawing.Point(276, 13);
+            this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(82, 21);
+            this.label35.TabIndex = 150;
+            this.label35.Text = "Savings :";
             // 
-            // txtNoOfServiceInYears
+            // label37
             // 
-            this.txtNoOfServiceInYears.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNoOfServiceInYears.Location = new System.Drawing.Point(372, 265);
-            this.txtNoOfServiceInYears.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNoOfServiceInYears.Name = "txtNoOfServiceInYears";
-            this.txtNoOfServiceInYears.ReadOnly = true;
-            this.txtNoOfServiceInYears.Size = new System.Drawing.Size(106, 28);
-            this.txtNoOfServiceInYears.TabIndex = 126;
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label37.Location = new System.Drawing.Point(147, 13);
+            this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(15, 21);
+            this.label37.TabIndex = 152;
+            this.label37.Text = ":";
+            // 
+            // cmbLessType
+            // 
+            this.cmbLessType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLessType.Font = new System.Drawing.Font("Century Gothic", 9F);
+            this.cmbLessType.FormattingEnabled = true;
+            this.cmbLessType.IntegralHeight = false;
+            this.cmbLessType.Location = new System.Drawing.Point(163, 44);
+            this.cmbLessType.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbLessType.Name = "cmbLessType";
+            this.cmbLessType.Size = new System.Drawing.Size(322, 28);
+            this.cmbLessType.TabIndex = 153;
             // 
             // LoanAmmortizationComputationcs
             // 
@@ -1175,7 +1249,6 @@
         public System.Windows.Forms.Label label11;
         public System.Windows.Forms.Button btnSave;
         public System.Windows.Forms.Label label9;
-        public System.Windows.Forms.TextBox txtDescriptionLESS;
         public System.Windows.Forms.Label label10;
         public System.Windows.Forms.Panel panel10;
         public System.Windows.Forms.Panel panel11;
@@ -1206,7 +1279,6 @@
         private CrystalDecisions.Windows.Forms.CrystalReportViewer crystalReportViewer1;
         public System.Windows.Forms.Button button1;
         public System.Windows.Forms.Button btnClose;
-        public System.Windows.Forms.Label label21;
         public System.Windows.Forms.Label label22;
         public System.Windows.Forms.TextBox txtEmployeeID;
         public System.Windows.Forms.Label label24;
@@ -1222,5 +1294,12 @@
         public System.Windows.Forms.Label label27;
         public System.Windows.Forms.Label label28;
         public System.Windows.Forms.TextBox txtDateHired;
+        public System.Windows.Forms.Button button2;
+        public System.Windows.Forms.Label label37;
+        public System.Windows.Forms.Label label35;
+        public System.Windows.Forms.Label label21;
+        public System.Windows.Forms.TextBox txtSD;
+        public System.Windows.Forms.TextBox txtSC;
+        public System.Windows.Forms.ComboBox cmbLessType;
     }
 }

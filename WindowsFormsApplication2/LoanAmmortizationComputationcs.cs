@@ -65,10 +65,35 @@ namespace WindowsFormsApplication2
             }
         }
 
+        //GET THE INTEREST
+        public int returnInterest()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE frm = 'Loan' and Description = 'Loan Interest Amort'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                try
+                {
+                    return Convert.ToInt32(dt.Rows[0].ItemArray[0].ToString());
+                }
+                catch
+                {
+                    return 9;
+                }
+            }
+        }
+
         private void LoanAmmortizationComputationcs_Load(object sender, EventArgs e)
         {
             clsLoan.loadComboBox(cmbLoanType);
             cmbLoanType.SelectedIndex = -1;
+            interestRate.Text = returnInterest().ToString();
+            clsLoan.loadComboBox(cmbLessType);
+            cmbLessType.SelectedIndex = -1;
         }
 
         private void txtLoanAmount_Leave(object sender, EventArgs e)
@@ -82,7 +107,7 @@ namespace WindowsFormsApplication2
 
         private void label21_Click(object sender, EventArgs e)
         {
-            this.Close();
+           
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -218,6 +243,33 @@ namespace WindowsFormsApplication2
                     }
 
 
+                }
+
+                //IF SC AND SD NOT NULL
+                if(txtSC.Text != "")
+                {
+                    SqlCommand cmdSC = new SqlCommand();
+                    cmdSC.Connection = con;
+                    cmdSC.CommandText = "sp_insertLoanAmortLess";
+                    cmdSC.CommandType = CommandType.StoredProcedure;
+                    cmdSC.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                    cmdSC.Parameters.AddWithValue("@Description", "Share Capital");
+                    cmdSC.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtSC.Text));
+                    cmdSC.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
+                    cmdSC.ExecuteNonQuery();
+                }
+
+                if (txtSD.Text != "")
+                {
+                    SqlCommand cmdSD = new SqlCommand();
+                    cmdSD.Connection = con;
+                    cmdSD.CommandText = "sp_insertLoanAmortLess";
+                    cmdSD.CommandType = CommandType.StoredProcedure;
+                    cmdSD.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                    cmdSD.Parameters.AddWithValue("@Description", "Savings");
+                    cmdSD.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtSD.Text));
+                    cmdSD.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
+                    cmdSD.ExecuteNonQuery();
                 }
             }
 
@@ -361,7 +413,7 @@ namespace WindowsFormsApplication2
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if(txtDescriptionLESS.Text == "")
+            if(cmbLessType.Text == "")
             {
                 Alert.show("Please enter description.", Alert.AlertType.error);
                 return;
@@ -373,11 +425,10 @@ namespace WindowsFormsApplication2
                 return;
             }
             txtAmountLESS.Text = Convert.ToDecimal(txtAmountLESS.Text).ToString("#,0.00");
-            string[] row = { txtDescriptionLESS.Text, txtAmountLESS.Text};
+            string[] row = { cmbLessType.SelectedValue.ToString(), txtAmountLESS.Text};
             dataGridView1.Rows.Add(row);
 
             txtAmountLESS.Text = "";
-            txtDescriptionLESS.Text = "";
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -422,13 +473,17 @@ namespace WindowsFormsApplication2
             cmbLoanType.SelectedIndex = -1;
             txtLoanAmount.Text = "";
             txtGrossAmount.Text = "";
-            interestRate.Text = "";
             txtTerminMos.Text = "";
             txtMonthlyPayment.Text = "";
             txtNoPayment.Text = "";
             txtTotalPayment.Text = "";
             txtInterest.Text = "";
             dataGridView1.Rows.Clear();
+            txtSC.Text = "";
+            txtSD.Text = "";
+            cmbLessType.SelectedIndex = -1;
+            txtDateHired.Text = "";
+            txtNoOfServiceInYears.Text = "";
         }
 
         private void txtLoanAmount_KeyPress(object sender, KeyPressEventArgs e)
@@ -484,7 +539,7 @@ namespace WindowsFormsApplication2
                         }
 
                         //Put in LESS 
-                        string[] row = { dt.Rows[0].ItemArray[1].ToString() + " - " + dt.Rows[0].ItemArray[0].ToString(), Convert.ToDecimal(dt.Rows[0].ItemArray[37].ToString()).ToString("#,0.00") };
+                        string[] row = { dt.Rows[0].ItemArray[1].ToString() + " - " + dt.Rows[0].ItemArray[0].ToString(), Convert.ToDecimal(dt.Rows[0].ItemArray[38].ToString()).ToString("#,0.00") };
                         dataGridView1.Rows.Add(row);
 
                     }
@@ -493,6 +548,35 @@ namespace WindowsFormsApplication2
                         plarRenew = false;
                     }
                 }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            if(txtSC.Text != "")
+            {
+                txtSC.Text = Convert.ToDecimal(txtSC.Text).ToString("#,0.00");
+            }
+        }
+
+        private void txtSD_Leave(object sender, EventArgs e)
+        {
+            if (txtSD.Text != "")
+            {
+                txtSD.Text = Convert.ToDecimal(txtSD.Text).ToString("#,0.00");
+            }
+        }
+
+        private void txtAmountLESS_Leave(object sender, EventArgs e)
+        {
+            if (txtAmountLESS.Text != "")
+            {
+                txtAmountLESS.Text = Convert.ToDecimal(txtAmountLESS.Text).ToString("#,0.00");
             }
         }
     }

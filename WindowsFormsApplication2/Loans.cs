@@ -224,6 +224,8 @@ namespace WindowsFormsApplication2
                 loansDataEntry.txtSemiMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Semi_Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
                 loansDataEntry.comboBox1.Text = dataGridView1.SelectedRows[0].Cells["Payment_Option"].Value.ToString();
                 loansDataEntry.comboBox1.Enabled = false;
+                loansDataEntry.cmbReleaseOption.Text = dataGridView1.SelectedRows[0].Cells["ReleaseOption"].Value.ToString();
+                loansDataEntry.cmbReleaseOption.Enabled = false;
 
                 //============================================================
                 //              END DETAILS OF LOAN
@@ -269,6 +271,21 @@ namespace WindowsFormsApplication2
                 loansDataEntry.status.Visible = true;
                 loansDataEntry.status.Text = dataGridView1.SelectedRows[0].Cells["status_description"].Value.ToString();
 
+                /*
+                * IF STATUS IS CANCELLED THEN DISPLAY THE CANCELLED NOTE
+                */
+
+                if(dataGridView1.SelectedRows[0].Cells["Status"].Value.ToString() == "7")
+                {
+                    loansDataEntry.txtCancel.Visible = true;
+                    loansDataEntry.lblReason.Visible = true;
+                    loansDataEntry.txtCancel.Text = dataGridView1.SelectedRows[0].Cells["Note"].Value.ToString();
+                }
+                else
+                {
+                    loansDataEntry.txtCancel.Visible = false;
+                    loansDataEntry.lblReason.Visible = false;
+                }
 
 
                 //If Approve BtnForward visible = false and Cancel will be visible

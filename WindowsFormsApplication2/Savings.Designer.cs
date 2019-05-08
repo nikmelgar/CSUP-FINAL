@@ -203,7 +203,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 89.83051F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.16949F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 540F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 542F));
             this.tableLayoutPanel1.Controls.Add(this.dtWithdrawalDate, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.label10, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 1);
@@ -226,7 +226,7 @@
             // 
             this.dtWithdrawalDate.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtWithdrawalDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtWithdrawalDate.Location = new System.Drawing.Point(188, 75);
+            this.dtWithdrawalDate.Location = new System.Drawing.Point(186, 75);
             this.dtWithdrawalDate.Name = "dtWithdrawalDate";
             this.dtWithdrawalDate.Size = new System.Drawing.Size(416, 28);
             this.dtWithdrawalDate.TabIndex = 14;
@@ -235,7 +235,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(170, 1);
+            this.label10.Location = new System.Drawing.Point(168, 1);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(10, 20);
@@ -246,7 +246,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(170, 38);
+            this.label12.Location = new System.Drawing.Point(168, 38);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(10, 20);
@@ -278,7 +278,7 @@
             // txtWithdrawalSlipNo
             // 
             this.txtWithdrawalSlipNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtWithdrawalSlipNo.Location = new System.Drawing.Point(189, 42);
+            this.txtWithdrawalSlipNo.Location = new System.Drawing.Point(187, 42);
             this.txtWithdrawalSlipNo.Margin = new System.Windows.Forms.Padding(4);
             this.txtWithdrawalSlipNo.Name = "txtWithdrawalSlipNo";
             this.txtWithdrawalSlipNo.Size = new System.Drawing.Size(415, 26);
@@ -288,7 +288,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(170, 72);
+            this.label15.Location = new System.Drawing.Point(168, 72);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(10, 20);
@@ -315,7 +315,7 @@
             "ATM - AT",
             "CASH - CA",
             "CHEQUE - CH"});
-            this.cmbMode.Location = new System.Drawing.Point(188, 4);
+            this.cmbMode.Location = new System.Drawing.Point(186, 4);
             this.cmbMode.Name = "cmbMode";
             this.cmbMode.Size = new System.Drawing.Size(416, 29);
             this.cmbMode.TabIndex = 15;

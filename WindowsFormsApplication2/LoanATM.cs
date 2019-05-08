@@ -67,7 +67,7 @@ namespace WindowsFormsApplication2
         {
             clsLoanATM.loadATMWithdrawal(dataGridView2);
             clsLoanATM.loadBank(cmbBank);
-            txtCancelNote.Text = "";
+            txtReason.Text = "";
             txtEmployeeID.Text = "";
             txtLastName.Text = "";
             txtFirstName.Text = "";
@@ -138,6 +138,121 @@ namespace WindowsFormsApplication2
 
         private void panel5_Paint(object sender, PaintEventArgs e)
         {
+
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if(dataGridView2.Rows.Count > 0)
+            {
+                if (dataGridView2.SelectedRows.Count == 0)
+                {
+                    //No Data to be edit
+                    Alert.show("Please select record first.", Alert.AlertType.warning);
+                    return;
+                }
+
+                if(txtReason.Text == "")
+                {
+                    Alert.show("Reason is required for cancellation of loan.", Alert.AlertType.error);
+                    return;
+                }
+
+                string msg = Environment.NewLine + "Are you sure you want to cancel this loan?";
+                DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    /*
+                    *   cancel loan
+                    *   cancel journal 
+                    *   task to cancel
+                    */
+
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
+
+                        //Cancelled Loan
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "UPDATE Loan SET Status = '7', Note ='"+ txtReason.Text +"' WHERE Loan_No = '"+ dataGridView2.SelectedRows[0].Cells["Loan_No"].Value.ToString() +"'";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
+
+                        //Cancelled JV
+                        SqlCommand cmdJV = new SqlCommand();
+                        cmdJV.Connection = con;
+                        cmdJV.CommandText = "UPDATE Journal_Header SET Posted = '0', Cancelled = '1', Cancelled_By = '"+ Classes.clsUser.Username +"', Cancel_Note = '"+ txtReason.Text +"' WHERE jv_no = '"+ dataGridView2.SelectedRows[0].Cells["jv_no"].Value.ToString() + "'";
+                        cmdJV.CommandType = CommandType.Text;
+                        cmdJV.ExecuteNonQuery();
+                    }
+                    Alert.show("Loan successfully cancelled.", Alert.AlertType.success);
+                    //refresh
+                    clsLoanATM.loadATMWithdrawal(dataGridView2);
+                    clsLoanATM.loadBank(cmbBank);
+                }
+
+            }
+            else
+            {
+                Alert.show("No records found.", Alert.AlertType.error);
+                return;
+            }
+           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (dataGridView2.Rows.Count > 0)
+            {
+                if (dataGridView2.SelectedRows.Count == 0)
+                {
+                    //No Data to be edit
+                    Alert.show("Please select record first.", Alert.AlertType.warning);
+                    return;
+                }
+
+                if (txtReason.Text == "")
+                {
+                    Alert.show("Reason is required.", Alert.AlertType.error);
+                    return;
+                }
+
+                string msg = Environment.NewLine + "Are you sure you want to return this loan for approval?";
+                DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
+
+                        //Cancelled JV
+                        SqlCommand cmdJV = new SqlCommand();
+                        cmdJV.Connection = con;
+                        cmdJV.CommandText = "UPDATE Journal_Header SET Posted = '0', Cancelled = '1', Cancelled_By = '" + Classes.clsUser.Username + "', Cancel_Note = '" + txtReason.Text + "' WHERE jv_no = '" + dataGridView2.SelectedRows[0].Cells["jv_no"].Value.ToString() + "'";
+                        cmdJV.CommandType = CommandType.Text;
+                        cmdJV.ExecuteNonQuery();
+                        
+
+                        //RETURN TO FOR APPROVAL
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "UPDATE Loan SET Status = '1', jv_no = NULL WHERE loan_no = '"+ dataGridView2.SelectedRows[0].Cells["loan_no"].Value.ToString() +"'";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    Alert.show("Loan No "+ dataGridView2.SelectedRows[0].Cells["loan_no"].Value.ToString() + " successfully returned for approval.", Alert.AlertType.success);
+                    //refresh
+                    clsLoanATM.loadATMWithdrawal(dataGridView2);
+                    clsLoanATM.loadBank(cmbBank);
+                }
+            }
+            else
+            {
+                Alert.show("No records found.", Alert.AlertType.error);
+                return;
+            }
 
         }
     }

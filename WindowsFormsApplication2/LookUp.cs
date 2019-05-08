@@ -31,7 +31,7 @@ namespace WindowsFormsApplication2
         private Point m_firstClickLoc;
         private void label1_Click(object sender, EventArgs e)
         {
-            this.Close();
+           
         }
 
         private void LookUp_Load(object sender, EventArgs e)
@@ -351,6 +351,11 @@ namespace WindowsFormsApplication2
                 case "1":
                     break;
             }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

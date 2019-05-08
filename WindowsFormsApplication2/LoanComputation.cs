@@ -133,6 +133,24 @@ namespace WindowsFormsApplication2
             txtInterest.Text = dataGridView1.SelectedRows[0].Cells["Interest"].Value.ToString();
             txtPrincipal.Text = clsLoanComputation.returnPrincipalID(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString()));
 
+            /*
+            *   THIS WILL ENABLE ATM OR CHEQUE BUTTON
+            *   ENHANCEMENT FOR LOAN COMPUTATION
+            */
+
+            if(dataGridView1.SelectedRows[0].Cells["ReleaseOption"].Value.ToString() == "ATM")
+            {
+                //ATM OPTION
+                button1.Enabled = false;
+                button2.Enabled = true;
+            }
+            else
+            {
+                //CHEQUE
+                button1.Enabled = true;
+                button2.Enabled = false;
+            }
+
             //=====================================================================
             //              LOAN COMPUTATION 
             //=====================================================================

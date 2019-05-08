@@ -148,6 +148,7 @@ namespace WindowsFormsApplication2
                 }
                 else if(dataGridView1.SelectedRows[0].Cells["Cancelled"].Value.ToString() == "True")
                 {
+                    jv.txtParticulars.Text = dataGridView1.SelectedRows[0].Cells["Cancel_Note"].Value.ToString();
                     jv.status.Visible = true;
                     jv.status.Text = "CANCELLED";
                 }
