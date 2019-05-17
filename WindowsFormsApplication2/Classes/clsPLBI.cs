@@ -147,7 +147,7 @@ namespace WindowsFormsApplication2.Classes
                 dt = new DataTable();
                 adapter.Fill(dt);
 
-                return dt.Rows[0].ItemArray[0].ToString() + " -- " + dt.Rows[0].ItemArray[1].ToString();
+                return dt.Rows[0].ItemArray[1].ToString() + " - " + dt.Rows[0].ItemArray[0].ToString();
             }
                 
         }

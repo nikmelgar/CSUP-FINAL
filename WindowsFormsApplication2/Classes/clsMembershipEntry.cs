@@ -13,7 +13,7 @@ namespace WindowsFormsApplication2
     {
         SqlConnection con;
         Global global = new Global();
-
+        clsMembership clsMembership = new clsMembership();
 
         public static string principal { get; set; }
         public static string userID { get; set; }
@@ -70,6 +70,8 @@ namespace WindowsFormsApplication2
         public bool CheckValuesEntry(TextBox LastName, TextBox FirstName, TextBox Address, ComboBox CivilStatus, MaskedTextBox TinNo, DateTimePicker DateOfBirth, TextBox PlacePMS, DateTimePicker DatePMS, TextBox EmployeeID, ComboBox Company, ComboBox PayrollGroup, ComboBox CostCenter, DateTimePicker DateHired, TextBox NameContactPerson, MaskedTextBox ContactNo1)
         {
             TinNo.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            ContactNo1.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+
             if (LastName.Text != "" || FirstName.Text != "" || Address.Text != "" || CivilStatus.Text != "" || TinNo.Text != "" || PlacePMS.Text != "" || EmployeeID.Text != "" || Company.Text != "" || PayrollGroup.Text != "" || CostCenter.Text != "" || NameContactPerson.Text != "" || ContactNo1.Text != "")
             {
                 return true;
@@ -77,6 +79,33 @@ namespace WindowsFormsApplication2
             else
             {
                 return false;
+            }
+        }
+
+        //For Leaving without saving
+        public bool CheckValuesForUpdating(TextBox LastName, TextBox FirstName, TextBox Address, ComboBox CivilStatus, MaskedTextBox TinNo, DateTimePicker DateOfBirth, TextBox PlacePMS, DateTimePicker DatePMS, TextBox EmployeeID, ComboBox Company, ComboBox PayrollGroup, ComboBox CostCenter, DateTimePicker DateHired, TextBox NameContactPerson, MaskedTextBox ContactNo1)
+        {
+            //TRUE = Not Change
+            //FALSE = Change values
+            TinNo.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            ContactNo1.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("select LastName,FirstName,Residential_Address,Civil_Status,TinNo,Date_Of_Birth,Place_PMS,Date_Of_PMS,EmployeeID,Company_Code,Payroll_Code,Cost_Center_Code,Date_Hired, Contact_Person, Contact_No1 from Membership WHERE userid = '" + clsMembershipEntry.userID + "'", con);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (LastName.Text == ds.Tables[0].Rows[0]["LastName"].ToString() && FirstName.Text == ds.Tables[0].Rows[0]["FirstName"].ToString() && Address.Text == ds.Tables[0].Rows[0]["Residential_Address"].ToString() && CivilStatus.Text == ds.Tables[0].Rows[0]["Civil_Status"].ToString() && TinNo.Text == ds.Tables[0].Rows[0]["TinNo"].ToString() && DateOfBirth.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Of_Birth"].ToString()).ToShortDateString() && PlacePMS.Text == ds.Tables[0].Rows[0]["Place_PMS"].ToString() && DatePMS.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Of_PMS"].ToString()).ToShortDateString() && EmployeeID.Text == ds.Tables[0].Rows[0]["EmployeeID"].ToString() && Company.Text == clsMembership.returnCompanyDescription(ds.Tables[0].Rows[0]["Company_Code"].ToString()) && PayrollGroup.Text == clsMembership.returnPayrollDescription(ds.Tables[0].Rows[0]["Payroll_Code"].ToString()) && CostCenter.Text == clsMembership.returnCostCenter(ds.Tables[0].Rows[0]["Cost_Center_Code"].ToString()) && DateHired.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Hired"].ToString()).ToShortDateString() && NameContactPerson.Text == ds.Tables[0].Rows[0]["Contact_Person"].ToString() && ContactNo1.Text == ds.Tables[0].Rows[0]["Contact_No1"].ToString())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 

@@ -19,6 +19,7 @@ namespace WindowsFormsApplication2.Classes
         DataTable dt;
 
         Global global = new Global();
+        Classes.clsParameter clsParameter = new clsParameter();
         public string returnCompanyDescription(int userID)
         {
             using (SqlConnection con = new SqlConnection(global.connectString()))
@@ -209,5 +210,248 @@ namespace WindowsFormsApplication2.Classes
 
             }
         }
+
+        //For Automatic computation of deferred and 20% net
+        #region Automate_Computation
+        //Check first if he/she has a deferred loan
+        public Boolean hasDeferredLoan(int userid,string presentLoan_Type)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanBalancesDeferredForAutomaticComp";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userid", userid);
+                cmd.Parameters.AddWithValue("@loan_Type", presentLoan_Type);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+
+                if(ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        //Get Total Sum Amount of Deferred loans
+        public decimal totalDeferredAmount(int userid,string presentLoan_Type)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanBalancesDeferredForAutomaticComp";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userid", userid);
+                cmd.Parameters.AddWithValue("@loan_Type", presentLoan_Type);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+
+                decimal sumttal = 0;
+
+                for(int x = 0; x < ds.Tables[0].Rows.Count; x++)
+                {
+                    sumttal = sumttal + Convert.ToDecimal(ds.Tables[0].Rows[x]["Deferred"].ToString());
+                }
+
+                return sumttal;
+            }
+        }
+
+        //Insert to temp Table 
+        public void insertLoanDeferred(int userid,string presentLoan_Type,string loan_no)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_ReturnLoanBalancesDeferredForAutomaticComp";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userid", userid);
+                cmd.Parameters.AddWithValue("@loan_Type", presentLoan_Type);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+                
+                for (int x = 0; x < ds.Tables[0].Rows.Count; x++)
+                {
+                    SqlCommand cmdInsert = new SqlCommand();
+                    cmdInsert.Connection = con;
+                    cmdInsert.CommandText = "sp_InsertLoanAutoCompute";
+                    cmdInsert.CommandType = CommandType.StoredProcedure;
+                    cmdInsert.Parameters.AddWithValue("@loan_No", loan_no);
+                    cmdInsert.Parameters.AddWithValue("@loan_Type", ds.Tables[0].Rows[x]["Loan_Type"].ToString());
+                    cmdInsert.Parameters.AddWithValue("@Amount", Convert.ToDecimal(ds.Tables[0].Rows[x]["Deferred"].ToString()));
+                    cmdInsert.ExecuteNonQuery();
+                }
+            }
+        }
+
+        //Get the percentage of deferred amount and update in table
+        public void updateLoanDeferredPercent(string loan_no,decimal ttalDefAmount)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM loan_AutoCompute WHERE Loan_No ='"+ loan_no +"'", con);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+
+                if(ds.Tables[0].Rows.Count > 0)
+                {
+                    for(int x = 0; x < ds.Tables[0].Rows.Count; x++)
+                    {
+                        SqlCommand cmd = new SqlCommand();
+                        cmd.Connection = con;
+                        cmd.CommandText = "UPDATE loan_AutoCompute SET Percentage = '"+ Convert.ToDouble(ds.Tables[0].Rows[x]["Amount"].ToString()) / Convert.ToDouble(ttalDefAmount) + "' WHERE Loan_No = '"+ loan_no +"' and Loan_Type = '"+ ds.Tables[0].Rows[x]["Loan_Type"].ToString() +"'";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        //Get the net amount 
+        public decimal getTotalAmountMinusServiceFee(decimal loan_amount,decimal share,decimal savings,string loan_Type)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE val = '"+ loan_Type + "' and Description = 'No Service Fee'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                decimal ret = 0;
+                if (dt.Rows.Count > 0)
+                {
+                    ret = loan_amount * clsParameter.serviceFee();
+                }
+                else
+                {
+                    ret = loan_amount * clsParameter.serviceFee();
+                }
+                ret = loan_amount - ret;
+                ret = ret - share;
+                ret = ret - savings;
+
+                ret = ret * clsParameter.net20Percent();
+
+                return ret;
+            }
+        }
+
+        //Delete first before updating
+        public void deleteLoanAuto(string loan_no)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "DELETE loan_AutoCompute Where Loan_No = '" + loan_no + "'";
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void updateForShareandSavings(string loan_No,string loanAmount,string shareCapital,string savings,string loan_Type,DataGridView dgvLoanApproval)
+        {
+            deleteLoanAuto(loan_No);
+
+            insertLoanDeferred(Classes.clsLoanDataEntry.userID, loan_Type, loan_No);
+
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+
+                //Check if 20% of net is Greater than or Less Than
+                if (getTotalAmountMinusServiceFee(Convert.ToDecimal(loanAmount), Convert.ToDecimal(shareCapital), Convert.ToDecimal(savings), loan_Type) > totalDeferredAmount(Classes.clsLoanDataEntry.userID, loan_Type))
+                {
+                    //if Greater than then as ease the value
+                    SqlDataAdapter adapterGet = new SqlDataAdapter("select * from loan_AutoCompute where loan_no = '" + loan_No + "'", con);
+                    DataSet ds = new DataSet();
+                    adapterGet.Fill(ds);
+
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        for (int xx = 0; xx < ds.Tables[0].Rows.Count; xx++)
+                        {
+                            foreach (DataGridViewRow row in dgvLoanApproval.Rows)
+                            {
+                                if (row.Cells[7].Value.ToString().Contains(ds.Tables[0].Rows[xx]["Loan_Type"].ToString()))
+                                {
+                                    row.Cells[4].Value = Convert.ToDecimal(ds.Tables[0].Rows[xx]["Amount"].ToString()).ToString("#,0.00");
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //Move to percentage value and allocate
+                    //Second compute percentage
+                    updateLoanDeferredPercent(loan_No, totalDeferredAmount(Classes.clsLoanDataEntry.userID, loan_Type));
+
+                    //Update Amount if The 20% of Net is less than the deferred amount
+                    SqlDataAdapter adapterGet = new SqlDataAdapter("select * from loan_AutoCompute where loan_no = '" + loan_No + "'", con);
+                    DataSet ds = new DataSet();
+                    adapterGet.Fill(ds);
+                    string amt;
+                    decimal net = getTotalAmountMinusServiceFee(Convert.ToDecimal(loanAmount), Convert.ToDecimal(shareCapital), Convert.ToDecimal(savings), loan_Type);
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        for (int x = 0; x < ds.Tables[0].Rows.Count; x++)
+                        {
+                            SqlCommand cmd2 = new SqlCommand();
+                            cmd2.Connection = con;
+                            amt = Convert.ToString(Convert.ToDecimal(net) * Convert.ToDecimal(ds.Tables[0].Rows[x]["Percentage"].ToString()));
+                            cmd2.CommandText = "UPDATE loan_AutoCompute set Amount = " + Convert.ToDecimal(decimal.Round(Convert.ToDecimal(amt), 2)) + " WHERE loan_type = '" + ds.Tables[0].Rows[x]["Loan_Type"].ToString() + "' and loan_no = '" + loan_No + "'";
+                            cmd2.CommandType = CommandType.Text;
+                            cmd2.ExecuteNonQuery();
+                        }
+
+                        //SELECT THE UPDATED VALUES IN TABLE
+                        SqlDataAdapter adpterUpdate = new SqlDataAdapter("select * from loan_AutoCompute where loan_no = '" + loan_No + "'", con);
+                        DataSet ds2 = new DataSet();
+                        adpterUpdate.Fill(ds2);
+
+                        for (int xx = 0; xx < ds2.Tables[0].Rows.Count; xx++)
+                        {
+                            foreach (DataGridViewRow row in dgvLoanApproval.Rows)
+                            {
+                                if (row.Cells[7].Value.ToString().Contains(ds2.Tables[0].Rows[xx]["Loan_Type"].ToString()))
+                                {
+                                    row.Cells[4].Value = Convert.ToDecimal(ds2.Tables[0].Rows[xx]["Amount"].ToString()).ToString("#,0.00");
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+        #endregion
     }
 }

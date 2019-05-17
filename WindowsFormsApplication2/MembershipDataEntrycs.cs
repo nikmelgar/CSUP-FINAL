@@ -28,26 +28,51 @@ namespace WindowsFormsApplication2
         MembershipMain Membership = new MembershipMain();
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (clsMembershipEntry.CheckValuesEntry(txtLastName, txtFirstName, txtAddress, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup, cmbPayrollGroup, dtDateHired, txtContactName, txtContactNo1) == true)
+            if(btnNew.Enabled == true)
             {
-                string msg = Environment.NewLine + "Are you sure you want to Cancel this Entry?";
-                DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
+                if (clsMembershipEntry.CheckValuesEntry(txtLastName, txtFirstName, txtAddress, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup, cmbPayrollGroup, dtDateHired, txtContactName, txtContactNo1) == true)
                 {
-                    //Clear All fields inside Membership Data Entry
-                    clearAllFields();
-                    this.Close();
+                    string msg = Environment.NewLine + "Are you sure you want to Cancel this Entry?";
+                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        //Clear All fields inside Membership Data Entry
+                        clearAllFields();
+                        this.Close();
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 else
                 {
-                    return;
+                    this.Close();
                 }
             }
             else
             {
-                this.Close();
+                //For update purposes
+                if (clsMembershipEntry.CheckValuesForUpdating(txtLastName, txtFirstName, txtAddress, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany,cmbPayrollGroup,cmbCostCenter, dtDateHired, txtContactName, txtContactNo1) == false)
+                {
+                    string msg = Environment.NewLine + "Are you sure you want to exit without saving changes?";
+                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        //Clear All fields inside Membership Data Entry
+                        clearAllFields();
+                        this.Close();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    this.Close();
+                }
             }
-
         }
     
 
@@ -1021,7 +1046,6 @@ namespace WindowsFormsApplication2
             picPicture.Image = imageList1.Images[0];
             btnNew.Text = "NEW";
             btnNew.Enabled = true;
-            btnDelete.Enabled = false;
             btnEdit.Enabled = false;
 
             //refresh

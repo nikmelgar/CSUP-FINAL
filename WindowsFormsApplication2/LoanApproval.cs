@@ -23,12 +23,15 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         Classes.clsLoanApproval clsApproval = new Classes.clsLoanApproval();
         Classes.clsParameter clsParameter = new Classes.clsParameter();
+        Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
 
         SqlConnection con;
         SqlCommand cmd;
         SqlDataAdapter adapter;
         DataTable dt;
 
+        Boolean plarRenew;
+        string plarAmnt;
         private void panelHeader_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -100,7 +103,7 @@ namespace WindowsFormsApplication2
                     srvc = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
 
                     //For Loans that not required a service fee
-                    SqlDataAdapter adapterSRV = new SqlDataAdapter("SELECT VAL FROM Parameter WHERE val = '" + cmbLoanType.Text + "'", con);
+                    SqlDataAdapter adapterSRV = new SqlDataAdapter("SELECT VAL FROM Parameter WHERE val = '" + cmbLoanType.Text + "' and Description = 'No Service Fee'", con);
                     DataTable dtSRV = new DataTable();
                     adapterSRV.Fill(dtSRV);
 
@@ -586,6 +589,78 @@ namespace WindowsFormsApplication2
         private void LoanApproval_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void txtShareCapital_TextChanged(object sender, EventArgs e)
+        {
+            if(txtShareCapital.Text != "")
+            {
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.Cells[7].Value.ToString().Contains("PLAR"))
+                    {
+                        plarRenew = true;
+                    }
+                }
+
+                if (cmbLoanType.Text == "PLAR" && plarRenew == true)
+                {
+                    
+
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if(row.Cells[7].Value.ToString().Contains("PLAR"))
+                        {
+                            plarAmnt = row.Cells[2].Value.ToString();
+                        }
+                    }
+
+                    decimal newAmt = Convert.ToDecimal(txtLoanAmount.Text) - Convert.ToDecimal(plarAmnt);
+
+                    plarAmnt = newAmt.ToString("#,0.00");
+                    clsLoanDataEntry.updateForShareandSavings(txtLoanNo.Text, plarAmnt, txtShareCapital.Text, txtSavings.Text, cmbLoanType.Text, dataGridView1);
+                }
+                else
+                {
+                    clsLoanDataEntry.updateForShareandSavings(txtLoanNo.Text, txtLoanAmount.Text, txtShareCapital.Text, txtSavings.Text, cmbLoanType.Text, dataGridView1);
+                }
+            }
+        }
+
+        private void txtSavings_TextChanged(object sender, EventArgs e)
+        {
+            if (txtSavings.Text != "")
+            {
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.Cells[7].Value.ToString().Contains("PLAR"))
+                    {
+                        plarRenew = true;
+                    }
+                }
+
+                if (cmbLoanType.Text == "PLAR" && plarRenew == true)
+                {
+
+
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (row.Cells[7].Value.ToString().Contains("PLAR"))
+                        {
+                            plarAmnt = row.Cells[2].Value.ToString();
+                        }
+                    }
+
+                    decimal newAmt = Convert.ToDecimal(txtLoanAmount.Text) - Convert.ToDecimal(plarAmnt);
+
+                    plarAmnt = newAmt.ToString("#,0.00");
+                    clsLoanDataEntry.updateForShareandSavings(txtLoanNo.Text, plarAmnt, txtShareCapital.Text, txtSavings.Text, cmbLoanType.Text, dataGridView1);
+                }
+                else
+                {
+                    clsLoanDataEntry.updateForShareandSavings(txtLoanNo.Text, txtLoanAmount.Text, txtShareCapital.Text, txtSavings.Text, cmbLoanType.Text, dataGridView1);
+                }
+            }
         }
     }
     

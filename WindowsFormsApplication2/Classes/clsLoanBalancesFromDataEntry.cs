@@ -39,14 +39,22 @@ namespace WindowsFormsApplication2.Classes
 
                     if (dt.Rows.Count > 0)
                     {
+                        //Prev Loan for Renewal
+
                         txtOldLoanNo.Text = dt.Rows[0].ItemArray[0].ToString();
                         txtOldLoanType.Text = dt.Rows[0].ItemArray[1].ToString();
                         txtGrossAmount.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[3].ToString()).ToString("#,0.00");
                         txtReleasedDate.Text = Convert.ToDateTime(dt.Rows[0].ItemArray[33].ToString().ToString()).ToString("MM/dd/yyyy");
-                        txtExistingBalance.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[37].ToString()).ToString("#,0.00");
-                        txtDeferredBalances.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[38].ToString()).ToString("#,0.00");
+                        txtExistingBalance.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[38].ToString()).ToString("#,0.00");
+                        txtDeferredBalances.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[39].ToString()).ToString("#,0.00");
                         txtTermsinMos.Text = dt.Rows[0].ItemArray[5].ToString();
                         txtMonthlyAmort.Text = Convert.ToDecimal(dt.Rows[0].ItemArray[7].ToString()).ToString("#,0.00");
+
+                        if(checkIfEqualMaxAndBalance(loan_type, Convert.ToDecimal(txtExistingBalance.Text)) == true)
+                        {
+                            return;
+                        }
+
                     }
 
                     else
@@ -62,6 +70,29 @@ namespace WindowsFormsApplication2.Classes
                     }
                 }
             }
-        } 
+        }
+        
+        public Boolean checkIfEqualMaxAndBalance(string loan_Type,decimal Balance)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                //first get the max amount of that loan and compare to the balance of that loan if equal to the max amount then decline
+                SqlDataAdapter adapterGetMax = new SqlDataAdapter("SELECT Max_Loan_Amount FROM Loan_Type WHERE Loan_Type = '" + loan_Type + "'", con);
+                DataTable dtGetMax = new DataTable();
+                adapterGetMax.Fill(dtGetMax);
+
+                if(Balance >= Convert.ToDecimal(dtGetMax.Rows[0].ItemArray[0].ToString()))
+                {
+                    Alert.show("Maximum loanable amount reached.", Alert.AlertType.error);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }

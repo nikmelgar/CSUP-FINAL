@@ -18,6 +18,8 @@ namespace WindowsFormsApplication2
             InitializeComponent();
         }
 
+        //For PLAR Renew
+
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
 
@@ -235,6 +237,105 @@ namespace WindowsFormsApplication2
                 ///Load Balances
 
                 clsApproval.loadLoanBalances(Classes.clsLoanDataEntry.userID, loanApproval.dataGridView1, cmbLoanType.SelectedValue.ToString());
+
+
+                /*
+                *   This is for the automation of the loan deferred
+                *   20% Net
+                */
+
+                //Compute for 20 net 
+                //Check first if theres a deferred loan (Selected Member by User)
+                if(clsLoanDataEntry.hasDeferredLoan(Classes.clsLoanDataEntry.userID,cmbLoanType.SelectedValue.ToString()) == true)
+                {
+                    //Delete first before adding to temp table
+                    SqlCommand cmdDelete = new SqlCommand();
+                    cmdDelete.Connection = con;
+                    cmdDelete.CommandText = "Delete loan_AutoCompute";
+                    cmdDelete.CommandType = CommandType.Text;
+                    cmdDelete.ExecuteNonQuery();
+
+                    //First step add to table
+                    clsLoanDataEntry.insertLoanDeferred(Classes.clsLoanDataEntry.userID, cmbLoanType.SelectedValue.ToString(), txtLoanNo.Text);
+
+                    //Check if 20% of net is Greater than or Less Than
+
+                    //check if plar
+                    string loanAmnt = txtLoanAmount.Text;
+                    if(cmbLoanType.SelectedValue.ToString() == "PLAR" && txtPrevOutstandingBalance.Text != "")
+                    {
+                        //Minus the balance in loan amount
+                        decimal amt;
+                        amt = Convert.ToDecimal(txtLoanAmount.Text) - Convert.ToDecimal(txtPrevOutstandingBalance.Text);
+
+                        loanAmnt = amt.ToString();
+                    }
+
+                    if (clsLoanDataEntry.getTotalAmountMinusServiceFee(Convert.ToDecimal(loanAmnt),Convert.ToDecimal(loanApproval.txtShareCapital.Text),Convert.ToDecimal(loanApproval.txtSavings.Text),cmbLoanType.SelectedValue.ToString()) > clsLoanDataEntry.totalDeferredAmount(Classes.clsLoanDataEntry.userID,cmbLoanType.SelectedValue.ToString()))
+                    {
+                        //if Greater than then as ease the value
+                        SqlDataAdapter adapterGet = new SqlDataAdapter("select * from loan_AutoCompute where loan_no = '"+ txtLoanNo.Text +"'", con);
+                        DataSet ds = new DataSet();
+                        adapterGet.Fill(ds);
+
+                        if(ds.Tables[0].Rows.Count > 0)
+                        {
+                            for(int xx =0; xx < ds.Tables[0].Rows.Count; xx++)
+                            {
+                                foreach (DataGridViewRow row in loanApproval.dataGridView1.Rows)
+                                {
+                                    if (row.Cells[7].Value.ToString().Contains(ds.Tables[0].Rows[xx]["Loan_Type"].ToString()))
+                                    {
+                                        row.Cells[4].Value = Convert.ToDecimal(ds.Tables[0].Rows[xx]["Amount"].ToString()).ToString("#,0.00");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Move to percentage value and allocate
+                        //Second compute percentage
+                        clsLoanDataEntry.updateLoanDeferredPercent(txtLoanNo.Text, clsLoanDataEntry.totalDeferredAmount(Classes.clsLoanDataEntry.userID, cmbLoanType.SelectedValue.ToString()));
+
+                        //Update Amount if The 20% of Net is less than the deferred amount
+                        SqlDataAdapter adapterGet = new SqlDataAdapter("select * from loan_AutoCompute where loan_no = '" + txtLoanNo.Text + "'", con);
+                        DataSet ds = new DataSet();
+                        adapterGet.Fill(ds);
+                        string amt;
+                        decimal net = clsLoanDataEntry.getTotalAmountMinusServiceFee(Convert.ToDecimal(loanAmnt), Convert.ToDecimal(loanApproval.txtShareCapital.Text), Convert.ToDecimal(loanApproval.txtSavings.Text), cmbLoanType.SelectedValue.ToString());
+                        if (ds.Tables[0].Rows.Count > 0)
+                        {
+                            for(int x = 0; x < ds.Tables[0].Rows.Count; x++)
+                            {
+                                SqlCommand cmd2 = new SqlCommand();
+                                cmd2.Connection = con;
+                                amt = Convert.ToString(Convert.ToDecimal(net) * Convert.ToDecimal(ds.Tables[0].Rows[x]["Percentage"].ToString()));
+                                cmd2.CommandText = "UPDATE loan_AutoCompute set Amount = " + Convert.ToDecimal(decimal.Round(Convert.ToDecimal(amt), 2)) + " WHERE loan_type = '" + ds.Tables[0].Rows[x]["Loan_Type"].ToString() + "' and loan_no = '" + txtLoanNo.Text + "'";
+                                cmd2.CommandType = CommandType.Text;
+                                cmd2.ExecuteNonQuery();
+                            }
+
+                            //SELECT THE UPDATED VALUES IN TABLE
+                            SqlDataAdapter adpterUpdate = new SqlDataAdapter("select * from loan_AutoCompute where loan_no = '" + txtLoanNo.Text + "'", con);
+                            DataSet ds2 = new DataSet();
+                            adpterUpdate.Fill(ds2);
+
+                            for (int xx = 0; xx < ds2.Tables[0].Rows.Count; xx++)
+                            {
+                                foreach (DataGridViewRow row in loanApproval.dataGridView1.Rows)
+                                {
+                                    if (row.Cells[7].Value.ToString().Contains(ds2.Tables[0].Rows[xx]["Loan_Type"].ToString()))
+                                    {
+                                        row.Cells[4].Value = Convert.ToDecimal(ds2.Tables[0].Rows[xx]["Amount"].ToString()).ToString("#,0.00");
+                                    }
+                                }
+                            }
+
+                        }
+                        
+                    }       
+                }
             }
             this.Close();
             loanApproval.ShowDialog();
@@ -453,11 +554,19 @@ namespace WindowsFormsApplication2
                     Alert.show("Please select Release Option", Alert.AlertType.error);
                     return;
                 }
-
-
+                
                 if (cmbReleaseOption.Text == "ATM")
                 {
                     if(clsLoan.invalidBankAccount(Classes.clsLoanDataEntry.userID) == true)
+                    {
+                        return;
+                    }
+                }
+                
+                //Check if Max loanable amount for Prev.
+                if(txtPrevOutstandingBalance.Text != "")
+                {
+                    if (clsLoanBalances.checkIfEqualMaxAndBalance(cmbLoanType.SelectedValue.ToString(), Convert.ToDecimal(txtPrevOutstandingBalance.Text)) == true)
                     {
                         return;
                     }
@@ -513,7 +622,7 @@ namespace WindowsFormsApplication2
                         }
 
 
-                        if (dataGridView1.Rows.Count != answer)
+                        if (dataGridView1.Rows.Count != answer && dataGridView1.Rows.Count < answer)
                         {
                             Alert.show("Insufficient required number of co-makers (" + answer.ToString() + ")", Alert.AlertType.error);
                             return;

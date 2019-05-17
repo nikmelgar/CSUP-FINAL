@@ -60,7 +60,6 @@ namespace WindowsFormsApplication2.MembershipSubForms
                         form.Activate();
                         mementry = (MembershipDataEntrycs)Application.OpenForms["MembershipDataEntrycs"];
                         mementry.clearAllFields();
-                        mementry.btnDelete.Enabled = false;
                         mementry.btnEdit.Enabled = false;
                         mementry.btnNew.Enabled = true;
                         mementry.btnNew.Text = "SAVE";
@@ -84,9 +83,8 @@ namespace WindowsFormsApplication2.MembershipSubForms
                 }
 
                 mementry.clearAllFields();
-                mementry.btnNew.Text = "SAVE";
-                mementry.btnDelete.Enabled = false;
                 mementry.btnEdit.Enabled = false;
+                mementry.btnNew.Text = "SAVE";
                 mementry.btnNew.Enabled = true;
                 mementry.picPicture.Image = mementry.imageList1.Images[0];
                 mementry.tabControl1.SelectedTab = mementry.tabPage2;

@@ -34,9 +34,12 @@ namespace WindowsFormsApplication2
         SqlDataAdapter adapter;
         DataTable dt;
         double less;
+        double net20;
         public static int userID { get; set; }
         public static Boolean plarRenew { get; set; }
         public static Double plarExistingBalance { get; set; }
+
+        double lessTotal, netAmount;
         private void button1_Click(object sender, EventArgs e)
         {
           
@@ -137,7 +140,6 @@ namespace WindowsFormsApplication2
             }
 
             computeMonthly();
-
             //call the Report then display to the crystal report viewer
             loadReport();
         }
@@ -235,7 +237,7 @@ namespace WindowsFormsApplication2
                         cmd2.Connection = con;
                         cmd2.CommandText = "sp_insertLoanAmortLess";
                         cmd2.CommandType = CommandType.StoredProcedure;
-                        cmd2.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                        cmd2.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue.ToString());
                         cmd2.Parameters.AddWithValue("@Description", dataGridView1.Rows[b].Cells[0].Value.ToString());
                         cmd2.Parameters.AddWithValue("@Amount", Convert.ToDecimal(dataGridView1.Rows[b].Cells[1].Value.ToString()));
                         cmd2.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
@@ -252,7 +254,7 @@ namespace WindowsFormsApplication2
                     cmdSC.Connection = con;
                     cmdSC.CommandText = "sp_insertLoanAmortLess";
                     cmdSC.CommandType = CommandType.StoredProcedure;
-                    cmdSC.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                    cmdSC.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue.ToString());
                     cmdSC.Parameters.AddWithValue("@Description", "Share Capital");
                     cmdSC.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtSC.Text));
                     cmdSC.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
@@ -265,7 +267,7 @@ namespace WindowsFormsApplication2
                     cmdSD.Connection = con;
                     cmdSD.CommandText = "sp_insertLoanAmortLess";
                     cmdSD.CommandType = CommandType.StoredProcedure;
-                    cmdSD.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
+                    cmdSD.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue.ToString());
                     cmdSD.Parameters.AddWithValue("@Description", "Savings");
                     cmdSD.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtSD.Text));
                     cmdSD.Parameters.AddWithValue("@encoded_by", Classes.clsUser.Username);
@@ -278,6 +280,8 @@ namespace WindowsFormsApplication2
 
         public void loadReport()
         {
+            updateTableLess();
+
             CrystalDecisions.Shared.TableLogOnInfo li;
                        
             string str = "SELECT * FROM Loan_Amortization WHERE encoded_by = '"+ Classes.clsUser.Username.ToString() +"' order by balance desc";
@@ -345,24 +349,37 @@ namespace WindowsFormsApplication2
                 cr.SetParameterValue("NoOfPayments", txtTerminMos.Text);
                 cr.SetParameterValue("TotalPayments", txtTotalPayment.Text);
                 cr.SetParameterValue("TotalInterest", txtInterest.Text);
-                double lessTotal, netAmount;
-
-
+               
                 //If Loan PLAR is RENEW then change the service fee amount
 
                 if (plarRenew == true)
                 {
                     lessTotal = Convert.ToDouble(txtLoanAmount.Text) - plarExistingBalance;
                     lessTotal = lessTotal * Convert.ToDouble(clsParameter.serviceFee());
+                    //testing for plarbalance
+                    MessageBox.Show(plarExistingBalance.ToString("#,0.00"));
                 }
                 else
                 {
-                    lessTotal = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
+                    //For LOANS NOT REQUIRED SERVICE FEE
+                    SqlDataAdapter adapterNoFee = new SqlDataAdapter("SELECT VAL FROM Parameter WHERE val = '" + cmbLoanType.SelectedValue.ToString() + "' and Description = 'No Service Fee'", con);
+                    DataTable dtNoFee = new DataTable();
+                    adapterNoFee.Fill(dtNoFee);
+
+                    if(dtNoFee.Rows.Count > 0)
+                    {
+                        lessTotal = Convert.ToDouble(txtLoanAmount.Text) * 0.00;
+                    }
+                    else
+                    {
+                        lessTotal = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
+                    }
+
                 }
 
 
                 netAmount = Convert.ToDouble(txtLoanAmount.Text) - lessTotal;
-                netAmount = netAmount - less;
+                netAmount = netAmount - less; //Less all the loans and other deductions
 
                 cr.SetParameterValue("LessServiceFee", Convert.ToString(Convert.ToDecimal(lessTotal).ToString("#,0.00")));
                 cr.SetParameterValue("TotalNet", Convert.ToString(Convert.ToDecimal(netAmount).ToString("#,0.00")));
@@ -371,6 +388,143 @@ namespace WindowsFormsApplication2
             }
         }
 
+        public void updateTableLess()
+        {
+            //If Loan PLAR is RENEW then change the service fee amount
+
+            if (plarRenew == true)
+            {
+                lessTotal = Convert.ToDouble(txtLoanAmount.Text) - plarExistingBalance;
+                lessTotal = lessTotal * Convert.ToDouble(clsParameter.serviceFee());
+            }
+            else
+            {
+                lessTotal = Convert.ToDouble(txtLoanAmount.Text) * Convert.ToDouble(clsParameter.serviceFee());
+            }
+
+
+            netAmount = Convert.ToDouble(txtLoanAmount.Text) - lessTotal;
+            if(txtSD.Text != "")
+            {
+                netAmount = netAmount - Convert.ToDouble(txtSD.Text);
+            }
+
+            if(txtSC.Text != "")
+            {
+                netAmount = netAmount - Convert.ToDouble(txtSC.Text);
+            }
+
+            netAmount = netAmount - totalLoanLessNotDeferred();
+            //Get 20% of net first
+            net20 = netAmount * clsLoan.returnNetForAmmortization();
+            //net = This will be the Net 20%
+
+            if (checkIfHasDeferredLoan() == true)
+            {
+                if (net20 < Convert.ToDouble(totalDeferredLoanAmount()))
+                {
+                    updateDeferredPercentageAndAmount(net20);//First Update Percentage before Setting up the applied amount
+                }
+            }
+        }
+
+        public double totalLoanLessNotDeferred()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+                
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Amount FROM loan_amort_less WHERE Loan_Type ='" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username + "' and Description not like '%Deferred%' and Description not in('Share Capital','Savings')", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT sum(Amount) FROM loan_amort_less WHERE Loan_Type ='" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username + "' and Description not like '%Deferred%' and Description not in('Share Capital','Savings')", con);
+                    DataTable dt2 = new DataTable();
+                    adapter2.Fill(dt2);
+
+                    return Convert.ToDouble(dt2.Rows[0].ItemArray[0].ToString());
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        public decimal totalDeferredLoanAmount()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT SUM(Amount) FROM loan_amort_less WHERE Loan_Type ='" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username +"' and Description like '%Deferred%'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDecimal(decimal.Round(Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString()), 2));
+            }
+        }
+        
+        //Check if theres a deferred loan first
+        public Boolean checkIfHasDeferredLoan()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM loan_amort_less WHERE Loan_Type = '" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username + "' and Description like '%Deferred%'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        //Update the percentage of the deferred loans
+        public void updateDeferredPercentageAndAmount(double net)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+                string amnt;
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Amount,Description FROM loan_amort_less WHERE Loan_Type = '" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username + "' and Description like '%Deferred%'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                for(int x = 0; x < dt.Rows.Count; x++)
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "UPDATE loan_amort_less SET deferred_Percent ="+ Convert.ToDouble(dt.Rows[x].ItemArray[0].ToString()) / Convert.ToDouble(totalDeferredLoanAmount()) + " WHERE loan_Type = '"+ cmbLoanType.SelectedValue.ToString() +"' and encoded_by = '"+ Classes.clsUser.Username +"' and Description = '"+ dt.Rows[x].ItemArray[1].ToString() +"'";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
+
+                SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT Amount,Description,deferred_Percent FROM loan_amort_less WHERE Loan_Type = '" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username + "' and Description like '%Deferred%'", con);
+                DataTable dt2 = new DataTable();
+                adapter2.Fill(dt2);
+
+                for(int y = 0; y < dt2.Rows.Count; y++)
+                {
+                    SqlCommand cmd2 = new SqlCommand();
+                    cmd2.Connection = con;
+                    amnt = Convert.ToString(Convert.ToDecimal(net * Convert.ToDouble(dt2.Rows[y].ItemArray[2].ToString())));
+                    cmd2.CommandText = "UPDATE loan_amort_less set Amount = " + Convert.ToDecimal(decimal.Round(Convert.ToDecimal(amnt), 2)) + " WHERE loan_type = '" + cmbLoanType.SelectedValue.ToString() + "' and encoded_by = '" + Classes.clsUser.Username + "' and Description = '" + dt2.Rows[y].ItemArray[1].ToString() + "'";
+                    cmd2.CommandType = CommandType.Text;
+                    cmd2.ExecuteNonQuery();
+                }
+               
+            }
+        }
+        
         private void txtTerminMos_Leave(object sender, EventArgs e)
         {
             if (txtTerminMos.Text != "")
@@ -530,7 +684,7 @@ namespace WindowsFormsApplication2
                         if (cmbLoanType.SelectedValue.ToString() == "PLAR")
                         {
                             plarRenew = true;
-                            plarExistingBalance = Convert.ToDouble(dt.Rows[0].ItemArray[37].ToString());
+                            plarExistingBalance = Convert.ToDouble(dt.Rows[0].ItemArray[38].ToString());
                         }
                         else
                         {
@@ -546,6 +700,41 @@ namespace WindowsFormsApplication2
                     else
                     {
                         plarRenew = false;
+                    }
+
+
+                    //Load Loans Deferred 
+                    SqlCommand cmdDeferred = new SqlCommand();
+                    cmdDeferred.Connection = con;
+                    cmdDeferred.CommandText = "sp_ReturnLoanBalancesDeferred";
+                    cmdDeferred.CommandType = CommandType.StoredProcedure;
+                    cmdDeferred.Parameters.AddWithValue("@userid", userID);
+
+                    SqlDataAdapter adapterDef = new SqlDataAdapter(cmdDeferred);
+                    DataTable dtDef = new DataTable();
+                    adapterDef.Fill(dtDef);
+
+                    if(dtDef.Rows.Count > 0)
+                    {
+                        //Has a deferred loan(s)
+                        //Put the deferred loans in datagridview
+                        for(int x = 0; x<dtDef.Rows.Count; x++)
+                        {
+                            if(dt.Rows.Count > 0)
+                            {
+                                if (dt.Rows[0].ItemArray[1].ToString() != dtDef.Rows[x].ItemArray[1].ToString())
+                                {
+                                    //Will not add if the loan is selected already for renewal
+                                    string[] row = { dtDef.Rows[x].ItemArray[1].ToString() + " - Deferred", Convert.ToDecimal(dtDef.Rows[x].ItemArray[39].ToString()).ToString("#,0.00") };
+                                    dataGridView1.Rows.Add(row);
+                                }
+                            }
+                            else
+                            {
+                                string[] row = { dtDef.Rows[x].ItemArray[1].ToString() + " - Deferred", Convert.ToDecimal(dtDef.Rows[x].ItemArray[39].ToString()).ToString("#,0.00") };
+                                dataGridView1.Rows.Add(row);
+                            }
+                        }
                     }
                 }
             }

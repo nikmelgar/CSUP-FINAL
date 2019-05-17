@@ -487,5 +487,19 @@ namespace WindowsFormsApplication2.Classes
                 }
             }
         }
+
+        public double returnNetForAmmortization()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE frm = 'Loan' and Description = 'net20'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDouble(dt.Rows[0].ItemArray[0].ToString());
+            }
+        }
     }
 }

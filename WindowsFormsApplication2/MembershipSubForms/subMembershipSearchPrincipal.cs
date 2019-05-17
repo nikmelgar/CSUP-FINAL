@@ -78,7 +78,6 @@ namespace WindowsFormsApplication2.MembershipSubForms
                     mementry = (MembershipDataEntrycs)Application.OpenForms["MembershipDataEntrycs"];
                     mementry.btnEdit.Enabled = false;
                     mementry.btnNew.Text = "SAVE";
-                    mementry.btnDelete.Enabled = false;
                     mementry.picPicture.Image = mementry.imageList1.Images[0];
                     mementry.panel6.Enabled = false;
                     mementry.btnNew.Enabled = true;
@@ -119,7 +118,6 @@ namespace WindowsFormsApplication2.MembershipSubForms
             mementry.Show();
             mementry.btnNew.Text = "SAVE";
             mementry.btnEdit.Enabled = false;
-            mementry.btnDelete.Enabled = false;
             mementry.panel6.Enabled = false;
 
             //Move to Company Information        

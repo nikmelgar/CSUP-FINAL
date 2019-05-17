@@ -174,9 +174,21 @@ namespace WindowsFormsApplication2.Classes
                 adapter.Fill(dt);
 
                 return Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString());
-            }
+            }     
+        }
 
-              
+        public decimal net20Percent()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE Description = 'net20' and frm = 'Loan'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString());
+            }
         }
 
     }

@@ -164,7 +164,6 @@ namespace WindowsFormsApplication2
             }
 
             MembershipDataEntrycs mementry = new MembershipDataEntrycs();
-            mementry.btnDelete.Enabled = true;
             mementry.btnEdit.Enabled = true;
             mementry.btnNew.Enabled = false;
             if(x != true)
@@ -208,8 +207,7 @@ namespace WindowsFormsApplication2
                 
             }
 
-
-            dataentry.btnDelete.Enabled = true;
+            
             dataentry.btnEdit.Enabled = true;
             dataentry.btnNew.Enabled = false;
 
