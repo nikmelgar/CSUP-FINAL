@@ -22,6 +22,7 @@ namespace WindowsFormsApplication2.loanFrms
         Global global = new Global();
         Classes.clsLoanLookUp clsLookUp = new Classes.clsLoanLookUp();
         Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
+        clsMembership clsMembership = new clsMembership();
         private void label1_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -73,6 +74,17 @@ namespace WindowsFormsApplication2.loanFrms
 
         private void button2_Click(object sender, EventArgs e)
         {
+            //For Resigned Member
+            if (clsMembership.isResigned(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == true)
+            {
+                //Already Resigned
+                DialogResult result = MessageBox.Show(this, "This member already resigned, are you sure you want to continue?", "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
             LoansDataEntry loanDataEntry = new LoansDataEntry ();
 
             foreach (Form form in Application.OpenForms)

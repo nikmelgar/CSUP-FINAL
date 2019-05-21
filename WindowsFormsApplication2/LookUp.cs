@@ -26,6 +26,7 @@ namespace WindowsFormsApplication2
         Classes.clsCashReceipt clsCash = new Classes.clsCashReceipt();
         Classes.clsSavings clsSavings = new Classes.clsSavings();
         Classes.clsHoldAccounts clsHoldAccount = new Classes.clsHoldAccounts();
+        clsMembership clsMembership = new clsMembership();
 
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
@@ -159,6 +160,18 @@ namespace WindowsFormsApplication2
                         return;
                     }
                     //for dependent purposes
+
+
+                    //For Resigned Member
+                    if(clsMembership.isResigned(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == true)
+                    {
+                        //Already Resigned
+                        DialogResult result = MessageBox.Show(this, "This member already resigned, are you sure you want to continue?", "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
 
                     foreach (Form form in Application.OpenForms)
                     {

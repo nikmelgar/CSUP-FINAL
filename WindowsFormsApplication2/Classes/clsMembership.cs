@@ -363,5 +363,26 @@ namespace WindowsFormsApplication2
             }
 
         }
+
+        public Boolean isResigned(int userid)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT Date_Resigned_From_Pecci FROM Membership WHERE userID = '" + userid + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows[0].ItemArray[0].ToString() != "")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }
