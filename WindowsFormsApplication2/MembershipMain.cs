@@ -204,7 +204,9 @@ namespace WindowsFormsApplication2
                 dataentry.txtEmail.BackColor = SystemColors.Window;
                 dataentry.lblAsteriskEmail.Visible = false;
                 dataentry.lblAsteriskTIN.Visible = false;
-                
+                dataentry.dtResignedFromPecci.Enabled = true;
+
+
             }
 
             
