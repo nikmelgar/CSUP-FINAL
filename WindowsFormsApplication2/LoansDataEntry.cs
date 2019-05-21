@@ -28,6 +28,7 @@ namespace WindowsFormsApplication2
         Classes.clsLoanLookUp clsLookUp = new Classes.clsLoanLookUp();
         Classes.clsLoanApproval clsApproval = new Classes.clsLoanApproval();
         Classes.clsLoanBalancesFromDataEntry clsLoanBalances = new Classes.clsLoanBalancesFromDataEntry();
+        Classes.clsParameter clsParameter = new Classes.clsParameter();
 
         Global global = new Global();
         Loans loans = new Loans();
@@ -544,7 +545,7 @@ namespace WindowsFormsApplication2
                     Alert.show("Loan Terms in Mos is required!", Alert.AlertType.error);
                     return;
                 }
-                if(comboBox1.Text == "")
+                if(cmbPaymentOption.Text == "")
                 {
                     Alert.show("Please select Payment Option", Alert.AlertType.error);
                     return;
@@ -662,7 +663,7 @@ namespace WindowsFormsApplication2
                     cmd.CommandText = "sp_InsertLoanHeader";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Loan_Type", cmbLoanType.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Payment_Option", comboBox1.Text);
+                    cmd.Parameters.AddWithValue("@Payment_Option", cmbPaymentOption.Text);
                     cmd.Parameters.AddWithValue("@Loan_Amount", txtLoanAmount.Text.Replace(",", ""));
                     cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
                     cmd.Parameters.AddWithValue("@No_Payment", Convert.ToInt32(txtTermsInMonth.Text) * 2);
@@ -737,96 +738,76 @@ namespace WindowsFormsApplication2
                     }
 
                     //====================================================================================
-                    //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
+                    //              IF PDC OR PAYROLL PAYMENT
                     //====================================================================================
-                    //CREATING LOAN DETAILS
-                    double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
-                    double rate = Convert.ToDouble(txtInterest.Text);
-                    double term = Convert.ToDouble(txtTermsInMonth.Text);
-                    double val1 = 1 + rate;
-                    double val2 = -term;
-                    double powResult = Math.Pow(val1, val2);
-                    double rightSide = 1 - powResult;
-                    double leftSide = PV * rate;
-                    double finalResult = leftSide / rightSide;
-
-                    double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
-                    decimal dec = Convert.ToDecimal(finalResult2);
-
-
-                    double z, i, ob;
-                    double interest, principal;
-                    dec = dec / 2;
-                    int noPay = 1;
-
-                    //=============================================
-                    //         DECLARATION FOR DATE
-                    //=============================================
-
-                    string str = txtDateEncoded.Text;
-                    string outputDate;
-                    str = str.Replace("/", "-");
-                    CultureInfo provider = CultureInfo.InvariantCulture;
-                    DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
-
-                    int year, month, day;
-
-                    year = Convert.ToInt32(dateTime13.Year.ToString());
-                    month = Convert.ToInt32(dateTime13.Month.ToString());
-                    day = Convert.ToInt32(dateTime13.Day.ToString());
-
-                    //=============================================
-
-                    //////////////////////////////////////
-
-                    int cnt = Convert.ToInt32(txtTermsInMonth.Text);
-                    for (int a = 0; a < cnt; a++)
+                    if (cmbPaymentOption.Text == "PDC")
                     {
-                        z = PV * rate;
-                        i = finalResult2 - z;
+                        //Generate Loan Details for PDC
+
+                        //====================================================================================
+                        //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
+                        //====================================================================================
+                        //CREATING LOAN DETAILS
+                        double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
+                        double rate = Convert.ToDouble(txtInterest.Text);
+                        double term = Convert.ToDouble(txtTermsInMonth.Text);
+                        double val1 = 1 + rate;
+                        double val2 = -term;
+                        double powResult = Math.Pow(val1, val2);
+                        double rightSide = 1 - powResult;
+                        double leftSide = PV * rate;
+                        double finalResult = leftSide / rightSide;
+
+                        double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
+                        decimal dec = Convert.ToDecimal(finalResult2);
 
 
+                        double z, i, ob;
+                        double interest, principal;
 
-                        interest = z / 2;
-                        principal = i / 2;
-                        ob = PV - principal;
+                        //=============================================
+                        //         DECLARATION FOR DATE
+                        //=============================================
+
+                        string str = txtDateEncoded.Text;
+                        string outputDate;
+                        str = str.Replace("/", "-");
+                        CultureInfo provider = CultureInfo.InvariantCulture;
+                        DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
+
+                        int year, month, day;
+
+                        year = Convert.ToInt32(dateTime13.Year.ToString());
+                        month = Convert.ToInt32(dateTime13.Month.ToString());
+                        day = Convert.ToInt32(dateTime13.Day.ToString());
+
+                        //=============================================
 
 
-                        //=====================
-                        //for date
-                        //=====================
-                        if (month == 12)
+                        //Getting the mons first deduction first
+                        if(clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString()) != 0)
                         {
-                            if (day <= 15)
+                            month = month + clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString());
+                        }
+
+
+                        if (day <= 15)
+                        {
+                            if (month == 2)
                             {
-                                day = 30;
+                                day = 28;
                             }
                             else
                             {
-                                day = 15;
-                                month = 1;
-                                year = year + 1;
+                                day = 30;
                             }
                         }
                         else
                         {
-                            if (day <= 15)
-                            {
-                                if (month == 2)
-                                {
-                                    day = 28;
-                                }
-                                else
-                                {
-                                    day = 30;
-                                }
-                            }
-                            else
-                            {
-                                day = 15;
-                                month = month + 1;
-                            }
+                            day = 15;
+                            month = month + 1;
                         }
+
                         if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
                         {
                             outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
@@ -835,87 +816,230 @@ namespace WindowsFormsApplication2
                         {
                             outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
                         }
+
                         IFormatProvider culture = new CultureInfo("en-US", true);
                         DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
-                        //================================================================
 
-                        SqlCommand cmdDetail1 = new SqlCommand();
-                        cmdDetail1.Connection = con;
-                        cmdDetail1.CommandText = "sp_InsertLoanDetails";
-                        cmdDetail1.CommandType = CommandType.StoredProcedure;
-                        cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                        cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                        cmdDetail1.Parameters.AddWithValue("@Payment", dec);
-                        cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                        cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                        cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
-                        cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
-                        cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
-                        cmdDetail1.ExecuteNonQuery();
-
-                        if (month == 12)
+                        int cnt = Convert.ToInt32(txtTermsInMonth.Text);
+                        for (int a = 0; a < cnt; a++)
                         {
-                            if (day <= 15)
-                            {
-                                day = 30;
-                            }
-                            else
-                            {
-                                day = 15;
-                                month = 1;
-                                year = year + 1;
-                            }
+                            z = PV * rate;
+                            i = finalResult2 - z;
+
+
+
+                            interest = z;
+                            principal = i;
+                            ob = PV - principal;
+                            //================================================================
+
+                            SqlCommand cmdDetail1 = new SqlCommand();
+                            cmdDetail1.Connection = con;
+                            cmdDetail1.CommandText = "sp_InsertLoanDetails";
+                            cmdDetail1.CommandType = CommandType.StoredProcedure;
+                            cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                            cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", a);
+                            cmdDetail1.Parameters.AddWithValue("@Payment", dec);
+                            cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                            cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
+                            cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.AddMonths(a).ToShortDateString());
+                            cmdDetail1.ExecuteNonQuery();
+
+                            PV = ob;
+                            ob = 0;
                         }
-                        else
+                    }
+                    else
+                    {
+                        //Generatge Loan Details for Payroll Deduction
+
+                        //====================================================================================
+                        //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
+                        //====================================================================================
+                        //CREATING LOAN DETAILS
+                        double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
+                        double rate = Convert.ToDouble(txtInterest.Text);
+                        double term = Convert.ToDouble(txtTermsInMonth.Text);
+                        double val1 = 1 + rate;
+                        double val2 = -term;
+                        double powResult = Math.Pow(val1, val2);
+                        double rightSide = 1 - powResult;
+                        double leftSide = PV * rate;
+                        double finalResult = leftSide / rightSide;
+
+                        double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
+                        decimal dec = Convert.ToDecimal(finalResult2);
+
+
+                        double z, i, ob;
+                        double interest, principal;
+                        dec = dec / 2;
+                        int noPay = 1;
+
+                        //=============================================
+                        //         DECLARATION FOR DATE
+                        //=============================================
+
+                        string str = txtDateEncoded.Text;
+                        string outputDate;
+                        str = str.Replace("/", "-");
+                        CultureInfo provider = CultureInfo.InvariantCulture;
+                        DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
+
+                        int year, month, day;
+
+                        year = Convert.ToInt32(dateTime13.Year.ToString());
+                        month = Convert.ToInt32(dateTime13.Month.ToString());
+                        day = Convert.ToInt32(dateTime13.Day.ToString());
+
+                        //=============================================
+
+                        //Getting the mons first deduction first
+                        if (clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString()) != 0)
                         {
-                            if (day <= 15)
+                            month = month + clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString());
+                        }
+
+                        int cnt = Convert.ToInt32(txtTermsInMonth.Text);
+                        for (int a = 0; a < cnt; a++)
+                        {
+                            z = PV * rate;
+                            i = finalResult2 - z;
+
+
+
+                            interest = z / 2;
+                            principal = i / 2;
+                            ob = PV - principal;
+
+
+                            //=====================
+                            //for date
+                            //=====================
+                            if (month == 12)
                             {
-                                if (month == 2)
-                                {
-                                    day = 28;
-                                }
-                                else
+                                if (day <= 15)
                                 {
                                     day = 30;
                                 }
+                                else
+                                {
+                                    day = 15;
+                                    month = 1;
+                                    year = year + 1;
+                                }
                             }
                             else
                             {
-                                day = 15;
-                                month = month + 1;
+                                if (day <= 15)
+                                {
+                                    if (month == 2)
+                                    {
+                                        day = 28;
+                                    }
+                                    else
+                                    {
+                                        day = 30;
+                                    }
+                                }
+                                else
+                                {
+                                    day = 15;
+                                    month = month + 1;
+                                }
                             }
-                        }
-                        if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
-                        {
-                            outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
-                        }
-                        else
-                        {
-                            outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
-                        }
-                        DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+                            if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                            {
+                                outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                            }
+                            else
+                            {
+                                outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                            }
+                            IFormatProvider culture = new CultureInfo("en-US", true);
+                            DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+                            //================================================================
+
+                            SqlCommand cmdDetail1 = new SqlCommand();
+                            cmdDetail1.Connection = con;
+                            cmdDetail1.CommandText = "sp_InsertLoanDetails";
+                            cmdDetail1.CommandType = CommandType.StoredProcedure;
+                            cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                            cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                            cmdDetail1.Parameters.AddWithValue("@Payment", dec);
+                            cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                            cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
+                            cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
+                            cmdDetail1.ExecuteNonQuery();
+
+                            if (month == 12)
+                            {
+                                if (day <= 15)
+                                {
+                                    day = 30;
+                                }
+                                else
+                                {
+                                    day = 15;
+                                    month = 1;
+                                    year = year + 1;
+                                }
+                            }
+                            else
+                            {
+                                if (day <= 15)
+                                {
+                                    if (month == 2)
+                                    {
+                                        day = 28;
+                                    }
+                                    else
+                                    {
+                                        day = 30;
+                                    }
+                                }
+                                else
+                                {
+                                    day = 15;
+                                    month = month + 1;
+                                }
+                            }
+                            if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                            {
+                                outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                            }
+                            else
+                            {
+                                outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                            }
+                            DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
 
 
-                        noPay = noPay + 1;
-                        SqlCommand cmd1 = new SqlCommand();
-                        cmd1.Connection = con;
-                        cmd1.CommandText = "sp_InsertLoanDetails";
-                        cmd1.CommandType = CommandType.StoredProcedure;
-                        cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                        cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                        cmd1.Parameters.AddWithValue("@Payment", dec);
-                        cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                        cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                        cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                        ob = ob - principal;
-                        cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                        cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
-                        cmd1.ExecuteNonQuery();
+                            noPay = noPay + 1;
+                            SqlCommand cmd1 = new SqlCommand();
+                            cmd1.Connection = con;
+                            cmd1.CommandText = "sp_InsertLoanDetails";
+                            cmd1.CommandType = CommandType.StoredProcedure;
+                            cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                            cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                            cmd1.Parameters.AddWithValue("@Payment", dec);
+                            cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                            cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                            cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                            ob = ob - principal;
+                            cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                            cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
+                            cmd1.ExecuteNonQuery();
 
-                        noPay = noPay + 1;
-                        z = 0;
-                        PV = ob;
-                        ob = 0;
+                            noPay = noPay + 1;
+                            z = 0;
+                            PV = ob;
+                            ob = 0;
+                        }
                     }
 
                     //===============================================================================
@@ -992,7 +1116,7 @@ namespace WindowsFormsApplication2
                     cmd.CommandText = "sp_UpdateLoanHeader";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                    cmd.Parameters.AddWithValue("@Payment_Option", comboBox1.Text);
+                    cmd.Parameters.AddWithValue("@Payment_Option", cmbPaymentOption.Text);
                     cmd.Parameters.AddWithValue("@Loan_Amount", txtLoanAmount.Text.Replace(",", ""));
                     cmd.Parameters.AddWithValue("@Terms", txtTermsInMonth.Text);
                     cmd.Parameters.AddWithValue("@Monthly_Amort", txtMonthlyAmort.Text.Replace(",", ""));
@@ -1050,94 +1174,76 @@ namespace WindowsFormsApplication2
                     cmdDetail.CommandType = CommandType.Text;
                     cmdDetail.ExecuteNonQuery();
 
-                    //CREATING LOAN DETAILS
-                    double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
-                    double rate = Convert.ToDouble(txtInterest.Text);
-                    double term = Convert.ToDouble(txtTermsInMonth.Text);
-                    double val1 = 1 + rate;
-                    double val2 = -term;
-                    double powResult = Math.Pow(val1, val2);
-                    double rightSide = 1 - powResult;
-                    double leftSide = PV * rate;
-                    double finalResult = leftSide / rightSide;
-
-                    double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
-                    decimal dec = Convert.ToDecimal(finalResult2);
-
-
-                    double z, i, ob;
-                    double interest, principal;
-                    dec = dec / 2;
-                    int noPay = 1;
-
-                    //=============================================
-                    //         DECLARATION FOR DATE
-                    //=============================================
-
-                    string str = txtDateEncoded.Text;
-                    string outputDate;
-                    str = str.Replace("/", "-");
-                    CultureInfo provider = CultureInfo.InvariantCulture;
-                    DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
-
-                    int year, month, day;
-
-                    year = Convert.ToInt32(dateTime13.Year.ToString());
-                    month = Convert.ToInt32(dateTime13.Month.ToString());
-                    day = Convert.ToInt32(dateTime13.Day.ToString());
-
-                    //=============================================
-
-                    //////////////////////////////////////
-
-                    int cnt = Convert.ToInt32(txtTermsInMonth.Text);
-                    for (int a = 0; a < cnt; a++)
+                    //====================================================================================
+                    //              IF PDC OR PAYROLL PAYMENT
+                    //====================================================================================
+                    if (cmbPaymentOption.Text == "PDC")
                     {
-                        z = PV * rate;
-                        i = finalResult2 - z;
+                        //Generate Loan Details for PDC
+
+                        //====================================================================================
+                        //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
+                        //====================================================================================
+                        //CREATING LOAN DETAILS
+                        double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
+                        double rate = Convert.ToDouble(txtInterest.Text);
+                        double term = Convert.ToDouble(txtTermsInMonth.Text);
+                        double val1 = 1 + rate;
+                        double val2 = -term;
+                        double powResult = Math.Pow(val1, val2);
+                        double rightSide = 1 - powResult;
+                        double leftSide = PV * rate;
+                        double finalResult = leftSide / rightSide;
+
+                        double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
+                        decimal dec = Convert.ToDecimal(finalResult2);
 
 
+                        double z, i, ob;
+                        double interest, principal;
 
-                        interest = z / 2;
-                        principal = i / 2;
-                        ob = PV - principal;
+                        //=============================================
+                        //         DECLARATION FOR DATE
+                        //=============================================
 
+                        string str = txtDateEncoded.Text;
+                        string outputDate;
+                        str = str.Replace("/", "-");
+                        CultureInfo provider = CultureInfo.InvariantCulture;
+                        DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
 
-                        //=====================
-                        //for date
-                        //=====================
-                        if (month == 12)
+                        int year, month, day;
+
+                        year = Convert.ToInt32(dateTime13.Year.ToString());
+                        month = Convert.ToInt32(dateTime13.Month.ToString());
+                        day = Convert.ToInt32(dateTime13.Day.ToString());
+
+                        //=============================================
+
+                        //Getting the mons first deduction first
+                        if (clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString()) != 0)
                         {
-                            if (day <= 15)
+                            month = month + clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString());
+                        }
+
+
+                        if (day <= 15)
+                        {
+                            if (month == 2)
                             {
-                                day = 30;
+                                day = 28;
                             }
                             else
                             {
-                                day = 15;
-                                month = 1;
-                                year = year + 1;
+                                day = 30;
                             }
                         }
                         else
                         {
-                            if (day <= 15)
-                            {
-                                if (month == 2)
-                                {
-                                    day = 28;
-                                }
-                                else
-                                {
-                                    day = 30;
-                                }
-                            }
-                            else
-                            {
-                                day = 15;
-                                month = month + 1;
-                            }
+                            day = 15;
+                            month = month + 1;
                         }
+
                         if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
                         {
                             outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
@@ -1146,87 +1252,230 @@ namespace WindowsFormsApplication2
                         {
                             outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
                         }
+
                         IFormatProvider culture = new CultureInfo("en-US", true);
                         DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
-                        //================================================================
 
-                        SqlCommand cmdDetail1 = new SqlCommand();
-                        cmdDetail1.Connection = con;
-                        cmdDetail1.CommandText = "sp_InsertLoanDetails";
-                        cmdDetail1.CommandType = CommandType.StoredProcedure;
-                        cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                        cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                        cmdDetail1.Parameters.AddWithValue("@Payment", dec);
-                        cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                        cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                        cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
-                        cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                        cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
-                        cmdDetail1.ExecuteNonQuery();
-
-                        if (month == 12)
+                        int cnt = Convert.ToInt32(txtTermsInMonth.Text);
+                        for (int a = 0; a < cnt; a++)
                         {
-                            if (day <= 15)
-                            {
-                                day = 30;
-                            }
-                            else
-                            {
-                                day = 15;
-                                month = 1;
-                                year = year + 1;
-                            }
+                            z = PV * rate;
+                            i = finalResult2 - z;
+
+
+
+                            interest = z;
+                            principal = i;
+                            ob = PV - principal;
+                            //================================================================
+
+                            SqlCommand cmdDetail1 = new SqlCommand();
+                            cmdDetail1.Connection = con;
+                            cmdDetail1.CommandText = "sp_InsertLoanDetails";
+                            cmdDetail1.CommandType = CommandType.StoredProcedure;
+                            cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                            cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", a);
+                            cmdDetail1.Parameters.AddWithValue("@Payment", dec);
+                            cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                            cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
+                            cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.AddMonths(a).ToShortDateString());
+                            cmdDetail1.ExecuteNonQuery();
+
+                            PV = ob;
+                            ob = 0;
                         }
-                        else
+                    }
+                    else
+                    {
+                        //Generatge Loan Details for Payroll Deduction
+
+                        //====================================================================================
+                        //              CREATE LOAN DETAILS FOR [PAYMENT || INTEREST || PRINCIPAL]
+                        //====================================================================================
+                        //CREATING LOAN DETAILS
+                        double PV = Convert.ToDouble(txtLoanAmount.Text.Replace(",", ""));
+                        double rate = Convert.ToDouble(txtInterest.Text);
+                        double term = Convert.ToDouble(txtTermsInMonth.Text);
+                        double val1 = 1 + rate;
+                        double val2 = -term;
+                        double powResult = Math.Pow(val1, val2);
+                        double rightSide = 1 - powResult;
+                        double leftSide = PV * rate;
+                        double finalResult = leftSide / rightSide;
+
+                        double finalResult2 = (PV * rate) / (1 - (Math.Pow((1 + rate), -term)));
+                        decimal dec = Convert.ToDecimal(finalResult2);
+
+
+                        double z, i, ob;
+                        double interest, principal;
+                        dec = dec / 2;
+                        int noPay = 1;
+
+                        //=============================================
+                        //         DECLARATION FOR DATE
+                        //=============================================
+
+                        string str = txtDateEncoded.Text;
+                        string outputDate;
+                        str = str.Replace("/", "-");
+                        CultureInfo provider = CultureInfo.InvariantCulture;
+                        DateTime dateTime13 = DateTime.ParseExact(str, "MM-d-yyyy", provider);
+
+                        int year, month, day;
+
+                        year = Convert.ToInt32(dateTime13.Year.ToString());
+                        month = Convert.ToInt32(dateTime13.Month.ToString());
+                        day = Convert.ToInt32(dateTime13.Day.ToString());
+
+                        //=============================================
+
+                        //Getting the mons first deduction first
+                        if (clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString()) != 0)
                         {
-                            if (day <= 15)
+                            month = month + clsParameter.deductionMonth(cmbLoanType.SelectedValue.ToString());
+                        }
+
+                        int cnt = Convert.ToInt32(txtTermsInMonth.Text);
+                        for (int a = 0; a < cnt; a++)
+                        {
+                            z = PV * rate;
+                            i = finalResult2 - z;
+
+
+
+                            interest = z / 2;
+                            principal = i / 2;
+                            ob = PV - principal;
+
+
+                            //=====================
+                            //for date
+                            //=====================
+                            if (month == 12)
                             {
-                                if (month == 2)
-                                {
-                                    day = 28;
-                                }
-                                else
+                                if (day <= 15)
                                 {
                                     day = 30;
                                 }
+                                else
+                                {
+                                    day = 15;
+                                    month = 1;
+                                    year = year + 1;
+                                }
                             }
                             else
                             {
-                                day = 15;
-                                month = month + 1;
+                                if (day <= 15)
+                                {
+                                    if (month == 2)
+                                    {
+                                        day = 28;
+                                    }
+                                    else
+                                    {
+                                        day = 30;
+                                    }
+                                }
+                                else
+                                {
+                                    day = 15;
+                                    month = month + 1;
+                                }
                             }
-                        }
-                        if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
-                        {
-                            outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
-                        }
-                        else
-                        {
-                            outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
-                        }
-                        DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+                            if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                            {
+                                outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                            }
+                            else
+                            {
+                                outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                            }
+                            IFormatProvider culture = new CultureInfo("en-US", true);
+                            DateTime dateVal = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
+                            //================================================================
+
+                            SqlCommand cmdDetail1 = new SqlCommand();
+                            cmdDetail1.Connection = con;
+                            cmdDetail1.CommandText = "sp_InsertLoanDetails";
+                            cmdDetail1.CommandType = CommandType.StoredProcedure;
+                            cmdDetail1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                            cmdDetail1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                            cmdDetail1.Parameters.AddWithValue("@Payment", dec);
+                            cmdDetail1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                            cmdDetail1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
+                            cmdDetail1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(Convert.ToDecimal(ob)));
+                            cmdDetail1.Parameters.AddWithValue("@Schedule_Payment", dateVal.ToShortDateString());
+                            cmdDetail1.ExecuteNonQuery();
+
+                            if (month == 12)
+                            {
+                                if (day <= 15)
+                                {
+                                    day = 30;
+                                }
+                                else
+                                {
+                                    day = 15;
+                                    month = 1;
+                                    year = year + 1;
+                                }
+                            }
+                            else
+                            {
+                                if (day <= 15)
+                                {
+                                    if (month == 2)
+                                    {
+                                        day = 28;
+                                    }
+                                    else
+                                    {
+                                        day = 30;
+                                    }
+                                }
+                                else
+                                {
+                                    day = 15;
+                                    month = month + 1;
+                                }
+                            }
+                            if (Convert.ToInt32(Convert.ToString(month).Length) == 1)
+                            {
+                                outputDate = year.ToString() + "-0" + month.ToString() + "-" + day.ToString();
+                            }
+                            else
+                            {
+                                outputDate = year.ToString() + "-" + month.ToString() + "-" + day.ToString();
+                            }
+                            DateTime dateVal2 = DateTime.ParseExact(outputDate, "yyyy-MM-dd", provider);
 
 
-                        noPay = noPay + 1;
-                        SqlCommand cmd1 = new SqlCommand();
-                        cmd1.Connection = con;
-                        cmd1.CommandText = "sp_InsertLoanDetails";
-                        cmd1.CommandType = CommandType.StoredProcedure;
-                        cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
-                        cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
-                        cmd1.Parameters.AddWithValue("@Payment", dec);
-                        cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
-                        cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
-                        cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(Convert.ToDecimal(PV)));
-                        ob = ob - principal;
-                        cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
-                        cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
-                        cmd1.ExecuteNonQuery();
+                            noPay = noPay + 1;
+                            SqlCommand cmd1 = new SqlCommand();
+                            cmd1.Connection = con;
+                            cmd1.CommandText = "sp_InsertLoanDetails";
+                            cmd1.CommandType = CommandType.StoredProcedure;
+                            cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
+                            cmd1.Parameters.AddWithValue("@PaymentNoSemi", noPay);
+                            cmd1.Parameters.AddWithValue("@Payment", dec);
+                            cmd1.Parameters.AddWithValue("@Interest", Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)));
+                            cmd1.Parameters.AddWithValue("@Principal", Convert.ToString(decimal.Round(Convert.ToDecimal(principal), 2)));
+                            cmd1.Parameters.AddWithValue("@Outstanding_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                            ob = ob - principal;
+                            cmd1.Parameters.AddWithValue("@Original_Balance", Convert.ToString(decimal.Round(Convert.ToDecimal(ob), 2)));
+                            cmd1.Parameters.AddWithValue("@Schedule_Payment", dateVal2.ToShortDateString());
+                            cmd1.ExecuteNonQuery();
 
-                        noPay = noPay + 1;
-                        z = 0;
-                        PV = ob;
-                        ob = 0;
+                            noPay = noPay + 1;
+                            z = 0;
+                            PV = ob;
+                            ob = 0;
+                        }
                     }
 
                     //===============================================================================
@@ -1257,7 +1506,7 @@ namespace WindowsFormsApplication2
                     txtLoanAmount.Enabled = false;
                     txtTermsInMonth.Enabled = false;
                     btnForward.Enabled = true;
-                    comboBox1.Enabled = false;
+                    cmbPaymentOption.Enabled = false;
                     cmbReleaseOption.Enabled = false;
 
                 }
@@ -1268,12 +1517,12 @@ namespace WindowsFormsApplication2
                     if (txtCompany.Text != "NON PAYROLL")
                     {
                         button1.Enabled = true;
-                        comboBox1.Enabled = true;
+                        cmbPaymentOption.Enabled = true;
                         cmbReleaseOption.Enabled = true;
                     }
                     else
                     {
-                        comboBox1.Enabled = false;
+                        cmbPaymentOption.Enabled = false;
                         cmbReleaseOption.Enabled = false;
                     }
                     txtLoanAmount.Enabled = true;
@@ -1289,7 +1538,7 @@ namespace WindowsFormsApplication2
                     //For New 
                     button1.Enabled = true;
                     btnSearch.Enabled = true;
-                    comboBox1.Enabled = true;
+                    cmbPaymentOption.Enabled = true;
 
                     //Change button From NEw = Save
                     btnSave.Text = "SAVE";
@@ -1323,13 +1572,13 @@ namespace WindowsFormsApplication2
             {
                 if (txtCompany.Text == "NON PAYROLL")
                 {
-                    comboBox1.SelectedIndex = 1;
-                    comboBox1.Enabled = false;
+                    cmbPaymentOption.SelectedIndex = 1;
+                    cmbPaymentOption.Enabled = false;
                 }
                 else
                 {
-                    comboBox1.SelectedIndex = -1;
-                    comboBox1.Enabled = true;
+                    cmbPaymentOption.SelectedIndex = -1;
+                    cmbPaymentOption.Enabled = true;
                 }
             }
         }

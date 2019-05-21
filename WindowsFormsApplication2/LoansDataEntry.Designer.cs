@@ -85,10 +85,14 @@
             this.panel10 = new System.Windows.Forms.Panel();
             this.label43 = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
+            this.label77 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
+            this.cmbReleaseOption = new System.Windows.Forms.ComboBox();
+            this.label76 = new System.Windows.Forms.Label();
             this.label74 = new System.Windows.Forms.Label();
             this.label73 = new System.Windows.Forms.Label();
             this.label69 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cmbPaymentOption = new System.Windows.Forms.ComboBox();
             this.label72 = new System.Windows.Forms.Label();
             this.label67 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -185,10 +189,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.txtCancel = new System.Windows.Forms.TextBox();
             this.lblReason = new System.Windows.Forms.Label();
-            this.label75 = new System.Windows.Forms.Label();
-            this.cmbReleaseOption = new System.Windows.Forms.ComboBox();
-            this.label76 = new System.Windows.Forms.Label();
-            this.label77 = new System.Windows.Forms.Label();
             this.panelHeader.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -840,7 +840,7 @@
             this.panel11.Controls.Add(this.label74);
             this.panel11.Controls.Add(this.label73);
             this.panel11.Controls.Add(this.label69);
-            this.panel11.Controls.Add(this.comboBox1);
+            this.panel11.Controls.Add(this.cmbPaymentOption);
             this.panel11.Controls.Add(this.label72);
             this.panel11.Controls.Add(this.label67);
             this.panel11.Controls.Add(this.label27);
@@ -876,6 +876,59 @@
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(513, 374);
             this.panel11.TabIndex = 62;
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label77.ForeColor = System.Drawing.Color.Red;
+            this.label77.Location = new System.Drawing.Point(42, 334);
+            this.label77.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(21, 25);
+            this.label77.TabIndex = 152;
+            this.label77.Text = "*";
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label75.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label75.Location = new System.Drawing.Point(209, 334);
+            this.label75.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(15, 21);
+            this.label75.TabIndex = 151;
+            this.label75.Text = ":";
+            // 
+            // cmbReleaseOption
+            // 
+            this.cmbReleaseOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbReleaseOption.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbReleaseOption.FormattingEnabled = true;
+            this.cmbReleaseOption.IntegralHeight = false;
+            this.cmbReleaseOption.Items.AddRange(new object[] {
+            "",
+            "ATM",
+            "CHEQUE"});
+            this.cmbReleaseOption.Location = new System.Drawing.Point(234, 334);
+            this.cmbReleaseOption.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbReleaseOption.Name = "cmbReleaseOption";
+            this.cmbReleaseOption.Size = new System.Drawing.Size(253, 25);
+            this.cmbReleaseOption.TabIndex = 150;
+            this.cmbReleaseOption.SelectedValueChanged += new System.EventHandler(this.cmbReleaseOption_SelectedValueChanged);
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label76.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label76.Location = new System.Drawing.Point(58, 334);
+            this.label76.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(138, 21);
+            this.label76.TabIndex = 149;
+            this.label76.Text = "Release Option";
             // 
             // label74
             // 
@@ -913,21 +966,21 @@
             this.label69.TabIndex = 120;
             this.label69.Text = "*";
             // 
-            // comboBox1
+            // cmbPaymentOption
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.IntegralHeight = false;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.cmbPaymentOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPaymentOption.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbPaymentOption.FormattingEnabled = true;
+            this.cmbPaymentOption.IntegralHeight = false;
+            this.cmbPaymentOption.Items.AddRange(new object[] {
             "",
             "PDC",
             "Payroll Deduction"});
-            this.comboBox1.Location = new System.Drawing.Point(234, 300);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(253, 25);
-            this.comboBox1.TabIndex = 146;
+            this.cmbPaymentOption.Location = new System.Drawing.Point(234, 300);
+            this.cmbPaymentOption.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbPaymentOption.Name = "cmbPaymentOption";
+            this.cmbPaymentOption.Size = new System.Drawing.Size(253, 25);
+            this.cmbPaymentOption.TabIndex = 146;
             // 
             // label72
             // 
@@ -2042,59 +2095,6 @@
             this.lblReason.Text = "Reason    :";
             this.lblReason.Visible = false;
             // 
-            // label75
-            // 
-            this.label75.AutoSize = true;
-            this.label75.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label75.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label75.Location = new System.Drawing.Point(209, 334);
-            this.label75.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(15, 21);
-            this.label75.TabIndex = 151;
-            this.label75.Text = ":";
-            // 
-            // cmbReleaseOption
-            // 
-            this.cmbReleaseOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbReleaseOption.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbReleaseOption.FormattingEnabled = true;
-            this.cmbReleaseOption.IntegralHeight = false;
-            this.cmbReleaseOption.Items.AddRange(new object[] {
-            "",
-            "ATM",
-            "CHEQUE"});
-            this.cmbReleaseOption.Location = new System.Drawing.Point(234, 334);
-            this.cmbReleaseOption.Margin = new System.Windows.Forms.Padding(4);
-            this.cmbReleaseOption.Name = "cmbReleaseOption";
-            this.cmbReleaseOption.Size = new System.Drawing.Size(253, 25);
-            this.cmbReleaseOption.TabIndex = 150;
-            this.cmbReleaseOption.SelectedValueChanged += new System.EventHandler(this.cmbReleaseOption_SelectedValueChanged);
-            // 
-            // label76
-            // 
-            this.label76.AutoSize = true;
-            this.label76.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label76.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label76.Location = new System.Drawing.Point(58, 334);
-            this.label76.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(138, 21);
-            this.label76.TabIndex = 149;
-            this.label76.Text = "Release Option";
-            // 
-            // label77
-            // 
-            this.label77.AutoSize = true;
-            this.label77.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label77.ForeColor = System.Drawing.Color.Red;
-            this.label77.Location = new System.Drawing.Point(42, 334);
-            this.label77.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(21, 25);
-            this.label77.TabIndex = 152;
-            this.label77.Text = "*";
-            // 
             // LoansDataEntry
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2305,7 +2305,7 @@
         public System.Windows.Forms.Label status;
         public System.Windows.Forms.Label label74;
         public System.Windows.Forms.Label label73;
-        public System.Windows.Forms.ComboBox comboBox1;
+        public System.Windows.Forms.ComboBox cmbPaymentOption;
         public System.Windows.Forms.Label label72;
         public System.Windows.Forms.Button btnCancel;
         public System.Windows.Forms.TextBox txtCancel;

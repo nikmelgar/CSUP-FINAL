@@ -191,5 +191,27 @@ namespace WindowsFormsApplication2.Classes
             }
         }
 
+        public int deductionMonth(string loan_type)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT monthCnt FROM loan_type_deducDateMonth WHERE loan_type = '"+ loan_type +"'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    return Convert.ToInt32(dt.Rows[0].ItemArray[0].ToString());
+                }
+                else
+                {
+                    return 0;
+                }
+                
+            }
+        }
+
     }
 }

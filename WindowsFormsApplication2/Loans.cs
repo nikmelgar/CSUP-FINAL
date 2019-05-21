@@ -222,8 +222,8 @@ namespace WindowsFormsApplication2
                 loansDataEntry.txtTermsInMonth.Text = dataGridView1.SelectedRows[0].Cells["Terms"].Value.ToString();
                 loansDataEntry.txtMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
                 loansDataEntry.txtSemiMonthlyAmort.Text = Convert.ToString(Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells["Semi_Monthly_Amort"].Value.ToString()).ToString("#,0.00"));
-                loansDataEntry.comboBox1.Text = dataGridView1.SelectedRows[0].Cells["Payment_Option"].Value.ToString();
-                loansDataEntry.comboBox1.Enabled = false;
+                loansDataEntry.cmbPaymentOption.Text = dataGridView1.SelectedRows[0].Cells["Payment_Option"].Value.ToString();
+                loansDataEntry.cmbPaymentOption.Enabled = false;
                 loansDataEntry.cmbReleaseOption.Text = dataGridView1.SelectedRows[0].Cells["ReleaseOption"].Value.ToString();
                 loansDataEntry.cmbReleaseOption.Enabled = false;
 

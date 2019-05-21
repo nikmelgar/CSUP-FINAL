@@ -151,8 +151,8 @@ namespace WindowsFormsApplication2.loanFrms
 
                     if (loanDataEntry.txtCompany.Text == "NON PAYROLL")
                     {
-                        loanDataEntry.comboBox1.SelectedIndex = 1;
-                        loanDataEntry.comboBox1.Enabled = false;
+                        loanDataEntry.cmbPaymentOption.SelectedIndex = 1;
+                        loanDataEntry.cmbPaymentOption.Enabled = false;
                     } 
                     this.Close();
                     return;
