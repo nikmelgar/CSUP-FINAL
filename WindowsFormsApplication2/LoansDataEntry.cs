@@ -770,7 +770,7 @@ namespace WindowsFormsApplication2
                         //         DECLARATION FOR DATE
                         //=============================================
 
-                        string str = txtDateEncoded.Text;
+                        string str = clsParameter.returnBonusLoanDate(cmbLoanType.SelectedValue.ToString(), txtDateEncoded);
                         string outputDate;
                         str = str.Replace("/", "-");
                         CultureInfo provider = CultureInfo.InvariantCulture;
@@ -883,7 +883,7 @@ namespace WindowsFormsApplication2
                         //         DECLARATION FOR DATE
                         //=============================================
 
-                        string str = txtDateEncoded.Text;
+                        string str = clsParameter.returnBonusLoanDate(cmbLoanType.SelectedValue.ToString(), txtDateEncoded);
                         string outputDate;
                         str = str.Replace("/", "-");
                         CultureInfo provider = CultureInfo.InvariantCulture;
@@ -1207,7 +1207,9 @@ namespace WindowsFormsApplication2
                         //         DECLARATION FOR DATE
                         //=============================================
 
-                        string str = txtDateEncoded.Text;
+
+
+                        string str = clsParameter.returnBonusLoanDate(cmbLoanType.SelectedValue.ToString(), txtDateEncoded);
                         string outputDate;
                         str = str.Replace("/", "-");
                         CultureInfo provider = CultureInfo.InvariantCulture;
@@ -1319,7 +1321,7 @@ namespace WindowsFormsApplication2
                         //         DECLARATION FOR DATE
                         //=============================================
 
-                        string str = txtDateEncoded.Text;
+                        string str = clsParameter.returnBonusLoanDate(cmbLoanType.SelectedValue.ToString(), txtDateEncoded);
                         string outputDate;
                         str = str.Replace("/", "-");
                         CultureInfo provider = CultureInfo.InvariantCulture;

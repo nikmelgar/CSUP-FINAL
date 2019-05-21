@@ -1079,6 +1079,7 @@
     <EmbeddedResource Include="TransactionType.resx">
       <DependentUpon>TransactionType.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\App.config" />
     <None Include="Properties\Settings.settings">

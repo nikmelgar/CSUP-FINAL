@@ -266,5 +266,37 @@ namespace WindowsFormsApplication2.Classes
             }
         }
 
+        public string returnBonusLoanDate(string loan_type,TextBox dtToday)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE Description = 'Bonus Loans' and val ='"+ loan_type +"'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    if(dt.Rows[0].ItemArray[0].ToString() == "BALMY")
+                    {
+                        return "05/15/2019"; 
+                    }
+                    else if(dt.Rows[0].ItemArray[0].ToString() == "BAL")
+                    {
+                        return "11/15/2019";
+                    }
+                    else
+                    {
+                        return "12/15/2019";
+                    }
+                }
+                else
+                {
+                    return dtToday.Text;
+                }
+            }
+        }
+
     }
 }
