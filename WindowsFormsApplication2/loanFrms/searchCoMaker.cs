@@ -21,10 +21,14 @@ namespace WindowsFormsApplication2.loanFrms
         bool alreadyUsed = false;
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
+    
+        public static string getLoanType { get; set; }
 
         Classes.clsSearchCoMaker clsSearchComaker = new Classes.clsSearchCoMaker();
         Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
         Classes.clsLoanLookUp clsLookUp = new Classes.clsLoanLookUp();
+        Classes.clsParameter clsParameter = new Classes.clsParameter();
+
         private void searchCoMaker_Load(object sender, EventArgs e)
         {
             clsSearchComaker.loaddefaultitems(dataGridView1);
@@ -126,6 +130,21 @@ namespace WindowsFormsApplication2.loanFrms
                     {
                         Alert.show("Please fill up loan amount and loan terms in mos.", Alert.AlertType.error);
                         return;
+                    }
+
+
+
+                    //For RPL Loans must be 10 years above 
+
+                    if(clsParameter.checkForRPLloans(getLoanType) == true)
+                    {
+                        //Selected loan type is RPL 
+                        if(clsParameter.check10yearsAbove(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == false)
+                        {
+                            //Must be 10 years above
+                            Alert.show("Co-Maker should be 10 years above.", Alert.AlertType.error);
+                            return;
+                        }
                     }
                 }
             }

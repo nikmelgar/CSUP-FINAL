@@ -439,6 +439,7 @@ namespace WindowsFormsApplication2
         {
             loanFrms.searchCoMaker coMaker = new loanFrms.searchCoMaker();
             Classes.clsSearchCoMaker.getCompanyCode = txtCompany.Text;
+            loanFrms.searchCoMaker.getLoanType = cmbLoanType.SelectedValue.ToString();
             coMaker.ShowDialog();
         }
 

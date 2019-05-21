@@ -213,5 +213,58 @@ namespace WindowsFormsApplication2.Classes
             }
         }
 
+        public Boolean check10yearsAbove(int userid)
+        {
+            DateTime dtToday = DateTime.Today;
+
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT Date_Hired FROM Membership WHERE userID = '" + userid + "'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                decimal dtMember, dtYearToday, dtDif;
+                DateTime dtYearMember;
+                dtYearMember = Convert.ToDateTime(dt.Rows[0].ItemArray[0].ToString());
+
+                dtMember = Convert.ToDecimal(dtYearMember.Year);
+                dtYearToday = Convert.ToDecimal(dtToday.Year);
+
+                dtDif = dtYearToday - dtMember;
+
+                if (dtDif >= 10)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public Boolean checkForRPLloans(string loan_type)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE Description ='10 Years above' and val = '"+ loan_type +"'", con);
+                dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
     }
 }
