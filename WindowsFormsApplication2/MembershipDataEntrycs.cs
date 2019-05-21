@@ -1229,10 +1229,19 @@ namespace WindowsFormsApplication2
             {
                 if (cmbCompany.Text != "PLDT" && cmbCompany.Text != "NON PAYROLL")
                 {
+                    //Updating of old company
+                    if(clsmembership.returnCompanyNonPayroll(Convert.ToInt32(clsMembershipEntry.userID)) != cmbCompany.SelectedValue.ToString())
+                    {
+                        cmboPrevComp.SelectedValue = clsmembership.returnCompanyNonPayroll(Convert.ToInt32(clsMembershipEntry.userID));
+                    }
+                    else
+                    {
+                        cmboPrevComp.SelectedIndex = -1;
+                    }
+
                     clsMembershipEntry.loadComboBox(cmbCostCenter, "Company", "Description", "Company_Code");
                     cmbCostCenter.SelectedValue = cmbCompany.SelectedValue;
                     cmbCostCenter.Enabled = false;
-                    cmboPrevComp.SelectedIndex = -1;
                 }
                 else if (cmbCompany.Text == "NON PAYROLL")
                 {
@@ -1246,9 +1255,19 @@ namespace WindowsFormsApplication2
                 }
                 else
                 {
+                    //Updating of old company
+                    if (clsmembership.returnCompanyNonPayroll(Convert.ToInt32(clsMembershipEntry.userID)) != cmbCompany.SelectedValue.ToString())
+                    {
+                        cmboPrevComp.SelectedValue = clsmembership.returnCompanyNonPayroll(Convert.ToInt32(clsMembershipEntry.userID));
+                    }
+                    else
+                    {
+                        cmboPrevComp.SelectedIndex = -1;
+                    }
+
                     clsMembershipEntry.loadComboBox(cmbCostCenter, "Cost_Center", "Description", "Cost_Center_Code");
                     cmbCostCenter.Enabled = true;
-                    cmboPrevComp.SelectedIndex = -1;
+                   
                 }
             }
         }
