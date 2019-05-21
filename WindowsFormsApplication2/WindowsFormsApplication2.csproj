@@ -462,12 +462,6 @@
     <Compile Include="ReminderPDC\reminder.Designer.cs">
       <DependentUpon>reminder.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReportsForms\CashReceiptReportDetails.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CashReceiptReportDetails.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ReportsForms\CashReceiptReportSummary.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -916,10 +910,6 @@
     <EmbeddedResource Include="ReminderPDC\reminder.resx">
       <DependentUpon>reminder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReportsForms\CashReceiptReportDetails.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>CashReceiptReportDetails.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="ReportsForms\CashReceiptReportSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CashReceiptReportSummary.cs</LastGenOutput>
@@ -1079,7 +1069,6 @@
     <EmbeddedResource Include="TransactionType.resx">
       <DependentUpon>TransactionType.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\App.config" />
     <None Include="Properties\Settings.settings">
