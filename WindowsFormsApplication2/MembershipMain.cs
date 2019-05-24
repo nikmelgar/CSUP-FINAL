@@ -359,7 +359,7 @@ namespace WindowsFormsApplication2
             
 
             //For Beneficiaries Panel Principal
-            if(dataentry.txtPrincipalNo.Text == "")
+            if(Convert.ToString(dataGridView1.SelectedRows[0].Cells["PrincipalID"].Value.ToString()) == "")
             {
                 clsMembership.loadBeneficiaries(dataentry.dataGridView1, dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString());
                 clsMembership.empIDStored = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();

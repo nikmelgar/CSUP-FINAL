@@ -21,20 +21,20 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            //conbd.DataSource = "192.168.255.176";
-            //conbd.InitialCatalog = "PECCI-NEW";
-            ////conbd.IntegratedSecurity = true;
-            //conbd.UserID = "sa";
-            //conbd.Password = "SYSADMIN";
-            //conbd.MaxPoolSize = 20000;
-
-            //Local Connection House
-            conbd.DataSource = ".";
+            conbd.DataSource = "192.168.255.176";
             conbd.InitialCatalog = "PECCI-NEW";
-            conbd.IntegratedSecurity = true;
+            //conbd.IntegratedSecurity = true;
             conbd.UserID = "sa";
             conbd.Password = "SYSADMIN";
             conbd.MaxPoolSize = 20000;
+
+            ////Local Connection House
+            //conbd.DataSource = ".";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            //conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+            //conbd.MaxPoolSize = 20000;
 
 
 
@@ -65,20 +65,20 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            //conbd.DataSource = "192.168.255.176";
-            //conbd.InitialCatalog = "PECCI-NEW";
-            ////conbd.IntegratedSecurity = true;
-            //conbd.UserID = "sa";
-            //conbd.Password = "SYSADMIN";
-            //conbd.MaxPoolSize = 20000;
-
-            //Local Connection House
-            conbd.DataSource = ".";
+            conbd.DataSource = "192.168.255.176";
             conbd.InitialCatalog = "PECCI-NEW";
-            conbd.IntegratedSecurity = true;
+            //conbd.IntegratedSecurity = true;
             conbd.UserID = "sa";
             conbd.Password = "SYSADMIN";
             conbd.MaxPoolSize = 20000;
+
+            ////Local Connection House
+            //conbd.DataSource = ".";
+            //conbd.InitialCatalog = "PECCI-NEW";
+            //conbd.IntegratedSecurity = true;
+            //conbd.UserID = "sa";
+            //conbd.Password = "SYSADMIN";
+            //conbd.MaxPoolSize = 20000;
 
 
 

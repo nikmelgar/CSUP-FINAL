@@ -46,10 +46,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.btnMembership = new System.Windows.Forms.Button();
             this.PanelMainContainer = new System.Windows.Forms.Panel();
+            this.queryLoanDetails1 = new WindowsFormsApplication2.QueryLoanDetails();
+            this.queryLoanBalances1 = new WindowsFormsApplication2.QueryLoanBalances();
+            this.queryShareCapital1 = new WindowsFormsApplication2.QueryShareCapital();
             this.querySavingsDeposit1 = new WindowsFormsApplication2.QuerySavingsDeposit();
             this.queryMemberProfile1 = new WindowsFormsApplication2.QueryMemberProfile();
             this.querySearchMember1 = new WindowsFormsApplication2.QuerySearchMember();
-            this.queryShareCapital1 = new WindowsFormsApplication2.QueryShareCapital();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMin)).BeginInit();
@@ -147,6 +149,7 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(266, 909);
             this.panel5.TabIndex = 62;
+            this.panel5.Paint += new System.Windows.Forms.PaintEventHandler(this.panel5_Paint);
             // 
             // button7
             // 
@@ -212,6 +215,7 @@
             this.button4.Text = "Loan Listing";
             this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
@@ -228,6 +232,7 @@
             this.button3.Text = "Loan Balances";
             this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -283,6 +288,8 @@
             // 
             // PanelMainContainer
             // 
+            this.PanelMainContainer.Controls.Add(this.queryLoanDetails1);
+            this.PanelMainContainer.Controls.Add(this.queryLoanBalances1);
             this.PanelMainContainer.Controls.Add(this.queryShareCapital1);
             this.PanelMainContainer.Controls.Add(this.querySavingsDeposit1);
             this.PanelMainContainer.Controls.Add(this.queryMemberProfile1);
@@ -292,6 +299,33 @@
             this.PanelMainContainer.Name = "PanelMainContainer";
             this.PanelMainContainer.Size = new System.Drawing.Size(1523, 909);
             this.PanelMainContainer.TabIndex = 63;
+            // 
+            // queryLoanDetails1
+            // 
+            this.queryLoanDetails1.BackColor = System.Drawing.Color.White;
+            this.queryLoanDetails1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryLoanDetails1.Location = new System.Drawing.Point(0, 0);
+            this.queryLoanDetails1.Name = "queryLoanDetails1";
+            this.queryLoanDetails1.Size = new System.Drawing.Size(1523, 909);
+            this.queryLoanDetails1.TabIndex = 5;
+            // 
+            // queryLoanBalances1
+            // 
+            this.queryLoanBalances1.BackColor = System.Drawing.Color.White;
+            this.queryLoanBalances1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryLoanBalances1.Location = new System.Drawing.Point(0, 0);
+            this.queryLoanBalances1.Name = "queryLoanBalances1";
+            this.queryLoanBalances1.Size = new System.Drawing.Size(1523, 909);
+            this.queryLoanBalances1.TabIndex = 4;
+            // 
+            // queryShareCapital1
+            // 
+            this.queryShareCapital1.BackColor = System.Drawing.Color.White;
+            this.queryShareCapital1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryShareCapital1.Location = new System.Drawing.Point(0, 0);
+            this.queryShareCapital1.Name = "queryShareCapital1";
+            this.queryShareCapital1.Size = new System.Drawing.Size(1523, 909);
+            this.queryShareCapital1.TabIndex = 3;
             // 
             // querySavingsDeposit1
             // 
@@ -319,15 +353,6 @@
             this.querySearchMember1.Name = "querySearchMember1";
             this.querySearchMember1.Size = new System.Drawing.Size(1523, 909);
             this.querySearchMember1.TabIndex = 0;
-            // 
-            // queryShareCapital1
-            // 
-            this.queryShareCapital1.BackColor = System.Drawing.Color.White;
-            this.queryShareCapital1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.queryShareCapital1.Location = new System.Drawing.Point(0, 0);
-            this.queryShareCapital1.Name = "queryShareCapital1";
-            this.queryShareCapital1.Size = new System.Drawing.Size(1523, 909);
-            this.queryShareCapital1.TabIndex = 3;
             // 
             // Query
             // 
@@ -377,5 +402,7 @@
         public QueryMemberProfile queryMemberProfile1;
         private QuerySavingsDeposit querySavingsDeposit1;
         private QueryShareCapital queryShareCapital1;
+        private QueryLoanDetails queryLoanDetails1;
+        private QueryLoanBalances queryLoanBalances1;
     }
 }

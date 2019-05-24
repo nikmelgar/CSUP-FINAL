@@ -186,10 +186,82 @@ namespace WindowsFormsApplication2.Classes
                     }
                 }
             }
+        }
+        /*
+        * ---------------------------------------------------------------------------------------------------------
+        *           LOAN BALANCES DISPLAY  
+        * ---------------------------------------------------------------------------------------------------------
+        */
 
-           
+        public void loadLoanBalances(int userid,DataGridView dgv)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                if(userid.ToString() == "" || userid.ToString() == "0")
+                {
+                    return;
+                }
+                else
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnLoanBalancesQuery";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", userid);
+
+                    adapter = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+
+                    dgv.Rows.Clear();
+
+                    if(ds.Tables[0].Rows.Count > 0)
+                    {
+                        //Fill in the datagridview
+                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        {
+                            dgv.Rows.Add(ds.Tables[0].Rows[i]["Loan_Description"].ToString(), ds.Tables[0].Rows[i]["Loan_No"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[i]["Loan_Amount"].ToString()).ToString("#,0.00"),Convert.ToDateTime(ds.Tables[0].Rows[i]["ReleaseDate"].ToString()).ToShortDateString(), ds.Tables[0].Rows[i]["Terms"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[i]["Monthly_Amort"].ToString()).ToString("#,0.00"), Convert.ToDecimal(ds.Tables[0].Rows[i]["Balance"].ToString()).ToString("#,0.00"), Convert.ToDecimal(ds.Tables[0].Rows[i]["Deferred"].ToString()).ToString("#,0.00"));
+                        }
+                    }
+
+                    //Load Footer
+                    loadTotals(dgv);
+                }
+            }
         }
 
+
+        public void loadTotals(DataGridView dgv)
+        {
+            dgv.Rows.Add(1);
+
+            decimal sumMonthlyAmort = 0;
+            decimal sumBalance = 0;
+            decimal sumDeferred = 0;
+            //Check if theres a beneficiary
+            if (dgv.Rows.Count > 0)
+            {
+                for (int i = 0; i < dgv.Rows.Count; ++i)
+                {
+                    sumMonthlyAmort += Convert.ToDecimal(dgv.Rows[i].Cells["Monthly_Amort"].Value);
+                    sumBalance += Convert.ToDecimal(dgv.Rows[i].Cells["bal"].Value);
+                    sumDeferred += Convert.ToDecimal(dgv.Rows[i].Cells["Deferred"].Value);
+                }
+            }
+
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[4].Value = "Totals";
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Monthly_Amort"].Value = sumMonthlyAmort.ToString("#,0.00");
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["bal"].Value = sumBalance.ToString("#,0.00");
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Deferred"].Value = sumDeferred.ToString("#,0.00");
+
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[4].Style.Font = new System.Drawing.Font("Tahoma", 12);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Monthly_Amort"].Style.Font = new System.Drawing.Font("Tahoma", 12);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["bal"].Style.Font = new System.Drawing.Font("Tahoma", 12);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Deferred"].Style.Font = new System.Drawing.Font("Tahoma", 12);
+
+        }
 
         //RETURN Members Name and ID
         public string returMembersNameAndID(int userid)

@@ -154,6 +154,7 @@
     <Compile Include="Classes\clsPDCManagement.cs" />
     <Compile Include="Classes\clsPLBI.cs" />
     <Compile Include="Classes\clsQuery.cs" />
+    <Compile Include="Classes\clsQueryLoanDetails.cs" />
     <Compile Include="Classes\clsQueryMember.cs" />
     <Compile Include="Classes\clsReminder.cs" />
     <Compile Include="Classes\clsSavings.cs" />
@@ -431,6 +432,18 @@
     </Compile>
     <Compile Include="Query.Designer.cs">
       <DependentUpon>Query.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QueryLoanBalances.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QueryLoanBalances.Designer.cs">
+      <DependentUpon>QueryLoanBalances.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QueryLoanDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QueryLoanDetails.Designer.cs">
+      <DependentUpon>QueryLoanDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="QueryMemberProfile.cs">
       <SubType>UserControl</SubType>
@@ -894,6 +907,12 @@
     </Compile>
     <EmbeddedResource Include="Query.resx">
       <DependentUpon>Query.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryLoanBalances.resx">
+      <DependentUpon>QueryLoanBalances.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryLoanDetails.resx">
+      <DependentUpon>QueryLoanDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QueryMemberProfile.resx">
       <DependentUpon>QueryMemberProfile.cs</DependentUpon>

@@ -61,5 +61,32 @@ namespace WindowsFormsApplication2
             queryShareCapital1.minmax();
             queryShareCapital1.BringToFront();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            queryLoanBalances1.returnName();
+            queryLoanBalances1.loadLoanBalance();
+            queryLoanBalances1.BringToFront();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        //For loan balances to loan details
+        public void loadLoanDetails(string loan_no)
+        {
+            //Return Name first
+            queryLoanDetails1.returnName();
+            queryLoanDetails1.loadTrans();
+            queryLoanDetails1.loadLoanDetails(loan_no);
+            queryLoanDetails1.BringToFront();
+        }
     }
 }

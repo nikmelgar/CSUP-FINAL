@@ -1031,7 +1031,7 @@ namespace WindowsFormsApplication2
                         //UPDATE ALL DEPENDENT ID IF PRINCIPAL CHANGE ID
                         SqlCommand cmdUpdateID = new SqlCommand();
                         cmdUpdateID.Connection = con;
-                        cmdUpdateID.CommandText = "UPDATE Membership SET PrincipalID = '"+ txtEmployeeIDNo.Text +"', EmployeeID = '" + txtEmployeeIDNo.Text + "' WHERE EmployeeID = '" + clsMembership.empIDStored + "'";
+                        cmdUpdateID.CommandText = "UPDATE Membership SET PrincipalID = '"+ txtEmployeeIDNo.Text +"', EmployeeID = '" + txtEmployeeIDNo.Text + "' WHERE EmployeeID = '" + clsMembership.empIDStored + "' and Principal <> '1'";
                         cmdUpdateID.CommandType = CommandType.Text;
                         cmdUpdateID.ExecuteNonQuery();
                     }
