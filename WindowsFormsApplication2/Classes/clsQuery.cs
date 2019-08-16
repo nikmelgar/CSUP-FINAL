@@ -31,7 +31,7 @@ namespace WindowsFormsApplication2.Classes
                 if (LastName.Text == "" && FirstName.Text == "" && EmployeeID.Text == "")
                 {
                     //No Search Criteria 
-                    Alert.show("No Keywords to be search.", Alert.AlertType.error);
+                    Alert.show("Please enter valid Keyword.", Alert.AlertType.error);
                     return;
                 }
                 else
@@ -53,7 +53,7 @@ namespace WindowsFormsApplication2.Classes
                     else
                     {
                         //No Records
-                        Alert.show("No Records Found.", Alert.AlertType.error);
+                        Alert.show("No record(s) found.", Alert.AlertType.error);
                         return;
                     }
                 }
@@ -222,12 +222,78 @@ namespace WindowsFormsApplication2.Classes
                         //Fill in the datagridview
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
-                            dgv.Rows.Add(ds.Tables[0].Rows[i]["Loan_Description"].ToString(), ds.Tables[0].Rows[i]["Loan_No"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[i]["Loan_Amount"].ToString()).ToString("#,0.00"),Convert.ToDateTime(ds.Tables[0].Rows[i]["ReleaseDate"].ToString()).ToShortDateString(), ds.Tables[0].Rows[i]["Terms"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[i]["Monthly_Amort"].ToString()).ToString("#,0.00"), Convert.ToDecimal(ds.Tables[0].Rows[i]["Balance"].ToString()).ToString("#,0.00"), Convert.ToDecimal(ds.Tables[0].Rows[i]["Deferred"].ToString()).ToString("#,0.00"));
+                            dgv.Rows.Add(ds.Tables[0].Rows[i]["Loan_Description"].ToString(), ds.Tables[0].Rows[i]["Loan_No"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[i]["Loan_Amount"].ToString()).ToString("#,0.00"),Convert.ToDateTime(ds.Tables[0].Rows[i]["ReleaseDate"].ToString()).ToShortDateString(), ds.Tables[0].Rows[i]["Terms"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[i]["Monthly_Amort"].ToString()).ToString("#,0.00"), Convert.ToDecimal(ds.Tables[0].Rows[i]["Balance"].ToString()).ToString("#,0.00"), Convert.ToDecimal(ds.Tables[0].Rows[i]["Deferred"].ToString()).ToString("#,0.00"),Convert.ToDateTime(ds.Tables[0].Rows[i]["As_Of"].ToString()).ToString("MM/dd/yyyy"));
                         }
                     }
 
                     //Load Footer
                     loadTotals(dgv);
+                }
+            }
+        }
+
+        /*
+        * ---------------------------------------------------------------------------------------------------------
+        *           LOAN LISTING DISPLAY  
+        * ---------------------------------------------------------------------------------------------------------
+        */
+
+        public void loadLoanListing(int userid, DataGridView dgv)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                if (userid.ToString() == "" || userid.ToString() == "0")
+                {
+                    return;
+                }
+                else
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnLoanListing";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", userid);
+
+                    adapter = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+
+                    dgv.Rows.Clear();
+
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        //Fill in the datagridview
+                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        {
+                            if(ds.Tables[0].Rows[i]["status_description"].ToString() == "RELEASED")
+                            {
+                                dgv.Rows.Add(ds.Tables[0].Rows[i]["Loan_type"].ToString(),
+                                ds.Tables[0].Rows[i]["Loan_No"].ToString(),
+                                Convert.ToDecimal(ds.Tables[0].Rows[i]["Loan_Amount"].ToString()).ToString("#,0.00"),
+                                Convert.ToDateTime(ds.Tables[0].Rows[i]["ReleaseDate"].ToString()).ToShortDateString(),
+                                "0.00",
+                                "0.00",
+                                Convert.ToDecimal(ds.Tables[0].Rows[i]["NetProceeds"].ToString()).ToString("#,0.00"),
+                                ds.Tables[0].Rows[i]["Terms"].ToString(),
+                                ds.Tables[0].Rows[i]["status_description"].ToString());
+                            }
+                            else
+                            {
+                                dgv.Rows.Add(ds.Tables[0].Rows[i]["Loan_type"].ToString(),
+                                ds.Tables[0].Rows[i]["Loan_No"].ToString(),
+                                Convert.ToDecimal(ds.Tables[0].Rows[i]["Loan_Amount"].ToString()).ToString("#,0.00"),
+                                "",
+                                "0.00",
+                                "0.00",
+                                "0.00",
+                                ds.Tables[0].Rows[i]["Terms"].ToString(),
+                                ds.Tables[0].Rows[i]["status_description"].ToString());
+                            }
+                        }
+                    }
+                    
                 }
             }
         }
@@ -256,10 +322,10 @@ namespace WindowsFormsApplication2.Classes
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["bal"].Value = sumBalance.ToString("#,0.00");
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Deferred"].Value = sumDeferred.ToString("#,0.00");
 
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[4].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Monthly_Amort"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["bal"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Deferred"].Style.Font = new System.Drawing.Font("Tahoma", 12);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[4].Style.Font = new System.Drawing.Font("Calibri",10,FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Monthly_Amort"].Style.Font = new System.Drawing.Font("Calibri", 10, FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["bal"].Style.Font = new System.Drawing.Font("Calibri", 10, FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Deferred"].Style.Font = new System.Drawing.Font("Calibri", 10, FontStyle.Bold);
 
         }
 

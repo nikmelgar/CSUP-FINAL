@@ -98,7 +98,7 @@ namespace WindowsFormsApplication2.Classes
 
                 if(orNumberDuplicate(or) == true)
                 {
-                    Alert.show("OR Number already used. Please try again.", Alert.AlertType.error);
+                    Alert.show("OR Number already used. ", Alert.AlertType.error);
                     return true;
                 }
                 else if (or.Text == "" || payorid.Text == "")
@@ -121,11 +121,6 @@ namespace WindowsFormsApplication2.Classes
                     Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
-                else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
-                {
-                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
-                    return true;
-                }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
                     Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
@@ -141,7 +136,7 @@ namespace WindowsFormsApplication2.Classes
                 //Validation For Cash Transaction
                 if (orNumberDuplicate(or) == true)
                 {
-                    Alert.show("OR Number already used. Please try again.", Alert.AlertType.error);
+                    Alert.show("OR Number already used. ", Alert.AlertType.error);
                     return true;
                 }
                 else if (or.Text == "" || payorid.Text == "")
@@ -167,11 +162,6 @@ namespace WindowsFormsApplication2.Classes
                 else if (dgvDetails.Rows.Count <= 1)
                 {
                     Alert.show("Details information is required.", Alert.AlertType.warning);
-                    return true;
-                }
-                else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
-                {
-                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
                     return true;
                 }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
@@ -214,11 +204,6 @@ namespace WindowsFormsApplication2.Classes
                     Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
-                else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
-                {
-                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
-                    return true;
-                }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
                     Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
@@ -257,11 +242,6 @@ namespace WindowsFormsApplication2.Classes
                     Alert.show("Details information is required.", Alert.AlertType.warning);
                     return true;
                 }
-                else if (Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalDebit.Text) || Convert.ToDecimal(totalTransaction.Text) != Convert.ToDecimal(totalCredit.Text))
-                {
-                    Alert.show("Amount in transaction not equal to amount in details.", Alert.AlertType.error);
-                    return true;
-                }
                 else if (Convert.ToDecimal(totalDebit.Text) != Convert.ToDecimal(totalCredit.Text))
                 {
                     Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
@@ -275,5 +255,114 @@ namespace WindowsFormsApplication2.Classes
         }
         #endregion
 
+
+        #region for payment of PDC
+        public bool hasLoanDetails(string loan_No)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapterCheckLoanDetails = new SqlDataAdapter("SELECT top 1 * from Loan_Details where loan_no = '" + loan_No + "' and isDone = '0' Order by PaymentNoSemi", con);
+                DataTable dt = new DataTable();
+                adapterCheckLoanDetails.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
+        }
+
+        public bool isPDC(string loan_No)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Payment_Option FROM Loan WHERE Loan_No = '"+ loan_No +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows[0].ItemArray[0].ToString() == "PDC")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public string pastDueAccount(string loan_No)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Loan_Type FROM Loan WHERE Loan_No = '"+ loan_No +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                SqlDataAdapter adapterLoanType = new SqlDataAdapter("SELECT PastDue_Account FROM Loan_Type WHERE Loan_Type = '"+ dt.Rows[0].ItemArray[0].ToString() +"'", con);
+                DataTable dt2 = new DataTable();
+                adapterLoanType.Fill(dt2);
+
+                return dt2.Rows[0].ItemArray[0].ToString();
+            }
+        }
+
+        public string AccountDr(string loan_No)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Loan_Type FROM Loan WHERE Loan_No = '" + loan_No + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                SqlDataAdapter adapterLoanType = new SqlDataAdapter("SELECT Account_Dr FROM Loan_Type WHERE Loan_Type = '" + dt.Rows[0].ItemArray[0].ToString() + "'", con);
+                DataTable dt2 = new DataTable();
+                adapterLoanType.Fill(dt2);
+
+                return dt2.Rows[0].ItemArray[0].ToString();
+            }
+        }
+
+        public double retInterestPerLoanType(string loan_no)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Interest FROM Loan WHERE Loan_No = '" + loan_no + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDouble(dt.Rows[0].ItemArray[0].ToString());
+            }
+        }
+
+        public double retPrincipalPerLoanType(string loan_no)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Monthly_Amort FROM Loan WHERE Loan_No = '" + loan_no + "'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDouble(dt.Rows[0].ItemArray[0].ToString());
+            }
+        }
+        #endregion
     }
 }

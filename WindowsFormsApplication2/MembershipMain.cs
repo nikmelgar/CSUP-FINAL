@@ -25,9 +25,15 @@ namespace WindowsFormsApplication2
         bool x;
         clsHoverDash cls = new clsHoverDash();
         clsMembership clsMembership = new clsMembership();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         Global global = new Global();
         private void lblAddNewMember_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction("Membership Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             //controls
             foreach (Form form in Application.OpenForms)
             {
@@ -140,10 +146,15 @@ namespace WindowsFormsApplication2
         }
         private void button2_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForViewingRestriction("Membership Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select members you want to edit!", Alert.AlertType.warning);
+                Alert.show("Please select members you want to edit.", Alert.AlertType.warning);
                 return;
             }
 
@@ -178,7 +189,7 @@ namespace WindowsFormsApplication2
             //get If Principal or not
             if(dataGridView1.SelectedRows[0].Cells["Principal"].Value.ToString() == "True")
             {
-                dataentry.panel6.Enabled = true;
+                dataentry.panelCompanyInfo.Enabled = true;
                 dataentry.dataGridView1.Enabled = true;
 
                 //Required fields validation for dependent
@@ -195,7 +206,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                dataentry.panel6.Enabled = false;
+                dataentry.panelCompanyInfo.Enabled = false;
                 dataentry.dataGridView1.Enabled = false;
 
                 //Required fields validation for dependent
@@ -276,10 +287,12 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Company"].Value.ToString() != string.Empty && dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Company"].Value != DBNull.Value)
             {
                 dataentry.dtDateResigned.Text = dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Company"].Value.ToString();
+                dataentry.dtDateResigned.Checked = true;
             }
             else if (dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Company"].Value != DBNull.Value)
             {
                 dataentry.dtDateResigned.Value = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Company"].Value);
+                dataentry.dtDateResigned.Checked = true;
             }
             else
             {
@@ -293,10 +306,12 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Pecci"].Value.ToString() != string.Empty && dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Pecci"].Value != DBNull.Value)
             {
                 dataentry.dtResignedFromPecci.Text = dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Pecci"].Value.ToString();
+                dataentry.dtResignedFromPecci.Checked = true;
             }
             else if (dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Pecci"].Value != DBNull.Value)
             {
                 dataentry.dtResignedFromPecci.Value = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Pecci"].Value);
+                dataentry.dtResignedFromPecci.Checked = true;
             }
             else
             {
@@ -369,9 +384,45 @@ namespace WindowsFormsApplication2
                 //If Dependent remove stored emp id
                 clsMembership.empIDStored = "";
             }
+
+            /*
+            *   FOR RESIGNED MEMBERS WANT TO CONTINUE OR NOT
+            */
+
+            if(Convert.ToString(dataGridView1.SelectedRows[0].Cells["Date_Resigned_From_Pecci"].Value.ToString()) != "")
+            {
+                dataentry.lblStat.Visible = true;
+                dataentry.btnReActivate.Visible = true;
+
+                //Disable Panels
+                dataentry.panelPersonalInformation.Enabled = false;
+                dataentry.panelCompanyInfo.Enabled = false;
+                dataentry.tabControl1.Enabled = false;
+                dataentry.panelOtherInfo.Enabled = false;
+                dataentry.btnEdit.Enabled = false;
+            }
+            else
+            {
+                dataentry.lblStat.Visible = false;
+                dataentry.btnReActivate.Visible = false;
+
+
+                dataentry.panelPersonalInformation.Enabled = true;
+                if (dataGridView1.SelectedRows[0].Cells["Principal"].Value.ToString() == "True")
+                {
+                    dataentry.panelCompanyInfo.Enabled = true;
+                }
+                else
+                {
+                    dataentry.panelCompanyInfo.Enabled = false;
+                }
+                dataentry.tabControl1.Enabled = true;
+                dataentry.panelOtherInfo.Enabled = true;
+            }
+
             clsMembership.loadPicture(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString(), dataentry.picPicture);
             dataentry = null;
-           
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -393,7 +444,7 @@ namespace WindowsFormsApplication2
         {
             if(txtEmployeeID.Text == "" && txtFirstName.Text == "" && txtLastName.Text == "")
             {
-                Alert.show("Please enter valid keyword to be searched.", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
             else

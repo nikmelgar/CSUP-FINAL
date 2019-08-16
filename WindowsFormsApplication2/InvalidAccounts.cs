@@ -29,6 +29,7 @@ namespace WindowsFormsApplication2
         //=======================================================
         Global global = new Global();
         Classes.clsATMRejects clsATMReject = new Classes.clsATMRejects();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -62,7 +63,7 @@ namespace WindowsFormsApplication2
         {
             if(txtSearchText.Text == "")
             {
-                Alert.show("Please enter a valid keyword!", Alert.AlertType.error);
+                Alert.show("Please enter a valid keyword.", Alert.AlertType.error);
                 return;
             }
             clsATMReject.searchInvalidAccount(txtSearchText, txtSearchText.Text.Trim(), dataGridView1);
@@ -70,16 +71,21 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.SelectedRows.Count == 0)
+            if (clsAccess.checkForDeleteRestriction("ATM Rejects", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dataGridView1.SelectedRows.Count == 0)
             {
                 if(dataGridView1.Rows.Count > 0)
                 {
-                    Alert.show("Please select account to be remove!", Alert.AlertType.error);
+                    Alert.show("Please select account to be remove.", Alert.AlertType.error);
                     return;
                 }
                 else
                 {
-                    Alert.show("No records to be removed!", Alert.AlertType.error);
+                    Alert.show("No record(s) to be removed.", Alert.AlertType.error);
                     return;
                 }
             }
@@ -133,7 +139,7 @@ namespace WindowsFormsApplication2
                 }
 
                 //End of Process
-                Alert.show("Successfully Removed!", Alert.AlertType.success);
+                Alert.show("Successfully removed.", Alert.AlertType.success);
 
                 foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                 {
@@ -159,6 +165,16 @@ namespace WindowsFormsApplication2
             InvalidAccounts frm = new InvalidAccounts();
             frm.Show();
             frm.MdiParent = this;
+        }
+
+        private void btnClose_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace WindowsFormsApplication2
         Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
         Classes.clsSearchDisbursement clsDisbursement = new Classes.clsSearchDisbursement();
         Classes.clsParameter clsParameter = new Classes.clsParameter();
+        Classes.clsCollection clsCollection = new Classes.clsCollection();
 
         SqlConnection con;
         SqlCommand cmd;
@@ -81,14 +82,14 @@ namespace WindowsFormsApplication2
 
             //Default
             txtProcessedBy.Text = Classes.clsUser.Username;
-            txtProcessdDate.Text = Convert.ToString(DateTime.Today.ToShortDateString());
+            txtProcessdDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
             if(txtSearchLoanNo.Text == "")
             {
-                Alert.show("Please enter valid loan number.", Alert.AlertType.error);
+                Alert.show("Please enter valid Loan number.", Alert.AlertType.error);
                 return;
             }
 
@@ -106,7 +107,7 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select you want to release!", Alert.AlertType.warning);
+                Alert.show("Please select transaction you want to release.", Alert.AlertType.warning);
                 return;
             }
             txtSearchLoanNo.Text = "";
@@ -230,6 +231,9 @@ namespace WindowsFormsApplication2
                     txtTotalDeduction.Text = Convert.ToString(Convert.ToDouble(ttalDeduction).ToString("#,0.00"));
                     txtNetAmount.Text = Convert.ToString(Convert.ToDouble(ttalNet).ToString("#,0.00"));
                 }
+
+                txtProcessedBy.Text = Classes.clsUser.Username;
+                txtProcessdDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
             }
         }
 
@@ -250,6 +254,12 @@ namespace WindowsFormsApplication2
                 using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
                     con.Open();
+
+                    //=====================================================
+                    //         LOAN DETAIL INSERT HERE
+                    //=====================================================
+
+                    clsLoanDataEntry.createSchedule(txtLoanNo.Text, clsLoanDataEntry.returnPaymentOption(txtLoanNo.Text), clsLoanDataEntry.loanAmountGross(txtLoanNo.Text), Convert.ToDouble(txtInterest.Text), Convert.ToDouble(txtTermsInMonth.Text), cmbLoanType.Text, txtProcessdDate.Text);
 
                     string jvNo;
 
@@ -311,7 +321,7 @@ namespace WindowsFormsApplication2
                     cmd.Parameters.AddWithValue("@JV_No", jvNo);
                     cmd.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnChartAccountCode(cmbLoanType.Text));
                     cmd.Parameters.AddWithValue("@userID", userID);
-                    cmd.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
                     cmd.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
                     cmd.Parameters.AddWithValue("@Debit", Convert.ToDecimal(txtLoanReceivable.Text.Replace(",", "")));
                     cmd.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
@@ -325,7 +335,7 @@ namespace WindowsFormsApplication2
                     cmd1.Parameters.AddWithValue("@JV_No", jvNo);
                     cmd1.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnMemberBankCodeAccount(userID));
                     cmd1.Parameters.AddWithValue("@userID", userID);
-                    cmd1.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd1.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
                     cmd1.Parameters.AddWithValue("@Loan_No", "");
                     cmd1.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
                     cmd1.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtNetAmount.Text.Replace(",", "")));
@@ -341,7 +351,7 @@ namespace WindowsFormsApplication2
                         cmd2.Parameters.AddWithValue("@JV_No", jvNo);
                         cmd2.Parameters.AddWithValue("@Account_Code", "405");
                         cmd2.Parameters.AddWithValue("@userID", userID);
-                        cmd2.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                        cmd2.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
                         cmd2.Parameters.AddWithValue("@Loan_No", "");
                         cmd2.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
                         cmd2.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtServiceFee.Text.Replace(",", "")));
@@ -368,7 +378,7 @@ namespace WindowsFormsApplication2
                             cmdDeduction.Parameters.AddWithValue("@JV_No", jvNo);
                             cmdDeduction.Parameters.AddWithValue("@Account_Code", dt2.Rows[x].ItemArray[7].ToString());
                             cmdDeduction.Parameters.AddWithValue("@userID", userID);
-                            cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                            cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
 
                             if (dt2.Rows[x].ItemArray[4].ToString() != "")
                             {
@@ -379,8 +389,20 @@ namespace WindowsFormsApplication2
                                 cmdDeduction.Parameters.AddWithValue("@Loan_No", "");
                             }
 
-                            cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
-                            cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
+                            //check if unearned or earned
+                            //if unearned then go debit else credit
+                            if(dt2.Rows[x].ItemArray[7].ToString() == "314")
+                            {
+                                cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
+                                cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
+
+                            }
+                            else
+                            {
+                                cmdDeduction.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
+                                cmdDeduction.Parameters.AddWithValue("@Credit", Convert.ToDecimal(dt2.Rows[x].ItemArray[5].ToString()));
+                            }
+                            
                             cmdDeduction.ExecuteNonQuery();
 
                             x = x + 1;//Increment
@@ -409,6 +431,9 @@ namespace WindowsFormsApplication2
                     cmdRelease.ExecuteNonQuery();
                 }
                 clearTextFIelds();
+
+                //RESET TO DEFAULT
+                button2.Enabled = false;
             }
         }
 
@@ -421,6 +446,13 @@ namespace WindowsFormsApplication2
                 using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
                     con.Open();
+
+                    //=====================================================
+                    //         LOAN DETAIL INSERT HERE
+                    //=====================================================
+
+                    clsLoanDataEntry.createSchedule(txtLoanNo.Text, clsLoanDataEntry.returnPaymentOption(txtLoanNo.Text), clsLoanDataEntry.loanAmountGross(txtLoanNo.Text), Convert.ToDouble(txtInterest.Text), Convert.ToDouble(txtTermsInMonth.Text), cmbLoanType.Text, txtProcessdDate.Text);
+
 
                     string cvno;
 
@@ -482,7 +514,7 @@ namespace WindowsFormsApplication2
                     cmd1.Parameters.AddWithValue("@CV_No", cvno);
                     cmd1.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnChartAccountCode(cmbLoanType.Text));
                     cmd1.Parameters.AddWithValue("@userID", userID);
-                    cmd1.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd1.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
                     cmd1.Parameters.AddWithValue("@Loan_No", txtLoanNo.Text);
                     cmd1.Parameters.AddWithValue("@Debit", Convert.ToDecimal(txtLoanReceivable.Text.Replace(",", "")));
                     cmd1.Parameters.AddWithValue("@Credit", Convert.ToDecimal("0.00"));
@@ -494,9 +526,9 @@ namespace WindowsFormsApplication2
                     cmd2.CommandText = "sp_InsertDisbursementDetail";
                     cmd2.CommandType = CommandType.StoredProcedure;
                     cmd2.Parameters.AddWithValue("@CV_No", cvno);
-                    cmd2.Parameters.AddWithValue("@Account_Code", clsLoanComputation.returnMemberBankCodeAccount(userID));
+                    cmd2.Parameters.AddWithValue("@Account_Code", "102.02");
                     cmd2.Parameters.AddWithValue("@userID", userID);
-                    cmd2.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                    cmd2.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
                     cmd2.Parameters.AddWithValue("@Loan_No", "");
                     cmd2.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
                     cmd2.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtNetAmount.Text.Replace(",", "")));
@@ -512,7 +544,7 @@ namespace WindowsFormsApplication2
                         cmd3.Parameters.AddWithValue("@CV_No", cvno);
                         cmd3.Parameters.AddWithValue("@Account_Code", "405");
                         cmd3.Parameters.AddWithValue("@userID", userID);
-                        cmd3.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                        cmd3.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
                         cmd3.Parameters.AddWithValue("@Loan_No", "");
                         cmd3.Parameters.AddWithValue("@Debit", Convert.ToDecimal("0.00"));
                         cmd3.Parameters.AddWithValue("@Credit", Convert.ToDecimal(txtServiceFee.Text.Replace(",", "")));
@@ -539,7 +571,7 @@ namespace WindowsFormsApplication2
                             cmdDeduction.Parameters.AddWithValue("@CV_No", cvno);
                             cmdDeduction.Parameters.AddWithValue("@Account_Code", dt2.Rows[x].ItemArray[7].ToString());
                             cmdDeduction.Parameters.AddWithValue("@userID", userID);
-                            cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", txtEmployeeID.Text);
+                            cmdDeduction.Parameters.AddWithValue("@Subsidiary_Code", clsCollection.GetSubsidiary(userID));
 
                             if (dt2.Rows[x].ItemArray[4].ToString() != "")
                             {
@@ -646,6 +678,9 @@ namespace WindowsFormsApplication2
                     cmdRelease.ExecuteNonQuery();
                 }
                 clearTextFIelds();
+
+                //RESET TO DEFAULT
+                button1.Enabled = false;
             }
         }
 

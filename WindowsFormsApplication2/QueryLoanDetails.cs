@@ -39,7 +39,9 @@ namespace WindowsFormsApplication2
 
         public void loadLoanDetails(string loan_no)
         {
-            clsQyeryLoanDetails.displayLoanDetails(loan_no,lblLoanNo,lblLoanType,lblLoanDate,lblReleasedDate,lblLoanStatus,lblLoanGrossAmount,lblServiceFee,lblPrevBalance,lblNetProceed,lblTerms,lblMonthlyAMort,lblFirstDeductionPayment,lblSecondDeductionPayment,lblThirdDeductionPayment,lblSuccedingPayment,lblFirstDeduction,lblSecondDeduction,lblThirdDeduction,dgvCoMakers,dgvOtherDeduct);
+            clsQyeryLoanDetails.displayLoanDetails(loan_no,lblLoanNo,lblLoanType,lblLoanDate,lblReleasedDate,lblLoanStatus,lblLoanGrossAmount,lblServiceFee,lblPrevBalance,lblNetProceed,lblTerms,lblMonthlyAMort,lblFirstDeductionPayment,lblSecondDeductionPayment,lblThirdDeductionPayment,lblSuccedingPayment,lblFirstDeduction,lblSecondDeduction,lblThirdDeduction,dgvCoMakers,dgvOtherDeduct,dgvSubsTrans);
+            clsQyeryLoanDetails.loadSubsTransactiob(loan_no, dgvSubsTrans);
+            clsQyeryLoanDetails.loadSubsTransactioPastDue(loan_no, dgvPastDue);
         }
     }
 }

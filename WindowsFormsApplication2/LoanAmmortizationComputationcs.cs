@@ -94,7 +94,6 @@ namespace WindowsFormsApplication2
         {
             clsLoan.loadComboBox(cmbLoanType);
             cmbLoanType.SelectedIndex = -1;
-            interestRate.Text = returnInterest().ToString();
             clsLoan.loadComboBox(cmbLessType);
             cmbLessType.SelectedIndex = -1;
         }
@@ -117,13 +116,13 @@ namespace WindowsFormsApplication2
         {
             if(cmbLoanType.Text == "")
             {
-                Alert.show("Please select loan type.", Alert.AlertType.error);
+                Alert.show("Please select Loan type.", Alert.AlertType.error);
                 return;
             }
 
             if(txtLoanAmount.Text == "")
             {
-                Alert.show("Please enter loan amount.", Alert.AlertType.error);
+                Alert.show("Please enter Loan amount.", Alert.AlertType.error);
                 return;
             }
 
@@ -135,7 +134,7 @@ namespace WindowsFormsApplication2
 
             if(txtTerminMos.Text == "")
             {
-                Alert.show("Please enter ttrms in months.", Alert.AlertType.error);
+                Alert.show("Please enter Loan term in months.", Alert.AlertType.error);
                 return;
             }
 
@@ -569,13 +568,13 @@ namespace WindowsFormsApplication2
         {
             if(cmbLessType.Text == "")
             {
-                Alert.show("Please enter description.", Alert.AlertType.error);
+                Alert.show("Please enter Description.", Alert.AlertType.error);
                 return;
             }
 
             if(txtAmountLESS.Text == "")
             {
-                Alert.show("Please enter amount to be deducted.", Alert.AlertType.error);
+                Alert.show("Please enter Amount to be deducted.", Alert.AlertType.error);
                 return;
             }
             txtAmountLESS.Text = Convert.ToDecimal(txtAmountLESS.Text).ToString("#,0.00");
@@ -659,6 +658,7 @@ namespace WindowsFormsApplication2
             if(cmbLoanType.Text != "")
             {
                 dataGridView1.Rows.Clear();
+                
 
                 using (SqlConnection con = new SqlConnection(global.connectString()))
                 {
@@ -758,6 +758,18 @@ namespace WindowsFormsApplication2
             if (txtSD.Text != "")
             {
                 txtSD.Text = Convert.ToDecimal(txtSD.Text).ToString("#,0.00");
+            }
+        }
+
+        private void cmbLoanType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cmbLoanType.Text != "")
+            {
+                interestRate.Text = returnInterest().ToString();
+            }
+            else
+            {
+                interestRate.Text = "";
             }
         }
 

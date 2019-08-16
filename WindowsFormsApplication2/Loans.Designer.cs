@@ -328,7 +328,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.71429F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1258F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1218F));
             this.tableLayoutPanel1.Controls.Add(this.label10, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label13, 0, 0);
@@ -351,10 +351,10 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(99, 1);
+            this.label10.Location = new System.Drawing.Point(133, 1);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(7, 20);
+            this.label10.Size = new System.Drawing.Size(13, 20);
             this.label10.TabIndex = 4;
             this.label10.Text = ":";
             // 
@@ -362,10 +362,10 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(99, 38);
+            this.label12.Location = new System.Drawing.Point(133, 38);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(7, 20);
+            this.label12.Size = new System.Drawing.Size(13, 20);
             this.label12.TabIndex = 4;
             this.label12.Text = ":";
             // 
@@ -387,14 +387,14 @@
             this.label14.Location = new System.Drawing.Point(5, 38);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(79, 33);
+            this.label14.Size = new System.Drawing.Size(113, 21);
             this.label14.TabIndex = 2;
             this.label14.Text = "Employee ID";
             // 
             // txtEmployeeID
             // 
             this.txtEmployeeID.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmployeeID.Location = new System.Drawing.Point(115, 42);
+            this.txtEmployeeID.Location = new System.Drawing.Point(155, 42);
             this.txtEmployeeID.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmployeeID.Name = "txtEmployeeID";
             this.txtEmployeeID.Size = new System.Drawing.Size(434, 26);
@@ -404,10 +404,10 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(99, 72);
+            this.label15.Location = new System.Drawing.Point(133, 72);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(7, 20);
+            this.label15.Size = new System.Drawing.Size(13, 20);
             this.label15.TabIndex = 10;
             this.label15.Text = ":";
             // 
@@ -425,7 +425,7 @@
             // txtLoanNo
             // 
             this.txtLoanNo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLoanNo.Location = new System.Drawing.Point(115, 5);
+            this.txtLoanNo.Location = new System.Drawing.Point(155, 5);
             this.txtLoanNo.Margin = new System.Windows.Forms.Padding(4);
             this.txtLoanNo.Name = "txtLoanNo";
             this.txtLoanNo.Size = new System.Drawing.Size(434, 26);
@@ -434,7 +434,7 @@
             // txtName
             // 
             this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(115, 76);
+            this.txtName.Location = new System.Drawing.Point(155, 76);
             this.txtName.Margin = new System.Windows.Forms.Padding(4);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(434, 26);

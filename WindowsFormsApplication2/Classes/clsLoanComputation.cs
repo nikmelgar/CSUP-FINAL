@@ -82,7 +82,7 @@ namespace WindowsFormsApplication2.Classes
 
                 if (dgv.Rows.Count == 0)
                 {
-                    Alert.show("No record/s found.", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     txtloan.Text = "";
                 }
 

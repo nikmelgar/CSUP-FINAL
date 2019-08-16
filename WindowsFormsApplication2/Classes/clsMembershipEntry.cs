@@ -37,14 +37,14 @@ namespace WindowsFormsApplication2
         }
 
         //Checking for Data Entry upon Saving and Updating
-        public bool RequiredFields(TextBox LastName, TextBox FirstName,TextBox MiddleName , TextBox Address, ComboBox gender, ComboBox CivilStatus, MaskedTextBox TinNo, DateTimePicker DateOfBirth, TextBox PlacePMS, DateTimePicker DatePMS, TextBox EmployeeID, ComboBox Company, ComboBox PayrollGroup, ComboBox CostCenter, DateTimePicker DateHired, TextBox NameContactPerson, MaskedTextBox OfficeTel,ComboBox bank,TextBox atm)
+        public bool RequiredFields(TextBox LastName, TextBox FirstName,TextBox MiddleName , TextBox Address, ComboBox gender, ComboBox CivilStatus, MaskedTextBox TinNo, DateTimePicker DateOfBirth, TextBox PlacePMS, DateTimePicker DatePMS, TextBox EmployeeID, ComboBox Company, ComboBox PayrollGroup, ComboBox CostCenter, DateTimePicker DateHired, TextBox NameContactPerson, MaskedTextBox OfficeTel,ComboBox bank,TextBox atm,TextBox txtMembership,TextBox txtSavingsDeposit,TextBox txtShareCapital)
         {
             TinNo.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
             OfficeTel.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
 
             if (clsMembershipEntry.principal.ToString() != "False" && clsMembershipEntry.principal.ToString() != "0")
             {
-                if (LastName.Text == "" || FirstName.Text == "" || MiddleName.Text == "" || Address.Text == "" || gender.Text == "" || CivilStatus.Text == "" || TinNo.Text == "" || DateOfBirth.Text == "" || PlacePMS.Text == "" || DatePMS.Text == "" || EmployeeID.Text == "" || Company.Text == "" || PayrollGroup.Text == "" || CostCenter.Text == "" || DateHired.Text == "" || NameContactPerson.Text == "" ||  bank.Text == "" || atm.Text == "" || OfficeTel.Text == "")
+                if (LastName.Text == "" || FirstName.Text == "" || MiddleName.Text == "" || Address.Text == "" || gender.Text == "" || CivilStatus.Text == "" || TinNo.Text == "" || DateOfBirth.Text == "" || PlacePMS.Text == "" || DatePMS.Text == "" || EmployeeID.Text == "" || Company.Text == "" || PayrollGroup.Text == "" || CostCenter.Text == "" || DateHired.Text == "" || NameContactPerson.Text == "" ||  bank.Text == "" || atm.Text == "" || OfficeTel.Text == "" || txtMembership.Text == "0.00" || txtSavingsDeposit.Text == "0.00" || txtShareCapital.Text == "0.00" || txtMembership.Text == "" || txtSavingsDeposit.Text == "" || txtShareCapital.Text == "")
                 {
                     return true;
                 }
@@ -55,7 +55,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                if (LastName.Text == "" || FirstName.Text == "" || MiddleName.Text == "" || Address.Text == "" || gender.Text == "" || CivilStatus.Text == "" || DateOfBirth.Text == "" || PlacePMS.Text == "" || DatePMS.Text == "" || EmployeeID.Text == "" || Company.Text == "" || PayrollGroup.Text == "" || CostCenter.Text == "" || DateHired.Text == "" || NameContactPerson.Text == "" || bank.Text == "" || atm.Text == "")
+                if (LastName.Text == "" || FirstName.Text == "" || MiddleName.Text == "" || Address.Text == "" || gender.Text == "" || CivilStatus.Text == "" || DateOfBirth.Text == "" || PlacePMS.Text == "" || DatePMS.Text == "" || EmployeeID.Text == "" || Company.Text == "" || PayrollGroup.Text == "" || CostCenter.Text == "" || DateHired.Text == "" || NameContactPerson.Text == "" || bank.Text == "" || atm.Text == "" || txtMembership.Text == "0.00" || txtSavingsDeposit.Text == "0.00" || txtShareCapital.Text == "0.00" || txtMembership.Text == "" || txtSavingsDeposit.Text == "" || txtShareCapital.Text == "")
                 {
                     return true;
                 }
@@ -83,30 +83,37 @@ namespace WindowsFormsApplication2
         }
 
         //For Leaving without saving
-        public bool CheckValuesForUpdating(TextBox LastName, TextBox FirstName, TextBox Address, ComboBox CivilStatus, MaskedTextBox TinNo, DateTimePicker DateOfBirth, TextBox PlacePMS, DateTimePicker DatePMS, TextBox EmployeeID, ComboBox Company, ComboBox PayrollGroup, ComboBox CostCenter, DateTimePicker DateHired, TextBox NameContactPerson, MaskedTextBox ContactNo1)
+        public bool CheckValuesForUpdating(TextBox LastName, TextBox FirstName, TextBox Address, ComboBox CivilStatus, DateTimePicker DateOfBirth, TextBox PlacePMS, DateTimePicker DatePMS, TextBox EmployeeID, ComboBox Company, ComboBox PayrollGroup, ComboBox CostCenter, DateTimePicker DateHired, TextBox NameContactPerson, MaskedTextBox ContactNo1)
         {
-            //TRUE = Not Change
-            //FALSE = Change values
-            TinNo.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
-            ContactNo1.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
-
-            using (SqlConnection con = new SqlConnection(global.connectString()))
+            try
             {
-                con.Open();
+                //TRUE = Not Change
+                //FALSE = Change values
+                ContactNo1.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
 
-                SqlDataAdapter adapter = new SqlDataAdapter("select LastName,FirstName,Residential_Address,Civil_Status,TinNo,Date_Of_Birth,Place_PMS,Date_Of_PMS,EmployeeID,Company_Code,Payroll_Code,Cost_Center_Code,Date_Hired, Contact_Person, Contact_No1 from Membership WHERE userid = '" + clsMembershipEntry.userID + "'", con);
-                DataSet ds = new DataSet();
-                adapter.Fill(ds);
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                if (LastName.Text == ds.Tables[0].Rows[0]["LastName"].ToString() && FirstName.Text == ds.Tables[0].Rows[0]["FirstName"].ToString() && Address.Text == ds.Tables[0].Rows[0]["Residential_Address"].ToString() && CivilStatus.Text == ds.Tables[0].Rows[0]["Civil_Status"].ToString() && TinNo.Text == ds.Tables[0].Rows[0]["TinNo"].ToString() && DateOfBirth.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Of_Birth"].ToString()).ToShortDateString() && PlacePMS.Text == ds.Tables[0].Rows[0]["Place_PMS"].ToString() && DatePMS.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Of_PMS"].ToString()).ToShortDateString() && EmployeeID.Text == ds.Tables[0].Rows[0]["EmployeeID"].ToString() && Company.Text == clsMembership.returnCompanyDescription(ds.Tables[0].Rows[0]["Company_Code"].ToString()) && PayrollGroup.Text == clsMembership.returnPayrollDescription(ds.Tables[0].Rows[0]["Payroll_Code"].ToString()) && CostCenter.Text == clsMembership.returnCostCenter(ds.Tables[0].Rows[0]["Cost_Center_Code"].ToString()) && DateHired.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Hired"].ToString()).ToShortDateString() && NameContactPerson.Text == ds.Tables[0].Rows[0]["Contact_Person"].ToString() && ContactNo1.Text == ds.Tables[0].Rows[0]["Contact_No1"].ToString())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    SqlDataAdapter adapter = new SqlDataAdapter("select LastName,FirstName,Residential_Address,Civil_Status,TinNo,Date_Of_Birth,Place_PMS,Date_Of_PMS,EmployeeID,Company_Code,Payroll_Code,Cost_Center_Code,Date_Hired, Contact_Person, Contact_No1 from Membership WHERE userid = '" + clsMembershipEntry.userID + "'", con);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+
+                    if (LastName.Text == ds.Tables[0].Rows[0]["LastName"].ToString() && FirstName.Text == ds.Tables[0].Rows[0]["FirstName"].ToString() && Address.Text == ds.Tables[0].Rows[0]["Residential_Address"].ToString() && CivilStatus.Text == ds.Tables[0].Rows[0]["Civil_Status"].ToString() && DateOfBirth.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Of_Birth"].ToString()).ToShortDateString() && PlacePMS.Text == ds.Tables[0].Rows[0]["Place_PMS"].ToString() && DatePMS.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Of_PMS"].ToString()).ToShortDateString() && EmployeeID.Text == ds.Tables[0].Rows[0]["EmployeeID"].ToString() && Company.Text == clsMembership.returnCompanyDescription(ds.Tables[0].Rows[0]["Company_Code"].ToString()) && PayrollGroup.Text == clsMembership.returnPayrollDescription(ds.Tables[0].Rows[0]["Payroll_Code"].ToString()) && CostCenter.Text == clsMembership.returnCostCenter(ds.Tables[0].Rows[0]["Cost_Center_Code"].ToString()) && DateHired.Text == Convert.ToDateTime(ds.Tables[0].Rows[0]["Date_Hired"].ToString()).ToShortDateString() && NameContactPerson.Text == ds.Tables[0].Rows[0]["Contact_Person"].ToString() && ContactNo1.Text == ds.Tables[0].Rows[0]["Contact_No1"].ToString())
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
+            catch
+            {
+                return false;
+            }
+            
         }
 
         //Checking for Duplicate EmployeeID
@@ -276,6 +283,44 @@ namespace WindowsFormsApplication2
                 empid.BackColor = SystemColors.Window;
             }
 
+        }
+
+
+        //Public Return for Share Capital
+        //For Non Payroll Purposes
+        //For Reactivation of Membership
+        public Boolean getShareCapital(int userid)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_GetShareCapitalBalancePerMember";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userID", userid);
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(Convert.ToString(dt.Rows[0].ItemArray[0].ToString()) != "")
+                {
+                    if(Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString()) > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }

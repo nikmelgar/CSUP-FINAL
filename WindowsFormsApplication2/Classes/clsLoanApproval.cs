@@ -17,7 +17,7 @@ namespace WindowsFormsApplication2.Classes
 
         Global global = new Global();
 
-      
+
         public string returnStatusNo(string loan_No)
         {
             using (SqlConnection con = new SqlConnection(global.connectString()))
@@ -33,7 +33,7 @@ namespace WindowsFormsApplication2.Classes
 
         }
 
-        public void loadLoanBalances(int userid,DataGridView dgv,string loanType)
+        public void loadLoanBalances(int userid, DataGridView dgv, string loanType)
         {
             dgv.Rows.Clear();
 

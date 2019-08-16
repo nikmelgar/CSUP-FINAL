@@ -48,7 +48,7 @@ namespace WindowsFormsApplication2.Classes
                 }
                 else
                 {
-                    Alert.show("No record found.", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     dgv.DataSource = null;
                     txt.Text = "";
                     return;
@@ -92,7 +92,7 @@ namespace WindowsFormsApplication2.Classes
                 {
                     cmd = new SqlCommand();
                     cmd.Connection = con;
-                    cmd.CommandText = "UPDATE Journal_Header SET Cancelled = 1, Cancelled_By ='" + Classes.clsUser.Username + "', Cancel_Note ='Invalid Account Number', Particulars = 'Invalid Account Number' WHERE JV_No = '" + jvno + "'";
+                    cmd.CommandText = "UPDATE Journal_Header SET Posted = 0, Posted_By = NULL,Cancelled = 1, Cancelled_By ='" + Classes.clsUser.Username + "', Cancel_Note ='Invalid Account Number', Particulars = 'Invalid Account Number' WHERE JV_No = '" + jvno + "'";
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                 }
@@ -108,7 +108,7 @@ namespace WindowsFormsApplication2.Classes
                     adapGetAmount.Fill(dtGetAmount);
 
                     //Get the Amount [Credit] of Selected UserID
-                    SqlDataAdapter adapGetAmountCreidt = new SqlDataAdapter("SELECT Credit FROM Journal_Detail WHERE JV_No ='" + jvno + "' and Account_Code ='102.10'", con);
+                    SqlDataAdapter adapGetAmountCreidt = new SqlDataAdapter("SELECT Credit FROM Journal_Detail WHERE JV_No ='" + jvno + "' and Account_Code like '102.%'", con);
                     DataTable dtGetAmountCredit = new DataTable();
                     adapGetAmountCreidt.Fill(dtGetAmountCredit);
 
@@ -121,7 +121,7 @@ namespace WindowsFormsApplication2.Classes
                     //Recompute
                     SqlCommand cmdUpdateCredit = new SqlCommand();
                     cmdUpdateCredit.Connection = con;
-                    cmdUpdateCredit.CommandText = "UPDATE Journal_Detail SET Credit = '" + updateCredit + "' WHERE JV_No = '" + jvno + "' and Account_Code = '102.10'";
+                    cmdUpdateCredit.CommandText = "UPDATE Journal_Detail SET Credit = '" + updateCredit + "' WHERE JV_No = '" + jvno + "' and Account_Code like '102.%'";
                     cmdUpdateCredit.CommandType = CommandType.Text;
                     cmdUpdateCredit.ExecuteNonQuery();
 

@@ -29,13 +29,20 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PDCManagement));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtGross = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtLoanNumber = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.radioLoan = new System.Windows.Forms.RadioButton();
             this.radioShareCapital = new System.Windows.Forms.RadioButton();
             this.radioSavings = new System.Windows.Forms.RadioButton();
@@ -62,9 +69,6 @@
             this.btnClear = new System.Windows.Forms.Button();
             this.btnAddCheck = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.txtLoanNumber = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtLoanType = new System.Windows.Forms.TextBox();
@@ -115,12 +119,9 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.btnSelectAll = new System.Windows.Forms.Button();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.txtGross = new System.Windows.Forms.TextBox();
             this.panelHeader.SuspendLayout();
             this.panel19.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -128,7 +129,6 @@
             this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel10.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel2
@@ -210,6 +210,99 @@
             this.panel19.Size = new System.Drawing.Size(1456, 201);
             this.panel19.TabIndex = 111;
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel2.ColumnCount = 6;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 87.95181F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.04819F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
+            this.tableLayoutPanel2.Controls.Add(this.txtGross, 5, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label20, 4, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label16, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.txtLoanNumber, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label8, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label11, 0, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(9, 159);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(630, 35);
+            this.tableLayoutPanel2.TabIndex = 162;
+            // 
+            // txtGross
+            // 
+            this.txtGross.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtGross.Location = new System.Drawing.Point(442, 5);
+            this.txtGross.Margin = new System.Windows.Forms.Padding(4);
+            this.txtGross.MaxLength = 50;
+            this.txtGross.Name = "txtGross";
+            this.txtGross.ReadOnly = true;
+            this.txtGross.Size = new System.Drawing.Size(177, 28);
+            this.txtGross.TabIndex = 152;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label20.Location = new System.Drawing.Point(421, 1);
+            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(12, 21);
+            this.label20.TabIndex = 131;
+            this.label20.Text = ":";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label16.Location = new System.Drawing.Point(357, 1);
+            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(55, 21);
+            this.label16.TabIndex = 152;
+            this.label16.Text = "Gross";
+            // 
+            // txtLoanNumber
+            // 
+            this.txtLoanNumber.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLoanNumber.Location = new System.Drawing.Point(166, 5);
+            this.txtLoanNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.txtLoanNumber.MaxLength = 50;
+            this.txtLoanNumber.Name = "txtLoanNumber";
+            this.txtLoanNumber.ReadOnly = true;
+            this.txtLoanNumber.Size = new System.Drawing.Size(179, 28);
+            this.txtLoanNumber.TabIndex = 151;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label8.Location = new System.Drawing.Point(146, 1);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(11, 21);
+            this.label8.TabIndex = 130;
+            this.label8.Text = ":";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label11.Location = new System.Drawing.Point(5, 1);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(122, 21);
+            this.label11.TabIndex = 139;
+            this.label11.Text = "Loan Number";
+            // 
             // radioLoan
             // 
             this.radioLoan.AutoSize = true;
@@ -278,7 +371,7 @@
             this.tableLayoutPanel4.ColumnCount = 3;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 87.21461F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.78539F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 358F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 364F));
             this.tableLayoutPanel4.Controls.Add(this.label6, 0, 4);
             this.tableLayoutPanel4.Controls.Add(this.txtAmount, 2, 4);
             this.tableLayoutPanel4.Controls.Add(this.label33, 1, 4);
@@ -320,7 +413,7 @@
             // txtAmount
             // 
             this.txtAmount.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtAmount.Location = new System.Drawing.Point(168, 149);
+            this.txtAmount.Location = new System.Drawing.Point(162, 149);
             this.txtAmount.Margin = new System.Windows.Forms.Padding(4);
             this.txtAmount.MaxLength = 50;
             this.txtAmount.Name = "txtAmount";
@@ -333,10 +426,10 @@
             this.label33.AutoSize = true;
             this.label33.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label33.Location = new System.Drawing.Point(147, 145);
+            this.label33.Location = new System.Drawing.Point(142, 145);
             this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(12, 21);
+            this.label33.Size = new System.Drawing.Size(11, 21);
             this.label33.TabIndex = 151;
             this.label33.Text = ":";
             // 
@@ -345,10 +438,10 @@
             this.label35.AutoSize = true;
             this.label35.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label35.Location = new System.Drawing.Point(147, 37);
+            this.label35.Location = new System.Drawing.Point(142, 37);
             this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(12, 21);
+            this.label35.Size = new System.Drawing.Size(11, 21);
             this.label35.TabIndex = 138;
             this.label35.Text = ":";
             // 
@@ -369,17 +462,17 @@
             this.label36.AutoSize = true;
             this.label36.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label36.Location = new System.Drawing.Point(147, 1);
+            this.label36.Location = new System.Drawing.Point(142, 1);
             this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(12, 21);
+            this.label36.Size = new System.Drawing.Size(11, 21);
             this.label36.TabIndex = 138;
             this.label36.Text = ":";
             // 
             // txtChequeNo
             // 
             this.txtChequeNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtChequeNo.Location = new System.Drawing.Point(168, 113);
+            this.txtChequeNo.Location = new System.Drawing.Point(162, 113);
             this.txtChequeNo.Margin = new System.Windows.Forms.Padding(4);
             this.txtChequeNo.MaxLength = 50;
             this.txtChequeNo.Name = "txtChequeNo";
@@ -404,10 +497,10 @@
             this.label37.AutoSize = true;
             this.label37.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label37.Location = new System.Drawing.Point(147, 73);
+            this.label37.Location = new System.Drawing.Point(142, 73);
             this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(12, 21);
+            this.label37.Size = new System.Drawing.Size(11, 21);
             this.label37.TabIndex = 133;
             this.label37.Text = ":";
             // 
@@ -428,10 +521,10 @@
             this.label41.AutoSize = true;
             this.label41.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label41.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label41.Location = new System.Drawing.Point(147, 109);
+            this.label41.Location = new System.Drawing.Point(142, 109);
             this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(12, 21);
+            this.label41.Size = new System.Drawing.Size(11, 21);
             this.label41.TabIndex = 130;
             this.label41.Text = ":";
             // 
@@ -452,7 +545,7 @@
             this.dtChequeDate.CustomFormat = "MM/dd/yyyy";
             this.dtChequeDate.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtChequeDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtChequeDate.Location = new System.Drawing.Point(167, 76);
+            this.dtChequeDate.Location = new System.Drawing.Point(161, 76);
             this.dtChequeDate.Name = "dtChequeDate";
             this.dtChequeDate.Size = new System.Drawing.Size(335, 28);
             this.dtChequeDate.TabIndex = 129;
@@ -462,7 +555,7 @@
             this.dtDatePrepared.CustomFormat = "MM/dd/yyyy";
             this.dtDatePrepared.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtDatePrepared.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtDatePrepared.Location = new System.Drawing.Point(167, 4);
+            this.dtDatePrepared.Location = new System.Drawing.Point(161, 4);
             this.dtDatePrepared.Name = "dtDatePrepared";
             this.dtDatePrepared.Size = new System.Drawing.Size(335, 28);
             this.dtDatePrepared.TabIndex = 140;
@@ -473,7 +566,7 @@
             this.cmbBank.Font = new System.Drawing.Font("Century Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbBank.FormattingEnabled = true;
             this.cmbBank.IntegralHeight = false;
-            this.cmbBank.Location = new System.Drawing.Point(168, 41);
+            this.cmbBank.Location = new System.Drawing.Point(162, 41);
             this.cmbBank.Margin = new System.Windows.Forms.Padding(4);
             this.cmbBank.Name = "cmbBank";
             this.cmbBank.Size = new System.Drawing.Size(334, 25);
@@ -545,7 +638,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 87.21461F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.78539F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 459F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 465F));
             this.tableLayoutPanel1.Controls.Add(this.label10, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.label2, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.txtLoanType, 2, 2);
@@ -564,41 +657,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(630, 109);
             this.tableLayoutPanel1.TabIndex = 134;
             // 
-            // txtLoanNumber
-            // 
-            this.txtLoanNumber.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLoanNumber.Location = new System.Drawing.Point(172, 5);
-            this.txtLoanNumber.Margin = new System.Windows.Forms.Padding(4);
-            this.txtLoanNumber.MaxLength = 50;
-            this.txtLoanNumber.Name = "txtLoanNumber";
-            this.txtLoanNumber.ReadOnly = true;
-            this.txtLoanNumber.Size = new System.Drawing.Size(179, 28);
-            this.txtLoanNumber.TabIndex = 151;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label8.Location = new System.Drawing.Point(151, 1);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(12, 21);
-            this.label8.TabIndex = 130;
-            this.label8.Text = ":";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label11.Location = new System.Drawing.Point(5, 1);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(122, 21);
-            this.label11.TabIndex = 139;
-            this.label11.Text = "Loan Number";
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -616,17 +674,17 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label2.Location = new System.Drawing.Point(151, 73);
+            this.label2.Location = new System.Drawing.Point(146, 73);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(13, 21);
+            this.label2.Size = new System.Drawing.Size(12, 21);
             this.label2.TabIndex = 133;
             this.label2.Text = ":";
             // 
             // txtLoanType
             // 
             this.txtLoanType.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLoanType.Location = new System.Drawing.Point(173, 77);
+            this.txtLoanType.Location = new System.Drawing.Point(167, 77);
             this.txtLoanType.Margin = new System.Windows.Forms.Padding(4);
             this.txtLoanType.MaxLength = 50;
             this.txtLoanType.Name = "txtLoanType";
@@ -637,7 +695,7 @@
             // txtName
             // 
             this.txtName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.Location = new System.Drawing.Point(173, 41);
+            this.txtName.Location = new System.Drawing.Point(167, 41);
             this.txtName.Margin = new System.Windows.Forms.Padding(4);
             this.txtName.MaxLength = 50;
             this.txtName.Name = "txtName";
@@ -648,7 +706,7 @@
             // txtEmployeeID
             // 
             this.txtEmployeeID.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmployeeID.Location = new System.Drawing.Point(173, 5);
+            this.txtEmployeeID.Location = new System.Drawing.Point(167, 5);
             this.txtEmployeeID.Margin = new System.Windows.Forms.Padding(4);
             this.txtEmployeeID.MaxLength = 50;
             this.txtEmployeeID.Name = "txtEmployeeID";
@@ -661,10 +719,10 @@
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label13.Location = new System.Drawing.Point(151, 37);
+            this.label13.Location = new System.Drawing.Point(146, 37);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(13, 21);
+            this.label13.Size = new System.Drawing.Size(12, 21);
             this.label13.TabIndex = 138;
             this.label13.Text = ":";
             // 
@@ -697,10 +755,10 @@
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label12.Location = new System.Drawing.Point(151, 1);
+            this.label12.Location = new System.Drawing.Point(146, 1);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(13, 21);
+            this.label12.Size = new System.Drawing.Size(12, 21);
             this.label12.TabIndex = 138;
             this.label12.Text = ":";
             // 
@@ -806,7 +864,7 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 394F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 169F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 495F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 501F));
             this.tableLayoutPanel3.Controls.Add(this.txtKeyword, 5, 0);
             this.tableLayoutPanel3.Controls.Add(this.cmbSearchBank, 5, 1);
             this.tableLayoutPanel3.Controls.Add(this.dtChequeDateTO, 5, 2);
@@ -837,7 +895,7 @@
             // txtKeyword
             // 
             this.txtKeyword.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtKeyword.Location = new System.Drawing.Point(791, 5);
+            this.txtKeyword.Location = new System.Drawing.Point(785, 5);
             this.txtKeyword.Margin = new System.Windows.Forms.Padding(4);
             this.txtKeyword.MaxLength = 50;
             this.txtKeyword.Name = "txtKeyword";
@@ -849,7 +907,7 @@
             this.cmbSearchBank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSearchBank.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbSearchBank.FormattingEnabled = true;
-            this.cmbSearchBank.Location = new System.Drawing.Point(790, 46);
+            this.cmbSearchBank.Location = new System.Drawing.Point(784, 46);
             this.cmbSearchBank.Name = "cmbSearchBank";
             this.cmbSearchBank.Size = new System.Drawing.Size(392, 29);
             this.cmbSearchBank.TabIndex = 146;
@@ -860,7 +918,7 @@
             this.dtChequeDateTO.CustomFormat = "MM/dd/yyyy";
             this.dtChequeDateTO.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtChequeDateTO.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtChequeDateTO.Location = new System.Drawing.Point(791, 89);
+            this.dtChequeDateTO.Location = new System.Drawing.Point(785, 89);
             this.dtChequeDateTO.Margin = new System.Windows.Forms.Padding(4);
             this.dtChequeDateTO.Name = "dtChequeDateTO";
             this.dtChequeDateTO.ShowCheckBox = true;
@@ -873,7 +931,7 @@
             this.dtChequeDateFrom.CustomFormat = "MM/dd/yyyy";
             this.dtChequeDateFrom.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtChequeDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtChequeDateFrom.Location = new System.Drawing.Point(202, 89);
+            this.dtChequeDateFrom.Location = new System.Drawing.Point(196, 89);
             this.dtChequeDateFrom.Margin = new System.Windows.Forms.Padding(4);
             this.dtChequeDateFrom.Name = "dtChequeDateFrom";
             this.dtChequeDateFrom.ShowCheckBox = true;
@@ -885,7 +943,7 @@
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label27.Location = new System.Drawing.Point(767, 1);
+            this.label27.Location = new System.Drawing.Point(761, 1);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(15, 21);
@@ -897,7 +955,7 @@
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label26.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label26.Location = new System.Drawing.Point(597, 85);
+            this.label26.Location = new System.Drawing.Point(591, 85);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(150, 21);
@@ -909,7 +967,7 @@
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label25.Location = new System.Drawing.Point(597, 1);
+            this.label25.Location = new System.Drawing.Point(591, 1);
             this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(81, 21);
@@ -921,7 +979,7 @@
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label24.Location = new System.Drawing.Point(597, 43);
+            this.label24.Location = new System.Drawing.Point(591, 43);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(51, 21);
@@ -936,7 +994,7 @@
             this.cmbLoanType.FormattingEnabled = true;
             this.cmbLoanType.IntegralHeight = false;
             this.cmbLoanType.ItemHeight = 21;
-            this.cmbLoanType.Location = new System.Drawing.Point(201, 46);
+            this.cmbLoanType.Location = new System.Drawing.Point(195, 46);
             this.cmbLoanType.Name = "cmbLoanType";
             this.cmbLoanType.Size = new System.Drawing.Size(388, 29);
             this.cmbLoanType.TabIndex = 145;
@@ -970,10 +1028,10 @@
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label21.Location = new System.Drawing.Point(179, 43);
+            this.label21.Location = new System.Drawing.Point(174, 43);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(14, 21);
+            this.label21.Size = new System.Drawing.Size(13, 21);
             this.label21.TabIndex = 141;
             this.label21.Text = ":";
             // 
@@ -982,10 +1040,10 @@
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label22.Location = new System.Drawing.Point(179, 1);
+            this.label22.Location = new System.Drawing.Point(174, 1);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(14, 21);
+            this.label22.Size = new System.Drawing.Size(13, 21);
             this.label22.TabIndex = 142;
             this.label22.Text = ":";
             // 
@@ -994,10 +1052,10 @@
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label23.Location = new System.Drawing.Point(179, 85);
+            this.label23.Location = new System.Drawing.Point(174, 85);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(14, 21);
+            this.label23.Size = new System.Drawing.Size(13, 21);
             this.label23.TabIndex = 143;
             this.label23.Text = ":";
             // 
@@ -1023,7 +1081,7 @@
             "OR Number",
             "EmployeeID",
             "Name"});
-            this.cmbSearchBy.Location = new System.Drawing.Point(201, 4);
+            this.cmbSearchBy.Location = new System.Drawing.Point(195, 4);
             this.cmbSearchBy.Name = "cmbSearchBy";
             this.cmbSearchBy.Size = new System.Drawing.Size(388, 29);
             this.cmbSearchBy.TabIndex = 144;
@@ -1033,7 +1091,7 @@
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label28.Location = new System.Drawing.Point(767, 43);
+            this.label28.Location = new System.Drawing.Point(761, 43);
             this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(15, 21);
@@ -1045,7 +1103,7 @@
             this.label29.AutoSize = true;
             this.label29.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label29.Location = new System.Drawing.Point(767, 85);
+            this.label29.Location = new System.Drawing.Point(761, 85);
             this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(15, 21);
@@ -1103,14 +1161,14 @@
             this.dataGridView1.AllowUserToResizeColumns = false;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.EnableHeadersVisualStyles = false;
@@ -1232,64 +1290,6 @@
             this.btnSelectAll.UseVisualStyleBackColor = true;
             this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel2.ColumnCount = 6;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 87.95181F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.04819F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 184F));
-            this.tableLayoutPanel2.Controls.Add(this.txtGross, 5, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label20, 4, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label16, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.txtLoanNumber, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label8, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label11, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(9, 159);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(630, 35);
-            this.tableLayoutPanel2.TabIndex = 162;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label16.Location = new System.Drawing.Point(363, 1);
-            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(55, 21);
-            this.label16.TabIndex = 152;
-            this.label16.Text = "Gross";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label20.Location = new System.Drawing.Point(427, 1);
-            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(12, 21);
-            this.label20.TabIndex = 131;
-            this.label20.Text = ":";
-            // 
-            // txtGross
-            // 
-            this.txtGross.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtGross.Location = new System.Drawing.Point(448, 5);
-            this.txtGross.Margin = new System.Windows.Forms.Padding(4);
-            this.txtGross.MaxLength = 50;
-            this.txtGross.Name = "txtGross";
-            this.txtGross.ReadOnly = true;
-            this.txtGross.Size = new System.Drawing.Size(177, 28);
-            this.txtGross.TabIndex = 152;
-            // 
             // PDCManagement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1318,6 +1318,8 @@
             this.panelHeader.PerformLayout();
             this.panel19.ResumeLayout(false);
             this.panel19.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -1329,8 +1331,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }

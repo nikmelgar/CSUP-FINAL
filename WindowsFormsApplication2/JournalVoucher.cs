@@ -26,7 +26,10 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         Classes.clsJournalVoucher clsJournalVoucher = new Classes.clsJournalVoucher();
         Classes.clsGeneralVoucher clsGeneral = new Classes.clsGeneralVoucher();
-
+        Classes.clsVoucherValidation clsVoucherValidation = new Classes.clsVoucherValidation();
+        Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
+        Classes.clsCollection clsSubsidiary = new Classes.clsCollection();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         SqlConnection con;
         SqlDataAdapter adapter;
@@ -34,6 +37,8 @@ namespace WindowsFormsApplication2
         //=================================================================
 
         public string getTransaction { get; set; }
+        public static string transactionFromTH { get; set; }
+        public bool fromTh = false;
 
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
@@ -46,14 +51,21 @@ namespace WindowsFormsApplication2
             {
                 if(Classes.clsJournalVoucher.fromReplenishment == true)
                 {
-                    Alert.show("Please finish this transaction first!", Alert.AlertType.error);
+                    Alert.show("Please finish this transaction first.", Alert.AlertType.error);
                     return;
                 }
+                if(txtJVNumber.Text != "")
+                {
+                    clsOpen.deleteTransaction("Journal Voucher", txtJVNumber.Text);
+                }
                 this.Close();
-
             }
             else
             {
+                if (txtJVNumber.Text != "")
+                {
+                    clsOpen.deleteTransaction("Journal Voucher", txtJVNumber.Text);
+                }
                 ForCancel();
                 txtCredit.Text = "";
                 txtDebit.Text = "";
@@ -96,10 +108,15 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                cmbTransaction.SelectedIndex = -1;
+                if(fromTh == true)
+                {
+                    cmbTransaction.SelectedValue = transactionFromTH;
+                }
+                else
+                {
+                    cmbTransaction.SelectedIndex = -1;
+                }
             }
-
-            txtPreparedBy.Text = Classes.clsUser.Username;
 
         }
 
@@ -333,28 +350,152 @@ namespace WindowsFormsApplication2
 
         private void btnAutoEntry_Click(object sender, EventArgs e)
         {
-            //for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
-            //{
-            //    dataGridView1.Rows.RemoveAt(i);
-            //    i--;
-            //    while (dataGridView1.Rows.Count == 0)
-            //        continue;
-            //}
+            if(txtLoanNumber.Text != "" && txtMember.Text != "")
+            {
+                if(cmbTransaction.SelectedValue.ToString() == "TRAN009" || cmbTransaction.SelectedValue.ToString() == "TRAN012")
+                {
+                    //Display Current and Past Due with subsidiary and loan number
 
-            //dataGridView1.Rows[0].Cells[0].Value = "1";
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
+                    {
+                        con.Open();
 
+                        dataGridView1.Rows.Clear();
+                        SqlDataAdapter adapterDr = new SqlDataAdapter("SELECT Account_Dr,PastDue_Account FROM Loan_Type WHERE Loan_Type = '" + txtLoanType.Text + "'", con);
+                        DataTable dt = new DataTable();
+                        adapterDr.Fill(dt);
 
+                        dataGridView1.Rows.Add();
+                        //Add Current Loan First
+                        dataGridView1.Rows[0].Cells[0].Value = dt.Rows[0].ItemArray[0].ToString();
+                        dataGridView1.Rows[0].Cells[1].Value = clsSubsidiary.GetSubsidiary(Classes.clsJournalVoucher.userId);
+                        dataGridView1.Rows[0].Cells[2].Value = txtLoanNumber.Text;
 
-            //int rowId = dataGridView1.Rows.Add();
+                        dataGridView1.Rows.Add();
 
-            //// Grab the new row!
-            //DataGridViewRow row = dataGridView1.Rows[rowId];
+                        //Add Current Loan First
+                        dataGridView1.Rows[1].Cells[0].Value = dt.Rows[0].ItemArray[1].ToString();
+                        dataGridView1.Rows[1].Cells[1].Value = clsSubsidiary.GetSubsidiary(Classes.clsJournalVoucher.userId);
+                        dataGridView1.Rows[1].Cells[2].Value = txtLoanNumber.Text;
+                    }
+                }
+            }
 
-            //// Add the data
-            //row.Cells[0].Value = "10";
+            //For Bounce Cheque
+            if(cmbTransaction.SelectedValue.ToString() == "TRAN016")
+            {
+                if(txtOrNumber.Text != "")
+                {
+                    loadDetailsForBounceCheck(dataGridView1, txtOrNumber.Text);
+                }
+                else
+                {
+                    Alert.show("Please enter O.R. number.", Alert.AlertType.error);
+                    return;
+                }
+                
+            }
+        }
 
-            ////compute
-            //compute();
+        public void loadDetailsForBounceCheck(DataGridView dgv,string orNumber)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Cash_Receipts_Detail WHERE Or_No ='" + orNumber + "'", con);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    dgv.Rows.Clear();
+                    dgv.Rows.Add(ds.Tables[0].Rows.Count);
+
+                    for (int x = 0; x < ds.Tables[0].Rows.Count; x++)
+                    {
+                        if(ds.Tables[0].Rows[x]["Account_Code"].ToString() == "105")
+                        {
+                            //FOR GETTING COCI ACCOUNT CODE
+                            dgv.Rows[x].Cells[0].Value = "102.01";
+                        }
+                        else
+                        {
+                            dgv.Rows[x].Cells[0].Value = ds.Tables[0].Rows[x]["Account_Code"].ToString();
+                        }
+                        dgv.Rows[x].Cells[1].Value = ds.Tables[0].Rows[x]["Subsidiary_Code"].ToString();
+                        dgv.Rows[x].Cells[2].Value = ds.Tables[0].Rows[x]["Loan_No"].ToString();
+                        dgv.Rows[x].Cells[3].Value = ds.Tables[0].Rows[x]["credit"].ToString(); //reverse for auto
+                        dgv.Rows[x].Cells[4].Value = ds.Tables[0].Rows[x]["debit"].ToString(); //reverse for auto
+                        if (ds.Tables[0].Rows[x]["userID"].ToString() == "" || DBNull.Value.Equals(ds.Tables[0].Rows[x]["userID"].ToString()))
+                        {
+                            dgv.Rows[x].Cells[5].Value = "0";
+                        }
+                        else
+                        {
+                            dgv.Rows[x].Cells[5].Value = ds.Tables[0].Rows[x]["userID"].ToString();
+                        }
+                    }
+
+                    //ADD 3 RECORDS FOR (INTEREST,CURRENT AND PASTDUE)
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnLoanBalancesPerLoanNo";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@loan_no", txtLoanNumber.Text);
+
+                    SqlDataAdapter adpterGet = new SqlDataAdapter(cmd);
+                    DataSet dsGet = new DataSet();
+                    adpterGet.Fill(dsGet);
+
+                    double balance, interest,amort;
+                    balance = 0;
+                    interest = 0;
+                    amort = 0;
+
+                    balance = Convert.ToDouble(dsGet.Tables[0].Rows[0]["Balance"].ToString());
+                    interest = Convert.ToDouble(dsGet.Tables[0].Rows[0]["interest"].ToString());
+                    amort = Convert.ToDouble(dsGet.Tables[0].Rows[0]["Monthly_Amort"].ToString());
+
+                    interest = balance * interest;
+                    amort = amort - interest;
+
+                    dgv.Rows.Add(
+                        dsGet.Tables[0].Rows[0]["PastDueDr"].ToString(),
+                        clsSubsidiary.GetSubsidiary(Convert.ToInt32(dsGet.Tables[0].Rows[0]["userid"].ToString())),
+                        txtLoanNumber.Text,
+                        Convert.ToDecimal(dsGet.Tables[0].Rows[0]["Monthly_Amort"].ToString()).ToString("#,0.00"),
+                        "0.00",
+                        dsGet.Tables[0].Rows[0]["userid"].ToString()
+                        );
+
+                    dgv.Rows.Add(
+                        dsGet.Tables[0].Rows[0]["CurrentDr"].ToString(),
+                        clsSubsidiary.GetSubsidiary(Convert.ToInt32(dsGet.Tables[0].Rows[0]["userid"].ToString())),
+                        txtLoanNumber.Text,
+                        "0.00",
+                        Convert.ToDecimal(amort).ToString("#,0.00"),
+                        dsGet.Tables[0].Rows[0]["userid"].ToString()
+                        );
+
+                    dgv.Rows.Add(
+                        "314",
+                        clsSubsidiary.GetSubsidiary(Convert.ToInt32(dsGet.Tables[0].Rows[0]["userid"].ToString())),
+                        txtLoanNumber.Text,
+                        "0.00",
+                        Convert.ToString(decimal.Round(Convert.ToDecimal(interest), 2)),
+                        dsGet.Tables[0].Rows[0]["userid"].ToString()
+                        );
+
+                    //dataGridView1.Sort(dataGridView1.Columns["Debit"], ListSortDirection.Descending);
+                    compute();
+                }
+                else
+                {
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
+                    return;
+                }
+            }
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -421,7 +562,7 @@ namespace WindowsFormsApplication2
             {
                 if (dataGridView1.CurrentRow.IsNewRow)
                 {
-                    Alert.show("New row cannot be deleted!", Alert.AlertType.error);
+                    Alert.show("New row cannot be deleted.", Alert.AlertType.error);
                     return;
                 }
 
@@ -461,8 +602,19 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (btnNew.Text == "NEW")
             {
+                //Remove first open transaction
+                if (txtJVNumber.Text != "")
+                {
+                    clsOpen.deleteTransaction("Journal Voucher", txtJVNumber.Text);
+                }
+
                 enableButtonsAfterClickingNew();
                 forNew();
                 btnSearchJV.Enabled = false;
@@ -471,6 +623,7 @@ namespace WindowsFormsApplication2
 
                 txtPostedBy.Text = "";
                 txtCancelled.Text = "";
+                txtAudited.Text = "";
                 //Check if Search is Online
                 foreach (Form form in Application.OpenForms)
                 {
@@ -486,20 +639,20 @@ namespace WindowsFormsApplication2
             {
                 if (cmbTransaction.Text == "" || cmbTransaction.Text == " - ")
                 {
-                    Alert.show("Transaction Type is Required!", Alert.AlertType.error);
+                    Alert.show("Transaction Type is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (dataGridView1.Rows.Count <= 1)
                 {
-                    Alert.show("Details Information is required.", Alert.AlertType.error);
+                    Alert.show("Details information is required.", Alert.AlertType.error);
                     return;
                 }
                 else
                 {
                    if (Convert.ToDecimal(txtDebit.Text) != Convert.ToDecimal(txtCredit.Text))
                    {
-                      Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                      Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                       return;
                    }                    
                 }
@@ -610,13 +763,12 @@ namespace WindowsFormsApplication2
                     }
                 }
                 //SAVE MESSAGEBOX HERE
-                Alert.show("Journal Voucher Successfully Created!", Alert.AlertType.success);
+                Alert.show("Journal Voucher successfully created.", Alert.AlertType.success);
 
                 //Disable all fields 
                 txtParticulars.ReadOnly = true;
                 dataGridView1.Enabled = false;
-                btnUpload.Enabled = false;
-
+                
                 //Button Save change to NEW
                 btnNew.Text = "NEW";
                 btnEdit.Enabled = true;
@@ -627,6 +779,7 @@ namespace WindowsFormsApplication2
                 btnPrint.Enabled = true;
                 btnPost.Enabled = true;
                 btnSearchJV.Enabled = true;
+                btnAuditted.Enabled = true;
                 
                 btnClose.Text = "CLOSE";
                
@@ -658,7 +811,6 @@ namespace WindowsFormsApplication2
             btnAutoEntry.Enabled = true;
 
             //Command Buttons
-            btnUpload.Enabled = true;
             btnClose.Text = "CANCEL";
         }
 
@@ -696,7 +848,7 @@ namespace WindowsFormsApplication2
                 if (clsJournalVoucher.checkIfCancelled(txtJVNumber.Text) == true)
                 {
                     //If Voucher already cancelled
-                    Alert.show("Journal Voucher Already Cancelled!", Alert.AlertType.error);
+                    Alert.show("Journal Voucher already cancelled.", Alert.AlertType.error);
                     return;
                 }
 
@@ -707,13 +859,23 @@ namespace WindowsFormsApplication2
                     return;
                 }
 
-            if(Convert.ToDecimal(txtDebit.Text) != Convert.ToDecimal(txtCredit.Text))
+                if(Convert.ToDecimal(txtDebit.Text) != Convert.ToDecimal(txtCredit.Text))
+                {
+                    Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
+                    return;
+                }
+
+
+            if(txtAudited.Text == "")
             {
-                Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                Alert.show("This voucher needs to be audited first.", Alert.AlertType.error);
                 return;
             }
 
-
+            if(clsVoucherValidation.checkIfTeamHeadAccounting() == false)
+            {
+                return;
+            }
                 //===================================================================================
                 //                       Are you sure you want to post this?
                 //===================================================================================
@@ -734,7 +896,7 @@ namespace WindowsFormsApplication2
                         cmd.ExecuteNonQuery();
 
                         //Success Message
-                        Alert.show("Journal Voucher Successfully Posted!", Alert.AlertType.success);
+                        Alert.show("Journal voucher successfully posted.", Alert.AlertType.success);
 
                         //Display Message
                         status.Visible = true;
@@ -990,7 +1152,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("Please Select Journal Before Printing!", Alert.AlertType.warning);
+                Alert.show("Please select Journal voucher before printing.", Alert.AlertType.warning);
                 return;
             }
         }
@@ -1010,7 +1172,7 @@ namespace WindowsFormsApplication2
             btnAutoEntry.Enabled = false;
             btnSearchJV.Enabled = true;
             btnNew.Enabled = true;
-
+            btnAuditted.Enabled = false;
 
 
             Control control = new Control();
@@ -1040,13 +1202,17 @@ namespace WindowsFormsApplication2
             btnEdit.Enabled = false;
             btnPost.Enabled = false;
             btnCancel.Enabled = false;
-            btnPrint.Enabled = false;
-            btnUpload.Enabled = false;
+            btnPrint.Enabled = false;            
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if(btnEdit.Text == "EDIT")
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (btnEdit.Text == "EDIT")
             {
                 frmCancel = false;
                 //Check if Search is Online
@@ -1064,7 +1230,7 @@ namespace WindowsFormsApplication2
                 if (clsJournalVoucher.checkIfCancelled(txtJVNumber.Text) == true)
                 {
                     //If Voucher already cancelled
-                    Alert.show("Journal Voucher Already Cancelled!", Alert.AlertType.error);
+                    Alert.show("Journal Voucher already cancelled.", Alert.AlertType.error);
                     return;
                 }
 
@@ -1085,7 +1251,6 @@ namespace WindowsFormsApplication2
                 btnCancel.Enabled = false;
                 btnPrint.Enabled = false;
                 btnSearchJV.Enabled = false;
-                btnUpload.Enabled = false;
 
                 //Enable Fields
                 dataGridView1.Enabled = true;
@@ -1096,20 +1261,20 @@ namespace WindowsFormsApplication2
                 //Code For Validation
                 if (cmbTransaction.Text == "" || cmbTransaction.Text == " - ")
                 {
-                    Alert.show("Transaction Type is Required!", Alert.AlertType.error);
+                    Alert.show("Transaction Type is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (dataGridView1.Rows.Count <= 1)
                 {
-                    Alert.show("Details Information is required.", Alert.AlertType.error);
+                    Alert.show("Details information is required.", Alert.AlertType.error);
                     return;
                 }
                 else
                 {
                     if (Convert.ToDecimal(txtDebit.Text) != Convert.ToDecimal(txtCredit.Text))
                     {
-                        Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                        Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                         return;
                     }
                 }
@@ -1218,14 +1383,13 @@ namespace WindowsFormsApplication2
                 }
 
                 //Message Success Below
-                Alert.show("Journal Voucher Successfully Updated.", Alert.AlertType.success);
+                Alert.show("Journal Voucher successfully updated.", Alert.AlertType.success);
 
                 btnEdit.Text = "EDIT";
 
                 //Disable all fields 
                 txtParticulars.ReadOnly = true;
-                dataGridView1.Enabled = false;
-                btnUpload.Enabled = false;
+                dataGridView1.Enabled = false;                
 
                 //Button Save change to NEW
                 btnNew.Text = "NEW";
@@ -1251,6 +1415,11 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             //For Saving of Manual Entry 
             //===================================================================================
             //                              JOURNAL MANUAL ENTRY
@@ -1263,7 +1432,7 @@ namespace WindowsFormsApplication2
             if (clsJournalVoucher.checkIfCancelled(txtJVNumber.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Journal Voucher Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Journal Voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1285,7 +1454,7 @@ namespace WindowsFormsApplication2
                 
             if(txtParticulars.Text == "")
             {
-                Alert.show("Please put note on particulars before cancellation!", Alert.AlertType.error);
+                Alert.show("Please enter reason for cancellation at Particulars. ", Alert.AlertType.error);
                 txtParticulars.BackColor = Color.FromArgb(245, 149, 70);
                 frmCancel = true;
                 return;
@@ -1366,19 +1535,121 @@ namespace WindowsFormsApplication2
 
         private void btnSearchLoan_Click(object sender, EventArgs e)
         {
-           if(LoanLookUpProcess.clsLoanLookUpMember.userid != 0)
+           if(txtMember.Text != "")
             {
-                //has a value 
-                LoanLookUpProcess.LoanLookUp frm = new LoanLookUpProcess.LoanLookUp();
-                LoanLookUpProcess.clsLoanLookUpMember.frmPass = "Journal";
-                frm.ShowDialog();
+                if (LoanLookUpProcess.clsLoanLookUpMember.userid != 0)
+                {
+                    //has a value 
+                    LoanLookUpProcess.LoanLookUp frm = new LoanLookUpProcess.LoanLookUp();
+                    LoanLookUpProcess.clsLoanLookUpMember.frmPass = "Journal";
+                    frm.ShowDialog();
+                }
+                else
+                {
+                    //No Record(s)
+                    Alert.show("Please select Member first.", Alert.AlertType.error);
+                    return;
+                }
+            }
+           else
+            {
+                //No Record(s)
+                Alert.show("Please select Member first.", Alert.AlertType.error);
+                return;
+            }
+        }
+
+        private void btnAuditted_Click(object sender, EventArgs e)
+        {
+            if(txtAudited.Text != "")
+            {
+                Alert.show("This voucher has been audited already.", Alert.AlertType.error);
+                return;
             }
             else
             {
-                //No Record(s)
-                Alert.show("Please select member first.", Alert.AlertType.error);
-                return;
+                if (Classes.clsUser.department.ToString() == "3")
+                {
+                    string msg = Environment.NewLine + "Are you sure you want to continue?";
+                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        using (SqlConnection con = new SqlConnection(global.connectString()))
+                        {
+                            con.Open();
+
+                            SqlCommand cmd = new SqlCommand();
+                            cmd.Connection = con;
+                            cmd.CommandText = "UPDATE Journal_Header SET Audited_By = '" + Classes.clsUser.Username + "' WHERE JV_No = '" + txtJVNumber.Text + "'";
+                            cmd.CommandType = CommandType.Text;
+                            cmd.ExecuteNonQuery();
+
+                        }
+
+                        Alert.show("Journal voucher successfully audited.", Alert.AlertType.success);
+                        txtAudited.Text = Classes.clsUser.Username;
+                    }
+                }
+                else
+                {
+                    Alert.show("Error : Access denied.", Alert.AlertType.error);
+                    return;
+                }
             }
+        }
+
+        private void JournalVoucher_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (txtJVNumber.Text != "")
+            {
+                clsOpen.deleteTransaction("Journal Voucher", txtJVNumber.Text);
+            }
+        }
+
+        private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void cmbTransaction_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if(cmbTransaction.Text != "")
+            {
+                if(cmbTransaction.SelectedValue.ToString() == "TRAN016")
+                {
+                    //Bounce Cheque
+                    enableforOR();
+                }
+                else
+                {
+                    DisableforOR();
+                }
+            }
+            else
+            {
+                DisableforOR();
+            }
+        }
+
+        public void DisableforOR()
+        {
+            lblOrDot.Visible = false;
+            lblOrNumber.Visible = false;
+            txtOrNumber.Visible = false;
+            txtOrNumber.Text = "";
+        }
+
+        public void enableforOR()
+        {
+            lblOrDot.Visible = true;
+            lblOrNumber.Visible = true;
+            txtOrNumber.Visible = true;
+            txtOrNumber.Text = "";
+        }
+
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
 
         public void forNew()
@@ -1414,6 +1685,8 @@ namespace WindowsFormsApplication2
             txtDebit.Text = "";
             btnPost.Enabled = false;
             btnNew.Enabled = true;
+            btnAuditted.Enabled = false;
+            txtPreparedBy.Text = Classes.clsUser.Username;
         }
     }
 

@@ -30,7 +30,8 @@ namespace WindowsFormsApplication2
         DataTable dt;
 
         CrystalDecisions.Shared.TableLogOnInfo li;
-
+        private bool m_firstClick = false;
+        private Point m_firstClickLoc;
         //==========================================================
         //                  BPI CREATE DISK VARIABLE
         //==========================================================
@@ -46,38 +47,14 @@ namespace WindowsFormsApplication2
 
         Global global = new Global();
 
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         Classes.clsATMDiskAdvice clsATMDiskAdvice = new Classes.clsATMDiskAdvice();
 
         decimal number;
-        private bool m_firstClick = false;
-        private Point m_firstClickLoc;
         string purpose;
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
-        {
-            //Moveable Forms / Screens
-            //Nikko Melgar
-            if (e.Button == MouseButtons.Left)
-            {
-                if (m_firstClick == false)
-                {
-                    m_firstClick = true;
-                    m_firstClickLoc = new Point(e.X, e.Y);
-                }
-
-                this.Location = new Point(
-                    this.Location.X + e.X - m_firstClickLoc.X,
-                    this.Location.Y + e.Y - m_firstClickLoc.Y
-                    );
-            }
-            else
-            {
-                m_firstClick = false;
-            }
         }
 
         private void ATMDiskBankAdvice_Load(object sender, EventArgs e)
@@ -155,7 +132,12 @@ namespace WindowsFormsApplication2
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(dgvATM.Rows.Count == 0)
+            if (clsAccess.checkForInsertRestriction("ATM Disk / Advice", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dgvATM.Rows.Count == 0)
             {
                 Alert.show("No ATM transaction.", Alert.AlertType.error);
                 return;
@@ -164,14 +146,14 @@ namespace WindowsFormsApplication2
             if(cmbBank.Text == "")
             {
                 //Message Alert
-                Alert.show("Bank Code is required!",Alert.AlertType.error);
+                Alert.show("Bank Code is required.",Alert.AlertType.error);
                 return;
             }
 
             if(txtTrans.Text == "")
             {
                 //Message Alert
-                Alert.show("Transaction Number is required!", Alert.AlertType.error);
+                Alert.show("Transaction No. is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -187,7 +169,7 @@ namespace WindowsFormsApplication2
 
             if(icount == 0)
             {
-                Alert.show("Please check at least 1 purpose!", Alert.AlertType.error);
+                Alert.show("Please check at least 1 transaction at  Make Deposit field.", Alert.AlertType.error);
                 return;
             }
 
@@ -214,7 +196,7 @@ namespace WindowsFormsApplication2
             saveFileDialog1.FileName = "BDO.txt";
 
             // set filters - this can be done in properties as well
-            saveFileDialog1.Filter = "Text files (*.txt)|*.dat|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -259,12 +241,13 @@ namespace WindowsFormsApplication2
                         writer.Write("\t");
                         writer.Write(dt.Rows[cnt].ItemArray[1].ToString());
                         cnt = cnt + 1;
+                        writer.Write(Environment.NewLine);
                     }
 
                     writer.Close();
                 }
 
-                Alert.show("BDO DISK Successfully Created!", Alert.AlertType.success);
+                Alert.show("BDO Disk successfully created.", Alert.AlertType.success);
             }
         }
         public void CreateBPI()
@@ -411,7 +394,7 @@ namespace WindowsFormsApplication2
 
                     writer.Close();
                 }
-                Alert.show("BPI DISK Successfully Created!", Alert.AlertType.success);
+                Alert.show("BPI Disk successfully created.", Alert.AlertType.success);
             }    
         }
 
@@ -489,7 +472,7 @@ namespace WindowsFormsApplication2
                     writer.Close();
                 }
 
-                Alert.show("MBTC DISK Successfully Created!", Alert.AlertType.success);
+                Alert.show("MBTC Disk successfully created.", Alert.AlertType.success);
             }
         }
 
@@ -598,7 +581,12 @@ namespace WindowsFormsApplication2
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if(dgvATM.Rows.Count >= 1)
+            if (clsAccess.checkForInsertRestriction("ATM Disk / Advice", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dgvATM.Rows.Count >= 1)
             {
                 int icount = 0;
                 purpose = "";
@@ -626,12 +614,12 @@ namespace WindowsFormsApplication2
                 //If theres a value
                 if (cmbBank.Text == "")
                 {
-                    Alert.show("Please select bank code first!", Alert.AlertType.error);
+                    Alert.show("Please select Bank Code.", Alert.AlertType.error);
                     return;
                 }
                 else if(icount == 0)
                 {
-                    Alert.show("Please check at least one on deposit purpose!", Alert.AlertType.error);
+                    Alert.show("Please check at least 1 transaction at  Make Deposit field.", Alert.AlertType.error);
                     return;
                 }
 
@@ -690,7 +678,7 @@ namespace WindowsFormsApplication2
                         cmd.CommandType = CommandType.Text;
                         cmd.ExecuteNonQuery();
 
-                        Alert.show("ATM Successfully Tagged!", Alert.AlertType.success);
+                        Alert.show("ATM successfully tagged.", Alert.AlertType.success);
 
                         clsATMDiskAdvice.loadATMDiskAdvice(dgvATM);
                         clsATMDiskAdvice.loadBankCode(cmbBank);
@@ -713,9 +701,14 @@ namespace WindowsFormsApplication2
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            if(txtTrans.Text == "")
+            if (clsAccess.checkForInsertRestriction("ATM Disk / Advice", Classes.clsUser.Username) != true)
             {
-                Alert.show("Transaction number is required.", Alert.AlertType.error);
+                return;
+            }
+
+            if (txtTrans.Text == "")
+            {
+                Alert.show("Transaction No. is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -731,7 +724,7 @@ namespace WindowsFormsApplication2
 
             if (icount == 0)
             {
-                Alert.show("Please check at least 1 purpose!", Alert.AlertType.error);
+                Alert.show("Please check at least 1 transaction at  Make Deposit field.", Alert.AlertType.error);
                 return;
             }
 
@@ -1137,6 +1130,57 @@ namespace WindowsFormsApplication2
                 rpt.crystalReportViewer1.ReportSource = cr;
                 rpt.ShowDialog();
             }
+        }
+
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            //Moveable Forms / Screens
+            //Nikko Melgar
+            if (e.Button == MouseButtons.Left)
+            {
+                if (m_firstClick == false)
+                {
+                    m_firstClick = true;
+                    m_firstClickLoc = new Point(e.X, e.Y);
+                }
+
+                this.Location = new Point(
+                    this.Location.X + e.X - m_firstClickLoc.X,
+                    this.Location.Y + e.Y - m_firstClickLoc.Y
+                    );
+            }
+            else
+            {
+                m_firstClick = false;
+            }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void panel1_Click(object sender, EventArgs e)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(ATMDiskBankAdvice))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            ATMDiskBankAdvice frm = new ATMDiskBankAdvice();
+            frm.Show();
+            frm.MdiParent = this;
         }
     }
 }

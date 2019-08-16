@@ -20,6 +20,7 @@ namespace WindowsFormsApplication2
         //Global & Others
         Global global = new Global();
         Classes.clsATMWithdrawal clsATM = new Classes.clsATMWithdrawal();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         //SQl
         SqlConnection con;
@@ -116,7 +117,7 @@ namespace WindowsFormsApplication2
 
                     if (dt.Rows.Count == 0)
                     {
-                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        Alert.show("No record(s) found.", Alert.AlertType.warning);
                         clsATM.loadATMWithdrawal(dataGridView2);
                     }
                     else
@@ -127,7 +128,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No Keywords to be search!", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
 
@@ -147,16 +148,21 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction("ATM Preparation", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (dataGridView2.Rows.Count == 0)
             {
-                Alert.show("No record/s found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
 
             //Check if cancel note is null
             if(txtCancelNote.Text == "")
             {
-                Alert.show("Cancel Note is required!", Alert.AlertType.error);
+                Alert.show("Cancel note is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -195,7 +201,12 @@ namespace WindowsFormsApplication2
 
         private void btnPost_Click(object sender, EventArgs e)
         {
-            if(dataGridView2.Rows.Count >= 1)
+            if (clsAccess.checkForInsertRestriction("ATM Preparation", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dataGridView2.Rows.Count >= 1)
             {
                 string msg = Environment.NewLine + "Are you sure you want to proceed?";
                 DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -490,7 +501,7 @@ namespace WindowsFormsApplication2
                             clsATM.loadATMWithdrawal(dataGridView2);
 
                             //SUCCESS MESSAGE
-                            Alert.show("ATM Withdrawal Voucher Successfully Created!", Alert.AlertType.success);
+                            Alert.show("ATM Withdrawal voucher successfully created.", Alert.AlertType.success);
                         }
 
 
@@ -503,7 +514,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record/s for posting.", Alert.AlertType.error);
+                Alert.show("No record(s) for posting.", Alert.AlertType.error);
                 return;
             }
         }

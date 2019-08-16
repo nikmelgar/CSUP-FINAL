@@ -398,7 +398,7 @@ namespace WindowsFormsApplication2.Classes
         {
             if (loan_no.Text == "" && name.Text == "" && employeeid.Text == "")
             {
-                Alert.show("Please put keyword to be search!", Alert.AlertType.error);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.error);
                 return;
             }
 
@@ -417,7 +417,7 @@ namespace WindowsFormsApplication2.Classes
 
                 if (dt.Rows.Count == 0)
                 {
-                    Alert.show("No record/s found.", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     return;
                 }
 
@@ -499,6 +499,64 @@ namespace WindowsFormsApplication2.Classes
                 adapter.Fill(dt);
 
                 return Convert.ToDouble(dt.Rows[0].ItemArray[0].ToString());
+            }
+        }
+
+        //==============================================================
+        //           GET THE UNEARNED INTEREST PER LOAN
+        //==============================================================
+        public double returnUnearnedInterest(string loan_No)
+        {
+            if(loan_No != "")
+            {
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnUnearnedInterest";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Loan_No", loan_No);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    if (Convert.ToDouble(dt.Rows[0].ItemArray[0].ToString()) > 0)
+                    {
+                        return Convert.ToDouble(dt.Rows[0].ItemArray[0].ToString());
+                    }
+                    else
+                    {
+                        return 0.00;
+                    }
+                }
+            }
+            else
+            {
+                return 0.00;
+            }
+        }
+
+        public void insertLoanDeduction(string loan_no,string loan_Type,string loan_Type_loan_no,string otherDeductionCode,decimal appliedAmount)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmdUnearned = new SqlCommand();
+                cmdUnearned.Connection = con;
+                cmdUnearned.CommandText = "sp_InsertLoanDeductions";
+                cmdUnearned.CommandType = CommandType.StoredProcedure;
+                cmdUnearned.Parameters.AddWithValue("@userID", Classes.clsLoanDataEntry.userID);
+                cmdUnearned.Parameters.AddWithValue("@Loan_No", loan_no);
+                cmdUnearned.Parameters.AddWithValue("@Loan_Type", loan_Type);
+                cmdUnearned.Parameters.AddWithValue("@Loan_Type_Loan_No", loan_Type_loan_no);
+                cmdUnearned.Parameters.AddWithValue("@Other_Deduction", otherDeductionCode); //UNEARNED ACCOUNT
+                cmdUnearned.Parameters.AddWithValue("@Applied_Amount", Convert.ToDecimal(appliedAmount));
+                cmdUnearned.Parameters.AddWithValue("@Deduction_Type", "INTEREST");
+                cmdUnearned.ExecuteNonQuery();
             }
         }
     }

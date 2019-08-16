@@ -19,8 +19,12 @@ namespace WindowsFormsApplication2
         private int counter = 3600;
         private int checkCounter = 5;
         Classes.clsReminder clsReminder = new Classes.clsReminder();
-
+        Classes.clsUser clsUser = new Classes.clsUser();
+        Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
+        Classes.clsReminderSavings clsReminderSavings = new Classes.clsReminderSavings();
         Global global = new Global();
+        Users.clsSettings clsSettings = new Users.clsSettings();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -29,53 +33,189 @@ namespace WindowsFormsApplication2
 
             //LoadName
             lblFullName.Text = Classes.clsUser.firstName + " " + Classes.clsUser.middleName + " " + Classes.clsUser.lastName;
+            lblDeparment.Text = clsUser.returnDepartmentDescription();
 
-            if(clsReminder.pdcDue() == true)
+            //Loan Image
+            clsSettings.loadPicture(pictureBox1);
+            clsSettings.loadPicture(pictureBox2);
+            //For PDC REMINDER
+            if (clsAccess.checkForViewingRestriction("PDC Management",Classes.clsUser.Username) == true)
             {
-                ReminderPDC.reminder frm = new ReminderPDC.reminder();
-                //SHOW NOTIF BUTTON
-                clsReminder.getCntPDCdueToday(btnNotifPDC,frm.lblSpiel,frm.btnRemid);
-                
-                //FOR PDC MANAGEMENT
-                frm.ShowDialog();
+                //FOR PDC
+                if (clsReminder.pdcDue() == true)
+                {
+                    ReminderPDC.reminder frm = new ReminderPDC.reminder();
+                    //SHOW NOTIF BUTTON
+                    clsReminder.getCntPDCdueToday(btnNotifPDC, frm.lblSpiel, frm.btnRemid);
+
+                    //FOR PDC MANAGEMENT
+                    frm.ShowDialog();
+                }
+                else
+                {
+                    btnNotifPDC.Visible = false;
+                }
             }
-            else
+
+
+            //Alarm 4 days before due date for savings deduction
+            String sDate = DateTime.Now.ToString();
+            DateTime datevalue = (Convert.ToDateTime(sDate.ToString()));
+
+            int dy = Convert.ToInt32(datevalue.Day.ToString());
+
+            if(dy >= 12 && dy <= 15)
             {
-                btnNotifPDC.Visible = false;
+                //Check All loans with monthly payment in day of 1-15 every month
+                if(clsReminderSavings.checkIfHasLoanSavingsDue(1, 15) == true)
+                {
+                    ReminderSavings.ReminderSavingsDeduction frm = new ReminderSavings.ReminderSavingsDeduction();
+                    frm.ShowDialog();
+                }
             }
+           
+            if(dy >= 27 && dy <= 31)
+            {
+                //Check All loans with monthly payment in day of 16-31 every month
+                if (clsReminderSavings.checkIfHasLoanSavingsDue(16, 31) == true)
+                {
+                    ReminderSavings.ReminderSavingsDeduction frm = new ReminderSavings.ReminderSavingsDeduction();
+                    frm.ShowDialog();
+                }
+            }
+
+
+            //Open the Dashboard of teamheads
+            //1 = Accounting
+            //3 = Team Head
+
+            //Open the Dashboard of teamheads
+            //3 = Audit
+            //3 = Team Head
+            if (Classes.clsUser.department.ToString() == "1" || Classes.clsUser.department.ToString() == "3")
+            {
+                button1_Click(sender, e);
+            }
+
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            sideVisible(btnFileMaintenance);
+            if(clsAccess.checkForViewingRestriction(btnFileMaintenance.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnFileMaintenance);
 
-            panelFileMaintenanceSub.Visible = true;
-            panelFileMaintenanceSub.Top = btnFileMaintenance.Bottom;
-            panelFileMaintenanceSub.Left = panelMenu.Right;
-            panelFileMaintenanceSub.Height = panelMenu.Bottom;
+                panelFileMaintenanceSub.Visible = true;
+                panelFileMaintenanceSub.Top = btnFileMaintenance.Bottom;
+                panelFileMaintenanceSub.Left = panelMenu.Right;
+                panelFileMaintenanceSub.Height = panelMenu.Bottom;
 
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
-
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            sideVisible(btnDashBoard);
+            if (clsAccess.checkForViewingRestriction(btnDashBoard.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnDashBoard);
 
-            //Hide Panels who is ON
-            panelFileMaintenanceSub.Visible = false;
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+                panelFileMaintenanceSub.Visible = false;
+                //controls
+
+                //Accounting Department TH
+                if (Classes.clsUser.department.ToString() == "1" && Classes.clsUser.role.ToString() == "3")
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.GetType() == typeof(Dashboard.DashboardTH))
+                        {
+                            form.Activate();
+                            return;
+                        }
+                    }
+
+                    Dashboard.DashboardTH frm = new Dashboard.DashboardTH();
+                    frm.timerRefreshAccntg.Enabled = true;
+                    frm.Show();
+                    frm.MdiParent = this;
+                }
+
+                //Audit Department TH
+                if (Classes.clsUser.department.ToString() == "3" && Classes.clsUser.role.ToString() == "3")
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.GetType() == typeof(Dashboard.DashboardTH))
+                        {
+                            form.Activate();
+                            return;
+                        }
+                    }
+
+                    Dashboard.DashboardTH frm = new Dashboard.DashboardTH();
+                    frm.timerAudit.Enabled = true;
+                    frm.Show();
+                    frm.MdiParent = this;
+                }
+
+
+                //================================================================================
+                //                          ACCOUNTING STAFF DASHBOARD
+                //================================================================================
+                if (Classes.clsUser.department.ToString() == "1" && Classes.clsUser.role.ToString() != "3")
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.GetType() == typeof(Dashboard.DashboardStaff))
+                        {
+                            form.Activate();
+                            return;
+                        }
+                    }
+
+                    Dashboard.DashboardStaff frm = new Dashboard.DashboardStaff();
+                    frm.timerAccntg.Enabled = true;
+                    frm.Show();
+                    frm.MdiParent = this;
+                }
+
+                //================================================================================
+                //                          AUDIT STAFF DASHBOARD
+                //================================================================================
+                if (Classes.clsUser.department.ToString() == "3" && Classes.clsUser.role.ToString() != "3")
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.GetType() == typeof(Dashboard.DashboardStaff))
+                        {
+                            form.Activate();
+                            return;
+                        }
+                    }
+
+                    Dashboard.DashboardStaff frm = new Dashboard.DashboardStaff();
+                    frm.timerAudit.Enabled = true;
+                    frm.Show();
+                    frm.MdiParent = this;
+                }
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -92,39 +232,46 @@ namespace WindowsFormsApplication2
 
         private void btnProcess_Click(object sender, EventArgs e)
         {
-            sideVisible(btnProcess);
-                     
-            panelProcessSub.Visible = true;
-            panelProcessSub.Top = btnProcess.Bottom;
-            panelProcessSub.Left = panelMenu.Right;
-            panelProcessSub.Height = panelMenu.Bottom;
+            if(clsAccess.checkForViewingRestriction(btnProcess.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnProcess);
 
-            //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
+                panelProcessSub.Visible = true;
+                panelProcessSub.Top = btnLoans.Top;
+                panelProcessSub.Left = panelMenu.Right;
+                panelProcessSub.Height = panelMenu.Bottom;
+
+                //Hide Panels
+                panelFileMaintenanceSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+            }
         }
 
         private void btnReports_Click(object sender, EventArgs e)
         {
-            sideVisible(btnReports);
-            panelReportSub.Visible = true;
-            panelReportSub.Top = btnReports.Bottom;
-            panelReportSub.Left = panelMenu.Right;
-            panelReportSub.Height = panelMenu.Bottom;
+            if(clsAccess.checkForViewingRestriction(btnReports.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnReports);
+                panelReportSub.Visible = true;
+                panelReportSub.Top = btnReports.Bottom;
+                panelReportSub.Left = panelMenu.Right;
+                panelReportSub.Height = panelMenu.Bottom;
 
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelFileMaintenanceSub.Visible = false;
-            panelPDCManagement.Visible = false;
-            panelLoan.Visible = false;
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelFileMaintenanceSub.Visible = false;
+                panelPDCManagement.Visible = false;
+                panelLoan.Visible = false;
+            }
+            
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
@@ -213,21 +360,23 @@ namespace WindowsFormsApplication2
 
         private void btnMembership_Click(object sender, EventArgs e)
         {
-            sideVisible(btnMembership);
-            panelMembership.Visible = true;
-            panelMembership.Top = btnMembership.Bottom;
-            panelMembership.Left = panelMenu.Right;
-            panelMembership.Height = panelMenu.Bottom;
+            if(clsAccess.checkForViewingRestriction(btnMembership.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnMembership);
+                panelMembership.Visible = true;
+                panelMembership.Top = btnMembership.Bottom;
+                panelMembership.Left = panelMenu.Right;
+                panelMembership.Height = panelMenu.Bottom;
 
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelFileMaintenanceSub.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
-
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelFileMaintenanceSub.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+            }
         }
 
         private void panelMenu_Click(object sender, EventArgs e)
@@ -240,247 +389,280 @@ namespace WindowsFormsApplication2
             panelReportSub.Visible = false;
             panelLoan.Visible = false;
             panelMemberSettings.Visible = false;
+            panelPDCManagement.Visible = false;
         }
 
         private void btnCompany_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnCompany.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(Company))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            Company frm = new Company();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(Company))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Company frm = new Company();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnCostCenter.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(CostCenter))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            CostCenter frm = new CostCenter();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(CostCenter))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                CostCenter frm = new CostCenter();
+                frm.Show();
+                frm.MdiParent = this;
+            }   
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnPayrollGroup.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(PayrollGroup))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            PayrollGroup frm = new PayrollGroup();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(PayrollGroup))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                PayrollGroup frm = new PayrollGroup();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnTransactionType.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(TransactionType))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            TransactionType frm = new TransactionType();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(TransactionType))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                TransactionType frm = new TransactionType();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnClient.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(Client))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            Client frm = new Client();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(Client))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Client frm = new Client();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnChartOfAccount.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(ChartOfAccounts))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            ChartOfAccounts frm = new ChartOfAccounts();
-            frm.Show();
-            frm.MdiParent = this;
-            frm.treeView1.ExpandAll();
-            frm.clearFields();
+
+                    if (form.GetType() == typeof(ChartOfAccounts))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                ChartOfAccounts frm = new ChartOfAccounts();
+                frm.Show();
+                frm.MdiParent = this;
+                frm.treeView1.ExpandAll();
+                frm.clearFields();
+            }
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnBanks.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(Banks))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            Banks frm = new Banks();
-            frm.Show();
-            frm.MdiParent = this;
-            frm.cleartxtField();
+
+                    if (form.GetType() == typeof(Banks))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Banks frm = new Banks();
+                frm.Show();
+                frm.MdiParent = this;
+                frm.cleartxtField();
+            }
         }
 
         private void btnSavings_Click(object sender, EventArgs e)
         {
-            sideVisible(btnSavings);
-            
-            panelSavings.Visible = true;
-            panelSavings.Top = btnSavings.Bottom;
-            panelSavings.Left = panelMenu.Right;
-            panelSavings.Height = panelMenu.Bottom;
+            if(clsAccess.checkForViewingRestriction(btnSavings.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnSavings);
+
+                panelSavings.Visible = true;
+                panelSavings.Top = btnSavings.Bottom;
+                panelSavings.Left = panelMenu.Right;
+                panelSavings.Height = panelMenu.Bottom;
 
 
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelFileMaintenanceSub.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelFileMaintenanceSub.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
 
-
+            }
         }
 
         private void btnLoans_Click(object sender, EventArgs e)
         {
-            sideVisible(btnLoans);
+            if(clsAccess.checkForViewingRestriction(btnLoans.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnLoans);
 
-            panelLoan.Visible = true;
-            panelLoan.Top = btnLoans.Bottom;
-            panelLoan.Left = panelMenu.Right;
-            panelLoan.Height = panelMenu.Bottom;
+                panelLoan.Visible = true;
+                panelLoan.Top = btnLoans.Bottom;
+                panelLoan.Left = panelMenu.Right;
+                panelLoan.Height = panelMenu.Bottom;
 
 
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelFileMaintenanceSub.Visible = false;
-            panelPDCManagement.Visible = false;
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelFileMaintenanceSub.Visible = false;
+                panelPDCManagement.Visible = false;
+            }
         }
 
         private void btnReplenishment_Click(object sender, EventArgs e)
         {
-            //Hide sub menu Process
-            panelSavings.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnReplenishment.Text, Classes.clsUser.Username) == true)
             {
-                if (form.GetType() == typeof(CashReplenishment))
-                {
-                    form.Activate();
-                    return;
-                }
-            }
+                //Hide sub menu Process
+                panelSavings.Visible = false;
 
-            CashReplenishment frm = new CashReplenishment();
-            frm.Show();
-            frm.MdiParent = this;
+                //controls
+                foreach (Form form in Application.OpenForms)
+                {
+                    if (form.GetType() == typeof(CashReplenishment))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                CashReplenishment frm = new CashReplenishment();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            //Hide Panels
-            panelSavings.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnSavingsWithdrawal.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panels
+                panelSavings.Visible = false;
 
-
-                if (form.GetType() == typeof(Savings))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            Savings frm = new Savings();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(Savings))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Savings frm = new Savings();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void panelSavings_Paint(object sender, PaintEventArgs e)
@@ -490,80 +672,86 @@ namespace WindowsFormsApplication2
 
         private void btnParameter_Click(object sender, EventArgs e)
         {
-            sideVisible(btnParameter);
-
-
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnParameter.Text, Classes.clsUser.Username) == true)
             {
+                sideVisible(btnParameter);
 
 
-                if (form.GetType() == typeof(Parameter))
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+                panelFileMaintenanceSub.Visible = false;
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
+
+
+                    if (form.GetType() == typeof(Parameter))
+                    {
+                        form.Activate();
+                        return;
+                    }
                 }
+
+                Parameter frm = new Parameter();
+                frm.Show();
+                frm.MdiParent = this;
             }
-
-            Parameter frm = new Parameter();
-            frm.Show();
-            frm.MdiParent = this;
-
-
-            
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelMembership.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction("Membership Data Entry", Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelMembership.Visible = false;
 
-
-                if (form.GetType() == typeof(MembershipMain))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            MembershipMain membership = new MembershipMain();
-            membership.Show();
-            membership.MdiParent = this;
+
+                    if (form.GetType() == typeof(MembershipMain))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                MembershipMain frm = new MembershipMain();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelMembership.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnBatchApprove.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelMembership.Visible = false;
 
-
-                if (form.GetType() == typeof(MembershipBatchApprove))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            MembershipBatchApprove membership = new MembershipBatchApprove();
-            membership.Show();
-            membership.MdiParent = this;
+
+                    if (form.GetType() == typeof(MembershipBatchApprove))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                MembershipBatchApprove membership = new MembershipBatchApprove();
+                membership.Show();
+                membership.MdiParent = this;
+            }
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -583,46 +771,53 @@ namespace WindowsFormsApplication2
 
         private void button8_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelProcessSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnJournalVoucher.Text, Classes.clsUser.Username) == true)
             {
 
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
 
-                if (form.GetType() == typeof(JournalVoucher))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            JournalVoucher frm = new JournalVoucher();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(JournalVoucher))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                JournalVoucher frm = new JournalVoucher();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button12_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelProcessSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnDisbursementVoucher.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
 
-
-                if (form.GetType() == typeof(DisbursementVoucher))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            DisbursementVoucher frm = new DisbursementVoucher();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(DisbursementVoucher))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                DisbursementVoucher frm = new DisbursementVoucher();
+                frm.Show();
+                frm.MdiParent = this;
+            }   
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -658,6 +853,12 @@ namespace WindowsFormsApplication2
             DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
+                //Delete all open transaction before closing the program
+                clsOpen.deleteOpenTransaction();
+
+                //Remove Login Information
+                clsUser.removeUserLogin();
+
                 Environment.Exit(0);
             }
             else
@@ -679,390 +880,440 @@ namespace WindowsFormsApplication2
 
         private void button16_Click(object sender, EventArgs e)
         {
-            //Hide sub menu Process
-            panelSavings.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnAtmPrep.Text, Classes.clsUser.Username) == true)
             {
-                if (form.GetType() == typeof(SavingsWithdrawalATM))
-                {
-                    form.Activate();
-                    return;
-                }
-            }
+                //Hide sub menu Process
+                panelSavings.Visible = false;
 
-            SavingsWithdrawalATM frm = new SavingsWithdrawalATM();
-            frm.Show();
-            frm.MdiParent = this;
+                //controls
+                foreach (Form form in Application.OpenForms)
+                {
+                    if (form.GetType() == typeof(SavingsWithdrawalATM))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                SavingsWithdrawalATM frm = new SavingsWithdrawalATM();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelProcessSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnReceiptVoucher.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
 
-
-                if (form.GetType() == typeof(CashReceiptVoucher))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            CashReceiptVoucher frm = new CashReceiptVoucher();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(CashReceiptVoucher))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                CashReceiptVoucher frm = new CashReceiptVoucher();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button18_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelProcessSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnAtmDisk.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
 
-
-                if (form.GetType() == typeof(ATMDiskBankAdvice))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            ATMDiskBankAdvice frm = new ATMDiskBankAdvice();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(ATMDiskBankAdvice))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                ATMDiskBankAdvice frm = new ATMDiskBankAdvice();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelProcessSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnAtmReject.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
 
-
-                if (form.GetType() == typeof(InvalidAccounts))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            InvalidAccounts frm = new InvalidAccounts();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(InvalidAccounts))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                InvalidAccounts frm = new InvalidAccounts();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button20_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelReportSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnSavingsReport.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelReportSub.Visible = false;
 
-
-                if (form.GetType() == typeof(rptSavingsMain))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            rptSavingsMain frm = new rptSavingsMain();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(rptSavingsMain))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                rptSavingsMain frm = new rptSavingsMain();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button21_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelMembership.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnHoldAccounts.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelMembership.Visible = false;
 
-
-                if (form.GetType() == typeof(HoldAccounts))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            HoldAccounts frm = new HoldAccounts();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(HoldAccounts))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                HoldAccounts frm = new HoldAccounts();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button22_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelLoan.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnLoanDataEntry.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelLoan.Visible = false;
 
-
-                if (form.GetType() == typeof(Loans))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            Loans frm = new Loans();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(Loans))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Loans frm = new Loans();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            //Hide sub menu filemaintenance
-            panelFileMaintenanceSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnLoanType.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
 
-
-                if (form.GetType() == typeof(LoanType))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            LoanType frm = new LoanType();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(LoanType))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                LoanType frm = new LoanType();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button23_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelLoan.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnLoanAmort.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelLoan.Visible = false;
 
-
-                if (form.GetType() == typeof(LoanAmmortizationComputationcs))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            LoanAmmortizationComputationcs frm = new LoanAmmortizationComputationcs();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(LoanAmmortizationComputationcs))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                LoanAmmortizationComputationcs frm = new LoanAmmortizationComputationcs();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button24_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelLoan.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnLoanComputation.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelLoan.Visible = false;
 
-
-                if (form.GetType() == typeof(LoanComputation))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            LoanComputation frm = new LoanComputation();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(LoanComputation))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                LoanComputation frm = new LoanComputation();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button25_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelLoan.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnLoanAtm.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelLoan.Visible = false;
 
-
-                if (form.GetType() == typeof(LoanATM))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            LoanATM frm = new LoanATM();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(LoanATM))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                LoanATM frm = new LoanATM();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button26_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelReportSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnPLBI.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelReportSub.Visible = false;
 
-
-                if (form.GetType() == typeof(ReportsForms.rptPLBI))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            ReportsForms.rptPLBI frm = new ReportsForms.rptPLBI();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(ReportsForms.rptPLBI))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                ReportsForms.rptPLBI frm = new ReportsForms.rptPLBI();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button27_Click(object sender, EventArgs e)
         {
-            //Hide Panel
-            panelReportSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnLoanReport.Text, Classes.clsUser.Username) == true)
             {
+                //Hide Panel
+                panelReportSub.Visible = false;
 
-
-                if (form.GetType() == typeof(loanReport))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            loanReport frm = new loanReport();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(loanReport))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                loanReport frm = new loanReport();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button28_Click(object sender, EventArgs e)
         {
-            sideVisible(button28);
-
-
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnBilling.Text, Classes.clsUser.Username) == true)
             {
+                sideVisible(btnBilling);
 
 
-                if (form.GetType() == typeof(BillingAndCollectionMain))
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            BillingAndCollectionMain frm = new BillingAndCollectionMain();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(BillingAndCollectionMain))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                BillingAndCollectionMain frm = new BillingAndCollectionMain();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button29_Click(object sender, EventArgs e)
         {
-
-            //Hide sub menu filemaintenance
-            panelProcessSub.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnTransactionReceipt.Text, Classes.clsUser.Username) == true)
             {
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
 
-
-                if (form.GetType() == typeof(CashTransactionViewing))
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            CashTransactionViewing frm = new CashTransactionViewing();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(CashTransactionViewing))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                CashTransactionViewing frm = new CashTransactionViewing();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void btnQuery_Click(object sender, EventArgs e)
         {
-            sideVisible(btnQuery);
-
-
-            //Hide Panels
-            panelProcessSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelReportSub.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelLoan.Visible = false;
-            panelPDCManagement.Visible = false;
-
-            //controls
-            foreach (Form form in Application.OpenForms)
+            if(clsAccess.checkForViewingRestriction(btnQuery.Text, Classes.clsUser.Username) == true)
             {
+                sideVisible(btnQuery);
 
 
-                if (form.GetType() == typeof(Query))
+                //Hide Panels
+                panelProcessSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelReportSub.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelLoan.Visible = false;
+                panelPDCManagement.Visible = false;
+
+                //controls
+                foreach (Form form in Application.OpenForms)
                 {
-                    form.Activate();
-                    return;
-                }
-            }
 
-            Query frm = new Query();
-            frm.Show();
-            frm.MdiParent = this;
+
+                    if (form.GetType() == typeof(Query))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Query frm = new Query();
+                frm.Show();
+                frm.MdiParent = this;
+            }
         }
 
         private void button30_Click(object sender, EventArgs e)
         {
-            sideVisible(button30);
+            if(clsAccess.checkForViewingRestriction(btnPdcMngt.Text, Classes.clsUser.Username) == true)
+            {
+                sideVisible(btnPdcMngt);
 
-            panelPDCManagement.Visible = true;
-            panelPDCManagement.Top = button30.Bottom;
-            panelPDCManagement.Left = panelMenu.Right;
-            panelPDCManagement.Height = panelMenu.Bottom;
+                panelPDCManagement.Visible = true;
+                panelPDCManagement.Top = btnPdcMngt.Bottom;
+                panelPDCManagement.Left = panelMenu.Right;
+                panelPDCManagement.Height = panelMenu.Bottom;
 
-            //Hide Panels
-            panelFileMaintenanceSub.Visible = false;
-            panelSavings.Visible = false;
-            panelMembership.Visible = false;
-            panelMemberSettings.Visible = false;
-            panelReportSub.Visible = false;
-            panelLoan.Visible = false;
-            panelProcessSub.Visible = false;
+                //Hide Panels
+                panelFileMaintenanceSub.Visible = false;
+                panelSavings.Visible = false;
+                panelMembership.Visible = false;
+                panelMemberSettings.Visible = false;
+                panelReportSub.Visible = false;
+                panelLoan.Visible = false;
+                panelProcessSub.Visible = false;
+            }
         }
 
 
@@ -1170,24 +1421,24 @@ namespace WindowsFormsApplication2
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
-                PDCManagement frm = new PDCManagement();
+                PDCManagementV2 frm = new PDCManagementV2();
 
                 foreach (Form form in Application.OpenForms)
                 {
 
 
-                    if (form.GetType() == typeof(PDCManagement))
+                    if (form.GetType() == typeof(PDCManagementV2))
                     {
                         form.Activate();
-                        frm = (PDCManagement)Application.OpenForms["PDCManagement"];
+                        frm = (PDCManagementV2)Application.OpenForms["PDCManagementV2"];
                         frm.dataGridView1.DataSource = dt;
                         frm.str = "";
-                        frm.str = "SELECT * FROM vw_PDCManagement WHERE ORNumber is NULL and ChequeDate between '" + dtNowFrom.ToShortDateString() + "' and '" + dtNowTo.ToShortDateString() + "'";
+                        frm.str = "SELECT * FROM vw_PDCManagement ChequeDate between '" + dtNowFrom.ToShortDateString() + "' and '" + dtNowTo.ToShortDateString() + "'";
                         return;
                     }
                 }
                 frm.str = "";
-                frm.str = "SELECT * FROM vw_PDCManagement WHERE ORNumber is NULL and ChequeDate between '" + dtNowFrom.ToShortDateString() + "' and '" + dtNowTo.ToShortDateString() + "'";
+                frm.str = "SELECT * FROM vw_PDCManagement WHERE ChequeDate between '" + dtNowFrom.ToShortDateString() + "' and '" + dtNowTo.ToShortDateString() + "'";
                 frm.Show();
                 frm.MdiParent = this;
                 frm.dataGridView1.DataSource = dt;
@@ -1202,34 +1453,165 @@ namespace WindowsFormsApplication2
             {
 
 
-                if (form.GetType() == typeof(PDCManagement))
+                if (form.GetType() == typeof(PDCManagementV2))
                 {
                     form.Activate();
                     return;
                 }
             }
 
-            PDCManagement frm = new PDCManagement();
+            PDCManagementV2 frm = new PDCManagementV2();
             frm.Show();
             frm.MdiParent = this;
         }
 
         private void button31_Click(object sender, EventArgs e)
         {
-            panelPDCManagement.Visible = false;
-            //controls
+            if(clsAccess.checkForViewingRestriction(btnLoanListing.Text, Classes.clsUser.Username) == true)
+            {
+                panelPDCManagement.Visible = false;
+                //controls
+                foreach (Form form in Application.OpenForms)
+                {
+
+
+                    if (form.GetType() == typeof(PDCLoanListing))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                PDCLoanListing frm = new PDCLoanListing();
+                frm.Show();
+                frm.MdiParent = this;
+            }
+        }
+
+        private void panelMenu_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button32_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            panelMemberSettings.Visible = false;
             foreach (Form form in Application.OpenForms)
             {
 
 
-                if (form.GetType() == typeof(PDCLoanListing))
+                if (form.GetType() == typeof(Users.UserSettings))
                 {
                     form.Activate();
                     return;
                 }
             }
 
-            PDCLoanListing frm = new PDCLoanListing();
+            Users.UserSettings frm = new Users.UserSettings();
+            frm.Show();
+            frm.MdiParent = this;
+
+        }
+
+        private void button34_Click(object sender, EventArgs e)
+        {
+            if(clsAccess.checkForViewingRestriction(btnProvisionalReceipt.Text, Classes.clsUser.Username) == true)
+            {
+                //Hide sub menu filemaintenance
+                panelProcessSub.Visible = false;
+
+                //controls
+                foreach (Form form in Application.OpenForms)
+                {
+
+
+                    if (form.GetType() == typeof(ProvisionalReceipt))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                ProvisionalReceipt frm = new ProvisionalReceipt();
+                frm.Show();
+                frm.MdiParent = this;
+            }
+        }
+
+        private void btnAccessRight_Click(object sender, EventArgs e)
+        {
+            if(clsAccess.checkForViewingRestriction(btnAccessRight.Text, Classes.clsUser.Username) == true)
+            {
+                //Hide sub menu filemaintenance
+                panelFileMaintenanceSub.Visible = false;
+
+                //controls
+                foreach (Form form in Application.OpenForms)
+                {
+
+
+                    if (form.GetType() == typeof(Users.AccessControl))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                Users.AccessControl frm = new Users.AccessControl();
+                frm.Show();
+                frm.MdiParent = this;
+            }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+
+            if(clsAccess.checkForViewingRestriction(btnUsers.Text, Classes.clsUser.Username) == true)
+            {
+                panelFileMaintenanceSub.Visible = false;
+
+                //controls
+                foreach (Form form in Application.OpenForms)
+                {
+
+
+                    if (form.GetType() == typeof(UsersFileMaintenance))
+                    {
+                        form.Activate();
+                        return;
+                    }
+                }
+
+                UsersFileMaintenance frm = new UsersFileMaintenance();
+                frm.Show();
+                frm.MdiParent = this;
+            }
+           
+        }
+
+        private void btnSavingDeduction_Click(object sender, EventArgs e)
+        {
+            //Hide sub menu filemaintenance
+            panelProcessSub.Visible = false;
+
+            //controls
+            foreach (Form form in Application.OpenForms)
+            {
+
+
+                if (form.GetType() == typeof(SavingsDeductionBilling))
+                {
+                    form.Activate();
+                    return;
+                }
+            }
+
+            SavingsDeductionBilling frm = new SavingsDeductionBilling();
             frm.Show();
             frm.MdiParent = this;
         }

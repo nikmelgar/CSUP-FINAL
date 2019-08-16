@@ -1582,6 +1582,7 @@
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.ForeColor = System.Drawing.Color.Red;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1596,6 +1597,7 @@
             // 
             // button2
             // 
+            this.button2.Enabled = false;
             this.button2.ForeColor = System.Drawing.Color.Red;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

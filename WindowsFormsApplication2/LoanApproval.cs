@@ -24,6 +24,7 @@ namespace WindowsFormsApplication2
         Classes.clsLoanApproval clsApproval = new Classes.clsLoanApproval();
         Classes.clsParameter clsParameter = new Classes.clsParameter();
         Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
+        Classes.clsLoan clsLoan = new Classes.clsLoan();
 
         SqlConnection con;
         SqlCommand cmd;
@@ -63,21 +64,21 @@ namespace WindowsFormsApplication2
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "2")
             {
                 //APPROVED
-                Alert.show("This Loan already approved.", Alert.AlertType.error);
+                Alert.show("This Loan is already approved.", Alert.AlertType.error);
                 return;
             }
 
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "3")
             {
                 //DISAPPROVED
-                Alert.show("This loan already dispproved.", Alert.AlertType.error);
+                Alert.show("This Loan is already disapproved.", Alert.AlertType.error);
                 return;
             }
 
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "5")
             {
                 //DISAPPROVED
-                Alert.show("This loan already released.", Alert.AlertType.error);
+                Alert.show("This Loan is already released.", Alert.AlertType.error);
                 return;
             }
 
@@ -137,7 +138,7 @@ namespace WindowsFormsApplication2
                         
                         int x = 0;
 
-
+                        //RECORDS IN DATAGRIDVIEW LOAN BALANCES
                         while (x != dataGridView1.Rows.Count)
                         {
                             if (dataGridView1.Rows[x].Cells[4].Value == null)
@@ -153,6 +154,16 @@ namespace WindowsFormsApplication2
                                     //Check if equal or greater than or less than 
                                     if (Convert.ToDecimal(dataGridView1.Rows[x].Cells[4].Value.ToString()) == Convert.ToDecimal(dataGridView1.Rows[x].Cells[3].Value.ToString()))
                                     {
+                                        //if loan no has unearned amount
+                                        if (clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString()) != 0.00)
+                                        {
+                                            //INSERT THE AMOUNT OF UNEARED
+                                            clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "314", Convert.ToDecimal(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString())));
+
+                                            //INSERT TO INTEREST ON LOAN (EARNED INTEREST)
+                                            clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "401.1", Convert.ToDecimal(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString())));
+                                        }
+
                                         //CHECK IF APPLIED AMOUNT = DEFERRED AMOUNT
                                         SqlCommand cmd = new SqlCommand();
                                         cmd.Connection = con;
@@ -170,6 +181,18 @@ namespace WindowsFormsApplication2
 
                                     else if (Convert.ToDecimal(dataGridView1.Rows[x].Cells[4].Value.ToString()) > Convert.ToDecimal(dataGridView1.Rows[x].Cells[3].Value.ToString()))
                                     {
+                                        //if loan no has unearned amount
+                                        if (clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString()) != 0.00)
+                                        {
+                                            //INSERT THE AMOUNT OF UNEARED
+                                            clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "314", Convert.ToDecimal(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString())));
+
+                                            //INSERT TO INTEREST ON LOAN (EARNED INTEREST)
+                                            clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "401.1", Convert.ToDecimal(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString())));
+                                        }
+
+                                        MessageBox.Show(clsLoan.returnUnearnedInterest(txtLoanNo.Text).ToString());
+
                                         //IF APPLIED AMOUNT IS GREATER THAN THE DEFERRED AMOUNT
                                         SqlCommand cmd = new SqlCommand();
                                         cmd.Connection = con;
@@ -184,6 +207,10 @@ namespace WindowsFormsApplication2
                                         cmd.Parameters.AddWithValue("@Deduction_Type", "LOAN");
                                         cmd.ExecuteNonQuery();
 
+                                        double appliedPrincipal = 0;
+                                        appliedPrincipal = Convert.ToDouble(dataGridView1.Rows[x].Cells[4].Value.ToString()) - Convert.ToDouble(dataGridView1.Rows[x].Cells[3].Value.ToString());
+
+
                                         SqlCommand cmd2 = new SqlCommand();
                                         cmd2.Connection = con;
                                         cmd2.CommandText = "sp_InsertLoanDeductions";
@@ -193,12 +220,40 @@ namespace WindowsFormsApplication2
                                         cmd2.Parameters.AddWithValue("@Loan_Type", dataGridView1.Rows[x].Cells[7].Value.ToString());
                                         cmd2.Parameters.AddWithValue("@Loan_Type_Loan_No", dataGridView1.Rows[x].Cells[0].Value.ToString());
                                         cmd2.Parameters.AddWithValue("@Other_Deduction", dataGridView1.Rows[x].Cells[5].Value.ToString()); //Bill Current First
-                                        cmd2.Parameters.AddWithValue("@Applied_Amount", Convert.ToDecimal(Convert.ToDecimal(dataGridView1.Rows[x].Cells[4].Value.ToString()) - Convert.ToDecimal(dataGridView1.Rows[0].Cells[3].Value.ToString())).ToString().Replace(",", "."));
+                                        cmd2.Parameters.AddWithValue("@Applied_Amount", Convert.ToDecimal(appliedPrincipal));
                                         cmd2.Parameters.AddWithValue("@Deduction_Type", "LOAN");
                                         cmd2.ExecuteNonQuery();
+
+                                        MessageBox.Show(appliedPrincipal.ToString());
                                     }
                                     else if (Convert.ToDecimal(dataGridView1.Rows[x].Cells[4].Value.ToString()) < Convert.ToDecimal(dataGridView1.Rows[x].Cells[3].Value.ToString()))
                                     {
+                                        //Applied amount is less than deferred amount
+                                        //First we should put to unearned interest if they have uneared balance
+
+                                        //Insert First reverse unearned entry
+                                        if(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString()) != 0.00)
+                                        {
+                                            //if applied amount is greater than the unearned amount
+                                            if(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString()) >= Convert.ToDouble(dataGridView1.Rows[x].Cells[4].Value.ToString().Replace(",", "")))
+                                            {
+                                                //INSERT THE AMOUNT OF UNEARED
+                                                clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "314", Convert.ToDecimal(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString())));
+
+                                                //INSERT TO INTEREST ON LOAN (EARNED INTEREST)
+                                                clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "401.1", Convert.ToDecimal(clsLoan.returnUnearnedInterest(dataGridView1.Rows[x].Cells[0].Value.ToString())));
+                                            }
+                                            else
+                                            {
+                                                //INSERT THE AMOUNT OF UNEARED
+                                                clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "314", Convert.ToDecimal(dataGridView1.Rows[x].Cells[4].Value.ToString().Replace(",", "")));
+
+                                                //INSERT TO INTEREST ON LOAN (EARNED INTEREST)
+                                                clsLoan.insertLoanDeduction(txtLoanNo.Text, dataGridView1.Rows[x].Cells[7].Value.ToString(), dataGridView1.Rows[x].Cells[0].Value.ToString(), "401.1", Convert.ToDecimal(dataGridView1.Rows[x].Cells[4].Value.ToString().Replace(",", "")));
+                                            }
+                                        }
+
+                                        //INSERT IN PAST DUE(DEFERRED ACCOUNT)
                                         SqlCommand cmd = new SqlCommand();
                                         cmd.Connection = con;
                                         cmd.CommandText = "sp_InsertLoanDeductions";
@@ -335,21 +390,21 @@ namespace WindowsFormsApplication2
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "2")
             {
                 //APPROVED
-                Alert.show("This Loan already Approved!", Alert.AlertType.error);
+                Alert.show("This Loan is already approved.", Alert.AlertType.error);
                 return;
             }
 
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "3")
             {
                 //DISAPPROVED
-                Alert.show("This Loan already Dispproved!", Alert.AlertType.error);
+                Alert.show("This Loan is already disapproved.", Alert.AlertType.error);
                 return;
             }
 
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "5")
             {
                 //DISAPPROVED
-                Alert.show("This Loan already Released!", Alert.AlertType.error);
+                Alert.show("This Loan is already released.", Alert.AlertType.error);
                 return;
             }
 
@@ -395,21 +450,21 @@ namespace WindowsFormsApplication2
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "2")
             {
                 //APPROVED
-                Alert.show("This Loan already Approved!", Alert.AlertType.error);
+                Alert.show("This Loan is already approved.", Alert.AlertType.error);
                 return;
             }
 
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "3")
             {
                 //DISAPPROVED
-                Alert.show("This Loan already Dispproved!", Alert.AlertType.error);
+                Alert.show("This Loan is already disapproved.", Alert.AlertType.error);
                 return;
             }
 
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "5")
             {
                 //DISAPPROVED
-                Alert.show("This Loan already Released!", Alert.AlertType.error);
+                Alert.show("This Loan is already released.", Alert.AlertType.error);
                 return;
             }
 
@@ -427,7 +482,7 @@ namespace WindowsFormsApplication2
 
                 if (txtReason.Text == "")
                 {
-                    Alert.show("Reason for Disapproving of loan is required!", Alert.AlertType.error);
+                    Alert.show("Reason for disapproving of loan is required.", Alert.AlertType.error);
                     return;
                 }
 
@@ -474,7 +529,7 @@ namespace WindowsFormsApplication2
             if (clsApproval.returnStatusNo(txtLoanNo.Text) == "5")
             {
                 //DISAPPROVED
-                Alert.show("This Loan already Released!", Alert.AlertType.error);
+                Alert.show("This Loan is already released.", Alert.AlertType.error);
                 return;
             }
 

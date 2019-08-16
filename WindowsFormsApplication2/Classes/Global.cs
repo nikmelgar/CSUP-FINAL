@@ -21,20 +21,29 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            conbd.DataSource = "192.168.255.176";
-            conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
-            conbd.UserID = "sa";
-            conbd.Password = "SYSADMIN";
-            conbd.MaxPoolSize = 20000;
-
-            ////Local Connection House
-            //conbd.DataSource = ".";
+            //conbd.DataSource = "192.168.255.176";
             //conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
+            ////conbd.IntegratedSecurity = true;
             //conbd.UserID = "sa";
             //conbd.Password = "SYSADMIN";
             //conbd.MaxPoolSize = 20000;
+
+            ////CLOUD DATASOURCE
+            //conbd.DataSource = @"sql.freeasphost.net\MSSQL2016";
+            //conbd.InitialCatalog = "nikmelgar_pecci";
+            ////conbd.IntegratedSecurity = true;
+            //conbd.UserID = "nikmelgar";
+            //conbd.Password = "nikkoreyes";
+            //conbd.MaxPoolSize = 20000;
+
+
+            //Local Connection House
+            conbd.DataSource = ".";
+            conbd.InitialCatalog = "PECCI-NEW";
+            conbd.IntegratedSecurity = true;
+            conbd.UserID = "sa";
+            conbd.Password = "SYSADMIN";
+            conbd.MaxPoolSize = 20000;
 
 
 
@@ -65,20 +74,30 @@ namespace WindowsFormsApplication2
 
             //Office Connection
 
-            conbd.DataSource = "192.168.255.176";
-            conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
-            conbd.UserID = "sa";
-            conbd.Password = "SYSADMIN";
-            conbd.MaxPoolSize = 20000;
-
-            ////Local Connection House
-            //conbd.DataSource = ".";
+            //conbd.DataSource = "192.168.255.176";
             //conbd.InitialCatalog = "PECCI-NEW";
-            //conbd.IntegratedSecurity = true;
+            ////conbd.IntegratedSecurity = true;
             //conbd.UserID = "sa";
             //conbd.Password = "SYSADMIN";
             //conbd.MaxPoolSize = 20000;
+
+
+            ////CLOUD DATASOURCE
+            //conbd.DataSource = @"sql.freeasphost.net\MSSQL2016";
+            //conbd.InitialCatalog = "nikmelgar_pecci";
+            ////conbd.IntegratedSecurity = true;
+            //conbd.UserID = "nikmelgar";
+            //conbd.Password = "nikkoreyes";
+            //conbd.MaxPoolSize = 20000;
+
+
+            //Local Connection House
+            conbd.DataSource = ".";
+            conbd.InitialCatalog = "PECCI-NEW";
+            conbd.IntegratedSecurity = true;
+            conbd.UserID = "sa";
+            conbd.Password = "SYSADMIN";
+            conbd.MaxPoolSize = 20000;
 
 
 
@@ -233,5 +252,23 @@ namespace WindowsFormsApplication2
         }
 
         #endregion region
+
+
+        //=====================================================================================
+        //          GETTING THE UNEARN AMOUNT PER LOAN#
+        //=====================================================================================
+        public decimal getUnearnAmountGLOBAL(string loan_No)
+        {
+            using (SqlConnection con = new SqlConnection(connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT ISNULL(SUM(CREDIT - DEBIT), 0) as unearn from vw_Query_Total where loan_no = '" + loan_No + "' and account_code = '314'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString());
+            }
+        }
     }
 }

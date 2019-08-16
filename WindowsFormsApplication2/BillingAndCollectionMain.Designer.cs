@@ -60,18 +60,6 @@
             this.panel22 = new System.Windows.Forms.Panel();
             this.panelAction = new System.Windows.Forms.Panel();
             this.btnClose = new System.Windows.Forms.Button();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.lblDisapproved = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel1.SuspendLayout();
@@ -84,10 +72,6 @@
             this.panel18.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.panelAction.SuspendLayout();
-            this.panel5.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.panel7.SuspendLayout();
-            this.panel8.SuspendLayout();
             this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
@@ -165,6 +149,7 @@
             this.button2.TabIndex = 36;
             this.button2.Text = "ASSIGN COLLECTION";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // pictureBox2
             // 
@@ -382,138 +367,6 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(141)))), ((int)(((byte)(188)))));
-            this.panel5.Controls.Add(this.lblDisapproved);
-            this.panel5.Controls.Add(this.label1);
-            this.panel5.Location = new System.Drawing.Point(635, 63);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(209, 108);
-            this.panel5.TabIndex = 30;
-            // 
-            // lblDisapproved
-            // 
-            this.lblDisapproved.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDisapproved.AutoSize = true;
-            this.lblDisapproved.Font = new System.Drawing.Font("Century Gothic", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDisapproved.ForeColor = System.Drawing.Color.White;
-            this.lblDisapproved.Location = new System.Drawing.Point(18, 29);
-            this.lblDisapproved.Name = "lblDisapproved";
-            this.lblDisapproved.Size = new System.Drawing.Size(176, 28);
-            this.lblDisapproved.TabIndex = 9;
-            this.lblDisapproved.Text = "100,000,000.00";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(68, 77);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 19);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Loans";
-            // 
-            // panel6
-            // 
-            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.panel6.Controls.Add(this.label3);
-            this.panel6.Controls.Add(this.label5);
-            this.panel6.Location = new System.Drawing.Point(864, 63);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(209, 108);
-            this.panel6.TabIndex = 31;
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(18, 29);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(176, 28);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "100,000,000.00";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(48, 77);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(118, 19);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Share Capital";
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.panel7.Controls.Add(this.label7);
-            this.panel7.Controls.Add(this.label8);
-            this.panel7.Location = new System.Drawing.Point(1323, 63);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(209, 108);
-            this.panel7.TabIndex = 32;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Century Gothic", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(18, 29);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(176, 28);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "100,000,000.00";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(65, 77);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(80, 19);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "Deferred";
-            // 
-            // panel8
-            // 
-            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.panel8.Controls.Add(this.label9);
-            this.panel8.Controls.Add(this.label10);
-            this.panel8.Location = new System.Drawing.Point(1093, 63);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(209, 108);
-            this.panel8.TabIndex = 33;
-            // 
-            // label9
-            // 
-            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Century Gothic", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(18, 29);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(176, 28);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "100,000,000.00";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(69, 77);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 19);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Savings";
-            // 
             // panel9
             // 
             this.panel9.Controls.Add(this.chart1);
@@ -557,10 +410,6 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1549, 959);
             this.Controls.Add(this.panel9);
-            this.Controls.Add(this.panel8);
-            this.Controls.Add(this.panel7);
-            this.Controls.Add(this.panel6);
-            this.Controls.Add(this.panel5);
             this.Controls.Add(this.panelAction);
             this.Controls.Add(this.panel11);
             this.Controls.Add(this.panel17);
@@ -586,14 +435,6 @@
             this.panel18.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.panelAction.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
             this.panel9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
@@ -627,18 +468,6 @@
         public System.Windows.Forms.PictureBox pictureBox5;
         public System.Windows.Forms.Panel panelAction;
         public System.Windows.Forms.Button btnClose;
-        public System.Windows.Forms.Panel panel5;
-        public System.Windows.Forms.Label lblDisapproved;
-        public System.Windows.Forms.Label label1;
-        public System.Windows.Forms.Panel panel6;
-        public System.Windows.Forms.Label label3;
-        public System.Windows.Forms.Label label5;
-        public System.Windows.Forms.Panel panel7;
-        public System.Windows.Forms.Label label7;
-        public System.Windows.Forms.Label label8;
-        public System.Windows.Forms.Panel panel8;
-        public System.Windows.Forms.Label label9;
-        public System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         public System.Windows.Forms.Button button2;

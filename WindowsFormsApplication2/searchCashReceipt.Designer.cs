@@ -249,7 +249,7 @@
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(284, 22);
             this.lblError.TabIndex = 130;
-            this.lblError.Text = "* ERROR : No record/s found.";
+            this.lblError.Text = "* ERROR : No record(s) found.";
             this.lblError.Visible = false;
             // 
             // searchCashReceipt

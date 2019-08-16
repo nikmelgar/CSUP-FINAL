@@ -26,7 +26,7 @@ namespace WindowsFormsApplication2
 
         Global global = new Global();
         Classes.clsHoldAccounts clsHoldAccount = new Classes.clsHoldAccounts();
-
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         //=======================================================
         //              DECLARATION
         //=======================================================
@@ -107,9 +107,9 @@ namespace WindowsFormsApplication2
 
         private void btnLock_Click(object sender, EventArgs e)
         {
-            if(txtID.Text == "")
+            if (txtID.Text == "")
             {
-                Alert.show("Please select member first!", Alert.AlertType.error);
+                Alert.show("Please select Member first.", Alert.AlertType.error);
                 return;
             }
 
@@ -126,6 +126,11 @@ namespace WindowsFormsApplication2
             {
                 if (btnLock.Text == "LOCK")
                 {
+                    if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+                    {
+                        return;
+                    }
+
                     //=======================================================================
                     //                     INSERT INTO HOLD ACCOUNTS
                     //=======================================================================
@@ -146,7 +151,7 @@ namespace WindowsFormsApplication2
                         clsHoldAccount.displayHoldAccounts(dataGridView1);
 
                         //alert
-                        Alert.show("Member's account successfully locked!", Alert.AlertType.success);
+                        Alert.show("Member's account successfully locked.", Alert.AlertType.success);
 
                         btnCancel.Visible = false;
                         txtID.Text = "";
@@ -154,12 +159,14 @@ namespace WindowsFormsApplication2
                         txtReason.Text = "";
                         Classes.clsHoldAccounts.userid = 0;
                     }
-
-                     
-
                 }
                 else
                 {
+                    if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+                    {
+                        return;
+                    }
+
                     //============================================================================
                     //                          UN LOCK ACCOUNT
                     //============================================================================

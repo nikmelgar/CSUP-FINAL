@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Billing));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -49,18 +49,25 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnSave = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.dgvTempBalances = new System.Windows.Forms.DataGridView();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.dgvPrincipal = new System.Windows.Forms.DataGridView();
+            this.employeeId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.firstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.middleName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.billDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDueAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnExport = new System.Windows.Forms.Button();
             this.panelHeader.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTempBalances)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPrincipal)).BeginInit();
             this.SuspendLayout();
             // 
             // panel2
@@ -283,20 +290,11 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.panel5);
+            this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Location = new System.Drawing.Point(12, 206);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1316, 538);
             this.panel1.TabIndex = 177;
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.dataGridView1);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1316, 474);
-            this.panel5.TabIndex = 176;
             // 
             // dataGridView1
             // 
@@ -304,14 +302,14 @@
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -320,8 +318,8 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1316, 474);
-            this.dataGridView1.TabIndex = 78;
+            this.dataGridView1.Size = new System.Drawing.Size(1316, 538);
+            this.dataGridView1.TabIndex = 79;
             // 
             // btnSave
             // 
@@ -370,12 +368,78 @@
             // dgvTempBalances
             // 
             this.dgvTempBalances.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvTempBalances.Location = new System.Drawing.Point(1280, 50);
+            this.dgvTempBalances.Location = new System.Drawing.Point(1282, 50);
             this.dgvTempBalances.Name = "dgvTempBalances";
             this.dgvTempBalances.RowTemplate.Height = 24;
-            this.dgvTempBalances.Size = new System.Drawing.Size(48, 150);
+            this.dgvTempBalances.Size = new System.Drawing.Size(46, 150);
             this.dgvTempBalances.TabIndex = 181;
             this.dgvTempBalances.Visible = false;
+            // 
+            // dgvPrincipal
+            // 
+            this.dgvPrincipal.AllowUserToAddRows = false;
+            this.dgvPrincipal.AllowUserToDeleteRows = false;
+            this.dgvPrincipal.AllowUserToResizeColumns = false;
+            this.dgvPrincipal.AllowUserToResizeRows = false;
+            this.dgvPrincipal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPrincipal.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.employeeId,
+            this.LastName,
+            this.firstName,
+            this.middleName,
+            this.billDate,
+            this.totalDueAmount});
+            this.dgvPrincipal.Location = new System.Drawing.Point(884, 50);
+            this.dgvPrincipal.Name = "dgvPrincipal";
+            this.dgvPrincipal.RowTemplate.Height = 24;
+            this.dgvPrincipal.Size = new System.Drawing.Size(392, 150);
+            this.dgvPrincipal.TabIndex = 182;
+            this.dgvPrincipal.Visible = false;
+            // 
+            // employeeId
+            // 
+            this.employeeId.HeaderText = "EmployeeID";
+            this.employeeId.Name = "employeeId";
+            // 
+            // LastName
+            // 
+            this.LastName.HeaderText = "Last Name";
+            this.LastName.Name = "LastName";
+            // 
+            // firstName
+            // 
+            this.firstName.HeaderText = "First Name";
+            this.firstName.Name = "firstName";
+            // 
+            // middleName
+            // 
+            this.middleName.HeaderText = "Middle Name";
+            this.middleName.Name = "middleName";
+            // 
+            // billDate
+            // 
+            this.billDate.HeaderText = "BillDate";
+            this.billDate.Name = "billDate";
+            // 
+            // totalDueAmount
+            // 
+            this.totalDueAmount.HeaderText = "TotalDueAMount";
+            this.totalDueAmount.Name = "totalDueAmount";
+            // 
+            // btnExport
+            // 
+            this.btnExport.Enabled = false;
+            this.btnExport.ForeColor = System.Drawing.Color.Red;
+            this.btnExport.Image = ((System.Drawing.Image)(resources.GetObject("btnExport.Image")));
+            this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExport.Location = new System.Drawing.Point(129, 750);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(111, 37);
+            this.btnExport.TabIndex = 183;
+            this.btnExport.Text = "EXPORT";
+            this.btnExport.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // Billing
             // 
@@ -383,6 +447,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1340, 799);
+            this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.dgvPrincipal);
             this.Controls.Add(this.dgvTempBalances);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -412,9 +478,9 @@
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTempBalances)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPrincipal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -444,9 +510,16 @@
         public System.Windows.Forms.Button btnSave;
         public System.Windows.Forms.Button button2;
         public System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Panel panel5;
-        public System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridView dgvTempBalances;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        public System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvPrincipal;
+        public System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn employeeId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LastName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn firstName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn middleName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn billDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn totalDueAmount;
     }
 }

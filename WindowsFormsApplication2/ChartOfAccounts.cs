@@ -46,6 +46,7 @@ namespace WindowsFormsApplication2
         SqlConnection con = new SqlConnection();
 
         clsChartOfAccount clsChart = new clsChartOfAccount();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -137,80 +138,80 @@ namespace WindowsFormsApplication2
             ////Load Parent ComboBox FIrst
             loadParentNoEDIT(cmbParentAccount, "chart_of_accounts", "Account", txtCode.Text);
 
-            global.connection(con);
-            SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT Account_Description,Account_Group,Account_Type FROM chart_of_accounts WHERE Account_Code = '"+ txtCode.Text +"'", con);
-            DataTable dt2 = new DataTable();
-            adapter2.Fill(dt2);
-
-            if(dt2.Rows.Count > 0)
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
-                txtDescription.Text = dt2.Rows[0].ItemArray[0].ToString();
-                cmbAccountGroup.Text = dt2.Rows[0].ItemArray[1].ToString();
-                cmbAccountType.Text = dt2.Rows[0].ItemArray[2].ToString();
-            }
+                SqlDataAdapter adapter2 = new SqlDataAdapter("SELECT Account_Description,Account_Group,Account_Type FROM chart_of_accounts WHERE Account_Code = '" + txtCode.Text + "'", con);
+                DataTable dt2 = new DataTable();
+                adapter2.Fill(dt2);
 
-            try
-            {
-                if (r["Parent_Account"].ToString() == "0")
+                if (dt2.Rows.Count > 0)
                 {
-                    cmbParentAccount.Text = "";
+                    txtDescription.Text = dt2.Rows[0].ItemArray[0].ToString();
+                    cmbAccountGroup.Text = dt2.Rows[0].ItemArray[1].ToString();
+                    cmbAccountType.Text = dt2.Rows[0].ItemArray[2].ToString();
                 }
-                else
-                {                    
-                    global.connection(con);
+
+                try
+                {
+                    if (r["Parent_Account"].ToString() == "0")
+                    {
+                        cmbParentAccount.Text = "";
+                    }
+                    else
+                    {
+                        global.connection(con);
+
+                        //Get the Account code then get the parent code
+                        SqlDataAdapter adapterGetParentCode = new SqlDataAdapter("SELECT Parent_Account FROM chart_of_accounts WHERE Account_Code ='" + r["Account_Code"] + "'", con);
+                        DataTable dtParent = new DataTable();
+                        adapterGetParentCode.Fill(dtParent);
+
+                        //Check if theres a ROW
+                        if (dtParent.Rows.Count > 0)
+                        {
+                            //Getting The Account Code + Account Description
+                            SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 1 (account_code + ' - ' + Account_description)  FROM chart_of_accounts where Account_Code ='" + dtParent.Rows[0].ItemArray[0].ToString() + "'", con);
+                            DataTable dt = new DataTable();
+                            adapter.Fill(dt);
+
+
+                            cmbParentAccount.Text = dt.Rows[0].ItemArray[0].ToString();
+                        }
+
+                    }
+
 
                     //Get the Account code then get the parent code
-                    SqlDataAdapter adapterGetParentCode = new SqlDataAdapter("SELECT Parent_Account FROM chart_of_accounts WHERE Account_Code ='" + r["Account_Code"] +"'", con);
-                    DataTable dtParent = new DataTable();
-                    adapterGetParentCode.Fill(dtParent);
+                    SqlDataAdapter adapter1 = new SqlDataAdapter("SELECT Loan_Related,isActive FROM chart_of_accounts WHERE Account_Code ='" + r["Account_Code"] + "'", con);
+                    DataTable dt1 = new DataTable();
+                    adapter1.Fill(dt1);
 
-                    //Check if theres a ROW
-                    if(dtParent.Rows.Count > 0)
+                    if (dt1.Rows.Count > 0)
                     {
-                        //Getting The Account Code + Account Description
-                        SqlDataAdapter adapter = new SqlDataAdapter("SELECT top 1 (account_code + ' - ' + Account_description)  FROM chart_of_accounts where Account_Code ='" + dtParent.Rows[0].ItemArray[0].ToString() + "'", con);
-                        DataTable dt = new DataTable();
-                        adapter.Fill(dt);
+                        if (dt1.Rows[0].ItemArray[0].ToString() == "True")
+                        {
+                            chckLoanRelated.Checked = true;
+                        }
+                        else
+                        {
+                            chckLoanRelated.Checked = false;
+                        }
 
-
-                        cmbParentAccount.Text = dt.Rows[0].ItemArray[0].ToString();
+                        if (dt1.Rows[0].ItemArray[1].ToString() == "True")
+                        {
+                            chckActive.Checked = true;
+                        }
+                        else
+                        {
+                            chckActive.Checked = false;
+                        }
                     }
-                    
                 }
-
-                global.connection(con);
-
-                //Get the Account code then get the parent code
-                SqlDataAdapter adapter1 = new SqlDataAdapter("SELECT Loan_Related,isActive FROM chart_of_accounts WHERE Account_Code ='" + r["Account_Code"] + "'", con);
-                DataTable dt1 = new DataTable();
-                adapter1.Fill(dt1);
-
-                if(dt1.Rows.Count > 0)
+                catch
                 {
-                    if(dt1.Rows[0].ItemArray[0].ToString() == "True")
-                    {
-                        chckLoanRelated.Checked = true;
-                    }
-                    else
-                    {
-                        chckLoanRelated.Checked = false;
-                    }
 
-                    if(dt1.Rows[0].ItemArray[1].ToString() == "True")
-                    {
-                        chckActive.Checked = true;
-                    }
-                    else
-                    {
-                        chckActive.Checked = false;
-                    }
                 }
-            }
-            catch
-            {
-
-            }
-            
+            }   
         }
 
         public void loadParentNo(ComboBox cmb, string tableName, string Display)
@@ -323,6 +324,11 @@ namespace WindowsFormsApplication2
         }
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             enabledFields();
 
             if(btnNew.Text == "SAVE")
@@ -340,7 +346,7 @@ namespace WindowsFormsApplication2
                 Global global = new Global();
                 if(global.CheckDuplicateEntryParam("Account_Code", txtCode.Text, "chart_of_accounts") == true)
                 {
-                    Alert.show("Account Code Already Exist", Alert.AlertType.error);
+                    Alert.show("Account Code already exist.", Alert.AlertType.error);
                     return;
                 }
 
@@ -406,7 +412,7 @@ namespace WindowsFormsApplication2
                     }
                 }
                 //MessageBox
-                Alert.show("Successfully Added.", Alert.AlertType.success);
+                Alert.show("Successfully added.", Alert.AlertType.success);
 
                 //load Parent for real time adding
                 loadParentNo(cmbParentAccount, "chart_of_accounts", "Account"); //Parent
@@ -472,7 +478,11 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             //check if theres a data to be updated
             if (txtCode.Text == "")
             {
@@ -520,7 +530,7 @@ namespace WindowsFormsApplication2
 
                     if (dtFilter.Rows.Count > 0)
                     {
-                        Alert.show("Account Description Already Exist", Alert.AlertType.error);
+                        Alert.show("Account Description already exist.", Alert.AlertType.error);
                         return;
                     }
 
@@ -635,7 +645,12 @@ namespace WindowsFormsApplication2
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if(txtCode.Text == "")
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (txtCode.Text == "")
             {
                 //No Data to be deleted
                 Alert.show("Please select account you want to delete.", Alert.AlertType.error);
@@ -661,7 +676,7 @@ namespace WindowsFormsApplication2
                     cmd.ExecuteNonQuery();
                 }
                 //Message
-                Alert.show("Company Successfully Deleted", Alert.AlertType.success);
+                Alert.show("Company successfully deleted.", Alert.AlertType.success);
 
                 //Remove from treeview
                 _selectedNode.Remove();

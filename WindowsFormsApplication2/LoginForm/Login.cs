@@ -25,7 +25,7 @@ namespace WindowsFormsApplication2.LoginForm
         SqlCommand cmd;
         SqlDataAdapter adapter;
         DataTable dt;
-
+        int attempt = 0;
         Global global = new Global();
 
         Classes.clsUser clsUser = new Classes.clsUser();
@@ -65,6 +65,8 @@ namespace WindowsFormsApplication2.LoginForm
 
             using (SqlConnection con = new SqlConnection(global.connectString()))
             {
+                con.Open();
+
                 cmd = new SqlCommand();
                 cmd.Connection = con;
                 cmd.CommandText = "sp_GetUsernameAndPassword";
@@ -82,16 +84,35 @@ namespace WindowsFormsApplication2.LoginForm
                 }
                 else
                 {
-                    //Username does not exist!
-                    Alert.show("Username does not exist!", Alert.AlertType.error);
+                    //Username does not exist.
+                    Alert.show("Username does not exist.", Alert.AlertType.error);
                     txtUsername.Focus();
                     return;
                 }
 
                 if (IsExist)
                 {
+                    //Increment Login Attempts
+                    SqlDataAdapter adapterAttempt = new SqlDataAdapter("SELECT loginAttemps FROM Users WHERE Username = '" + txtUsername.Text + "'", con);
+                    DataTable dtAttempt = new DataTable();
+                    adapterAttempt.Fill(dtAttempt);
+
+                    attempt = Convert.ToInt32(dtAttempt.Rows[0].ItemArray[0].ToString());
+
                     if (Classes.clsUser.Decrypt(Password).Equals(txtPassword.Text))
                     {
+                        if(attempt >= 3)
+                        {
+                            string str = "You have exceeded maximum Password attempts." + Environment.NewLine + "Please contact your account administrator.";
+
+                            Alert.show(str, Alert.AlertType.error);
+                            return;
+                        }
+
+                        if(checkIfAlreadyLogged() == true)
+                        {
+                            return;
+                        }
                         //Go To Main Form
 
                         //Move Name and Other Information for Users Login
@@ -99,15 +120,38 @@ namespace WindowsFormsApplication2.LoginForm
                         Classes.clsUser.firstName = dt.Rows[0].ItemArray[2].ToString();
                         Classes.clsUser.middleName = dt.Rows[0].ItemArray[3].ToString();
                         Classes.clsUser.lastName = dt.Rows[0].ItemArray[4].ToString();
-
+                        Classes.clsUser.department = dt.Rows[0].ItemArray[5].ToString();
+                        Classes.clsUser.role = dt.Rows[0].ItemArray[6].ToString();
 
                         //Go to Form
-                        MainForm frm = new MainForm();
-                        this.Hide();
-                        frm.ShowDialog();
+                        //this.Close();
+                        //MainForm frm = new MainForm();
+                        //frm.ShowDialog();
+
+                        //Login At and IP Address
+                        clsUser.updateUserLogin();
+
+                        //reset attemp after successfully login
+                        resetAttemp();
+
+                        //clsMembership.loadPicture(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString(), dataentry.picPicture);
+
+                        MainForm frm = new MainForm();// I have created object of Form2
+                        this.Hide();//Hide cirrent form.
+                        frm.Show();
                     }
                     else
                     {
+                        if (attempt >= 3)
+                        {
+                            string str = "You have exceeded maximum Password attempts." + Environment.NewLine + "Please contact your account administrator.";
+
+                            Alert.show(str, Alert.AlertType.error);
+                            return;
+                        }
+
+                        cntAttempt();
+
                         Alert.show("Password is incorrect!", Alert.AlertType.error);
                         txtPassword.Focus();
                         return;
@@ -115,12 +159,63 @@ namespace WindowsFormsApplication2.LoginForm
                 }
                 else
                 {
-                    Alert.show("Please enter the valid credentials", Alert.AlertType.error);
+                    Alert.show("Please enter the valid credentials.", Alert.AlertType.error);
                     txtUsername.Focus();
                     return;
                 }
             }
 
+        }
+
+        public bool checkIfAlreadyLogged()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT isLoggedIn FROM Users WHERE Username = '"+ txtUsername.Text +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows[0].ItemArray[0].ToString() == "True" || dt.Rows[0].ItemArray[0].ToString() == "1")
+                {
+                    Alert.show("Account already in used.", Alert.AlertType.error);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public void resetAttemp()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "UPDATE Users SET loginAttemps = 0 WHERE Username ='" + txtUsername.Text + "'";
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void cntAttempt()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_IncrementAttemp";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -190,6 +285,11 @@ namespace WindowsFormsApplication2.LoginForm
         private void label1_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+          txtUsername.Text = Classes.clsUser.Encrypt(txtUsername.Text);
         }
     }
 }

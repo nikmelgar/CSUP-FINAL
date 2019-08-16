@@ -87,7 +87,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(176, 24);
             this.label3.TabIndex = 11;
-            this.label3.Text = "Successfully Added.";
+            this.label3.Text = "Successfully added.";
             // 
             // label2
             // 

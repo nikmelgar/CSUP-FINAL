@@ -24,6 +24,8 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         bool saveTrigger, updateTrigger; //For Insert and Update
 
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             //Button : Close
@@ -67,6 +69,11 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if(clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+            
             //CONNECTION TO SQL SERVER AND STORED PROCEDURE
             using (SqlConnection con = new SqlConnection(global.connectString()))
             {
@@ -87,7 +94,7 @@ namespace WindowsFormsApplication2
                         //Check if theres a duplicate entry
                         if (global.CheckDuplicateEntry(txtDescription.Text, "Company") == true)
                         {
-                            Alert.show("Company Description Already Exist", Alert.AlertType.error);
+                            Alert.show("Company Description already exist.", Alert.AlertType.error);
                             return;
                         }
 
@@ -118,7 +125,7 @@ namespace WindowsFormsApplication2
                         //load data
                         global.loadDataForFileMaintenance(dataGridView1, "Company");
                         //customize alert
-                        Alert.show("Successfully Added.", Alert.AlertType.success);
+                        Alert.show("Successfully added.", Alert.AlertType.success);
 
                         txtDescription.Enabled = false;
                         txtRemarks.Enabled = false;
@@ -168,6 +175,11 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (txtCode.Text == "") //Check if code is empty
             {
                 if (dataGridView1.SelectedRows.Count > 0) //make sure user select at least 1 row 
@@ -268,6 +280,11 @@ namespace WindowsFormsApplication2
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (txtCode.Text == "") //Check if code is empty
             {
                 if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
@@ -310,7 +327,7 @@ namespace WindowsFormsApplication2
                     global.loadDataForFileMaintenance(dataGridView1, "Company");
 
                     //Message
-                    Alert.show("Company Successfully Deleted", Alert.AlertType.success);
+                    Alert.show("Company successfully deleted.", Alert.AlertType.success);
                 }   
             }
             else

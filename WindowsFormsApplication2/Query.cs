@@ -71,7 +71,9 @@ namespace WindowsFormsApplication2
 
         private void button4_Click(object sender, EventArgs e)
         {
-           
+            queryLoanListing1.returnName();
+            queryLoanListing1.loadLoanListing();
+            queryLoanListing1.BringToFront();
         }
 
         private void panel5_Paint(object sender, PaintEventArgs e)
@@ -87,6 +89,20 @@ namespace WindowsFormsApplication2
             queryLoanDetails1.loadTrans();
             queryLoanDetails1.loadLoanDetails(loan_no);
             queryLoanDetails1.BringToFront();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            queryPayrollDeduction1.dataGridView1.Rows.Clear();
+            queryPayrollDeduction1.returnName();
+            queryPayrollDeduction1.BringToFront();
+        }
+
+        private void btnCoMaker_Click(object sender, EventArgs e)
+        {
+            queryCoMaker1.returnName();
+            queryCoMaker1.loadCoMaker();
+            queryCoMaker1.BringToFront();
         }
     }
 }

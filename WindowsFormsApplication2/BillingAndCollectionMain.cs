@@ -30,29 +30,66 @@ namespace WindowsFormsApplication2
             using (SqlConnection con = new SqlConnection(global.connectString()))
             {
                 con.Open();
-
-                adapter = new SqlDataAdapter("select Deduction_Code,SUM(TotalDueAmount) as TotalDueAmount from Billing GROUP BY Deduction_Code", con);
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_returnBillingDashboard";
+                cmd.CommandType = CommandType.StoredProcedure;
+                
+                adapter = new SqlDataAdapter(cmd);
                 dt = new DataTable();
                 adapter.Fill(dt);
 
-                chart1.DataSource = dt;
+                //chart1.DataSource = dt;
 
-                //Billing
-                chart1.Series["Billing"].XValueMember = "Deduction_Code";
-                chart1.Series["Billing"].YValueMembers = "TotalDueAmount";
+                SqlCommand cmdCollection = new SqlCommand();
+                cmdCollection.Connection = con;
+                cmdCollection.CommandText = "sp_returnCollectionDashboard";
+                cmdCollection.CommandType = CommandType.StoredProcedure;
 
-                chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
-                chart1.Series["Billing"].ToolTip = "#VALY";
+                SqlDataAdapter adapterCollect = new SqlDataAdapter(cmdCollection);
+                DataSet ds = new DataSet();
+                adapterCollect.Fill(ds);
 
-                //Collection
-                chart1.Series["Collection"].XValueMember = "Deduction_Code";
-                chart1.Series["Collection"].YValueMembers = "TotalDueAmount";
+                ////Billing
+                //chart1.Series["Billing"].XValueMember = dt.Rows[0].ItemArray[0].ToString();
+                //chart1.Series["Billing"].YValueMembers = dt.Rows[0].ItemArray[1].ToString();
 
-                chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
-                chart1.Series["Collection"].ToolTip = "#VALY";
+                //chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
+                //
+
+                ////Collection
+                //chart1.Series["Collection"].XValueMember = ds.Tables[0].Columns[0].ToString();
+                //chart1.Series["Collection"].YValueMembers = ds.Tables[0].Columns[1].ToString();
+
+                //chart1.ChartAreas["ChartArea1"].AxisX.Interval = 1;
+                //chart1.Series["Collection"].ToolTip = "#VALY";
+
+
+                try
+                {
+                    for (int xb = 0; xb < dt.Rows.Count; xb++)
+                    {
+                        chart1.Series["Billing"].Points.AddXY(dt.Rows[xb].ItemArray[0].ToString(), Convert.ToDecimal(dt.Rows[xb].ItemArray[1].ToString()));
+                    }
+                    chart1.Series["Billing"].ToolTip = "#VALY";
+
+                    for (int xc = 0; xc < ds.Tables[0].Rows.Count; xc++)
+                    {
+                        chart1.Series["Collection"].Points.AddXY(ds.Tables[0].Rows[xc]["Deduction_Code"].ToString(), Convert.ToDecimal(ds.Tables[0].Rows[xc]["TotalDueAmount"].ToString()));
+                    }
+                    chart1.Series["Collection"].ToolTip = "#VALY";
+
+                    chart1.AlignDataPointsByAxisLabel();
+                }
+                catch
+                {
+
+                }
+               
             }
         }
 
+       
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -114,6 +151,12 @@ namespace WindowsFormsApplication2
         private void chart1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CollectionForm collection = new CollectionForm();
+            collection.ShowDialog();
         }
     }
 }

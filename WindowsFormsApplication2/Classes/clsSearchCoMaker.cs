@@ -114,7 +114,7 @@ namespace WindowsFormsApplication2.Classes
                 }
                 else
                 {
-                    Alert.show("No record/s found.", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     return;
                 }
             }

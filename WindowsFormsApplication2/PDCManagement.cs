@@ -68,7 +68,7 @@ namespace WindowsFormsApplication2
         {
             if(txtEmployeeID.Text == "")
             {
-                Alert.show("Please select member first.", Alert.AlertType.error);
+                Alert.show("Please select Member first.", Alert.AlertType.error);
                 return;
             }
 
@@ -134,7 +134,7 @@ namespace WindowsFormsApplication2
         {
             if (txtEmployeeID.Text == "")
             {
-                Alert.show("Please select member first.", Alert.AlertType.error);
+                Alert.show("Please select Member first.", Alert.AlertType.error);
                 return;
             }
 
@@ -142,20 +142,20 @@ namespace WindowsFormsApplication2
             {
                 if (txtLoanType.Text == "")
                 {
-                    Alert.show("Please select loan first.", Alert.AlertType.error);
+                    Alert.show("Please select Loan first.", Alert.AlertType.error);
                     return;
                 }
             }
 
             if (cmbBank.Text == "")
             {
-                Alert.show("Please select bank first.", Alert.AlertType.error);
+                Alert.show("Please select Bank first.", Alert.AlertType.error);
                 return;
             }
 
             if (txtChequeNo.Text == "")
             {
-                Alert.show("Cheque number is required.", Alert.AlertType.error);
+                Alert.show("Cheque Number is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -309,7 +309,7 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select you want to edit.", Alert.AlertType.warning);
+                Alert.show("Please select transaction you want to edit.", Alert.AlertType.warning);
                 return;
             }
 
@@ -374,13 +374,13 @@ namespace WindowsFormsApplication2
             {
                 if (cmbBank.Text == "")
                 {
-                    Alert.show("Please select bank first.", Alert.AlertType.error);
+                    Alert.show("Please select Bank first.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtChequeNo.Text == "")
                 {
-                    Alert.show("Cheque number is required.", Alert.AlertType.error);
+                    Alert.show("Cheque Number is required.", Alert.AlertType.error);
                     return;
                 }
 
@@ -588,7 +588,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
         }
@@ -606,7 +606,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
         }
@@ -679,7 +679,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("Please check record you want to delete.", Alert.AlertType.error);
+                Alert.show("Please select  Record you want to delete.", Alert.AlertType.error);
                 return;
             }
         }

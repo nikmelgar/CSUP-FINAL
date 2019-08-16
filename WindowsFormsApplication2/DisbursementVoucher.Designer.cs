@@ -33,11 +33,14 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panelHeader = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
+            this.btnMin = new System.Windows.Forms.PictureBox();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -97,6 +100,10 @@
             this.panel10 = new System.Windows.Forms.Panel();
             this.label23 = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
+            this.btnAuditted = new System.Windows.Forms.Button();
+            this.txtAuditedBy = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
             this.btnRelease = new System.Windows.Forms.Button();
             this.panelSubs = new System.Windows.Forms.Panel();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
@@ -133,12 +140,6 @@
             this.label28 = new System.Windows.Forms.Label();
             this.txtPreparedBy = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.AccntDescription = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.subs = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LoanNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Debit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Credit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.userid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label33 = new System.Windows.Forms.Label();
@@ -152,7 +153,14 @@
             this.label29 = new System.Windows.Forms.Label();
             this.panel15 = new System.Windows.Forms.Panel();
             this.btnSave = new System.Windows.Forms.Button();
+            this.AccntDescription = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.subs = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LoanNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Debit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Credit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.userid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnMin)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -204,7 +212,8 @@
             // panelHeader
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.panelHeader.Controls.Add(this.label9);
+            this.panelHeader.Controls.Add(this.btnMin);
+            this.panelHeader.Controls.Add(this.lblTitle);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -214,17 +223,30 @@
             this.panelHeader.Click += new System.EventHandler(this.panelHeader_Click);
             this.panelHeader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelHeader_MouseMove);
             // 
-            // label9
+            // btnMin
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(3, 5);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(215, 23);
-            this.label9.TabIndex = 3;
-            this.label9.Text = "Disbursement Voucher";
+            this.btnMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMin.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMin.Image = ((System.Drawing.Image)(resources.GetObject("btnMin.Image")));
+            this.btnMin.Location = new System.Drawing.Point(1319, 0);
+            this.btnMin.Name = "btnMin";
+            this.btnMin.Size = new System.Drawing.Size(36, 36);
+            this.btnMin.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.btnMin.TabIndex = 10;
+            this.btnMin.TabStop = false;
+            this.btnMin.Click += new System.EventHandler(this.btnMin_Click);
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(3, 5);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(215, 23);
+            this.lblTitle.TabIndex = 3;
+            this.lblTitle.Text = "Disbursement Voucher";
             // 
             // panel1
             // 
@@ -950,6 +972,10 @@
             // 
             // panel11
             // 
+            this.panel11.Controls.Add(this.btnAuditted);
+            this.panel11.Controls.Add(this.txtAuditedBy);
+            this.panel11.Controls.Add(this.label42);
+            this.panel11.Controls.Add(this.label43);
             this.panel11.Controls.Add(this.btnRelease);
             this.panel11.Controls.Add(this.panelSubs);
             this.panel11.Controls.Add(this.status);
@@ -988,12 +1014,62 @@
             this.panel11.Size = new System.Drawing.Size(1332, 459);
             this.panel11.TabIndex = 66;
             // 
+            // btnAuditted
+            // 
+            this.btnAuditted.Enabled = false;
+            this.btnAuditted.ForeColor = System.Drawing.Color.Red;
+            this.btnAuditted.Image = ((System.Drawing.Image)(resources.GetObject("btnAuditted.Image")));
+            this.btnAuditted.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAuditted.Location = new System.Drawing.Point(377, 402);
+            this.btnAuditted.Name = "btnAuditted";
+            this.btnAuditted.Size = new System.Drawing.Size(158, 37);
+            this.btnAuditted.TabIndex = 118;
+            this.btnAuditted.Text = "AUDITED";
+            this.btnAuditted.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnAuditted.UseVisualStyleBackColor = true;
+            this.btnAuditted.Click += new System.EventHandler(this.btnAuditted_Click);
+            // 
+            // txtAuditedBy
+            // 
+            this.txtAuditedBy.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAuditedBy.Location = new System.Drawing.Point(1098, 314);
+            this.txtAuditedBy.Margin = new System.Windows.Forms.Padding(4);
+            this.txtAuditedBy.MaxLength = 50;
+            this.txtAuditedBy.Name = "txtAuditedBy";
+            this.txtAuditedBy.ReadOnly = true;
+            this.txtAuditedBy.Size = new System.Drawing.Size(212, 28);
+            this.txtAuditedBy.TabIndex = 117;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label42.Location = new System.Drawing.Point(1080, 317);
+            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(15, 21);
+            this.label42.TabIndex = 116;
+            this.label42.Text = ":";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Century Gothic", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label43.Location = new System.Drawing.Point(962, 317);
+            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(101, 21);
+            this.label43.TabIndex = 115;
+            this.label43.Text = "Audited By";
+            // 
             // btnRelease
             // 
             this.btnRelease.ForeColor = System.Drawing.Color.Red;
             this.btnRelease.Image = ((System.Drawing.Image)(resources.GetObject("btnRelease.Image")));
             this.btnRelease.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRelease.Location = new System.Drawing.Point(654, 359);
+            this.btnRelease.Location = new System.Drawing.Point(121, 402);
             this.btnRelease.Name = "btnRelease";
             this.btnRelease.Size = new System.Drawing.Size(125, 37);
             this.btnRelease.TabIndex = 114;
@@ -1104,12 +1180,12 @@
             this.status.AutoSize = true;
             this.status.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.status.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.status.Location = new System.Drawing.Point(534, 408);
+            this.status.Location = new System.Drawing.Point(585, 394);
             this.status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(154, 37);
+            this.status.Size = new System.Drawing.Size(336, 37);
             this.status.TabIndex = 112;
-            this.status.Text = "RELEASED";
+            this.status.Text = "POSTED and RELEASED";
             this.status.Visible = false;
             // 
             // panel22
@@ -1214,7 +1290,7 @@
             // 
             this.pictureBox4.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.ErrorImage")));
             this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(0, 402);
+            this.pictureBox4.Location = new System.Drawing.Point(0, 445);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(1332, 3);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -1289,7 +1365,7 @@
             this.btnPost.ForeColor = System.Drawing.Color.Red;
             this.btnPost.Image = ((System.Drawing.Image)(resources.GetObject("btnPost.Image")));
             this.btnPost.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPost.Location = new System.Drawing.Point(541, 359);
+            this.btnPost.Location = new System.Drawing.Point(8, 402);
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size(107, 37);
             this.btnPost.TabIndex = 85;
@@ -1354,9 +1430,9 @@
             this.btnCancel.ForeColor = System.Drawing.Color.Red;
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(785, 359);
+            this.btnCancel.Location = new System.Drawing.Point(252, 402);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(135, 37);
+            this.btnCancel.Size = new System.Drawing.Size(119, 37);
             this.btnCancel.TabIndex = 82;
             this.btnCancel.Text = "CANCEL";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1457,52 +1533,6 @@
             this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);
             this.dataGridView1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView1_EditingControlShowing);
             // 
-            // AccntDescription
-            // 
-            this.AccntDescription.DataPropertyName = "Account_Description";
-            this.AccntDescription.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.AccntDescription.FillWeight = 115F;
-            this.AccntDescription.HeaderText = "Account Description";
-            this.AccntDescription.Name = "AccntDescription";
-            this.AccntDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.AccntDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // subs
-            // 
-            this.subs.DataPropertyName = "Subsidiary_Code";
-            this.subs.FillWeight = 95F;
-            this.subs.HeaderText = "Subsidiary";
-            this.subs.Name = "subs";
-            this.subs.ReadOnly = true;
-            // 
-            // LoanNo
-            // 
-            this.LoanNo.DataPropertyName = "Loan_No";
-            this.LoanNo.FillWeight = 45F;
-            this.LoanNo.HeaderText = "Loan No";
-            this.LoanNo.Name = "LoanNo";
-            // 
-            // Debit
-            // 
-            this.Debit.DataPropertyName = "Debit";
-            this.Debit.FillWeight = 50F;
-            this.Debit.HeaderText = "Debit";
-            this.Debit.Name = "Debit";
-            // 
-            // Credit
-            // 
-            this.Credit.DataPropertyName = "Credit";
-            this.Credit.FillWeight = 50F;
-            this.Credit.HeaderText = "Credit";
-            this.Credit.Name = "Credit";
-            // 
-            // userid
-            // 
-            this.userid.DataPropertyName = "userID";
-            this.userid.HeaderText = "UserID";
-            this.userid.Name = "userid";
-            this.userid.Visible = false;
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -1593,7 +1623,7 @@
             this.panel12.BackColor = System.Drawing.Color.SeaGreen;
             this.panel12.Location = new System.Drawing.Point(1329, 3);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(3, 400);
+            this.panel12.Size = new System.Drawing.Size(3, 445);
             this.panel12.TabIndex = 3;
             // 
             // panel13
@@ -1601,7 +1631,7 @@
             this.panel13.BackColor = System.Drawing.Color.SeaGreen;
             this.panel13.Location = new System.Drawing.Point(0, 3);
             this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(3, 400);
+            this.panel13.Size = new System.Drawing.Size(3, 445);
             this.panel13.TabIndex = 2;
             // 
             // label29
@@ -1639,6 +1669,56 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // AccntDescription
+            // 
+            this.AccntDescription.DataPropertyName = "Account_Description";
+            this.AccntDescription.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.AccntDescription.FillWeight = 115F;
+            this.AccntDescription.HeaderText = "Account Description";
+            this.AccntDescription.Name = "AccntDescription";
+            this.AccntDescription.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.AccntDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // subs
+            // 
+            this.subs.DataPropertyName = "Subsidiary_Code";
+            this.subs.FillWeight = 95F;
+            this.subs.HeaderText = "Subsidiary";
+            this.subs.Name = "subs";
+            this.subs.ReadOnly = true;
+            // 
+            // LoanNo
+            // 
+            this.LoanNo.DataPropertyName = "Loan_No";
+            this.LoanNo.FillWeight = 45F;
+            this.LoanNo.HeaderText = "Loan No";
+            this.LoanNo.Name = "LoanNo";
+            // 
+            // Debit
+            // 
+            this.Debit.DataPropertyName = "Debit";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Debit.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Debit.FillWeight = 50F;
+            this.Debit.HeaderText = "Debit";
+            this.Debit.Name = "Debit";
+            // 
+            // Credit
+            // 
+            this.Credit.DataPropertyName = "Credit";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Credit.DefaultCellStyle = dataGridViewCellStyle5;
+            this.Credit.FillWeight = 50F;
+            this.Credit.HeaderText = "Credit";
+            this.Credit.Name = "Credit";
+            // 
+            // userid
+            // 
+            this.userid.DataPropertyName = "userID";
+            this.userid.HeaderText = "UserID";
+            this.userid.Name = "userid";
+            this.userid.Visible = false;
+            // 
             // DisbursementVoucher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1656,9 +1736,11 @@
             this.Name = "DisbursementVoucher";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DisbursementVoucher";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DisbursementVoucher_FormClosing);
             this.Load += new System.EventHandler(this.DisbursementVoucher_Load);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnMin)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel5.ResumeLayout(false);
@@ -1692,7 +1774,7 @@
         public System.Windows.Forms.Panel panel3;
         public System.Windows.Forms.Panel panel4;
         public System.Windows.Forms.Panel panelHeader;
-        public System.Windows.Forms.Label label9;
+        public System.Windows.Forms.Label lblTitle;
         public System.Windows.Forms.Panel panel1;
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Panel panel5;
@@ -1798,14 +1880,19 @@
         public System.Windows.Forms.Panel panel17;
         public System.Windows.Forms.Panel panel18;
         public System.Windows.Forms.Panel panel19;
+        public System.Windows.Forms.Button btnChangeCheque;
+        public System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button btnRelease;
+        public System.Windows.Forms.TextBox txtAuditedBy;
+        public System.Windows.Forms.Label label42;
+        public System.Windows.Forms.Label label43;
+        public System.Windows.Forms.Button btnAuditted;
+        private System.Windows.Forms.PictureBox btnMin;
         private System.Windows.Forms.DataGridViewComboBoxColumn AccntDescription;
         private System.Windows.Forms.DataGridViewTextBoxColumn subs;
         private System.Windows.Forms.DataGridViewTextBoxColumn LoanNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn Debit;
         private System.Windows.Forms.DataGridViewTextBoxColumn Credit;
         private System.Windows.Forms.DataGridViewTextBoxColumn userid;
-        public System.Windows.Forms.Button btnChangeCheque;
-        public System.Windows.Forms.Button button1;
-        public System.Windows.Forms.Button btnRelease;
     }
 }

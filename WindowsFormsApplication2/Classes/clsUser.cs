@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
 
 namespace WindowsFormsApplication2.Classes
 {
@@ -17,8 +22,11 @@ namespace WindowsFormsApplication2.Classes
         public static string middleName { get; set; }
         public static string lastName{ get; set; }
 
+        public static string department { get; set; }
+        public static string role { get; set; }
 
 
+        Global global = new Global();
 
         public static string Encrypt(string encryptString)
         {
@@ -67,6 +75,59 @@ namespace WindowsFormsApplication2.Classes
                 }
             }
             return cipherText;
+        }
+
+        public string returnDepartmentDescription()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Department FROM Department WHERE DepartmentID = '"+ department +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                SqlDataAdapter adapterRole = new SqlDataAdapter("SELECT RoleDescription FROM Role WHERE RoleID = '"+ role +"'", con);
+                DataTable dt2 = new DataTable();
+                adapterRole.Fill(dt2);
+
+                return dt.Rows[0].ItemArray[0].ToString() + Environment.NewLine + dt2.Rows[0].ItemArray[0].ToString();
+            }
+        }
+
+        public void updateUserLogin()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                string MachineName4 = System.Environment.GetEnvironmentVariable("COMPUTERNAME");
+                IPAddress ip = Dns.GetHostAddresses(Dns.GetHostName()).Where(address => address.AddressFamily == AddressFamily.InterNetwork).First();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_GetLoginInformation";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Username", Username);
+                cmd.Parameters.AddWithValue("@LoggedAtName", MachineName4);
+                cmd.Parameters.AddWithValue("@LoggedAtIPAddress", ip.ToString());
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void removeUserLogin()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "sp_RemoveLoginInformation";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Username", Username);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

@@ -975,12 +975,14 @@
             this.cmbPaymentOption.Items.AddRange(new object[] {
             "",
             "PDC",
-            "Payroll Deduction"});
+            "Payroll Deduction",
+            "Savings Deduction"});
             this.cmbPaymentOption.Location = new System.Drawing.Point(234, 300);
             this.cmbPaymentOption.Margin = new System.Windows.Forms.Padding(4);
             this.cmbPaymentOption.Name = "cmbPaymentOption";
             this.cmbPaymentOption.Size = new System.Drawing.Size(253, 25);
             this.cmbPaymentOption.TabIndex = 146;
+            this.cmbPaymentOption.SelectedValueChanged += new System.EventHandler(this.cmbPaymentOption_SelectedValueChanged);
             // 
             // label72
             // 
@@ -2128,6 +2130,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LoansDataEntry";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Loans Data Entry";
             this.Load += new System.EventHandler(this.LoansDataEntry_Load);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();

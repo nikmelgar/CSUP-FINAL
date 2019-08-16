@@ -134,14 +134,14 @@ namespace WindowsFormsApplication2
                     }
                     else
                     {
-                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        Alert.show("No record(s) found.", Alert.AlertType.warning);
                         return;
                     }
                 }                
             }
             else
             {
-                Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
             

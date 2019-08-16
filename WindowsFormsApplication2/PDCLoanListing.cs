@@ -81,14 +81,25 @@ namespace WindowsFormsApplication2
                 PDCFolder.PDCLoanListing cr = new PDCFolder.PDCLoanListing();
 
                 li.ConnectionInfo.IntegratedSecurity = false;
-                
+
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM vw_PDCManagementV2_SearchLoanType WHERE ChequeDate Between '"+ dtLoanFrom.Text +"' and '"+ dtLoanTo.Text + "'", con);
+
+                DataTable dt = new DataTable();
+                DataSet ds = new DataSet();
+
+                li = new TableLogOnInfo();
+
+                li.ConnectionInfo.IntegratedSecurity = false;
+
+                adapter.Fill(ds, "vw_PDCManagementReportV2");
+                dt = ds.Tables["vw_PDCManagementReportV2"];
+                cr.SetDataSource(ds.Tables["vw_PDCManagementReportV2"]);
+
 
                 //PARAMETERS
                 cr.SetParameterValue("pdcDate", "PDC FROM : " + dtLoanFrom.Text + " To " + dtLoanTo.Text);
                 cr.SetParameterValue("printedBy", Classes.clsUser.Username.ToString());
-                cr.SetParameterValue("@loanDateFrom", dtLoanFrom.Text);
-                cr.SetParameterValue("@loanDateTo", dtLoanTo.Text);
-
 
                 //cr.SetDatabaseLogon("sa", "SYSADMIN", "192.168.255.176", "PECCI-NEW");
                 cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);

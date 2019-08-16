@@ -32,8 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MembershipDataEntrycs));
             this.txtSavingsDeposit = new System.Windows.Forms.TextBox();
-            this.label73 = new System.Windows.Forms.Label();
-            this.panel10 = new System.Windows.Forms.Panel();
+            this.panelOtherInfo = new System.Windows.Forms.Panel();
             this.label65 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
             this.label100 = new System.Windows.Forms.Label();
@@ -43,8 +42,6 @@
             this.dtDateMembership = new System.Windows.Forms.DateTimePicker();
             this.txtShareCapital = new System.Windows.Forms.TextBox();
             this.label68 = new System.Windows.Forms.Label();
-            this.label70 = new System.Windows.Forms.Label();
-            this.label69 = new System.Windows.Forms.Label();
             this.txtMembershipFee = new System.Windows.Forms.TextBox();
             this.label71 = new System.Windows.Forms.Label();
             this.label81 = new System.Windows.Forms.Label();
@@ -158,7 +155,7 @@
             this.label83 = new System.Windows.Forms.Label();
             this.label82 = new System.Windows.Forms.Label();
             this.label63 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.panelCompanyInfo = new System.Windows.Forms.Panel();
             this.label99 = new System.Windows.Forms.Label();
             this.cmbOfficeArea = new System.Windows.Forms.ComboBox();
             this.txtOfficeTelNo = new System.Windows.Forms.MaskedTextBox();
@@ -206,12 +203,17 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.label9 = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.panel10.SuspendLayout();
+            this.lblStat = new System.Windows.Forms.Label();
+            this.btnReActivate = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.panelOtherInfo.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -220,7 +222,7 @@
             this.contextMenuStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel7.SuspendLayout();
-            this.panel6.SuspendLayout();
+            this.panelCompanyInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPicture)).BeginInit();
             this.panel5.SuspendLayout();
             this.panelPersonalInformation.SuspendLayout();
@@ -232,48 +234,36 @@
             // txtSavingsDeposit
             // 
             this.txtSavingsDeposit.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSavingsDeposit.Location = new System.Drawing.Point(1282, 5);
+            this.txtSavingsDeposit.Location = new System.Drawing.Point(1288, 5);
             this.txtSavingsDeposit.Margin = new System.Windows.Forms.Padding(4);
             this.txtSavingsDeposit.Name = "txtSavingsDeposit";
-            this.txtSavingsDeposit.Size = new System.Drawing.Size(83, 28);
+            this.txtSavingsDeposit.Size = new System.Drawing.Size(77, 28);
             this.txtSavingsDeposit.TabIndex = 42;
             this.txtSavingsDeposit.Text = "0.00";
             this.txtSavingsDeposit.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSalary_KeyPress);
             this.txtSavingsDeposit.Leave += new System.EventHandler(this.txtSavingsDeposit_Leave);
             // 
-            // label73
+            // panelOtherInfo
             // 
-            this.label73.AutoSize = true;
-            this.label73.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label73.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label73.Location = new System.Drawing.Point(1260, 7);
-            this.label73.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(14, 19);
-            this.label73.TabIndex = 91;
-            this.label73.Text = ":";
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.label65);
-            this.panel10.Controls.Add(this.label64);
-            this.panel10.Controls.Add(this.label100);
-            this.panel10.Controls.Add(this.dtFirstDeduction);
-            this.panel10.Controls.Add(this.txtSavingsDeposit);
-            this.panel10.Controls.Add(this.label73);
-            this.panel10.Controls.Add(this.label66);
-            this.panel10.Controls.Add(this.label72);
-            this.panel10.Controls.Add(this.dtDateMembership);
-            this.panel10.Controls.Add(this.txtShareCapital);
-            this.panel10.Controls.Add(this.label68);
-            this.panel10.Controls.Add(this.label70);
-            this.panel10.Controls.Add(this.label69);
-            this.panel10.Controls.Add(this.txtMembershipFee);
-            this.panel10.Controls.Add(this.label71);
-            this.panel10.Location = new System.Drawing.Point(11, 738);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(1376, 47);
-            this.panel10.TabIndex = 58;
+            this.panelOtherInfo.Controls.Add(this.label70);
+            this.panelOtherInfo.Controls.Add(this.label69);
+            this.panelOtherInfo.Controls.Add(this.label9);
+            this.panelOtherInfo.Controls.Add(this.label65);
+            this.panelOtherInfo.Controls.Add(this.label64);
+            this.panelOtherInfo.Controls.Add(this.label100);
+            this.panelOtherInfo.Controls.Add(this.dtFirstDeduction);
+            this.panelOtherInfo.Controls.Add(this.txtSavingsDeposit);
+            this.panelOtherInfo.Controls.Add(this.label66);
+            this.panelOtherInfo.Controls.Add(this.label72);
+            this.panelOtherInfo.Controls.Add(this.dtDateMembership);
+            this.panelOtherInfo.Controls.Add(this.txtShareCapital);
+            this.panelOtherInfo.Controls.Add(this.label68);
+            this.panelOtherInfo.Controls.Add(this.txtMembershipFee);
+            this.panelOtherInfo.Controls.Add(this.label71);
+            this.panelOtherInfo.Location = new System.Drawing.Point(11, 738);
+            this.panelOtherInfo.Name = "panelOtherInfo";
+            this.panelOtherInfo.Size = new System.Drawing.Size(1376, 47);
+            this.panelOtherInfo.TabIndex = 58;
             // 
             // label65
             // 
@@ -339,12 +329,12 @@
             this.label72.AutoSize = true;
             this.label72.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label72.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label72.Location = new System.Drawing.Point(1122, 5);
+            this.label72.Location = new System.Drawing.Point(1139, 6);
             this.label72.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(141, 21);
+            this.label72.Size = new System.Drawing.Size(151, 21);
             this.label72.TabIndex = 90;
-            this.label72.Text = "Savings Deposit";
+            this.label72.Text = "Savings Deposit :";
             // 
             // dtDateMembership
             // 
@@ -373,44 +363,20 @@
             this.label68.AutoSize = true;
             this.label68.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label68.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label68.Location = new System.Drawing.Point(631, 5);
+            this.label68.Location = new System.Drawing.Point(647, 7);
             this.label68.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(148, 21);
+            this.label68.Size = new System.Drawing.Size(158, 21);
             this.label68.TabIndex = 84;
-            this.label68.Text = "Membership Fee";
-            // 
-            // label70
-            // 
-            this.label70.AutoSize = true;
-            this.label70.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label70.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label70.Location = new System.Drawing.Point(1015, 7);
-            this.label70.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(14, 19);
-            this.label70.TabIndex = 88;
-            this.label70.Text = ":";
-            // 
-            // label69
-            // 
-            this.label69.AutoSize = true;
-            this.label69.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label69.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label69.Location = new System.Drawing.Point(781, 7);
-            this.label69.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(14, 19);
-            this.label69.TabIndex = 85;
-            this.label69.Text = ":";
+            this.label68.Text = "Membership Fee :";
             // 
             // txtMembershipFee
             // 
             this.txtMembershipFee.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMembershipFee.Location = new System.Drawing.Point(802, 5);
+            this.txtMembershipFee.Location = new System.Drawing.Point(806, 5);
             this.txtMembershipFee.Margin = new System.Windows.Forms.Padding(4);
             this.txtMembershipFee.Name = "txtMembershipFee";
-            this.txtMembershipFee.Size = new System.Drawing.Size(83, 28);
+            this.txtMembershipFee.Size = new System.Drawing.Size(76, 28);
             this.txtMembershipFee.TabIndex = 40;
             this.txtMembershipFee.Text = "0.00";
             this.txtMembershipFee.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSalary_KeyPress);
@@ -421,12 +387,12 @@
             this.label71.AutoSize = true;
             this.label71.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label71.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.label71.Location = new System.Drawing.Point(893, 5);
+            this.label71.Location = new System.Drawing.Point(899, 7);
             this.label71.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(124, 21);
+            this.label71.Size = new System.Drawing.Size(134, 21);
             this.label71.TabIndex = 87;
-            this.label71.Text = "Share Capital";
+            this.label71.Text = "Share Capital :";
             // 
             // label81
             // 
@@ -876,7 +842,7 @@
             // 
             this.txtContactNo1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtContactNo1.Location = new System.Drawing.Point(224, 51);
-            this.txtContactNo1.Mask = "###-####";
+            this.txtContactNo1.Mask = "###-#####";
             this.txtContactNo1.Name = "txtContactNo1";
             this.txtContactNo1.Size = new System.Drawing.Size(117, 28);
             this.txtContactNo1.TabIndex = 35;
@@ -1773,53 +1739,53 @@
             this.label63.TabIndex = 81;
             this.label63.Text = ":";
             // 
-            // panel6
+            // panelCompanyInfo
             // 
-            this.panel6.Controls.Add(this.label99);
-            this.panel6.Controls.Add(this.cmbOfficeArea);
-            this.panel6.Controls.Add(this.txtOfficeTelNo);
-            this.panel6.Controls.Add(this.dtResignedFromPecci);
-            this.panel6.Controls.Add(this.label97);
-            this.panel6.Controls.Add(this.label96);
-            this.panel6.Controls.Add(this.label86);
-            this.panel6.Controls.Add(this.label85);
-            this.panel6.Controls.Add(this.label84);
-            this.panel6.Controls.Add(this.label83);
-            this.panel6.Controls.Add(this.label82);
-            this.panel6.Controls.Add(this.txtPrincipalNo);
-            this.panel6.Controls.Add(this.label63);
-            this.panel6.Controls.Add(this.label62);
-            this.panel6.Controls.Add(this.cmboPrevComp);
-            this.panel6.Controls.Add(this.label61);
-            this.panel6.Controls.Add(this.label60);
-            this.panel6.Controls.Add(this.label59);
-            this.panel6.Controls.Add(this.label58);
-            this.panel6.Controls.Add(this.txtSalary);
-            this.panel6.Controls.Add(this.label57);
-            this.panel6.Controls.Add(this.label56);
-            this.panel6.Controls.Add(this.dtDateResigned);
-            this.panel6.Controls.Add(this.label55);
-            this.panel6.Controls.Add(this.label54);
-            this.panel6.Controls.Add(this.dtDateHired);
-            this.panel6.Controls.Add(this.label53);
-            this.panel6.Controls.Add(this.label52);
-            this.panel6.Controls.Add(this.cmbCostCenter);
-            this.panel6.Controls.Add(this.label51);
-            this.panel6.Controls.Add(this.label50);
-            this.panel6.Controls.Add(this.picPicture);
-            this.panel6.Controls.Add(this.cmbPayrollGroup);
-            this.panel6.Controls.Add(this.label49);
-            this.panel6.Controls.Add(this.label48);
-            this.panel6.Controls.Add(this.cmbCompany);
-            this.panel6.Controls.Add(this.label47);
-            this.panel6.Controls.Add(this.label46);
-            this.panel6.Controls.Add(this.txtEmployeeIDNo);
-            this.panel6.Controls.Add(this.label45);
-            this.panel6.Controls.Add(this.label44);
-            this.panel6.Location = new System.Drawing.Point(11, 336);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1376, 160);
-            this.panel6.TabIndex = 54;
+            this.panelCompanyInfo.Controls.Add(this.label99);
+            this.panelCompanyInfo.Controls.Add(this.cmbOfficeArea);
+            this.panelCompanyInfo.Controls.Add(this.txtOfficeTelNo);
+            this.panelCompanyInfo.Controls.Add(this.dtResignedFromPecci);
+            this.panelCompanyInfo.Controls.Add(this.label97);
+            this.panelCompanyInfo.Controls.Add(this.label96);
+            this.panelCompanyInfo.Controls.Add(this.label86);
+            this.panelCompanyInfo.Controls.Add(this.label85);
+            this.panelCompanyInfo.Controls.Add(this.label84);
+            this.panelCompanyInfo.Controls.Add(this.label83);
+            this.panelCompanyInfo.Controls.Add(this.label82);
+            this.panelCompanyInfo.Controls.Add(this.txtPrincipalNo);
+            this.panelCompanyInfo.Controls.Add(this.label63);
+            this.panelCompanyInfo.Controls.Add(this.label62);
+            this.panelCompanyInfo.Controls.Add(this.cmboPrevComp);
+            this.panelCompanyInfo.Controls.Add(this.label61);
+            this.panelCompanyInfo.Controls.Add(this.label60);
+            this.panelCompanyInfo.Controls.Add(this.label59);
+            this.panelCompanyInfo.Controls.Add(this.label58);
+            this.panelCompanyInfo.Controls.Add(this.txtSalary);
+            this.panelCompanyInfo.Controls.Add(this.label57);
+            this.panelCompanyInfo.Controls.Add(this.label56);
+            this.panelCompanyInfo.Controls.Add(this.dtDateResigned);
+            this.panelCompanyInfo.Controls.Add(this.label55);
+            this.panelCompanyInfo.Controls.Add(this.label54);
+            this.panelCompanyInfo.Controls.Add(this.dtDateHired);
+            this.panelCompanyInfo.Controls.Add(this.label53);
+            this.panelCompanyInfo.Controls.Add(this.label52);
+            this.panelCompanyInfo.Controls.Add(this.cmbCostCenter);
+            this.panelCompanyInfo.Controls.Add(this.label51);
+            this.panelCompanyInfo.Controls.Add(this.label50);
+            this.panelCompanyInfo.Controls.Add(this.picPicture);
+            this.panelCompanyInfo.Controls.Add(this.cmbPayrollGroup);
+            this.panelCompanyInfo.Controls.Add(this.label49);
+            this.panelCompanyInfo.Controls.Add(this.label48);
+            this.panelCompanyInfo.Controls.Add(this.cmbCompany);
+            this.panelCompanyInfo.Controls.Add(this.label47);
+            this.panelCompanyInfo.Controls.Add(this.label46);
+            this.panelCompanyInfo.Controls.Add(this.txtEmployeeIDNo);
+            this.panelCompanyInfo.Controls.Add(this.label45);
+            this.panelCompanyInfo.Controls.Add(this.label44);
+            this.panelCompanyInfo.Location = new System.Drawing.Point(11, 336);
+            this.panelCompanyInfo.Name = "panelCompanyInfo";
+            this.panelCompanyInfo.Size = new System.Drawing.Size(1376, 160);
+            this.panelCompanyInfo.TabIndex = 54;
             // 
             // label99
             // 
@@ -1851,7 +1817,7 @@
             // 
             this.txtOfficeTelNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtOfficeTelNo.Location = new System.Drawing.Point(245, 85);
-            this.txtOfficeTelNo.Mask = "###-####";
+            this.txtOfficeTelNo.Mask = "###-#####";
             this.txtOfficeTelNo.Name = "txtOfficeTelNo";
             this.txtOfficeTelNo.Size = new System.Drawing.Size(117, 28);
             this.txtOfficeTelNo.TabIndex = 27;
@@ -2336,9 +2302,9 @@
             this.txtHomeTel.Enabled = false;
             this.txtHomeTel.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtHomeTel.Location = new System.Drawing.Point(1041, 110);
-            this.txtHomeTel.Mask = "###-####";
+            this.txtHomeTel.Mask = "###-#####";
             this.txtHomeTel.Name = "txtHomeTel";
-            this.txtHomeTel.Size = new System.Drawing.Size(89, 28);
+            this.txtHomeTel.Size = new System.Drawing.Size(95, 28);
             this.txtHomeTel.TabIndex = 11;
             // 
             // lblAsteriskATMnO
@@ -2438,22 +2404,22 @@
             this.panel4.Size = new System.Drawing.Size(1397, 5);
             this.panel4.TabIndex = 50;
             // 
-            // label9
+            // lblTitle
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(3, 5);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(224, 23);
-            this.label9.TabIndex = 3;
-            this.label9.Text = "Membership Data Entry";
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Century Gothic", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(3, 5);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(224, 23);
+            this.lblTitle.TabIndex = 3;
+            this.lblTitle.Text = "Membership Data Entry";
             // 
             // panelHeader
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            this.panelHeader.Controls.Add(this.label9);
+            this.panelHeader.Controls.Add(this.lblTitle);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -2465,10 +2431,10 @@
             // txtPath
             // 
             this.txtPath.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPath.Location = new System.Drawing.Point(646, 802);
+            this.txtPath.Location = new System.Drawing.Point(1124, 807);
             this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(271, 28);
+            this.txtPath.Size = new System.Drawing.Size(121, 28);
             this.txtPath.TabIndex = 65;
             this.txtPath.Visible = false;
             // 
@@ -2482,22 +2448,90 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // lblStat
+            // 
+            this.lblStat.AutoSize = true;
+            this.lblStat.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStat.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.lblStat.Location = new System.Drawing.Point(763, 796);
+            this.lblStat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblStat.Name = "lblStat";
+            this.lblStat.Size = new System.Drawing.Size(158, 37);
+            this.lblStat.TabIndex = 145;
+            this.lblStat.Text = "RESIGNED";
+            this.lblStat.Visible = false;
+            // 
+            // btnReActivate
+            // 
+            this.btnReActivate.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
+            this.btnReActivate.ForeColor = System.Drawing.Color.Red;
+            this.btnReActivate.Image = ((System.Drawing.Image)(resources.GetObject("btnReActivate.Image")));
+            this.btnReActivate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReActivate.Location = new System.Drawing.Point(497, 793);
+            this.btnReActivate.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReActivate.Name = "btnReActivate";
+            this.btnReActivate.Size = new System.Drawing.Size(146, 44);
+            this.btnReActivate.TabIndex = 146;
+            this.btnReActivate.Text = "REACTIVATE";
+            this.btnReActivate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnReActivate.UseVisualStyleBackColor = true;
+            this.btnReActivate.Visible = false;
+            this.btnReActivate.Click += new System.EventHandler(this.btnReActivate_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.Red;
+            this.label9.Location = new System.Drawing.Point(630, 5);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(21, 25);
+            this.label9.TabIndex = 95;
+            this.label9.Text = "*";
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label69.ForeColor = System.Drawing.Color.Red;
+            this.label69.Location = new System.Drawing.Point(883, 5);
+            this.label69.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(21, 25);
+            this.label69.TabIndex = 96;
+            this.label69.Text = "*";
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label70.ForeColor = System.Drawing.Color.Red;
+            this.label70.Location = new System.Drawing.Point(1120, 5);
+            this.label70.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(21, 25);
+            this.label70.TabIndex = 147;
+            this.label70.Text = "*";
+            // 
             // MembershipDataEntrycs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1397, 848);
+            this.Controls.Add(this.btnReActivate);
+            this.Controls.Add(this.lblStat);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txtPath);
-            this.Controls.Add(this.panel10);
+            this.Controls.Add(this.panelOtherInfo);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel7);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.panel6);
+            this.Controls.Add(this.panelCompanyInfo);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panelPersonalInformation);
@@ -2511,8 +2545,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MembershipDataEntrycs";
             this.Load += new System.EventHandler(this.MembershipDataEntrycs_Load);
-            this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
+            this.panelOtherInfo.ResumeLayout(false);
+            this.panelOtherInfo.PerformLayout();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             this.panel8.ResumeLayout(false);
@@ -2524,8 +2558,8 @@
             this.tabPage2.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
+            this.panelCompanyInfo.ResumeLayout(false);
+            this.panelCompanyInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPicture)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
@@ -2544,15 +2578,12 @@
         #endregion
 
         public System.Windows.Forms.TextBox txtSavingsDeposit;
-        public System.Windows.Forms.Label label73;
-        public System.Windows.Forms.Panel panel10;
+        public System.Windows.Forms.Panel panelOtherInfo;
         public System.Windows.Forms.Label label66;
         public System.Windows.Forms.Label label72;
         public System.Windows.Forms.DateTimePicker dtDateMembership;
         public System.Windows.Forms.TextBox txtShareCapital;
         public System.Windows.Forms.Label label68;
-        public System.Windows.Forms.Label label70;
-        public System.Windows.Forms.Label label69;
         public System.Windows.Forms.TextBox txtMembershipFee;
         public System.Windows.Forms.Label label71;
         public System.Windows.Forms.Label label81;
@@ -2639,7 +2670,7 @@
         public System.Windows.Forms.Label label83;
         public System.Windows.Forms.Label label82;
         public System.Windows.Forms.Label label63;
-        public System.Windows.Forms.Panel panel6;
+        public System.Windows.Forms.Panel panelCompanyInfo;
         public System.Windows.Forms.TextBox txtPrincipalNo;
         public System.Windows.Forms.Label label62;
         public System.Windows.Forms.ComboBox cmboPrevComp;
@@ -2670,7 +2701,7 @@
         public System.Windows.Forms.Panel panel2;
         public System.Windows.Forms.Panel panel3;
         public System.Windows.Forms.Panel panel4;
-        public System.Windows.Forms.Label label9;
+        public System.Windows.Forms.Label lblTitle;
         public System.Windows.Forms.Panel panelHeader;
         public System.Windows.Forms.TabControl tabControl1;
         public System.Windows.Forms.TabPage tabPage1;
@@ -2723,5 +2754,10 @@
         public System.Windows.Forms.TextBox txtRelationship;
         public System.Windows.Forms.Label label67;
         public System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button btnReActivate;
+        public System.Windows.Forms.Label lblStat;
+        public System.Windows.Forms.Label label70;
+        public System.Windows.Forms.Label label69;
+        public System.Windows.Forms.Label label9;
     }
 }

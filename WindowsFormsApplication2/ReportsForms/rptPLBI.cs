@@ -27,6 +27,13 @@ namespace WindowsFormsApplication2.ReportsForms
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
 
+        double semiOrmonth = 0;
+        double billing6Mons = 0;
+        double billing2Mons = 0;
+        double collection6Mons = 0;
+        double collection2Mons = 0;
+        double fstBckt = 0;
+        double collectionPercent = 0;
         CrystalDecisions.Shared.TableLogOnInfo li;
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -63,14 +70,14 @@ namespace WindowsFormsApplication2.ReportsForms
         {
             if(txtLoanNo.Text == "")
             {
-                Alert.show("Loan number is required.", Alert.AlertType.error);
+                Alert.show("Loan No. is required.", Alert.AlertType.error);
                 return;
             }
 
             //Check if the loan no is in database
             if(clsPLBI.checkLoanNo(txtLoanNo.Text) != true)
             {
-                Alert.show("Loan number not found.", Alert.AlertType.error);
+                Alert.show("Loan No. is required.", Alert.AlertType.error);
                 return;
             }
 
@@ -110,6 +117,155 @@ namespace WindowsFormsApplication2.ReportsForms
                 cr.SetDatabaseLogon(global.username, global.pass, global.datasource, global.initialCatalog);
 
 
+                //============================================================
+                //Generate BIlling and Collection for 6 and 2 mons
+                //============================================================
+
+                SqlCommand cmdGetLoans = new SqlCommand();
+                cmdGetLoans.Connection = con;
+                cmdGetLoans.CommandText = "sp_ReturnLoanBalancesREPORT";
+                cmdGetLoans.CommandType = CommandType.StoredProcedure;
+                cmdGetLoans.Parameters.AddWithValue("@userid", clsPLBI.userid(txtLoanNo.Text));
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmdGetLoans);
+                DataSet dsList = new DataSet();
+                adapter.Fill(dsList);
+
+                //Variables
+                billing6Mons = 0;
+                billing2Mons = 0;
+                collection2Mons = 0;
+                collection6Mons = 0;
+
+                //====================================
+                //      FOR 6 MONTHS FIRST
+                //====================================
+                for (int x = 0; x < dsList.Tables[0].Rows.Count; x++)
+                {
+                    semiOrmonth = 0;
+                    fstBckt = 0;
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnListDatesForBillingPLBI";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", clsPLBI.userid(txtLoanNo.Text));
+                    cmd.Parameters.AddWithValue("@loan_No", dsList.Tables[0].Rows[x]["Loan_No"].ToString());
+                    cmd.Parameters.AddWithValue("@ReleasedDate", dsList.Tables[0].Rows[x]["ReleaseDate"].ToString());
+
+                    SqlDataAdapter adapterList = new SqlDataAdapter(cmd);
+                    DataTable dtCnt = new DataTable();
+                    adapterList.Fill(dtCnt);
+
+                    if (dtCnt.Rows.Count > 0)
+                    {
+                        if (checkIfNonPayroll() == true)
+                        {
+                            //FOR NON PAYROLL COMPUTATION
+                            semiOrmonth = Convert.ToDouble(dsList.Tables[0].Rows[x]["Monthly_Amort"].ToString());
+                        }
+                        else
+                        {
+                            //PAYROLL COMPUTATION
+                            semiOrmonth = Convert.ToDouble(dsList.Tables[0].Rows[x]["Semi_Monthly_Amort"].ToString());
+                        }
+
+                        //Compute
+                        fstBckt = Convert.ToDouble(dtCnt.Rows.Count) * semiOrmonth;
+
+                        billing6Mons += fstBckt;
+                    }
+                }
+
+                //====================================
+                //      FOR 2 MONTHS FIRST
+                //====================================
+                for (int x = 0; x < dsList.Tables[0].Rows.Count; x++)
+                {
+                    semiOrmonth = 0;
+                    fstBckt = 0;
+
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnListDatesForBillingPLBI2months";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", clsPLBI.userid(txtLoanNo.Text));
+                    cmd.Parameters.AddWithValue("@loan_No", dsList.Tables[0].Rows[x]["Loan_No"].ToString());
+                    cmd.Parameters.AddWithValue("@ReleasedDate", dsList.Tables[0].Rows[x]["ReleaseDate"].ToString());
+
+                    SqlDataAdapter adapterList = new SqlDataAdapter(cmd);
+                    DataTable dtCnt = new DataTable();
+                    adapterList.Fill(dtCnt);
+
+                    if (dtCnt.Rows.Count > 0)
+                    {
+                        if (checkIfNonPayroll() == true)
+                        {
+                            //FOR NON PAYROLL COMPUTATION
+                            semiOrmonth = Convert.ToDouble(dsList.Tables[0].Rows[x]["Monthly_Amort"].ToString());
+                        }
+                        else
+                        {
+                            //PAYROLL COMPUTATION
+                            semiOrmonth = Convert.ToDouble(dsList.Tables[0].Rows[x]["Semi_Monthly_Amort"].ToString());
+                        }
+
+                        //Compute
+                        fstBckt = Convert.ToDouble(dtCnt.Rows.Count) * semiOrmonth;
+
+                        billing2Mons += fstBckt;
+                    }
+                }
+
+
+                //====================================
+                //     FOR 6 MONTHS FIRST COLELCTION
+                //====================================
+                for (int x = 0; x < dsList.Tables[0].Rows.Count; x++)
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnListDatesForCollectionPLBI6months";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", clsPLBI.userid(txtLoanNo.Text));
+                    cmd.Parameters.AddWithValue("@loan_No", dsList.Tables[0].Rows[x]["Loan_No"].ToString());
+                    cmd.Parameters.AddWithValue("@ReleasedDate", dsList.Tables[0].Rows[x]["ReleaseDate"].ToString());
+                    cmd.Parameters.AddWithValue("@account_Dr", dsList.Tables[0].Rows[x]["CurrentDr"].ToString());
+                    cmd.Parameters.AddWithValue("@pastDueCr", dsList.Tables[0].Rows[x]["PastDueDr"].ToString());
+
+                    SqlDataAdapter adapterList = new SqlDataAdapter(cmd);
+                    DataTable dtCnt = new DataTable();
+                    adapterList.Fill(dtCnt);
+
+                    collection6Mons += Convert.ToDouble(dtCnt.Rows[0].ItemArray[0].ToString());
+                }
+
+                //====================================
+                //     FOR 2 MONTHS FIRST COLELCTION
+                //====================================
+                for (int x = 0; x < dsList.Tables[0].Rows.Count; x++)
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "sp_ReturnListDatesForCollectionPLBI2months";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@userid", clsPLBI.userid(txtLoanNo.Text));
+                    cmd.Parameters.AddWithValue("@loan_No", dsList.Tables[0].Rows[x]["Loan_No"].ToString());
+                    cmd.Parameters.AddWithValue("@ReleasedDate", dsList.Tables[0].Rows[x]["ReleaseDate"].ToString());
+                    cmd.Parameters.AddWithValue("@account_Dr", dsList.Tables[0].Rows[x]["CurrentDr"].ToString());
+                    cmd.Parameters.AddWithValue("@pastDueCr", dsList.Tables[0].Rows[x]["PastDueDr"].ToString());
+
+                    SqlDataAdapter adapterList = new SqlDataAdapter(cmd);
+                    DataTable dtCnt = new DataTable();
+                    adapterList.Fill(dtCnt);
+
+                    collection2Mons += Convert.ToDouble(dtCnt.Rows[0].ItemArray[0].ToString());
+                }
+
+                //====================================================
+                //          END GETTING COLLECTION AND BILLING
+                //====================================================
+
                 //PARAMETERS
                 cr.SetParameterValue("employeeID", clsPLBI.empid(txtLoanNo.Text));
                 cr.SetParameterValue("name", clsPLBI.namewithcompany(txtLoanNo.Text));
@@ -122,12 +278,34 @@ namespace WindowsFormsApplication2.ReportsForms
                 cr.SetParameterValue("sd_perday", clsPLBI.SavingsPerday(txtLoanNo.Text));
                 cr.SetParameterValue("BANK", clsPLBI.Bank(txtLoanNo.Text));
                 cr.SetParameterValue("bank_accnt", clsPLBI.Atm(txtLoanNo.Text));
-                cr.SetParameterValue("rate", "A");
-                cr.SetParameterValue("collection%", "100");
-                cr.SetParameterValue("BillingFor6Mons", "");
-                cr.SetParameterValue("BillingFor2Mons", "");
-                cr.SetParameterValue("CollectionFor6Mons", "");
-                cr.SetParameterValue("collectionlast2", "");
+                cr.SetParameterValue("BillingFor6Mons", Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(billing6Mons), 2))).ToString("#,0.00"));
+                cr.SetParameterValue("BillingFor2Mons", Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(billing2Mons), 2))).ToString("#,0.00"));
+                cr.SetParameterValue("CollectionFor6Mons", Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(collection6Mons), 2))).ToString("#,0.00"));
+                cr.SetParameterValue("collectionlast2", Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(collection2Mons), 2))).ToString("#,0.00"));
+
+                //SETTING THE RATE AND COLLECTION PERCENTAGE
+                collectionPercent = 0;
+
+                if(collection6Mons == 0 && billing6Mons == 0)
+                {
+                    collection6Mons = 1;
+                    billing6Mons = 1;
+                }
+
+                collectionPercent = collection6Mons / billing6Mons;
+                collectionPercent = collectionPercent * 100;
+
+                if(Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(collectionPercent), 2))) > 90)
+                {
+                    cr.SetParameterValue("rate", "A");
+                    cr.SetParameterValue("collection%", Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(collectionPercent), 2))));
+                }
+                else
+                {
+                    cr.SetParameterValue("rate", "B");
+                    cr.SetParameterValue("collection%", Convert.ToDecimal(Convert.ToString(decimal.Round(Convert.ToDecimal(collectionPercent), 2))));
+                }
+                
                 cr.SetParameterValue("printedBy", Classes.clsUser.Username.ToString());
                 cr.SetParameterValue("sc_date", "10/15/2017");
                 cr.SetParameterValue("sd_date", "10/15/2017");
@@ -137,6 +315,27 @@ namespace WindowsFormsApplication2.ReportsForms
                 cr.SetParameterValue("yearsInService", clsPLBI.noOfyearsService(txtLoanNo.Text));
 
                 crystalReportViewer1.ReportSource = cr;
+            }
+        }
+
+        public bool checkIfNonPayroll()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Company_Code FROM Membership WHERE userID = '"+ clsPLBI.userid(txtLoanNo.Text) +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows[0].ItemArray[0].ToString() == "COMP010")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
     }

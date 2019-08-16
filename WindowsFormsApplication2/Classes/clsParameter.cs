@@ -300,5 +300,41 @@ namespace WindowsFormsApplication2.Classes
             }
         }
 
+        public bool notRequiredCoMaker(string loanType)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Parameter WHERE Description = 'No Co-Maker' and val ='"+ loanType +"'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                if(dt.Rows.Count > 0)
+                {
+                    //Not required for co maker
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public decimal returnSavingsAmountPecent(decimal loanAmount)
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT val FROM Parameter WHERE Description = 'Savings Deduction Percentage' and frm = 'Loan'", con);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                return loanAmount * Convert.ToDecimal(dt.Rows[0].ItemArray[0].ToString());
+            }
+        }
+
     }
 }

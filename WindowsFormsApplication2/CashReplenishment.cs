@@ -24,6 +24,8 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         Classes.clsCashReplenishment clsCashReplenishment = new Classes.clsCashReplenishment();
         Classes.clsJournalVoucher clsjv = new Classes.clsJournalVoucher();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
+
 
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
@@ -55,7 +57,12 @@ namespace WindowsFormsApplication2
 
         private void button6_Click(object sender, EventArgs e)
         {
-            if(txtRangingFrom.Text == "" || txtRangingTo.Text == "")
+            if (clsAccess.checkForViewingRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (txtRangingFrom.Text == "" || txtRangingTo.Text == "")
             {
                 Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                 return;
@@ -63,13 +70,13 @@ namespace WindowsFormsApplication2
 
             if(Convert.ToInt32(txtRangingFrom.Text) > Convert.ToInt32(txtRangingTo.Text))
             {
-                Alert.show("Slip No From must not be greater than Slip No To!", Alert.AlertType.warning);
+                Alert.show("Slip No 'From' must not be greater than Slip No 'To'.", Alert.AlertType.warning);
                 return;
             }
 
             if(Convert.ToDateTime(dtFrom.Text) > Convert.ToDateTime(dtTo.Text))
             {
-                Alert.show("Date From must not be greater than Date To!", Alert.AlertType.warning);
+                Alert.show("Date ' From' must not be greater than Date 'To'.", Alert.AlertType.warning);
                 return;
             }
             clsCashReplenishment.loadReplenishment(dataGridView1, Convert.ToInt32(txtRangingFrom.Text), Convert.ToInt32(txtRangingTo.Text), dtFrom.Text, dtTo.Text,txtTotalNoSlips,txtAmount);
@@ -79,9 +86,14 @@ namespace WindowsFormsApplication2
 
         private void btnReplenish_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.Rows.Count == 0)
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
             {
-                Alert.show("No records found.", Alert.AlertType.warning);
+                return;
+            }
+
+            if (dataGridView1.Rows.Count == 0)
+            {
+                Alert.show("No record(s) found.", Alert.AlertType.warning);
                 return;
             }
 
@@ -273,7 +285,7 @@ namespace WindowsFormsApplication2
 
                     cv.Show();
                 }
-                Alert.show("Cash Withdrawal Successfully Replenished!", Alert.AlertType.success);
+                Alert.show("Cash withdrawal successfully replenished.", Alert.AlertType.success);
 
             } //User Click No For Return
             else
@@ -293,9 +305,14 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.Rows.Count == 0)
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
             {
-                Alert.show("No records found", Alert.AlertType.error);
+                return;
+            }
+
+            if (dataGridView1.Rows.Count == 0)
+            {
+                Alert.show("No record(s) found", Alert.AlertType.error);
                 return;
             }
             

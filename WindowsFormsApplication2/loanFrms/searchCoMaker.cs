@@ -64,7 +64,7 @@ namespace WindowsFormsApplication2.loanFrms
         {
             if (txtEmployeeID.Text == "" && txtLastName.Text == "" && txtFirstName.Text == "")
             {
-                Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
             clsSearchComaker.search(txtEmployeeID.Text, txtFirstName.Text, txtLastName.Text, dataGridView1);
@@ -128,7 +128,7 @@ namespace WindowsFormsApplication2.loanFrms
                     }
                     else
                     {
-                        Alert.show("Please fill up loan amount and loan terms in mos.", Alert.AlertType.error);
+                        Alert.show("Please fill up Loan amount and Loan term in months.", Alert.AlertType.error);
                         return;
                     }
 
@@ -142,7 +142,7 @@ namespace WindowsFormsApplication2.loanFrms
                         if(clsParameter.check10yearsAbove(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == false)
                         {
                             //Must be 10 years above
-                            Alert.show("Co-Maker should be 10 years above.", Alert.AlertType.error);
+                            Alert.show("Co-maker should be 10 years above in the company.", Alert.AlertType.error);
                             return;
                         }
                     }
@@ -173,7 +173,7 @@ namespace WindowsFormsApplication2.loanFrms
 
                     if (Classes.clsLoanDataEntry.userID.ToString() == dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())
                     {
-                        Alert.show("You cannot be a co-maker to your own loan.", Alert.AlertType.error);
+                        Alert.show("You cannot be a Co-Maker to your own loan.", Alert.AlertType.error);
                         return;
                     }
 

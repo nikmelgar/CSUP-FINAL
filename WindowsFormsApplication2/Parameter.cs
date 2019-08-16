@@ -27,7 +27,7 @@ namespace WindowsFormsApplication2
         //==============================================
         Global global = new Global();
         Classes.clsParameter clsParam = new Classes.clsParameter();
-
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         //==============================================
         //          DECLARATION
         //==============================================
@@ -77,6 +77,11 @@ namespace WindowsFormsApplication2
         {
             if(btnNew.Text == "NEW")
             {
+                if (clsAccess.checkForInsertRestriction("Parameter", Classes.clsUser.Username) != true)
+                {
+                    return;
+                }
+
                 btnNew.Text = "SAVE";
                 btnCancel.Visible = true;
 
@@ -90,19 +95,19 @@ namespace WindowsFormsApplication2
                 //For Newly Inserted
                 if (cmbFrm.Text == "")
                 {
-                    Alert.show("Please Select Form First!", Alert.AlertType.error);
+                    Alert.show("Please select form first.", Alert.AlertType.error);
                     return;
                 }
                 
                 if(txtDescription.Text == "")
                 {
-                    Alert.show("Please Fill Description Box!", Alert.AlertType.error);
+                    Alert.show("Please fill in Description box.", Alert.AlertType.error);
                     return;
                 }
 
                 if(txtValues.Text == "")
                 {
-                    Alert.show("Please Fill Values Box!", Alert.AlertType.error);
+                    Alert.show("Please fill in Values box.", Alert.AlertType.error);
                     return;
                 }
 
@@ -146,15 +151,19 @@ namespace WindowsFormsApplication2
                 //                      Alert
                 //====================================================================
 
-                Alert.show("Successfully Added.", Alert.AlertType.success);
+                Alert.show("Successfully added.", Alert.AlertType.success);
             }
             else
             {
                 //For Update
+                if (clsAccess.checkForEditRestriction("Parameter", Classes.clsUser.Username) != true)
+                {
+                    return;
+                }
 
                 if (txtValues.Text == "")
                 {
-                    Alert.show("Please Fill Values Box!", Alert.AlertType.error);
+                    Alert.show("Please fill in Values box.", Alert.AlertType.error);
                     return;
                 }
 

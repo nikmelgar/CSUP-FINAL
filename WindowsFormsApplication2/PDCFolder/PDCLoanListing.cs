@@ -90,7 +90,7 @@ namespace WindowsFormsApplication2.PDCFolder {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_loanDateFrom {
+        public CrystalDecisions.Shared.IParameterField Parameter_pdcDate {
             get {
                 return this.DataDefinition.ParameterFields[0];
             }
@@ -98,25 +98,9 @@ namespace WindowsFormsApplication2.PDCFolder {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_loanDateTo {
-            get {
-                return this.DataDefinition.ParameterFields[1];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_pdcDate {
-            get {
-                return this.DataDefinition.ParameterFields[2];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public CrystalDecisions.Shared.IParameterField Parameter_printedBy {
             get {
-                return this.DataDefinition.ParameterFields[3];
+                return this.DataDefinition.ParameterFields[1];
             }
         }
     }

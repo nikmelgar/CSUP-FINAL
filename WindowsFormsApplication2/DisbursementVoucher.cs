@@ -29,6 +29,9 @@ namespace WindowsFormsApplication2
         public bool fromWithdrawal = false;
 
         public bool fromReplenishment = false;
+        public bool fromTH = false;
+        public static string transactionFromTH { get; set; }
+
         decimal number;
         //from replenishment
         public string jvno { get; set; }
@@ -39,7 +42,10 @@ namespace WindowsFormsApplication2
         Classes.clsDisbursement clsDisbursement = new Classes.clsDisbursement();
         Classes.clsJournalVoucher clsJournalVoucher = new Classes.clsJournalVoucher();
         Classes.clsGeneralVoucher clsGeneral = new Classes.clsGeneralVoucher();
-
+        Classes.clsVoucherValidation clsVoucherValidation = new Classes.clsVoucherValidation();
+        Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
+        
         SqlConnection con;
 
         CrystalDecisions.Shared.TableLogOnInfo li;
@@ -47,6 +53,10 @@ namespace WindowsFormsApplication2
         {
             if (btnClose.Text == "CANCEL")
             {
+                if (txtCVNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Disbursement Voucher", txtCVNo.Text);
+                }
                 InitializeFromLoading();
             }
             else
@@ -59,8 +69,12 @@ namespace WindowsFormsApplication2
                         return;
                     }
 
-                    Alert.show("Please save this disbursement before closing!", Alert.AlertType.error);
+                    Alert.show("Please Save this Disbursement voucher before closing.", Alert.AlertType.error);
                     return;
+                }
+                if (txtCVNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Disbursement Voucher", txtCVNo.Text);
                 }
                 this.Close();
             }
@@ -115,7 +129,6 @@ namespace WindowsFormsApplication2
             clsDisbursement.loadComboBox(cmbTransaction);
             clsDisbursement.loadBank(cmbBank);
 
-
             //load
             populateDatagridCombobox();
 
@@ -134,11 +147,15 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                InitializeFromLoading();
+                if(fromTH != true)
+                {
+                    InitializeFromLoading();
+                }
+                else
+                {
+                    cmbTransaction.SelectedValue = transactionFromTH;
+                }
             }
-            
-
-            txtPreparedBy.Text = Classes.clsUser.Username;
         }
 
         public void populateDatagridCombobox()
@@ -288,7 +305,7 @@ namespace WindowsFormsApplication2
             {
                 if (dataGridView1.CurrentRow.IsNewRow)
                 {
-                    Alert.show("New row cannot be deleted!", Alert.AlertType.error);
+                    Alert.show("New row cannot be deleted.", Alert.AlertType.error);
                     return;
                 }
 
@@ -484,8 +501,19 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (btnNew.Text == "NEW")
             {
+                //remove open transaction first
+                if (txtCVNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Disbursement Voucher", txtCVNo.Text);
+                }
+
                 InitializeFromLoading();
 
                 //Set Default
@@ -493,6 +521,7 @@ namespace WindowsFormsApplication2
 
                 btnNew.Text = "SAVE";
                 btnClose.Text = "CANCEL";
+                btnAuditted.Enabled = false;
 
                 //Enable All Disable fields 
                 btnSearch.Enabled = false;
@@ -524,7 +553,7 @@ namespace WindowsFormsApplication2
                     //Check First if Total Debit = Total Credit
                     if (Convert.ToDecimal(txtDebit.Text) != Convert.ToDecimal(txtCredit.Text))
                     {
-                        Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                        Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                         return;
                     }
 
@@ -666,6 +695,8 @@ namespace WindowsFormsApplication2
                     btnPrint.Enabled = true;
                     btnPrintCheque.Enabled = true;
                     btnSearch.Enabled = true;
+                    btnAuditted.Enabled = true;
+                    btnRelease.Enabled = true;
 
                     //Disable Fields
                     CommandControls(false, dtCVDate, cmbTransaction, cmbBank, txtChequeNo, dtChequeDate, txtAmount, txtParticular, dataGridView1);
@@ -703,6 +734,7 @@ namespace WindowsFormsApplication2
             btnPrintCheque.Enabled = false;
             btnSearch.Enabled = true;
             btnRelease.Enabled = false;
+            btnAuditted.Enabled = false;
 
 
             //Button Naming Convension
@@ -710,6 +742,9 @@ namespace WindowsFormsApplication2
             btnNew.Text = "NEW";
             btnEdit.Text = "EDIT";
             btnClose.Text = "CLOSE";
+
+            txtPostedBy.Text = "";
+            txtAuditedBy.Text = "";
 
             //Status
             status.Visible = false;
@@ -783,6 +818,11 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (btnEdit.Text == "EDIT")
             {
 
@@ -795,7 +835,7 @@ namespace WindowsFormsApplication2
                 if (clsDisbursement.checkIfCancelled(txtCVNo.Text) == true)
                 {
                     //If Voucher already cancelled
-                    Alert.show("Disbursement Voucher Already Cancelled!", Alert.AlertType.error);
+                    Alert.show("Disbursement Voucher already cancelled.", Alert.AlertType.error);
                     return;
                 }
 
@@ -823,7 +863,8 @@ namespace WindowsFormsApplication2
                 btnPrint.Enabled = false;
                 btnPrintCheque.Enabled = false;
                 btnSearch.Enabled = false;
-                btnRelease.Enabled = false; 
+                btnRelease.Enabled = false;
+                btnAuditted.Enabled = false;
 
                 //=============================================
                 //              Enable Fields
@@ -841,6 +882,8 @@ namespace WindowsFormsApplication2
                 //Details Information
                 dataGridView1.Enabled = true;
 
+                txtPreparedBy.Text = Classes.clsUser.Username;
+
             }
             else
             {
@@ -849,7 +892,7 @@ namespace WindowsFormsApplication2
                 {
                     if (cmbTransaction.Text == "" || cmbTransaction.Text == " - ")
                     {
-                        Alert.show("Transaction Type is Required!", Alert.AlertType.error);
+                        Alert.show("Transaction Type is required.", Alert.AlertType.error);
                         return;
                     }
 
@@ -862,7 +905,7 @@ namespace WindowsFormsApplication2
                     {
                         if (Convert.ToDecimal(txtDebit.Text) != Convert.ToDecimal(txtCredit.Text))
                         {
-                            Alert.show("Debit / Credit not Equal!", Alert.AlertType.error);
+                            Alert.show("Debit / Credit not equal.", Alert.AlertType.error);
                             return;
                         }
                     }
@@ -987,7 +1030,7 @@ namespace WindowsFormsApplication2
                         }
                     }
                     //Messagebox here
-                    Alert.show("Disbursement Voucher Successfully Updated.", Alert.AlertType.success);
+                    Alert.show("Disbursement Voucher successfully updated.", Alert.AlertType.success);
 
                     //return all buttons
                     //Button Enable [Commands]
@@ -1035,7 +1078,7 @@ namespace WindowsFormsApplication2
             if (clsDisbursement.checkIfCancelled(txtCVNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Disbursement Voucher Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Disbursement Voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1051,9 +1094,22 @@ namespace WindowsFormsApplication2
 
             if(txtChequeNo.Text == "")
             {
-                Alert.show("Cheque Number is Required!", Alert.AlertType.error);
+                Alert.show("Cheque Number is required.", Alert.AlertType.error);
                 return;
             }
+
+
+            if (txtAuditedBy.Text == "")
+            {
+                Alert.show("This voucher needs to be audited first.", Alert.AlertType.error);
+                return;
+            }
+
+            if (clsVoucherValidation.checkIfTeamHeadAccounting() == false)
+            {
+                return;
+            }
+
             //===================================================================================
             //                       Are you sure you want to post this?
             //===================================================================================
@@ -1145,6 +1201,11 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             part = txtParticular.Text;
             btnChangeCheque.Text = "CHANGE NUMBER";
             //===================================================================================
@@ -1156,7 +1217,7 @@ namespace WindowsFormsApplication2
             if (clsDisbursement.checkIfCancelled(txtCVNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Disbursement Voucher Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Disbursement Voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1171,7 +1232,7 @@ namespace WindowsFormsApplication2
             txtParticular.Enabled = true;
             if (txtParticular.Text == "")
             {
-                Alert.show("Please put note on particulars before cancellation!", Alert.AlertType.error);
+                Alert.show("Please enter reason for cancellation at Particulars. ", Alert.AlertType.error);
                 return;
             }
 
@@ -1200,7 +1261,7 @@ namespace WindowsFormsApplication2
                     cmd.ExecuteNonQuery();
                 }
                 //Success Message
-                Alert.show("Disbursement Voucher Successfully Cancelled!", Alert.AlertType.success);
+                Alert.show("Disbursement Voucher successfully cancelled!", Alert.AlertType.success);
 
                 //Display Message
                 status.Visible = true;
@@ -1562,14 +1623,14 @@ namespace WindowsFormsApplication2
             //==============================================================
             if (txtCVNo.Text == "")
             {
-                Alert.show("Please select Disbursement First!", Alert.AlertType.error);
+                Alert.show("Please select Disbursement first.", Alert.AlertType.error);
                 return;
             }
 
             if (clsDisbursement.checkIfCancelled(txtCVNo.Text) == true)
             {
                 //If Voucher already cancelled
-                Alert.show("Disbursement Voucher Already Cancelled!", Alert.AlertType.error);
+                Alert.show("Disbursement Voucher already cancelled.", Alert.AlertType.error);
                 return;
             }
 
@@ -1609,7 +1670,7 @@ namespace WindowsFormsApplication2
                 
                 if (txtChequeNo.Text == "")
                 {
-                    Alert.show("Please fill up cheque no. field!", Alert.AlertType.error);
+                    Alert.show("Please fill up Cheque No. field.", Alert.AlertType.error);
                     txtChequeNo.Focus();
                     return;
                 }
@@ -1653,7 +1714,7 @@ namespace WindowsFormsApplication2
                     txtChequeNo.Enabled = false;
                     btnSearch.Enabled = true;
                     btnChangeCheque.Text = "CHANGE NUMBER";
-                    Alert.show("Cheque No. Successfully Updated.", Alert.AlertType.success);
+                    Alert.show("Cheque No. successfully updated.", Alert.AlertType.success);
 
                     //Restore to original after successfully updated
                     btnSearch.Enabled = true;
@@ -1708,19 +1769,80 @@ namespace WindowsFormsApplication2
 
         private void btnSearchLoan_Click(object sender, EventArgs e)
         {
-            if (LoanLookUpProcess.clsLoanLookUpMember.userid != 0)
+            if(txtPayee.Text != "" && radioMember.Checked == true)
             {
-                //has a value 
-                LoanLookUpProcess.LoanLookUp frm = new LoanLookUpProcess.LoanLookUp();
-                LoanLookUpProcess.clsLoanLookUpMember.frmPass = "Disbursement";
-                frm.ShowDialog();
+                if (LoanLookUpProcess.clsLoanLookUpMember.userid != 0)
+                {
+                    //has a value 
+                    LoanLookUpProcess.LoanLookUp frm = new LoanLookUpProcess.LoanLookUp();
+                    LoanLookUpProcess.clsLoanLookUpMember.frmPass = "Disbursement";
+                    frm.ShowDialog();
+                }
+                else
+                {
+                    //No Record(s)9561473002
+                    Alert.show("Please select Member first.", Alert.AlertType.error);
+                    return;
+                }
+            }
+            else if(txtPayee.Text == "" && radioMember.Checked == true)
+            {
+                //No Record(s)9561473002
+                Alert.show("Please select Member first.", Alert.AlertType.error);
+                return;
+            }
+        }
+
+        private void btnAuditted_Click(object sender, EventArgs e)
+        {
+            if (txtAuditedBy.Text != "")
+            {
+                Alert.show("This voucher has been audited already.", Alert.AlertType.error);
+                return;
             }
             else
             {
-                //No Record(s)9561473002
-                Alert.show("Please select member first.", Alert.AlertType.error);
-                return;
+                if (Classes.clsUser.department.ToString() == "3")
+                {
+                    string msg = Environment.NewLine + "Are you sure you want to continue?";
+                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        using (SqlConnection con = new SqlConnection(global.connectString()))
+                        {
+                            con.Open();
+
+                            SqlCommand cmd = new SqlCommand();
+                            cmd.Connection = con;
+                            cmd.CommandText = "UPDATE Disbursement_Header SET Audited_By = '" + Classes.clsUser.Username + "' WHERE CV_No = '" + txtCVNo.Text + "'";
+                            cmd.CommandType = CommandType.Text;
+                            cmd.ExecuteNonQuery();
+
+                        }
+
+                        Alert.show("Disbursement voucher successfully audited.", Alert.AlertType.success);
+                        txtAuditedBy.Text = Classes.clsUser.Username;
+                    }
+                }
+                else
+                {
+                    Alert.show("Error : Access denied.", Alert.AlertType.error);
+                    return;
+                }   
             }
+        }
+
+        private void DisbursementVoucher_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (txtCVNo.Text != "")
+            {
+                clsOpen.deleteTransaction("Disbursement Voucher", txtCVNo.Text);
+            }
+        }
+
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
 
         public void ForReplenishment()

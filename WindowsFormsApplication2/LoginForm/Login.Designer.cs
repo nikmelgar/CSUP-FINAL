@@ -201,6 +201,7 @@
             this.label4.Size = new System.Drawing.Size(127, 20);
             this.label4.TabIndex = 17;
             this.label4.Text = "Forgot Password";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 

@@ -29,7 +29,7 @@ namespace WindowsFormsApplication2
         Classes.clsSavings clsSavings = new Classes.clsSavings();
         Classes.clsSavingsDataEntry clsSavingsDataEntry = new Classes.clsSavingsDataEntry();
         Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
-
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         SqlConnection con = new SqlConnection();
         Global global = new Global();
         string mode;
@@ -115,6 +115,11 @@ namespace WindowsFormsApplication2
 
         private void lblAddWithdrawal_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction("Withdrawal Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             SavingsDataEntry savingsdataentry = new SavingsDataEntry();
             //controls
             foreach (Form form in Application.OpenForms)
@@ -191,7 +196,7 @@ namespace WindowsFormsApplication2
                     if (dt.Rows.Count == 0)
                     {
                         //No Records Found!
-                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        Alert.show("No record(s) found.", Alert.AlertType.warning);
                     }
 
                     int colCnt = dt.Columns.Count;
@@ -238,17 +243,22 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForViewingRestriction("Withdrawal Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select savings you want to edit!", Alert.AlertType.warning);
+                Alert.show("Please select Savings you want to edit!", Alert.AlertType.warning);
                 return;
             }
             //===================================================================================
@@ -326,11 +336,6 @@ namespace WindowsFormsApplication2
             {
                 savingsEntry.txtAmountWithdrawn.Text = dataGridView1.SelectedRows[0].Cells["AmtWithdrawn"].Value.ToString();
             }
-
-
-
-          
-
 
 
 

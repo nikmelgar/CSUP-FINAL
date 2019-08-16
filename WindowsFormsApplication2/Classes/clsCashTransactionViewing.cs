@@ -143,7 +143,7 @@ namespace WindowsFormsApplication2.Classes
                 {
                     if (dtCancelled.Rows.Count == 0)
                     {
-                        Alert.show("No Records Found.", Alert.AlertType.error);
+                        Alert.show("No record(s) found.", Alert.AlertType.error);
                         dgvAccnt.DataSource = "";
                         dgvCancelled.DataSource = "";
                         lblTotalCancel.Text = "0";
@@ -324,13 +324,13 @@ namespace WindowsFormsApplication2.Classes
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["SD"].Value = sumSavings.ToString("#,0.00");
             dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Others"].Value = sumOthers.ToString("#,0.00");
 
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[3].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Amount"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Cash"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["TotalAmount"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["FD"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["SD"].Style.Font = new System.Drawing.Font("Tahoma", 12);
-            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Others"].Style.Font = new System.Drawing.Font("Tahoma", 12);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells[3].Style.Font = new System.Drawing.Font("Tahoma", 9,System.Drawing.FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Amount"].Style.Font = new System.Drawing.Font("Tahoma", 9, System.Drawing.FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Cash"].Style.Font = new System.Drawing.Font("Tahoma", 9, System.Drawing.FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["TotalAmount"].Style.Font = new System.Drawing.Font("Tahoma", 9, System.Drawing.FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["FD"].Style.Font = new System.Drawing.Font("Tahoma", 9, System.Drawing.FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["SD"].Style.Font = new System.Drawing.Font("Tahoma", 9, System.Drawing.FontStyle.Bold);
+            dgv.Rows[Convert.ToInt32(dgv.Rows.Count - 1)].Cells["Others"].Style.Font = new System.Drawing.Font("Tahoma", 9, System.Drawing.FontStyle.Bold);
 
         }
     }

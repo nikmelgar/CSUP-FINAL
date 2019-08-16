@@ -65,7 +65,7 @@ namespace WindowsFormsApplication2.Classes
                 con.Open();
 
                 //Search Principal Only
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE isActive = '1' and isApprove = '1' and Principal = '1' and EmployeeID like '%" + EmployeeID + "%' and LastName like '%" + lastName + "%' and FirstName like '%" + firstName + "%' and Principal ='1'", con);
+                SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Membership WHERE isActive = '1' and isApprove = '1' and Principal = '1' and EmployeeID like '%" + EmployeeID + "%' and LastName like '%" + lastName + "%' and FirstName like '%" + firstName + "%' and Company_Code <> 'COMP010'", con);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
@@ -75,7 +75,7 @@ namespace WindowsFormsApplication2.Classes
                 }
                 else
                 {
-                    Alert.show("No Records found on Principal", Alert.AlertType.warning);
+                    Alert.show("No record(s) found on principal", Alert.AlertType.warning);
                     return;
                 }
             }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel55 = new System.Windows.Forms.Panel();
             this.txtEmpID = new System.Windows.Forms.Label();
@@ -354,12 +354,12 @@
             // 
             this.txtEmpID.AutoSize = true;
             this.txtEmpID.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtEmpID.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmpID.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtEmpID.ForeColor = System.Drawing.Color.Black;
             this.txtEmpID.Location = new System.Drawing.Point(0, 0);
             this.txtEmpID.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtEmpID.Name = "txtEmpID";
-            this.txtEmpID.Size = new System.Drawing.Size(113, 21);
+            this.txtEmpID.Size = new System.Drawing.Size(100, 21);
             this.txtEmpID.TabIndex = 28;
             this.txtEmpID.Text = "Employee ID";
             // 
@@ -377,12 +377,12 @@
             // 
             this.txtFirstName.AutoSize = true;
             this.txtFirstName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtFirstName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFirstName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtFirstName.ForeColor = System.Drawing.Color.Black;
             this.txtFirstName.Location = new System.Drawing.Point(0, 0);
             this.txtFirstName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtFirstName.Name = "txtFirstName";
-            this.txtFirstName.Size = new System.Drawing.Size(113, 21);
+            this.txtFirstName.Size = new System.Drawing.Size(100, 21);
             this.txtFirstName.TabIndex = 28;
             this.txtFirstName.Text = "Employee ID";
             // 
@@ -400,12 +400,12 @@
             // 
             this.txtLastName.AutoSize = true;
             this.txtLastName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtLastName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLastName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtLastName.ForeColor = System.Drawing.Color.Black;
             this.txtLastName.Location = new System.Drawing.Point(0, 0);
             this.txtLastName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtLastName.Name = "txtLastName";
-            this.txtLastName.Size = new System.Drawing.Size(113, 21);
+            this.txtLastName.Size = new System.Drawing.Size(100, 21);
             this.txtLastName.TabIndex = 28;
             this.txtLastName.Text = "Employee ID";
             // 
@@ -423,12 +423,12 @@
             // 
             this.txtSuffix.AutoSize = true;
             this.txtSuffix.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtSuffix.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSuffix.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtSuffix.ForeColor = System.Drawing.Color.Black;
             this.txtSuffix.Location = new System.Drawing.Point(0, 0);
             this.txtSuffix.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtSuffix.Name = "txtSuffix";
-            this.txtSuffix.Size = new System.Drawing.Size(113, 21);
+            this.txtSuffix.Size = new System.Drawing.Size(100, 21);
             this.txtSuffix.TabIndex = 28;
             this.txtSuffix.Text = "Employee ID";
             // 
@@ -446,12 +446,12 @@
             // 
             this.txtMiddleName.AutoSize = true;
             this.txtMiddleName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtMiddleName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMiddleName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtMiddleName.ForeColor = System.Drawing.Color.Black;
             this.txtMiddleName.Location = new System.Drawing.Point(0, 0);
             this.txtMiddleName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtMiddleName.Name = "txtMiddleName";
-            this.txtMiddleName.Size = new System.Drawing.Size(113, 21);
+            this.txtMiddleName.Size = new System.Drawing.Size(100, 21);
             this.txtMiddleName.TabIndex = 28;
             this.txtMiddleName.Text = "Employee ID";
             // 
@@ -468,7 +468,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label6.ForeColor = System.Drawing.Color.Black;
             this.label6.Location = new System.Drawing.Point(111, 0);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -490,12 +490,12 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label5.ForeColor = System.Drawing.Color.Black;
             this.label5.Location = new System.Drawing.Point(67, 1);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(124, 21);
+            this.label5.Size = new System.Drawing.Size(106, 21);
             this.label5.TabIndex = 29;
             this.label5.Text = "Middle Name";
             // 
@@ -532,12 +532,12 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label4.ForeColor = System.Drawing.Color.Black;
             this.label4.Location = new System.Drawing.Point(67, 1);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 21);
+            this.label4.Size = new System.Drawing.Size(87, 21);
             this.label4.TabIndex = 29;
             this.label4.Text = "First Name";
             // 
@@ -554,12 +554,12 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(61, 1);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 21);
+            this.label2.Size = new System.Drawing.Size(84, 21);
             this.label2.TabIndex = 28;
             this.label2.Text = "Last Name";
             // 
@@ -576,12 +576,12 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.Black;
             this.label3.Location = new System.Drawing.Point(61, 1);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 21);
+            this.label3.Size = new System.Drawing.Size(100, 21);
             this.label3.TabIndex = 28;
             this.label3.Text = "Employee ID";
             // 
@@ -656,12 +656,12 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label8.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label8.ForeColor = System.Drawing.Color.Black;
             this.label8.Location = new System.Drawing.Point(0, 0);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 21);
+            this.label8.Size = new System.Drawing.Size(67, 21);
             this.label8.TabIndex = 28;
             this.label8.Text = "Address";
             // 
@@ -679,12 +679,12 @@
             // 
             this.txtAddress.AutoSize = true;
             this.txtAddress.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtAddress.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAddress.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtAddress.ForeColor = System.Drawing.Color.Black;
             this.txtAddress.Location = new System.Drawing.Point(0, 0);
             this.txtAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtAddress.Name = "txtAddress";
-            this.txtAddress.Size = new System.Drawing.Size(77, 21);
+            this.txtAddress.Size = new System.Drawing.Size(67, 21);
             this.txtAddress.TabIndex = 28;
             this.txtAddress.Text = "Address";
             // 
@@ -702,12 +702,12 @@
             // 
             this.txtTelephone.AutoSize = true;
             this.txtTelephone.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtTelephone.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTelephone.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtTelephone.ForeColor = System.Drawing.Color.Black;
             this.txtTelephone.Location = new System.Drawing.Point(0, 0);
             this.txtTelephone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtTelephone.Name = "txtTelephone";
-            this.txtTelephone.Size = new System.Drawing.Size(97, 21);
+            this.txtTelephone.Size = new System.Drawing.Size(84, 21);
             this.txtTelephone.TabIndex = 28;
             this.txtTelephone.Text = "Telephone";
             // 
@@ -768,12 +768,12 @@
             // 
             this.txtSex.AutoSize = true;
             this.txtSex.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtSex.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSex.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtSex.ForeColor = System.Drawing.Color.Black;
             this.txtSex.Location = new System.Drawing.Point(0, 0);
             this.txtSex.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtSex.Name = "txtSex";
-            this.txtSex.Size = new System.Drawing.Size(113, 21);
+            this.txtSex.Size = new System.Drawing.Size(100, 21);
             this.txtSex.TabIndex = 28;
             this.txtSex.Text = "Employee ID";
             // 
@@ -790,12 +790,12 @@
             // 
             this.txtBirthPlace.AutoSize = true;
             this.txtBirthPlace.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtBirthPlace.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBirthPlace.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtBirthPlace.ForeColor = System.Drawing.Color.Black;
             this.txtBirthPlace.Location = new System.Drawing.Point(0, 0);
             this.txtBirthPlace.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtBirthPlace.Name = "txtBirthPlace";
-            this.txtBirthPlace.Size = new System.Drawing.Size(113, 21);
+            this.txtBirthPlace.Size = new System.Drawing.Size(100, 21);
             this.txtBirthPlace.TabIndex = 28;
             this.txtBirthPlace.Text = "Employee ID";
             // 
@@ -812,12 +812,12 @@
             // 
             this.txtBirthday.AutoSize = true;
             this.txtBirthday.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtBirthday.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBirthday.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtBirthday.ForeColor = System.Drawing.Color.Black;
             this.txtBirthday.Location = new System.Drawing.Point(0, 0);
             this.txtBirthday.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtBirthday.Name = "txtBirthday";
-            this.txtBirthday.Size = new System.Drawing.Size(54, 21);
+            this.txtBirthday.Size = new System.Drawing.Size(44, 21);
             this.txtBirthday.TabIndex = 28;
             this.txtBirthday.Text = "bday";
             // 
@@ -835,12 +835,12 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label11.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label11.ForeColor = System.Drawing.Color.Black;
             this.label11.Location = new System.Drawing.Point(0, 0);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(94, 21);
+            this.label11.Size = new System.Drawing.Size(82, 21);
             this.label11.TabIndex = 29;
             this.label11.Text = "Birthplace";
             // 
@@ -869,6 +869,7 @@
             this.panel17.BackColor = System.Drawing.Color.LightGreen;
             this.panel17.Controls.Add(this.label13);
             this.panel17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel17.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.panel17.Location = new System.Drawing.Point(0, 0);
             this.panel17.Name = "panel17";
             this.panel17.Size = new System.Drawing.Size(234, 25);
@@ -878,12 +879,12 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label13.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label13.ForeColor = System.Drawing.Color.Black;
             this.label13.Location = new System.Drawing.Point(0, 0);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(77, 21);
+            this.label13.Size = new System.Drawing.Size(70, 21);
             this.label13.TabIndex = 29;
             this.label13.Text = "Birthday";
             // 
@@ -901,12 +902,12 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label15.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label15.ForeColor = System.Drawing.Color.Black;
             this.label15.Location = new System.Drawing.Point(0, 0);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(37, 21);
+            this.label15.Size = new System.Drawing.Size(35, 21);
             this.label15.TabIndex = 28;
             this.label15.Text = "Sex";
             // 
@@ -943,12 +944,12 @@
             // 
             this.txtNameOfSpouse.AutoSize = true;
             this.txtNameOfSpouse.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtNameOfSpouse.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNameOfSpouse.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtNameOfSpouse.ForeColor = System.Drawing.Color.Black;
             this.txtNameOfSpouse.Location = new System.Drawing.Point(0, 0);
             this.txtNameOfSpouse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtNameOfSpouse.Name = "txtNameOfSpouse";
-            this.txtNameOfSpouse.Size = new System.Drawing.Size(113, 21);
+            this.txtNameOfSpouse.Size = new System.Drawing.Size(100, 21);
             this.txtNameOfSpouse.TabIndex = 28;
             this.txtNameOfSpouse.Text = "Employee ID";
             // 
@@ -966,12 +967,12 @@
             // 
             this.txtCivilStatus.AutoSize = true;
             this.txtCivilStatus.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtCivilStatus.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCivilStatus.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtCivilStatus.ForeColor = System.Drawing.Color.Black;
             this.txtCivilStatus.Location = new System.Drawing.Point(0, 0);
             this.txtCivilStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtCivilStatus.Name = "txtCivilStatus";
-            this.txtCivilStatus.Size = new System.Drawing.Size(113, 21);
+            this.txtCivilStatus.Size = new System.Drawing.Size(100, 21);
             this.txtCivilStatus.TabIndex = 28;
             this.txtCivilStatus.Text = "Employee ID";
             // 
@@ -1009,12 +1010,12 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label14.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label14.ForeColor = System.Drawing.Color.Black;
             this.label14.Location = new System.Drawing.Point(0, 0);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(146, 21);
+            this.label14.Size = new System.Drawing.Size(125, 21);
             this.label14.TabIndex = 29;
             this.label14.Text = "Name of Spouse";
             // 
@@ -1032,12 +1033,12 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label16.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label16.ForeColor = System.Drawing.Color.Black;
             this.label16.Location = new System.Drawing.Point(0, 0);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(100, 21);
+            this.label16.Size = new System.Drawing.Size(87, 21);
             this.label16.TabIndex = 28;
             this.label16.Text = "Civil Status";
             // 
@@ -1098,12 +1099,12 @@
             // 
             this.txtDateOfResigned.AutoSize = true;
             this.txtDateOfResigned.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtDateOfResigned.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDateOfResigned.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtDateOfResigned.ForeColor = System.Drawing.Color.Black;
             this.txtDateOfResigned.Location = new System.Drawing.Point(0, 0);
             this.txtDateOfResigned.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtDateOfResigned.Name = "txtDateOfResigned";
-            this.txtDateOfResigned.Size = new System.Drawing.Size(113, 21);
+            this.txtDateOfResigned.Size = new System.Drawing.Size(100, 21);
             this.txtDateOfResigned.TabIndex = 28;
             this.txtDateOfResigned.Text = "Employee ID";
             // 
@@ -1120,12 +1121,12 @@
             // 
             this.txtDateOfApproval.AutoSize = true;
             this.txtDateOfApproval.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtDateOfApproval.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDateOfApproval.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtDateOfApproval.ForeColor = System.Drawing.Color.Black;
             this.txtDateOfApproval.Location = new System.Drawing.Point(0, 0);
             this.txtDateOfApproval.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtDateOfApproval.Name = "txtDateOfApproval";
-            this.txtDateOfApproval.Size = new System.Drawing.Size(113, 21);
+            this.txtDateOfApproval.Size = new System.Drawing.Size(100, 21);
             this.txtDateOfApproval.TabIndex = 28;
             this.txtDateOfApproval.Text = "Employee ID";
             // 
@@ -1142,12 +1143,12 @@
             // 
             this.txtDateOfMembership.AutoSize = true;
             this.txtDateOfMembership.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtDateOfMembership.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDateOfMembership.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtDateOfMembership.ForeColor = System.Drawing.Color.Black;
             this.txtDateOfMembership.Location = new System.Drawing.Point(0, 0);
             this.txtDateOfMembership.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtDateOfMembership.Name = "txtDateOfMembership";
-            this.txtDateOfMembership.Size = new System.Drawing.Size(113, 21);
+            this.txtDateOfMembership.Size = new System.Drawing.Size(100, 21);
             this.txtDateOfMembership.TabIndex = 28;
             this.txtDateOfMembership.Text = "Employee ID";
             // 
@@ -1165,12 +1166,12 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label17.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label17.ForeColor = System.Drawing.Color.Black;
             this.label17.Location = new System.Drawing.Point(0, 0);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(202, 21);
+            this.label17.Size = new System.Drawing.Size(167, 21);
             this.label17.TabIndex = 29;
             this.label17.Text = "Date Resigned (PECCI)";
             // 
@@ -1208,12 +1209,12 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label18.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label18.ForeColor = System.Drawing.Color.Black;
             this.label18.Location = new System.Drawing.Point(0, 0);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(158, 21);
+            this.label18.Size = new System.Drawing.Size(129, 21);
             this.label18.TabIndex = 29;
             this.label18.Text = "Date of Approval";
             // 
@@ -1231,12 +1232,12 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label19.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label19.ForeColor = System.Drawing.Color.Black;
             this.label19.Location = new System.Drawing.Point(0, 0);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(182, 21);
+            this.label19.Size = new System.Drawing.Size(157, 21);
             this.label19.TabIndex = 28;
             this.label19.Text = "Date of Membership";
             // 
@@ -1274,12 +1275,12 @@
             // 
             this.txtCompany.AutoSize = true;
             this.txtCompany.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtCompany.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCompany.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtCompany.ForeColor = System.Drawing.Color.Black;
             this.txtCompany.Location = new System.Drawing.Point(0, 0);
             this.txtCompany.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtCompany.Name = "txtCompany";
-            this.txtCompany.Size = new System.Drawing.Size(113, 21);
+            this.txtCompany.Size = new System.Drawing.Size(100, 21);
             this.txtCompany.TabIndex = 28;
             this.txtCompany.Text = "Employee ID";
             // 
@@ -1297,12 +1298,12 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label20.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label20.ForeColor = System.Drawing.Color.Black;
             this.label20.Location = new System.Drawing.Point(0, 0);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(83, 21);
+            this.label20.Size = new System.Drawing.Size(69, 21);
             this.label20.TabIndex = 29;
             this.label20.Text = "Location";
             // 
@@ -1340,12 +1341,12 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label21.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label21.ForeColor = System.Drawing.Color.Black;
             this.label21.Location = new System.Drawing.Point(0, 0);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(92, 21);
+            this.label21.Size = new System.Drawing.Size(76, 21);
             this.label21.TabIndex = 29;
             this.label21.Text = "Exchange";
             // 
@@ -1363,12 +1364,12 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label22.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label22.ForeColor = System.Drawing.Color.Black;
             this.label22.Location = new System.Drawing.Point(0, 0);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(92, 21);
+            this.label22.Size = new System.Drawing.Size(76, 21);
             this.label22.TabIndex = 28;
             this.label22.Text = "Company";
             // 
@@ -1407,12 +1408,12 @@
             // 
             this.txtAccntNo.AutoSize = true;
             this.txtAccntNo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtAccntNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtAccntNo.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtAccntNo.ForeColor = System.Drawing.Color.Black;
             this.txtAccntNo.Location = new System.Drawing.Point(0, 0);
             this.txtAccntNo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtAccntNo.Name = "txtAccntNo";
-            this.txtAccntNo.Size = new System.Drawing.Size(113, 21);
+            this.txtAccntNo.Size = new System.Drawing.Size(100, 21);
             this.txtAccntNo.TabIndex = 28;
             this.txtAccntNo.Text = "Employee ID";
             // 
@@ -1429,12 +1430,12 @@
             // 
             this.txtBank.AutoSize = true;
             this.txtBank.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtBank.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBank.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtBank.ForeColor = System.Drawing.Color.Black;
             this.txtBank.Location = new System.Drawing.Point(0, 0);
             this.txtBank.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtBank.Name = "txtBank";
-            this.txtBank.Size = new System.Drawing.Size(113, 21);
+            this.txtBank.Size = new System.Drawing.Size(100, 21);
             this.txtBank.TabIndex = 28;
             this.txtBank.Text = "Employee ID";
             // 
@@ -1452,12 +1453,12 @@
             // 
             this.label23.AutoSize = true;
             this.label23.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label23.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label23.ForeColor = System.Drawing.Color.Black;
             this.label23.Location = new System.Drawing.Point(0, 0);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(81, 21);
+            this.label23.Size = new System.Drawing.Size(64, 21);
             this.label23.TabIndex = 29;
             this.label23.Text = "Acct No";
             // 
@@ -1495,12 +1496,12 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label24.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label24.ForeColor = System.Drawing.Color.Black;
             this.label24.Location = new System.Drawing.Point(0, 0);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(51, 21);
+            this.label24.Size = new System.Drawing.Size(45, 21);
             this.label24.TabIndex = 29;
             this.label24.Text = "Bank";
             // 
@@ -1518,12 +1519,12 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label25.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label25.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label25.ForeColor = System.Drawing.Color.Black;
             this.label25.Location = new System.Drawing.Point(0, 0);
             this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(105, 21);
+            this.label25.Size = new System.Drawing.Size(90, 21);
             this.label25.TabIndex = 28;
             this.label25.Text = "Deductions";
             // 
@@ -1561,12 +1562,12 @@
             // 
             this.txtPayrollGroup.AutoSize = true;
             this.txtPayrollGroup.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtPayrollGroup.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPayrollGroup.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtPayrollGroup.ForeColor = System.Drawing.Color.Black;
             this.txtPayrollGroup.Location = new System.Drawing.Point(0, 0);
             this.txtPayrollGroup.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtPayrollGroup.Name = "txtPayrollGroup";
-            this.txtPayrollGroup.Size = new System.Drawing.Size(113, 21);
+            this.txtPayrollGroup.Size = new System.Drawing.Size(100, 21);
             this.txtPayrollGroup.TabIndex = 28;
             this.txtPayrollGroup.Text = "Employee ID";
             // 
@@ -1584,12 +1585,12 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label26.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label26.ForeColor = System.Drawing.Color.Black;
             this.label26.Location = new System.Drawing.Point(0, 0);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(107, 21);
+            this.label26.Size = new System.Drawing.Size(93, 21);
             this.label26.TabIndex = 29;
             this.label26.Text = "PLDT Group\t";
             // 
@@ -1627,12 +1628,12 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label27.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label27.ForeColor = System.Drawing.Color.Black;
             this.label27.Location = new System.Drawing.Point(0, 0);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(120, 21);
+            this.label27.Size = new System.Drawing.Size(106, 21);
             this.label27.TabIndex = 29;
             this.label27.Text = "Payroll Group";
             // 
@@ -1650,12 +1651,12 @@
             // 
             this.label28.AutoSize = true;
             this.label28.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label28.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label28.ForeColor = System.Drawing.Color.Black;
             this.label28.Location = new System.Drawing.Point(0, 0);
             this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(71, 21);
+            this.label28.Size = new System.Drawing.Size(66, 21);
             this.label28.TabIndex = 28;
             this.label28.Text = "Division";
             // 
@@ -1715,12 +1716,12 @@
             // 
             this.txtSavings.AutoSize = true;
             this.txtSavings.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtSavings.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSavings.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtSavings.ForeColor = System.Drawing.Color.Black;
             this.txtSavings.Location = new System.Drawing.Point(0, 0);
             this.txtSavings.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtSavings.Name = "txtSavings";
-            this.txtSavings.Size = new System.Drawing.Size(113, 21);
+            this.txtSavings.Size = new System.Drawing.Size(100, 21);
             this.txtSavings.TabIndex = 28;
             this.txtSavings.Text = "Employee ID";
             // 
@@ -1737,12 +1738,12 @@
             // 
             this.txtShareCapital.AutoSize = true;
             this.txtShareCapital.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtShareCapital.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtShareCapital.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtShareCapital.ForeColor = System.Drawing.Color.Black;
             this.txtShareCapital.Location = new System.Drawing.Point(0, 0);
             this.txtShareCapital.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtShareCapital.Name = "txtShareCapital";
-            this.txtShareCapital.Size = new System.Drawing.Size(113, 21);
+            this.txtShareCapital.Size = new System.Drawing.Size(100, 21);
             this.txtShareCapital.TabIndex = 28;
             this.txtShareCapital.Text = "Employee ID";
             // 
@@ -1760,12 +1761,12 @@
             // 
             this.label30.AutoSize = true;
             this.label30.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label30.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label30.ForeColor = System.Drawing.Color.Black;
             this.label30.Location = new System.Drawing.Point(0, 0);
             this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(44, 21);
+            this.label30.Size = new System.Drawing.Size(38, 21);
             this.label30.TabIndex = 29;
             this.label30.Text = "CBP";
             // 
@@ -1803,12 +1804,12 @@
             // 
             this.label31.AutoSize = true;
             this.label31.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label31.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label31.ForeColor = System.Drawing.Color.Black;
             this.label31.Location = new System.Drawing.Point(0, 0);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(124, 21);
+            this.label31.Size = new System.Drawing.Size(102, 21);
             this.label31.TabIndex = 29;
             this.label31.Text = "Share Capital";
             // 
@@ -1826,12 +1827,12 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label32.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label32.ForeColor = System.Drawing.Color.Black;
             this.label32.Location = new System.Drawing.Point(0, 0);
             this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(72, 21);
+            this.label32.Size = new System.Drawing.Size(62, 21);
             this.label32.TabIndex = 28;
             this.label32.Text = "Savings";
             // 
@@ -1869,7 +1870,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -1891,14 +1892,14 @@
             // 
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(149)))), ((int)(((byte)(70)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -1980,12 +1981,12 @@
             // 
             this.txtContactRemarks.AutoSize = true;
             this.txtContactRemarks.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactRemarks.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactRemarks.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtContactRemarks.ForeColor = System.Drawing.Color.Black;
             this.txtContactRemarks.Location = new System.Drawing.Point(0, 0);
             this.txtContactRemarks.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtContactRemarks.Name = "txtContactRemarks";
-            this.txtContactRemarks.Size = new System.Drawing.Size(79, 21);
+            this.txtContactRemarks.Size = new System.Drawing.Size(72, 21);
             this.txtContactRemarks.TabIndex = 28;
             this.txtContactRemarks.Text = "Remarks";
             // 
@@ -2003,12 +2004,12 @@
             // 
             this.label40.AutoSize = true;
             this.label40.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label40.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label40.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label40.ForeColor = System.Drawing.Color.Black;
             this.label40.Location = new System.Drawing.Point(0, 0);
             this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(79, 21);
+            this.label40.Size = new System.Drawing.Size(72, 21);
             this.label40.TabIndex = 28;
             this.label40.Text = "Remarks";
             // 
@@ -2045,12 +2046,12 @@
             // 
             this.txtContactMobileNo.AutoSize = true;
             this.txtContactMobileNo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactMobileNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactMobileNo.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtContactMobileNo.ForeColor = System.Drawing.Color.Black;
             this.txtContactMobileNo.Location = new System.Drawing.Point(0, 0);
             this.txtContactMobileNo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtContactMobileNo.Name = "txtContactMobileNo";
-            this.txtContactMobileNo.Size = new System.Drawing.Size(96, 21);
+            this.txtContactMobileNo.Size = new System.Drawing.Size(84, 21);
             this.txtContactMobileNo.TabIndex = 28;
             this.txtContactMobileNo.Text = "Mobile No";
             // 
@@ -2068,12 +2069,12 @@
             // 
             this.txtContactTelephone.AutoSize = true;
             this.txtContactTelephone.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactTelephone.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactTelephone.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtContactTelephone.ForeColor = System.Drawing.Color.Black;
             this.txtContactTelephone.Location = new System.Drawing.Point(0, 0);
             this.txtContactTelephone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtContactTelephone.Name = "txtContactTelephone";
-            this.txtContactTelephone.Size = new System.Drawing.Size(97, 21);
+            this.txtContactTelephone.Size = new System.Drawing.Size(84, 21);
             this.txtContactTelephone.TabIndex = 28;
             this.txtContactTelephone.Text = "Telephone";
             // 
@@ -2091,12 +2092,12 @@
             // 
             this.label34.AutoSize = true;
             this.label34.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label34.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label34.ForeColor = System.Drawing.Color.Black;
             this.label34.Location = new System.Drawing.Point(0, 0);
             this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(126, 21);
+            this.label34.Size = new System.Drawing.Size(108, 21);
             this.label34.TabIndex = 28;
             this.label34.Text = "Telephone No";
             // 
@@ -2114,12 +2115,12 @@
             // 
             this.label35.AutoSize = true;
             this.label35.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label35.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label35.ForeColor = System.Drawing.Color.Black;
             this.label35.Location = new System.Drawing.Point(0, 0);
             this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(96, 21);
+            this.label35.Size = new System.Drawing.Size(84, 21);
             this.label35.TabIndex = 28;
             this.label35.Text = "Mobile No";
             // 
@@ -2156,12 +2157,12 @@
             // 
             this.txtContactRelationShip.AutoSize = true;
             this.txtContactRelationShip.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactRelationShip.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactRelationShip.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtContactRelationShip.ForeColor = System.Drawing.Color.Black;
             this.txtContactRelationShip.Location = new System.Drawing.Point(0, 0);
             this.txtContactRelationShip.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtContactRelationShip.Name = "txtContactRelationShip";
-            this.txtContactRelationShip.Size = new System.Drawing.Size(109, 21);
+            this.txtContactRelationShip.Size = new System.Drawing.Size(98, 21);
             this.txtContactRelationShip.TabIndex = 28;
             this.txtContactRelationShip.Text = "Relationship";
             // 
@@ -2179,12 +2180,12 @@
             // 
             this.txtContactName.AutoSize = true;
             this.txtContactName.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtContactName.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContactName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtContactName.ForeColor = System.Drawing.Color.Black;
             this.txtContactName.Location = new System.Drawing.Point(0, 0);
             this.txtContactName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtContactName.Name = "txtContactName";
-            this.txtContactName.Size = new System.Drawing.Size(61, 21);
+            this.txtContactName.Size = new System.Drawing.Size(52, 21);
             this.txtContactName.TabIndex = 28;
             this.txtContactName.Text = "Name";
             // 
@@ -2202,12 +2203,12 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label9.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label9.ForeColor = System.Drawing.Color.Black;
             this.label9.Location = new System.Drawing.Point(0, 0);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(109, 21);
+            this.label9.Size = new System.Drawing.Size(98, 21);
             this.label9.TabIndex = 28;
             this.label9.Text = "Relationship";
             // 
@@ -2225,12 +2226,12 @@
             // 
             this.label41.AutoSize = true;
             this.label41.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label41.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label41.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label41.ForeColor = System.Drawing.Color.Black;
             this.label41.Location = new System.Drawing.Point(0, 0);
             this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(61, 21);
+            this.label41.Size = new System.Drawing.Size(52, 21);
             this.label41.TabIndex = 28;
             this.label41.Text = "Name";
             // 
@@ -2284,12 +2285,12 @@
             // 
             this.label38.AutoSize = true;
             this.label38.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label38.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label38.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label38.ForeColor = System.Drawing.Color.Black;
             this.label38.Location = new System.Drawing.Point(0, 0);
             this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(96, 21);
+            this.label38.Size = new System.Drawing.Size(84, 21);
             this.label38.TabIndex = 28;
             this.label38.Text = "Mobile No";
             // 
@@ -2327,12 +2328,12 @@
             // 
             this.label37.AutoSize = true;
             this.label37.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label37.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label37.ForeColor = System.Drawing.Color.Black;
             this.label37.Location = new System.Drawing.Point(0, 0);
             this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(126, 21);
+            this.label37.Size = new System.Drawing.Size(108, 21);
             this.label37.TabIndex = 29;
             this.label37.Text = "Telephone No";
             // 
@@ -2350,12 +2351,12 @@
             // 
             this.label36.AutoSize = true;
             this.label36.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label36.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label36.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.label36.ForeColor = System.Drawing.Color.Black;
             this.label36.Location = new System.Drawing.Point(0, 0);
             this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(124, 21);
+            this.label36.Size = new System.Drawing.Size(109, 21);
             this.label36.TabIndex = 29;
             this.label36.Text = "Email Address";
             // 
@@ -2396,12 +2397,12 @@
             // 
             this.txtMobileNo.AutoSize = true;
             this.txtMobileNo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtMobileNo.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMobileNo.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtMobileNo.ForeColor = System.Drawing.Color.Black;
             this.txtMobileNo.Location = new System.Drawing.Point(0, 0);
             this.txtMobileNo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtMobileNo.Name = "txtMobileNo";
-            this.txtMobileNo.Size = new System.Drawing.Size(96, 21);
+            this.txtMobileNo.Size = new System.Drawing.Size(84, 21);
             this.txtMobileNo.TabIndex = 28;
             this.txtMobileNo.Text = "Mobile No";
             // 
@@ -2419,12 +2420,12 @@
             // 
             this.txtEmailAddress.AutoSize = true;
             this.txtEmailAddress.Dock = System.Windows.Forms.DockStyle.Left;
-            this.txtEmailAddress.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEmailAddress.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtEmailAddress.ForeColor = System.Drawing.Color.Black;
             this.txtEmailAddress.Location = new System.Drawing.Point(0, 0);
             this.txtEmailAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.txtEmailAddress.Name = "txtEmailAddress";
-            this.txtEmailAddress.Size = new System.Drawing.Size(52, 21);
+            this.txtEmailAddress.Size = new System.Drawing.Size(48, 21);
             this.txtEmailAddress.TabIndex = 28;
             this.txtEmailAddress.Text = "Email";
             // 

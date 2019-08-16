@@ -23,6 +23,9 @@ namespace WindowsFormsApplication2
 
         Global global = new Global();
         bool saveTrigger, updateTrigger;
+
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
+
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -82,6 +85,11 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (txtCode.Text == "") //Check if code is empty
             {
                 if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
@@ -183,6 +191,11 @@ namespace WindowsFormsApplication2
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (txtCode.Text == "") //Check if code is empty
             {
                 if (dataGridView1.SelectedRows.Count > 0) // make sure user select at least 1 row 
@@ -226,7 +239,7 @@ namespace WindowsFormsApplication2
                 global.loadDataForFileMaintenance(dataGridView1, "Payroll_Group");
 
                 //Message
-                Alert.show("Payroll Code Successfully Deleted", Alert.AlertType.success);
+                Alert.show("Payroll Code  successfully deleted.", Alert.AlertType.success);
             }
             else
             {
@@ -270,6 +283,11 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             saveTrigger = false;
 
             //CONNECTION TO SQL SERVER AND STORED PROCEDURE
@@ -291,7 +309,7 @@ namespace WindowsFormsApplication2
                         //Check if theres a duplicate entry
                         if (global.CheckDuplicateEntry(txtDescription.Text, "Payroll_Group") == true)
                         {
-                            Alert.show("Payroll Code Already Exist", Alert.AlertType.error);
+                            Alert.show("Payroll Code already exist.", Alert.AlertType.error);
                             return;
                         }
 
@@ -323,7 +341,7 @@ namespace WindowsFormsApplication2
                         //load data
                         global.loadDataForFileMaintenance(dataGridView1, "Payroll_Group");
                         //customize alert
-                        Alert.show("Successfully Added.", Alert.AlertType.success);
+                        Alert.show("Successfully added.", Alert.AlertType.success);
 
                         txtDescription.Enabled = false;
                         txtRemarks.Enabled = false;

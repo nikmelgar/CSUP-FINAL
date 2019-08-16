@@ -62,7 +62,7 @@ namespace WindowsFormsApplication2
         {
             if(cmbMode.Text == "")
             {
-                Alert.show("Please Select Withdrawal Mode!", Alert.AlertType.error);
+                Alert.show("Please Select Withdrawal Mode.", Alert.AlertType.error);
                 return;
             }
 
@@ -77,14 +77,14 @@ namespace WindowsFormsApplication2
             {
                 if (cmbSearchBy.Text == "")
                 {
-                    Alert.show("Please Select Type of Search you want!", Alert.AlertType.error);
+                    Alert.show("Please select Type of Search you want.", Alert.AlertType.error);
                     return;
                 }
             }
             
             if(cmbStatus.Text == "")
             {
-                Alert.show("Please Select Status of Withdrawal", Alert.AlertType.error);
+                Alert.show("Please select Status of Withdrawal.", Alert.AlertType.error);
                 return;
             }
 
@@ -92,14 +92,14 @@ namespace WindowsFormsApplication2
             {
                 if(txtKeyWord.Text == "")
                 {
-                    Alert.show("Please Put Valid Keyword To Search!", Alert.AlertType.error);
+                    Alert.show("Please enter valid Keyword.", Alert.AlertType.error);
                     return;
                 }
             }
 
             if(Convert.ToDateTime(dtFrom.Text) > Convert.ToDateTime(dtTo.Text))
             {
-                Alert.show("Please Put Valid Dates To Search", Alert.AlertType.error);
+                Alert.show("Please enter valid Dates.", Alert.AlertType.error);
                 return;
             }
 
@@ -140,7 +140,7 @@ namespace WindowsFormsApplication2
 
                 if (checkDT.Rows.Count == 0)
                 {
-                    Alert.show("No Record(s) Found!", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     return;
                 }
 

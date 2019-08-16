@@ -29,7 +29,7 @@ namespace WindowsFormsApplication2
 
         Global global = new Global();
         Classes.clsSearchDisbursement clsDisbursement = new Classes.clsSearchDisbursement();
-
+        Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
         //=======================================================
         //              MOVEABLE PANEL
         //=======================================================
@@ -113,6 +113,25 @@ namespace WindowsFormsApplication2
 
                 cv = (DisbursementVoucher)Application.OpenForms["DisbursementVoucher"];
 
+
+                if (cv.txtCVNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Disbursement Voucher", cv.txtCVNo.Text);
+                }
+
+                if (clsOpen.checkOpenFormsAndTransaction("Disbursement Voucher", dataGridView1.SelectedRows[0].Cells["CV_No"].Value.ToString()) == true)
+                {
+                    //Messagebox here for open form with user whos using the form and reference
+                    Alert.show(clsOpen.returnUserOnlineAndReference("Disbursement Voucher", dataGridView1.SelectedRows[0].Cells["CV_No"].Value.ToString(), "Disbursement Voucher"), Alert.AlertType.error);
+                    return;
+                }
+                else
+                {
+                    //Insert here for register the open form and reference
+                    clsOpen.insertTransaction("Disbursement Voucher", dataGridView1.SelectedRows[0].Cells["CV_No"].Value.ToString());
+                }
+
+
                 //=========================================================================================
                 //                              Header Information
                 //=========================================================================================
@@ -144,7 +163,6 @@ namespace WindowsFormsApplication2
                 
 
                 cv.txtLoanNo.Text = dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString();
-
                 cv.cmbTransaction.SelectedValue = dataGridView1.SelectedRows[0].Cells["Transaction_Type"].Value.ToString();
                 cv.cmbBank.SelectedValue = dataGridView1.SelectedRows[0].Cells["Bank_Code"].Value.ToString();
                 cv.txtChequeNo.Text = dataGridView1.SelectedRows[0].Cells["Check_No"].Value.ToString();
@@ -159,6 +177,7 @@ namespace WindowsFormsApplication2
                 cv.txtPreparedBy.Text = dataGridView1.SelectedRows[0].Cells["Prepared_By"].Value.ToString();
                 cv.txtPostedBy.Text = dataGridView1.SelectedRows[0].Cells["Posted_By"].Value.ToString();
                 cv.txtCancelledBy.Text = dataGridView1.SelectedRows[0].Cells["Cancelled_By"].Value.ToString();
+                cv.txtAuditedBy.Text = dataGridView1.SelectedRows[0].Cells["Audited_By"].Value.ToString();
 
                 //=========================================================================================
                 //                              Status Information
@@ -211,7 +230,7 @@ namespace WindowsFormsApplication2
                 cv.btnPrint.Enabled = true;
                 cv.btnPrintCheque.Enabled = true;
                 cv.btnRelease.Enabled = true;
-
+                cv.btnAuditted.Enabled = true;
 
                 //CLOSE AFTER SELECTION OF JOURNAL VOUCHER
                 this.Close();

@@ -20,6 +20,8 @@ namespace WindowsFormsApplication2
         private Point m_firstClickLoc;
 
         Classes.clsLoanATM clsLoanATM = new Classes.clsLoanATM();
+        Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         Global global = new Global();
 
         SqlConnection con;
@@ -76,7 +78,12 @@ namespace WindowsFormsApplication2
 
         private void btnPost_Click(object sender, EventArgs e)
         {
-            if(dataGridView2.Rows.Count > 0)
+            if (clsAccess.checkForInsertRestriction("Loan ATM Preparation", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dataGridView2.Rows.Count > 0)
             {
                 string msg = Environment.NewLine + "Are you sure you want to continue?";
                 DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -85,6 +92,8 @@ namespace WindowsFormsApplication2
                     using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
                         con.Open();
+
+                        string dtRelease = DateTime.Now.ToString("MM/dd/yyyy"); 
 
                         foreach (DataGridViewRow row in dataGridView2.Rows)
                         {
@@ -117,7 +126,7 @@ namespace WindowsFormsApplication2
                             cmd3.ExecuteNonQuery();
                         }
                     }
-                        Alert.show("Loan Successfully Posted", Alert.AlertType.success);
+                        Alert.show("Loan successfully posted.", Alert.AlertType.success);
 
                     //refresh
                     clsLoanATM.loadATMWithdrawal(dataGridView2);
@@ -126,7 +135,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record/s for posting.", Alert.AlertType.error);
+                Alert.show("No record(s) for posting.", Alert.AlertType.error);
                 return;
             }
         }
@@ -143,7 +152,12 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            if(dataGridView2.Rows.Count > 0)
+            if (clsAccess.checkForDeleteRestriction("Loan ATM Preparation", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dataGridView2.Rows.Count > 0)
             {
                 if (dataGridView2.SelectedRows.Count == 0)
                 {
@@ -154,7 +168,7 @@ namespace WindowsFormsApplication2
 
                 if(txtReason.Text == "")
                 {
-                    Alert.show("Reason is required for cancellation of loan.", Alert.AlertType.error);
+                    Alert.show("Reason for cancellation of loan is required.", Alert.AlertType.error);
                     return;
                 }
 
@@ -195,7 +209,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No records found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
            
@@ -203,6 +217,11 @@ namespace WindowsFormsApplication2
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction("Loan ATM Preparation", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (dataGridView2.Rows.Count > 0)
             {
                 if (dataGridView2.SelectedRows.Count == 0)
@@ -250,7 +269,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No records found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
 

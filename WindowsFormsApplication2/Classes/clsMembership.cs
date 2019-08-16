@@ -158,16 +158,24 @@ namespace WindowsFormsApplication2
 
         public string returnCompanyNonPayroll(int userid)
         {
-            using (SqlConnection con = new SqlConnection(global.connectString()))
+            try
             {
-                con.Open();
+                using (SqlConnection con = new SqlConnection(global.connectString()))
+                {
+                    con.Open();
 
-                SqlDataAdapter adapter = new SqlDataAdapter("SELECT Company_Code FROM Membership WHERE userID = '" + userid + "'", con);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
+                    SqlDataAdapter adapter = new SqlDataAdapter("SELECT Company_Code FROM Membership WHERE userID = '" + userid + "'", con);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
 
-                return dt.Rows[0].ItemArray[0].ToString();
+                    return dt.Rows[0].ItemArray[0].ToString();
+                }
             }
+            catch
+            {
+                return "";
+            }
+           
         }
 
         public void loadBeneficiaries(DataGridView dgv,string EmployeeID)
@@ -205,7 +213,7 @@ namespace WindowsFormsApplication2
                 DataSet dataSet = new DataSet();
                 dataAdapter.Fill(dataSet);
 
-                if (dataSet.Tables[0].Rows.Count == 1)
+                if (dataSet.Tables[0].Rows.Count == 1 && Convert.ToString(dataSet.Tables[0].Rows[0]["Member_Picture"].ToString()) != "")
                 {
                     Byte[] data = new Byte[0];
                     data = (Byte[])(dataSet.Tables[0].Rows[0]["Member_Picture"]);
@@ -235,7 +243,7 @@ namespace WindowsFormsApplication2
                     }
                     else
                     {
-                        Alert.show("No Records found on Principal", Alert.AlertType.warning);
+                        Alert.show("No record(s) found on principal", Alert.AlertType.warning);
                         return;
                     }
 
@@ -253,7 +261,7 @@ namespace WindowsFormsApplication2
                     }
                     else
                     {
-                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        Alert.show("No record(s) found.", Alert.AlertType.warning);
                         return;
                     }
                 }
@@ -270,7 +278,7 @@ namespace WindowsFormsApplication2
                     }
                     else
                     {
-                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        Alert.show("No record(s) found.", Alert.AlertType.warning);
                         return;
                     }
                 }
@@ -287,7 +295,7 @@ namespace WindowsFormsApplication2
                     }
                     else
                     {
-                        Alert.show("No record/s found.", Alert.AlertType.warning);
+                        Alert.show("No record(s) found.", Alert.AlertType.warning);
                         return;
                     }
                 }

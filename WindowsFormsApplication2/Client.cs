@@ -22,6 +22,7 @@ namespace WindowsFormsApplication2
 
         Global global = new Global();
 
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -118,7 +119,7 @@ namespace WindowsFormsApplication2
                     //Check if we got nothing
                     if (dt.Rows.Count == 0)
                     {
-                        Alert.show("No record/s found. Please search again.", Alert.AlertType.error);
+                        Alert.show("No record(s) found. Please search again.", Alert.AlertType.error);
                         loadClient(); //Load default data
                     }
 
@@ -140,7 +141,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("Please enter valid keyword in search box.", Alert.AlertType.error);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.error);
             }
         }
 
@@ -152,6 +153,11 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (btnNew.Text == "SAVE")
             {
                 //Check if all fields has a value
@@ -165,13 +171,13 @@ namespace WindowsFormsApplication2
                 //Check if theres a duplicate entry
                 if (global.CheckDuplicateEntryParam("Client_Code", txtCode.Text, "Client") == true)
                 {
-                    Alert.show("Client Code Already Exist", Alert.AlertType.error);
+                    Alert.show("Client Code already exist.", Alert.AlertType.error);
                     return;
                 }
 
                 if (global.CheckDuplicateEntryParam("Name", txtName.Text, "Client") == true)
                 {
-                    Alert.show("Client Name Already Exist", Alert.AlertType.error);
+                    Alert.show("Client Name already exist.", Alert.AlertType.error);
                     return;
                 }
 
@@ -194,7 +200,7 @@ namespace WindowsFormsApplication2
                    
 
                 //Success Message
-                Alert.show("Successfully Added.", Alert.AlertType.success);
+                Alert.show("Successfully added.", Alert.AlertType.success);
 
                 //Load Data
                 loadClient();
@@ -269,10 +275,15 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select client you want to edit!", Alert.AlertType.warning);
+                Alert.show("Please select client you want to edit.", Alert.AlertType.warning);
                 return;
             }
 
@@ -347,6 +358,11 @@ namespace WindowsFormsApplication2
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (txtCode.Text == "")
             {
                 //No Data to be deleted
@@ -374,7 +390,7 @@ namespace WindowsFormsApplication2
                 }
 
                 //Message
-                Alert.show("Company Successfully Deleted", Alert.AlertType.success);
+                Alert.show("Company successfully deleted.", Alert.AlertType.success);
 
                 loadClient();
 

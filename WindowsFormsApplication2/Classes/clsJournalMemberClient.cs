@@ -135,7 +135,7 @@ namespace WindowsFormsApplication2.Classes
                 }
                 else
                 {
-                    Alert.show("No record/s found.", Alert.AlertType.warning);
+                    Alert.show("No record(s) found.", Alert.AlertType.warning);
                     return;
                 }
             }
@@ -177,7 +177,7 @@ namespace WindowsFormsApplication2.Classes
                 }
                 else
                 {
-                    Alert.show("No record/s found.", Alert.AlertType.warning);
+                    Alert.show("No record(s) found.", Alert.AlertType.warning);
                     return;
                 }
             }   

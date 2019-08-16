@@ -33,7 +33,7 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         Classes.clsSearchCashReceipt clsSearchCash = new Classes.clsSearchCashReceipt();
         Classes.clsCashReceipt clsCash = new Classes.clsCashReceipt();
-        
+        Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
         //=================================================
         //             Panel Mouse Move
         //=================================================
@@ -95,6 +95,23 @@ namespace WindowsFormsApplication2
                 CashReceiptVoucher or = new CashReceiptVoucher();
 
                 or = (CashReceiptVoucher)Application.OpenForms["CashReceiptVoucher"];
+
+                if (or.txtORNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Receipt Voucher", or.txtORNo.Text);
+                }
+
+                if (clsOpen.checkOpenFormsAndTransaction("Receipt Voucher", dataGridView1.SelectedRows[0].Cells["Or_No"].Value.ToString()) == true)
+                {
+                    //Messagebox here for open form with user whos using the form and reference
+                    Alert.show(clsOpen.returnUserOnlineAndReference("Receipt Voucher", dataGridView1.SelectedRows[0].Cells["Or_No"].Value.ToString(), "Receipt Voucher"), Alert.AlertType.error);
+                    return;
+                }
+                else
+                {
+                    //Insert here for register the open form and reference
+                    clsOpen.insertTransaction("Receipt Voucher", dataGridView1.SelectedRows[0].Cells["Or_No"].Value.ToString());
+                }
 
                 //=========================================================================================
                 //                              Header Information
@@ -206,12 +223,15 @@ namespace WindowsFormsApplication2
 
                 //Put Prepared By
                 or.txtPreparedBy.Text = dataGridView1.SelectedRows[0].Cells["Prepared_By"].Value.ToString();
+                or.txtAuditedBy.Text = dataGridView1.SelectedRows[0].Cells["Audited_By"].Value.ToString();
 
                 //Enable Commands
                 or.btnEdit.Enabled = true;
                 or.btnPost.Enabled = true;
                 or.btnCancel.Enabled = true;
-
+                or.btnAuditted.Enabled = true;
+                //Sorting
+                or.dataGridView3.Sort(or.dataGridView3.Columns["Debit"], ListSortDirection.Descending);
                 this.Close();
             }
         }

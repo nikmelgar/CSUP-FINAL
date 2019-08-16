@@ -49,7 +49,14 @@ namespace WindowsFormsApplication2
                         Query query = new Query();
                         query = (Query)Application.OpenForms["Query"];
 
-                        query.loadLoanDetails(dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString());
+                        try
+                        {
+                            query.loadLoanDetails(dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString());
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
             }

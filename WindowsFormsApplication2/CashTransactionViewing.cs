@@ -141,5 +141,15 @@ namespace WindowsFormsApplication2
                 chckTeltech.Enabled = true;
             }
         }
+
+        private void btnClose_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
     }
 }

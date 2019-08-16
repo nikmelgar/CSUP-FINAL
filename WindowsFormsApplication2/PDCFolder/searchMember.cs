@@ -54,7 +54,7 @@ namespace WindowsFormsApplication2.PDC
         {
             if (txtEmployeeID.Text == "" && txtLastName.Text == "" && txtFirstName.Text == "")
             {
-                Alert.show("Please enter valid keyword in search box.", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
             clsLookUp.search(txtEmployeeID.Text, txtFirstName.Text, txtLastName.Text, dataGridView1);
@@ -70,27 +70,27 @@ namespace WindowsFormsApplication2.PDC
 
         private void button2_Click(object sender, EventArgs e)
         {
-            PDCManagement pdc = new PDCManagement();
+            PDCManagementV2 pdc = new PDCManagementV2();
 
             foreach (Form form in Application.OpenForms)
             {
-                if (form.GetType() == typeof(PDCManagement))
+                if (form.GetType() == typeof(PDCManagementV2))
                 {
                     //===============================================================================
                     //                      If form is already open
                     //===============================================================================
                     form.Activate();
-                    pdc = (PDCManagement)Application.OpenForms["PDCManagement"];
+                    pdc = (PDCManagementV2)Application.OpenForms["PDCManagementV2"];
                     Classes.clsPDCManagement.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
 
                     pdc.txtEmployeeID.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
-                    pdc.txtName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
+                    pdc.txtEmployeeName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
                 }
             }
             Classes.clsPDCManagement.userid = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString());
 
             pdc.txtEmployeeID.Text = dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString();
-            pdc.txtName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
+            pdc.txtEmployeeName.Text = dataGridView1.SelectedRows[0].Cells["LastName"].Value.ToString() + ", " + dataGridView1.SelectedRows[0].Cells["FirstName"].Value.ToString() + " " + dataGridView1.SelectedRows[0].Cells["MiddleName"].Value.ToString() + dataGridView1.SelectedRows[0].Cells["Suffix"].Value.ToString();
             this.Close();
         }
     }

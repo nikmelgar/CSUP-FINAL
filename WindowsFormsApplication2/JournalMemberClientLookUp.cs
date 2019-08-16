@@ -66,7 +66,7 @@ namespace WindowsFormsApplication2
                 }
                 else
                 {
-                    Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                    Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                     return;
                 }
             }
@@ -80,7 +80,7 @@ namespace WindowsFormsApplication2
                 }
                 else
                 {
-                    Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                    Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                     return;
                 }
 

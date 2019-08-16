@@ -23,6 +23,7 @@ namespace WindowsFormsApplication2
         SqlConnection con;
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -95,7 +96,12 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            if(btnNew.Text == "SAVE")
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (btnNew.Text == "SAVE")
             {
                 //Required Fields
                 if (RequiredFields(txtCode, txtDescription, txtBranch, txtAccountNo) == true)
@@ -107,14 +113,14 @@ namespace WindowsFormsApplication2
                 //Check if theres a duplicate entry for this newly insert CODE
                 if (global.CheckDuplicateEntryParam("Bank_Code", txtCode.Text, "Bank") == true)
                 {
-                    Alert.show("Bank Code Already Exist", Alert.AlertType.error);
+                    Alert.show("Bank Code already exist.", Alert.AlertType.error);
                     return;
                 }
 
                 //Check description for duplicate
                 if (global.CheckDuplicateEntryParam("Bank_Name", txtDescription.Text, "Bank") == true)
                 {
-                    Alert.show("Bank Name Already Exist", Alert.AlertType.error);
+                    Alert.show("Bank Name already exist.", Alert.AlertType.error);
                     return;
                 }
 
@@ -139,7 +145,7 @@ namespace WindowsFormsApplication2
                 }
                   
                 //Success Message
-                Alert.show("Successfully Added.", Alert.AlertType.success);
+                Alert.show("Successfully added.", Alert.AlertType.success);
 
                 //load Banks
                 clsbank.loadBanks(dataGridView1, "Bank");
@@ -238,7 +244,12 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if(txtCode.Text == "")
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (txtCode.Text == "")
             {
                 //No Data to be edit
                 Alert.show("Please select bank you want to edit.", Alert.AlertType.warning);
@@ -269,7 +280,7 @@ namespace WindowsFormsApplication2
 
                 if(clsbank.CheckDuplicateEntry(txtDescription.Text,txtCode.Text,"Bank") == true)
                 {
-                    Alert.show("Bank Name Already Exist", Alert.AlertType.error);
+                    Alert.show("Bank Name already exist.", Alert.AlertType.error);
                     return;
                 }
 
@@ -307,6 +318,11 @@ namespace WindowsFormsApplication2
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (txtCode.Text == "")
             {
                 //No Data to be edit
@@ -335,7 +351,7 @@ namespace WindowsFormsApplication2
                 }
 
                 //Message
-                Alert.show("Company Successfully Deleted", Alert.AlertType.success);
+                Alert.show("Company successfully deleted.", Alert.AlertType.success);
 
                 //load Banks
                 clsbank.loadBanks(dataGridView1, "Bank");

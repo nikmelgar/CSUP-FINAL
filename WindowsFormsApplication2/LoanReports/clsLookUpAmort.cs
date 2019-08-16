@@ -110,7 +110,7 @@ namespace WindowsFormsApplication2.loanFrms
                 }
                 else
                 {
-                    Alert.show("No record/s found.", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     return;
                 }
             }

@@ -18,6 +18,8 @@ namespace WindowsFormsApplication2
             InitializeComponent();
         }
 
+        public static Boolean frmReactivate { get; set; }
+
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
         SqlConnection con;
@@ -26,6 +28,7 @@ namespace WindowsFormsApplication2
         clsMembershipEntry clsMembershipEntry = new clsMembershipEntry();
         clsMembership clsmembership = new clsMembership();
         MembershipMain Membership = new MembershipMain();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         private void btnClose_Click(object sender, EventArgs e)
         {
             if(btnNew.Enabled == true)
@@ -37,6 +40,7 @@ namespace WindowsFormsApplication2
                     if (result == DialogResult.Yes)
                     {
                         //Clear All fields inside Membership Data Entry
+                        frmReactivate = false;
                         clearAllFields();
                         this.Close();
                     }
@@ -47,19 +51,21 @@ namespace WindowsFormsApplication2
                 }
                 else
                 {
+                    frmReactivate = false;
                     this.Close();
                 }
             }
             else
             {
                 //For update purposes
-                if (clsMembershipEntry.CheckValuesForUpdating(txtLastName, txtFirstName, txtAddress, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany,cmbPayrollGroup,cmbCostCenter, dtDateHired, txtContactName, txtContactNo1) == false)
+                if (clsMembershipEntry.CheckValuesForUpdating(txtLastName, txtFirstName, txtAddress, cmbCivilStatus, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany,cmbPayrollGroup,cmbCostCenter, dtDateHired, txtContactName, txtContactNo1) == false)
                 {
                     string msg = Environment.NewLine + "Are you sure you want to exit without saving changes?";
                     DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
                         //Clear All fields inside Membership Data Entry
+                        frmReactivate = false;
                         clearAllFields();
                         this.Close();
                     }
@@ -70,6 +76,7 @@ namespace WindowsFormsApplication2
                 }
                 else
                 {
+                    frmReactivate = false;
                     this.Close();
                 }
             }
@@ -194,7 +201,7 @@ namespace WindowsFormsApplication2
             //=====================================================================
             //                      Company Information
             //=====================================================================
-            foreach (var c in panel6.Controls)
+            foreach (var c in panelCompanyInfo.Controls)
             {
                 if (c is TextBox) ((TextBox)c).Text = String.Empty;
                 if (c is ComboBox) ((ComboBox)c).SelectedIndex = -1;
@@ -214,7 +221,7 @@ namespace WindowsFormsApplication2
             //=====================================================================
             //                      Other Information
             //=====================================================================
-            foreach (var c in panel10.Controls)
+            foreach (var c in panelOtherInfo.Controls)
             {
                 if (c is TextBox) ((TextBox)c).Text = String.Empty;
             }
@@ -230,6 +237,20 @@ namespace WindowsFormsApplication2
             }
 
             resetDatesToday();
+
+            //For resign members
+            lblStat.Visible = false;
+            btnReActivate.Visible = false;
+
+            dtDateResigned.Checked = false;
+            dtResignedFromPecci.Checked = false;
+
+            dtDateOfBirth.Value = DateTime.Today;
+            dtDatePMS.Value = DateTime.Today;
+            dtDateHired.Value = DateTime.Today;
+            dtDateResigned.Value = DateTime.Today;
+            dtDateMembership.Value = DateTime.Today;
+            dtFirstDeduction.Value = DateTime.Today;
 
         }
 
@@ -250,7 +271,7 @@ namespace WindowsFormsApplication2
             //=====================================================================
             //                      Other Information
             //=====================================================================
-            foreach (var c in panel10.Controls)
+            foreach (var c in panelOtherInfo.Controls)
             {
                 if (c is TextBox) ((TextBox)c).Text = String.Empty;
             }
@@ -275,8 +296,12 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
 
-            if(btnNew.Text == "NEW")
+            if (btnNew.Text == "NEW")
             {
                 //controls
                 foreach (Form form in Application.OpenForms)
@@ -301,7 +326,7 @@ namespace WindowsFormsApplication2
 
                 //}
 
-                if (clsMembershipEntry.RequiredFields(txtLastName, txtFirstName,txtMiddleName, txtAddress, cmbGender, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup,cmbCostCenter, dtDateHired, txtContactName, txtOfficeTelNo,cmbBankName,txtAccountNo) == true)
+                if (clsMembershipEntry.RequiredFields(txtLastName, txtFirstName,txtMiddleName, txtAddress, cmbGender, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup,cmbCostCenter, dtDateHired, txtContactName, txtOfficeTelNo,cmbBankName,txtAccountNo,txtMembershipFee,txtSavingsDeposit,txtShareCapital) == true)
                 {
                     Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                     return;
@@ -340,7 +365,7 @@ namespace WindowsFormsApplication2
 
                 if (Convert.ToInt32(txtAccountNo.TextLength.ToString()) <= 9)
                 {
-                    Alert.show("Account No. Should not be less than 10 characters!", Alert.AlertType.warning);
+                    Alert.show("Account No. should not be less than 10 characters.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -350,7 +375,7 @@ namespace WindowsFormsApplication2
                     txtTINno.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
                     if (txtTINno.Text.Length < 12)
                     {
-                        Alert.show("TIN No. Should not be less than 12 characters!", Alert.AlertType.warning);
+                        Alert.show("TIN No. should not be less than 12 characters.", Alert.AlertType.warning);
                         return;
                     }
 
@@ -362,6 +387,13 @@ namespace WindowsFormsApplication2
                     }
                 }
 
+                if (String.IsNullOrWhiteSpace(txtContactName.Text))
+                {
+                    // so stuff
+                    Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
+                    return;
+                }
+
                 //=====================================================================
                 //                      Saving Code Here
                 //                      For Duplicate EmployeeID in PRINCIPAL
@@ -370,7 +402,7 @@ namespace WindowsFormsApplication2
                 {
                     if (clsMembershipEntry.CheckDuplicateEmployeeID("Membership", txtEmployeeIDNo.Text) == true)
                     {
-                        Alert.show("Employee ID No Already Exist", Alert.AlertType.error);
+                        Alert.show("Employee ID No already exist.", Alert.AlertType.error);
                         return;
                     }
                 }
@@ -442,6 +474,7 @@ namespace WindowsFormsApplication2
                     cmd.Parameters.AddWithValue("@Home_Tel_No", txtHomeTel.Text);
                     cmd.Parameters.AddWithValue("@Cellphone_No", txtCellNo.Text);
                     cmd.Parameters.AddWithValue("@TinNo", txtTINno.Text);
+                    txtSSSNo.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
                     cmd.Parameters.AddWithValue("@SSSNo", txtSSSNo.Text);
                     cmd.Parameters.AddWithValue("@Email_Address", txtEmail.Text);
 
@@ -583,7 +616,7 @@ namespace WindowsFormsApplication2
                     {
                         if (clsMembershipEntry.principal == "1")
                         {
-                            Alert.show("Please put at least 1 Beneficiary!", Alert.AlertType.error);
+                            Alert.show("Please enter  at least 1 Beneficiary.", Alert.AlertType.error);
                             return;
                         }
                     }
@@ -625,6 +658,11 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             //=====================================================================
             //                      Fields Validation for Entry (Membership)
             //=====================================================================
@@ -633,7 +671,7 @@ namespace WindowsFormsApplication2
 
             //}
 
-            if (clsMembershipEntry.RequiredFields(txtLastName, txtFirstName, txtMiddleName , txtAddress, cmbGender, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup, cmbCostCenter, dtDateHired, txtContactName, txtOfficeTelNo,cmbBankName,txtAccountNo) == true)
+            if (clsMembershipEntry.RequiredFields(txtLastName, txtFirstName, txtMiddleName , txtAddress, cmbGender, cmbCivilStatus, txtTINno, dtDateOfBirth, txtPlacePMS, dtDatePMS, txtEmployeeIDNo, cmbCompany, cmbPayrollGroup, cmbCostCenter, dtDateHired, txtContactName, txtOfficeTelNo,cmbBankName,txtAccountNo,txtMembershipFee,txtSavingsDeposit,txtShareCapital) == true)
             {
                 Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
                 return;
@@ -670,7 +708,7 @@ namespace WindowsFormsApplication2
             //=======================================================================
             if (Convert.ToInt32(txtAccountNo.TextLength.ToString()) <= 9)
             {
-                Alert.show("Account No. Should not be less than 10 characters!", Alert.AlertType.warning);
+                Alert.show("Account No. should not be less than 10 characters.", Alert.AlertType.warning);
                 return;
             }
 
@@ -680,7 +718,7 @@ namespace WindowsFormsApplication2
                 txtTINno.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
                 if (txtTINno.Text.Length < 12)
                 {
-                    Alert.show("TIN No. Should not be less than 12 characters!", Alert.AlertType.warning);
+                    Alert.show("TIN No. should not be less than 12 characters.", Alert.AlertType.warning);
                     return;
                 }
 
@@ -690,7 +728,33 @@ namespace WindowsFormsApplication2
                     return;
                 }
             }
-            
+
+
+            //====================================================================
+            //              FOR CONTINOUS TO NON PAYROL
+            //====================================================================
+            if(btnReActivate.Visible == true)
+            {
+                if (cmbCompany.SelectedValue.ToString() == "COMP010")
+                {
+                    if (clsMembershipEntry.getShareCapital(Convert.ToInt32(clsMembershipEntry.userID)) == false)
+                    {
+                        string str = "Account can no longer reactivate due to";
+                        str += Environment.NewLine;
+                        str += "Php 0 share capital balance.";
+                        Alert.show(str, Alert.AlertType.error);
+                        return;
+                    }
+                }
+            }
+
+            if (String.IsNullOrWhiteSpace(txtContactName.Text))
+            {
+                // so stuff
+                Alert.show("All fields with (*) are required.", Alert.AlertType.warning);
+                return;
+            }
+
             //=====================================================================
             //                      Saving Code Here
             //                      For Duplicate EmployeeID in PRINCIPAL
@@ -699,17 +763,32 @@ namespace WindowsFormsApplication2
             {
                 if (clsMembershipEntry.CheckDuplicateEmployeeIDUpdate("Membership", txtEmployeeIDNo.Text,clsMembershipEntry.userID,txtEmployeeIDNo.Text) == true)
                 {
-                    Alert.show("Employee ID No Already Exist", Alert.AlertType.error);
+                    Alert.show("Employee ID No already exist.", Alert.AlertType.error);
                     return;
                 }
             }
 
+
+            //=====================================================================
+            //                 prompt question
+            //=====================================================================
+
+            if (dtResignedFromPecci.Checked == false)
+            {
+                string askMsg = Environment.NewLine + "Are you sure you want to proceed?";
+                DialogResult res = MessageBox.Show(this, askMsg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No)
+                {
+                    return;
+                }
+            }
+           
             //=====================================================================
             //                     Before Resigning the EMployee
             //                      For ASking before updating
             //=====================================================================
 
-            if (dtResignedFromPecci.Checked == true || dtDateResigned.Checked == true)
+            if (dtResignedFromPecci.Checked == true)
             {
                 string msg = Environment.NewLine + "Are you sure you want to resign this member?";
                 DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -793,11 +872,11 @@ namespace WindowsFormsApplication2
                         }
                         else if (cmbOfficeArea.Text != "" && txtSalary.Text == "")
                         {
-                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text + "', Salary ='" + DBNull.Value + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
+                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
                         }
                         else
                         {
-                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + DBNull.Value + "', Salary ='" + DBNull.Value + "' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
+                            cmdUpdateDependent.CommandText = "UPDATE Membership SET Payroll_Code ='" + cmbPayrollGroup.SelectedValue + "', Office_Area_Code ='" + cmbOfficeArea.Text +"' WHERE EmployeeID ='" + txtEmployeeIDNo.Text + "'";
                         }
                         cmdUpdateDependent.CommandType = CommandType.Text;
                         cmdUpdateDependent.ExecuteNonQuery();
@@ -880,6 +959,7 @@ namespace WindowsFormsApplication2
                 cmd.Parameters.AddWithValue("@Home_Tel_No", txtHomeTel.Text);
                 cmd.Parameters.AddWithValue("@Cellphone_No", txtCellNo.Text);
                 cmd.Parameters.AddWithValue("@TinNo", txtTINno.Text);
+                txtSSSNo.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
                 cmd.Parameters.AddWithValue("@SSSNo", txtSSSNo.Text);
                 cmd.Parameters.AddWithValue("@Email_Address", txtEmail.Text);
 
@@ -1018,12 +1098,33 @@ namespace WindowsFormsApplication2
                     }
                     else
                     {
-                        if (clsMembershipEntry.principal == "1")
+                        if (clsMembershipEntry.principal == "1" || clsMembershipEntry.principal.ToString() == "True")
                         {
-                            Alert.show("Please put at least 1 Beneficiary!", Alert.AlertType.error);
+                            Alert.show("Please enter  at least 1 Beneficiary.", Alert.AlertType.error);
                             return;
                         }
                     }
+
+                    //UPDATE COMPANY INFORMATION FIRST FOR ALL DEPENDENT
+                    //Update = July 28, 2019 For Billing Purposes and Collection
+                    SqlCommand cmdUpdateCompInfo = new SqlCommand();
+                    cmdUpdateCompInfo.Connection = con;
+                    cmdUpdateCompInfo.CommandText = "sp_UpdateDependentCompanyInformation";
+                    cmdUpdateCompInfo.CommandType = CommandType.StoredProcedure;
+                    cmdUpdateCompInfo.Parameters.AddWithValue("@EmployeeID", txtEmployeeIDNo.Text);
+                    cmdUpdateCompInfo.Parameters.AddWithValue("@Company_Code", cmbCompany.SelectedValue.ToString());
+                    cmdUpdateCompInfo.Parameters.AddWithValue("@Payroll_Code", cmbPayrollGroup.SelectedValue.ToString());
+                    cmdUpdateCompInfo.Parameters.AddWithValue("@Cost_Center_Code", cmbCostCenter.SelectedValue.ToString());
+                    if(cmboPrevComp.Text != "")
+                    {
+                        cmdUpdateCompInfo.Parameters.AddWithValue("@Prev_Company_Code", cmboPrevComp.SelectedValue.ToString());
+                    }
+                    else
+                    {
+                        cmdUpdateCompInfo.Parameters.AddWithValue("@Prev_Company_Code", DBNull.Value);
+                    }
+                    cmdUpdateCompInfo.ExecuteNonQuery();
+
 
                     if (clsMembership.empIDStored != "")
                     {
@@ -1039,8 +1140,7 @@ namespace WindowsFormsApplication2
                
             }
             
-            //Clear all fields
-            clearAllFields();
+            
             //Clear datagridview
             dataGridView1.Rows.Clear();
             picPicture.Image = imageList1.Images[0];
@@ -1052,7 +1152,23 @@ namespace WindowsFormsApplication2
             Membership = (MembershipMain)Application.OpenForms["MembershipMain"];
             Membership.loadDatas();
 
-            Alert.show("Successfully updated.", Alert.AlertType.success);
+            
+
+            if(dtResignedFromPecci.Checked == true)
+            {
+                Alert.show("Member successfully resigned.", Alert.AlertType.success);
+            }
+            else if(frmReactivate == true)
+            {
+                Alert.show("Member successfully reactivated.", Alert.AlertType.success);
+            }
+            else
+            {
+                Alert.show("Successfully updated.", Alert.AlertType.success);
+            }
+
+            //Clear all fields
+            clearAllFields();
 
         }
 
@@ -1242,6 +1358,9 @@ namespace WindowsFormsApplication2
                     clsMembershipEntry.loadComboBox(cmbCostCenter, "Company", "Description", "Company_Code");
                     cmbCostCenter.SelectedValue = cmbCompany.SelectedValue;
                     cmbCostCenter.Enabled = false;
+
+                    //For Reactivate Member
+                    dtDateMembership.Enabled = true;
                 }
                 else if (cmbCompany.Text == "NON PAYROLL")
                 {
@@ -1252,6 +1371,22 @@ namespace WindowsFormsApplication2
                     clsMembershipEntry.loadComboBox(cmbCostCenter, "Company", "Description", "Company_Code");
                     cmbCostCenter.SelectedValue = cmbCompany.SelectedValue;
                     cmbCostCenter.Enabled = false;
+
+                    //For Reactivate Member
+                    dtDateMembership.Enabled = false;
+
+                    if(btnReActivate.Visible == true)
+                    {
+                        //Get ShareCapital if has
+                        if (clsMembershipEntry.getShareCapital(Convert.ToInt32(clsMembershipEntry.userID)) == false)
+                        {
+                            string str = "Account can no longer reactivate due to";
+                            str += Environment.NewLine;
+                            str += "Php 0 share capital balance.";
+                            Alert.show(str, Alert.AlertType.error);
+                            return;
+                        }
+                    }
                 }
                 else
                 {
@@ -1267,7 +1402,9 @@ namespace WindowsFormsApplication2
 
                     clsMembershipEntry.loadComboBox(cmbCostCenter, "Cost_Center", "Description", "Cost_Center_Code");
                     cmbCostCenter.Enabled = true;
-                   
+
+                    //For Reactivate Member
+                    dtDateMembership.Enabled = true;
                 }
             }
         }
@@ -1516,7 +1653,7 @@ namespace WindowsFormsApplication2
 
         private void txtMiddleName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && (e.KeyChar != '.'))
+            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && (e.KeyChar != '_'))
             {
                 e.Handled = true;
             }
@@ -1538,6 +1675,39 @@ namespace WindowsFormsApplication2
         private void button1_Click(object sender, EventArgs e)
         {
             picPicture.Image = imageList1.Images[0];
+        }
+
+        private void btnReActivate_Click(object sender, EventArgs e)
+        {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            //Enable panels for reactivation of membership
+            string msg = Environment.NewLine + "Are you sure you want to reactivate this member?";
+            DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                panelPersonalInformation.Enabled = true;
+                panelCompanyInfo.Enabled = true;
+                tabControl1.Enabled = true;
+                panelOtherInfo.Enabled = true;
+
+                //Disable Company resigned date
+                dtDateResigned.Enabled = false;
+
+                //Enable Update buton
+                btnEdit.Enabled = true;
+
+                //Disable Reactivate Button
+                btnReActivate.Enabled = false;
+
+                //Un-Tick the Resign From pEcci
+                dtResignedFromPecci.Checked = false;
+
+                frmReactivate = true;
+            }
         }
     }
 }

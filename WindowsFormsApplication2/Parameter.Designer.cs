@@ -112,7 +112,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 163F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 449F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 452F));
             this.tableLayoutPanel1.Controls.Add(this.btnCancel, 2, 3);
             this.tableLayoutPanel1.Controls.Add(this.label6, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.label5, 1, 1);
@@ -240,11 +240,6 @@
             this.cmbFrm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFrm.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbFrm.FormattingEnabled = true;
-            this.cmbFrm.Items.AddRange(new object[] {
-            "ALL Mode",
-            "ATM - AT",
-            "CASH - CA",
-            "CHEQUE - CH"});
             this.cmbFrm.Location = new System.Drawing.Point(196, 4);
             this.cmbFrm.Name = "cmbFrm";
             this.cmbFrm.Size = new System.Drawing.Size(416, 29);

@@ -719,9 +719,9 @@
             this.label5.Location = new System.Drawing.Point(615, 19);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(133, 21);
+            this.label5.Size = new System.Drawing.Size(122, 21);
             this.label5.TabIndex = 74;
-            this.label5.Text = "Deposite Date";
+            this.label5.Text = "Deposit Date";
             // 
             // label11
             // 
@@ -1645,6 +1645,7 @@
             this.Name = "SavingsDataEntry";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SavingsDataEntry";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SavingsDataEntry_FormClosing);
             this.Load += new System.EventHandler(this.SavingsDataEntry_Load);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();

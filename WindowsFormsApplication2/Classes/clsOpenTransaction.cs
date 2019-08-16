@@ -17,6 +17,20 @@ namespace WindowsFormsApplication2.Classes
 
         Global global = new Global();
 
+        public void deleteOpenTransaction()
+        {
+            using (SqlConnection con = new SqlConnection(global.connectString()))
+            {
+                con.Open();
+                
+                cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "DELETE Open_Transaction WHERE userid = '" + Classes.clsUser.Username + "'";
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+        }
+        
         public void insertTransaction(string form, string reference)
         {
             using (SqlConnection con = new SqlConnection(global.connectString()))

@@ -23,6 +23,9 @@ namespace WindowsFormsApplication2
         Classes.clsLoan clsLoan = new Classes.clsLoan();
         Classes.clsLoanLookUp clsLookUp = new Classes.clsLoanLookUp();
         Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
+
+
         Global global = new Global();
 
         //==================
@@ -59,6 +62,11 @@ namespace WindowsFormsApplication2
 
         private void label1_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForInsertRestriction("Loan Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             //controls
             foreach (Form form in Application.OpenForms)
             {
@@ -115,10 +123,15 @@ namespace WindowsFormsApplication2
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForViewingRestriction("Loan Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select you want to edit.", Alert.AlertType.warning);
+                Alert.show("Please select transaction you want to edit.", Alert.AlertType.warning);
                 return;
             }
 

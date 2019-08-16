@@ -97,7 +97,7 @@ namespace WindowsFormsApplication2
                 case "0": //Savings
                     if(requiredField() == true)
                     {
-                        Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                        Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                         return;
                     }
                     clsLookUp.SearchSavings(txtEmployeeID.Text,txtFirstName.Text,txtLastName.Text,dataGridView1);
@@ -105,7 +105,7 @@ namespace WindowsFormsApplication2
                 case "1": //Disbursement 
                     if (requiredField() == true)
                     {
-                        Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                        Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                         return;
                     }
                     clsLookUp.SearchMemberDisbursement(txtEmployeeID.Text, txtFirstName.Text, txtLastName.Text, dataGridView1);
@@ -113,7 +113,7 @@ namespace WindowsFormsApplication2
                 case "2": //Cash Receipt
                     if (requiredField() == true)
                     {
-                        Alert.show("No keywords to be search!", Alert.AlertType.warning);
+                        Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                         return;
                     }
                     clsLookUp.SearchMemberCashReceipt(txtEmployeeID.Text, txtFirstName.Text, txtLastName.Text, dataGridView1);

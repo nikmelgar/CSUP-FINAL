@@ -54,17 +54,17 @@ namespace WindowsFormsApplication2.PDCFolder
 
         private void button2_Click(object sender, EventArgs e)
         {
-            PDCManagement pdc = new PDCManagement();
+            PDCManagementV2 pdc = new PDCManagementV2();
 
             foreach (Form form in Application.OpenForms)
             {
-                if (form.GetType() == typeof(PDCManagement))
+                if (form.GetType() == typeof(PDCManagementV2))
                 {
                     //===============================================================================
                     //                      If form is already open
                     //===============================================================================
                     form.Activate();
-                    pdc = (PDCManagement)Application.OpenForms["PDCManagement"];
+                    pdc = (PDCManagementV2)Application.OpenForms["PDCManagementV2"];
 
                     pdc.txtLoanNumber.Text = dataGridView1.SelectedRows[0].Cells["Loan_No"].Value.ToString();
                     pdc.txtLoanType.Text = dataGridView1.SelectedRows[0].Cells["Loan_Type"].Value.ToString();

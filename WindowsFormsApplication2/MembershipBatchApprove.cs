@@ -21,6 +21,7 @@ namespace WindowsFormsApplication2
         SqlConnection con;
         Global global = new Global();
         Classes.clsMembershipBatchApprove clsBatch = new Classes.clsMembershipBatchApprove();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         private bool m_firstClick = false;
         private Point m_firstClickLoc;
@@ -96,6 +97,11 @@ namespace WindowsFormsApplication2
 
         private void btnView_Click(object sender, EventArgs e)
         {
+            if(clsAccess.checkForViewingRestriction("Batch Approve", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             if(cmbView.Text == "Members for Approval")
             {
                 clsBatch.loadAllMembersForApproval(dataGridView1);
@@ -113,7 +119,7 @@ namespace WindowsFormsApplication2
 
         private void button6_Click(object sender, EventArgs e)
         {
-            using (SqlConnection con = new SqlConnection())
+            using (SqlConnection con = new SqlConnection(global.connectString()))
             {
                 con.Open();
 
@@ -164,7 +170,7 @@ namespace WindowsFormsApplication2
                 }
                 else
                 {
-                    Alert.show("No record found.", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                 }
             }
         }
@@ -179,7 +185,12 @@ namespace WindowsFormsApplication2
 
         private void btnBatch_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.Rows.Count > 0)
+            if (clsAccess.checkForInsertRestriction("Batch Approve", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (dataGridView1.Rows.Count > 0)
             {
                 int x = 0;
                 foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -204,7 +215,7 @@ namespace WindowsFormsApplication2
                 if(x == dataGridView1.Rows.Count)
                 {
                     //No data check
-                    Alert.show("Please select member you want to approve!", Alert.AlertType.error);
+                    Alert.show("Please select member/s you want to approve.", Alert.AlertType.error);
                     return;
                 }
                 else
@@ -255,6 +266,9 @@ namespace WindowsFormsApplication2
                                         cmdFee.CommandText = "sp_InsertMembersFee";
                                         cmdFee.CommandType = CommandType.StoredProcedure;
                                         cmdFee.Parameters.AddWithValue("@userid", row.Cells["userID"].Value.ToString());
+                                        cmdFee.Parameters.AddWithValue("@EmployeeID", row.Cells["EmployeeID"].Value.ToString());
+                                        cmdFee.Parameters.AddWithValue("@Company_Code", row.Cells["Company_Code"].Value.ToString());
+                                        cmdFee.Parameters.AddWithValue("@Payroll_Code", row.Cells["Payroll_Code"].Value.ToString());
                                         cmdFee.ExecuteNonQuery();
                                     }
                                 }
@@ -273,7 +287,7 @@ namespace WindowsFormsApplication2
                             }
                         }
                         //Success Message
-                        Alert.show("Successfully approved.", Alert.AlertType.success);
+                        Alert.show("Member(s) successfully approved.", Alert.AlertType.success);
                     } //End Question for continue
                     else
                     {
@@ -283,7 +297,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
 
@@ -302,7 +316,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
         }
@@ -320,7 +334,7 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Alert.show("No record found.", Alert.AlertType.error);
+                Alert.show("No record(s) found.", Alert.AlertType.error);
                 return;
             }
         }
@@ -331,7 +345,7 @@ namespace WindowsFormsApplication2
             if (dataGridView1.SelectedRows.Count == 0)
             {
                 //No Data to be edit
-                Alert.show("Please select members you want to delete.", Alert.AlertType.warning);
+                Alert.show("Please select member/s you want to delete.", Alert.AlertType.warning);
                 return;
             }
 

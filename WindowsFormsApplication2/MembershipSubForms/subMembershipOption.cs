@@ -65,7 +65,7 @@ namespace WindowsFormsApplication2.MembershipSubForms
                         mementry.btnNew.Text = "SAVE";
                         mementry.picPicture.Image = mementry.imageList1.Images[0];
                         mementry.tabControl1.SelectedTab = mementry.tabPage2;
-                        mementry.panel6.Enabled = true;
+                        mementry.panelCompanyInfo.Enabled = true;
                         mementry.dataGridView1.Enabled = true;
 
                         //Required fields validation for dependent
@@ -88,7 +88,7 @@ namespace WindowsFormsApplication2.MembershipSubForms
                 mementry.btnNew.Enabled = true;
                 mementry.picPicture.Image = mementry.imageList1.Images[0];
                 mementry.tabControl1.SelectedTab = mementry.tabPage2;
-                mementry.panel6.Enabled = true;
+                mementry.panelCompanyInfo.Enabled = true;
                 mementry.dataGridView1.Enabled = true;
 
                 //Required fields validation for dependent

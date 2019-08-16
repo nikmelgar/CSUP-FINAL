@@ -25,7 +25,7 @@ namespace WindowsFormsApplication2
         SqlConnection con;
         Global global = new Global();
 
-
+        Classes.clsOpenTransaction clsOpenTransaction = new Classes.clsOpenTransaction();
         Classes.clsSearchJournal clsSearchJournal = new Classes.clsSearchJournal();
 
         private bool m_firstClick = false;
@@ -102,9 +102,29 @@ namespace WindowsFormsApplication2
         {
             if(dataGridView1.SelectedRows.Count > 0)
             {
+                //Check if already open first
+                //Check if open
+                //Remove first the selected jv
                 JournalVoucher jv = new JournalVoucher();
 
                 jv = (JournalVoucher)Application.OpenForms["JournalVoucher"];
+
+                if(jv.txtJVNumber.Text != "")
+                {
+                    clsOpenTransaction.deleteTransaction("Journal Voucher", jv.txtJVNumber.Text);
+                }
+
+                if (clsOpenTransaction.checkOpenFormsAndTransaction("Journal Voucher", dataGridView1.SelectedRows[0].Cells["JV_No"].Value.ToString()) == true)
+                {
+                    //Messagebox here for open form with user whos using the form and reference
+                    Alert.show(clsOpenTransaction.returnUserOnlineAndReference("Journal Voucher", dataGridView1.SelectedRows[0].Cells["JV_No"].Value.ToString(), "Journal Voucher"), Alert.AlertType.error);
+                    return;
+                }
+                else
+                {
+                    //Insert here for register the open form and reference
+                    clsOpenTransaction.insertTransaction("Journal Voucher", dataGridView1.SelectedRows[0].Cells["JV_No"].Value.ToString());
+                }
 
                 //=========================================================================================
                 //                              Header Information
@@ -136,6 +156,7 @@ namespace WindowsFormsApplication2
                 jv.txtPreparedBy.Text = dataGridView1.SelectedRows[0].Cells["Prepared_By"].Value.ToString();
                 jv.txtPostedBy.Text = dataGridView1.SelectedRows[0].Cells["Posted_By"].Value.ToString();
                 jv.txtCancelled.Text = dataGridView1.SelectedRows[0].Cells["Cancelled_By"].Value.ToString();
+                jv.txtAudited.Text = dataGridView1.SelectedRows[0].Cells["Audited_By"].Value.ToString();
 
                 //=========================================================================================
                 //                              Status Information
@@ -187,7 +208,7 @@ namespace WindowsFormsApplication2
                 jv.btnPost.Enabled = true;
                 jv.btnCancel.Enabled = true;
                 jv.btnPrint.Enabled = true;
-
+                jv.btnAuditted.Enabled = true;
                 jv.txtParticulars.BackColor = SystemColors.Control;
 
                 //CLOSE AFTER SELECTION OF JOURNAL VOUCHER

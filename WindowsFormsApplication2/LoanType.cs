@@ -23,6 +23,7 @@ namespace WindowsFormsApplication2
 
 
         Classes.clsLoanType clsLoanType = new Classes.clsLoanType();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         Global global = new Global();
 
         SqlConnection con;
@@ -83,6 +84,11 @@ namespace WindowsFormsApplication2
         {
             if (btnSave.Text == "NEW")
             {
+                if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+                {
+                    return;
+                }
+
                 resetAllControls();
                 btnSave.Text = "SAVE";
                 btnClose.Text = "CANCEL";
@@ -94,42 +100,42 @@ namespace WindowsFormsApplication2
                 if(txtLoanType.Text == "")
                 {
                     txtLoanType.Focus();
-                    Alert.show("Loan Type is Required!", Alert.AlertType.error);
+                    Alert.show("Loan Type is required.", Alert.AlertType.error);
                     return;
                 }
                 
                 if(txtDescription.Text == "")
                 {
                     txtDescription.Focus();
-                    Alert.show("Loan Description is Required!", Alert.AlertType.error);
+                    Alert.show("Loan Description is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinAmount.Text == "")
                 {
                     txtMinAmount.Focus();
-                    Alert.show("Min. Loanable Amount is Required!", Alert.AlertType.error);
+                    Alert.show("Minimum  Loanable Amount is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxAmount.Text == "")
                 {
                     txtMaxAmount.Focus();
-                    Alert.show("Max. Loanable Amount is Required!", Alert.AlertType.error);
+                    Alert.show("Maximum  Loanable Amount is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinTerm.Text == "")
                 {
                     txtMinTerm.Focus();
-                    Alert.show("Min. Terms Required!", Alert.AlertType.error);
+                    Alert.show("Minimum Loan Term is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxTerm.Text == "")
                 {
                     txtMaxTerm.Focus();
-                    Alert.show("Max. Terms Required!", Alert.AlertType.error);
+                    Alert.show("Maximum Loan Term is required.", Alert.AlertType.error);
                     return;
                 }
 
@@ -142,56 +148,56 @@ namespace WindowsFormsApplication2
 
                 if(cmbCashAccnt.Text == "")
                 {
-                    Alert.show("Cash Account is Required!", Alert.AlertType.error);
+                    Alert.show("Cash Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbDebitCreditAccnt.Text == "")
                 {
-                    Alert.show("Cash Account is Required!", Alert.AlertType.error);
+                    Alert.show("Cash Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbServiceFeeAccnt.Text == "")
                 {
-                    Alert.show("Service Fee Account is Required!", Alert.AlertType.error);
+                    Alert.show("Service Fee Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbCurrentInterestAccnt.Text == "")
                 {
-                    Alert.show("Current Interest Account is Required!", Alert.AlertType.error);
+                    Alert.show("Current Interest Account is required.", Alert.AlertType.error);
                     return;
                 }
                 
                 if (cmbDeferredAccnt.Text == "")
                 {
-                    Alert.show("Deferred Account is Required!", Alert.AlertType.error);
+                    Alert.show("Deferred Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbRefundAccnt.Text == "")
                 {
-                    Alert.show("Refund Account is Required!", Alert.AlertType.error);
+                    Alert.show("Refund account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbPastDueAccnt.Text == "")
                 {
-                    Alert.show("Past-Due Account is Required!", Alert.AlertType.error);
+                    Alert.show("Past-Due Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbServicefactorCode.Text == "")
                 {
-                    Alert.show("Service Factor is Required!", Alert.AlertType.error);
+                    Alert.show("Service Factor is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtPriority.Text == "")
                 {
                     txtPriority.Focus();
-                    Alert.show("Priority is Required!", Alert.AlertType.error);
+                    Alert.show("Priority is required.", Alert.AlertType.error);
                     return;
                 }
 
@@ -204,7 +210,7 @@ namespace WindowsFormsApplication2
                 //=====================================================================
                 if(clsLoanType.checkIfAlreadyUsed(Convert.ToInt32(txtPriority.Text)) == true)
                 {
-                    Alert.show("Priority Number Already Used!", Alert.AlertType.error);
+                    Alert.show("Priority number already used.", Alert.AlertType.error);
                     return;
                 }
 
@@ -236,7 +242,7 @@ namespace WindowsFormsApplication2
                     cmd.ExecuteNonQuery();
                 }
 
-                Alert.show("Successfully Inserted!", Alert.AlertType.success);
+                Alert.show("Successfully inserted.", Alert.AlertType.success);
 
                 clsLoanType.displayLoans(dataGridView1); //Dispaly Real Time
 
@@ -245,46 +251,51 @@ namespace WindowsFormsApplication2
             }
             else
             {
+                if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+                {
+                    return;
+                }
+
                 //UPDATE
                 if (txtLoanType.Text == "")
                 {
                     txtLoanType.Focus();
-                    Alert.show("Loan Type is Required!", Alert.AlertType.error);  
+                    Alert.show("Loan Type is required.", Alert.AlertType.error);  
                     return;
                 }
 
                 if (txtDescription.Text == "")
                 {
                     txtDescription.Focus();
-                    Alert.show("Loan Description is Required!", Alert.AlertType.error);
+                    Alert.show("Loan Description is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinAmount.Text == "")
                 {
                     txtMinAmount.Focus();
-                    Alert.show("Min. Loanable Amount is Required!", Alert.AlertType.error);
+                    Alert.show("Minimum  Loanable Amount is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxAmount.Text == "")
                 {
                     txtMaxAmount.Focus();
-                    Alert.show("Max. Loanable Amount is Required!", Alert.AlertType.error);
+                    Alert.show("Maximum  Loanable Amount is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMinTerm.Text == "")
                 {
                     txtMinTerm.Focus();
-                    Alert.show("Min. Terms Required!", Alert.AlertType.error);
+                    Alert.show("Minimum Loan Term is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtMaxTerm.Text == "")
                 {
                     txtMaxTerm.Focus();
-                    Alert.show("Max. Terms Required!", Alert.AlertType.error);
+                    Alert.show("Maximum Loan Term is required.", Alert.AlertType.error);
                     return;
                 }
 
@@ -297,56 +308,56 @@ namespace WindowsFormsApplication2
 
                 if (cmbCashAccnt.Text == "")
                 {
-                    Alert.show("Cash Account is Required!", Alert.AlertType.error);
+                    Alert.show("Cash Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbDebitCreditAccnt.Text == "")
                 {
-                    Alert.show("Cash Account is Required!", Alert.AlertType.error);
+                    Alert.show("Cash Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbServiceFeeAccnt.Text == "")
                 {
-                    Alert.show("Service Fee Account is Required!", Alert.AlertType.error);
+                    Alert.show("Service Fee Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbCurrentInterestAccnt.Text == "")
                 {
-                    Alert.show("Current Interest Account is Required!", Alert.AlertType.error);
+                    Alert.show("Current Interest Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbDeferredAccnt.Text == "")
                 {
-                    Alert.show("Deferred Account is Required!", Alert.AlertType.error);
+                    Alert.show("Deferred Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbRefundAccnt.Text == "")
                 {
-                    Alert.show("Refund Account is Required!", Alert.AlertType.error);
+                    Alert.show("Refund account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbPastDueAccnt.Text == "")
                 {
-                    Alert.show("Past-Due Account is Required!", Alert.AlertType.error);
+                    Alert.show("Past-Due Account is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (cmbServicefactorCode.Text == "")
                 {
-                    Alert.show("Service Factor is Required!", Alert.AlertType.error);
+                    Alert.show("Service Factor is required.", Alert.AlertType.error);
                     return;
                 }
 
                 if (txtPriority.Text == "")
                 {
                     txtPriority.Focus();
-                    Alert.show("Priority is Required!", Alert.AlertType.error);
+                    Alert.show("Priority is required.", Alert.AlertType.error);
                     return;
                 }
 

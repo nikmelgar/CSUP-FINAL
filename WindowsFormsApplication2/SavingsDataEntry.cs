@@ -24,6 +24,7 @@ namespace WindowsFormsApplication2
         Classes.clsLookUp clsLookUp = new Classes.clsLookUp();
         Classes.clsSavings clsSavings = new Classes.clsSavings();
         Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
 
         Savings savings = new Savings();
 
@@ -257,7 +258,7 @@ namespace WindowsFormsApplication2
                 //Check if already resigned member
                 if(global.checkMemberIfResignedTRUE(Classes.clsSavingsDataEntry.userID) == true)
                 {
-                    Alert.show("This Member is Already Resigned!", Alert.AlertType.error);
+                    Alert.show("This Member is already resigned.", Alert.AlertType.error);
                     return;
                 }
                 //Cash limit for 50k
@@ -275,7 +276,7 @@ namespace WindowsFormsApplication2
                 {
                     if (txtCheque.Text == "")
                     {
-                        Alert.show("Cheque Number is required!", Alert.AlertType.warning);
+                        Alert.show("Cheque Number is required.", Alert.AlertType.warning);
                         txtCheque.Focus();
                         return;
                     }
@@ -286,7 +287,7 @@ namespace WindowsFormsApplication2
                     //Check if BPI BDO MBTC
                     if(txtBankCode.Text != "BDO" && txtBankCode.Text != "BPI" && txtBankCode.Text != "MBTC")
                     {
-                        Alert.show("Members Bank is Invalid!", Alert.AlertType.error);
+                        Alert.show("Members Bank is Invalid.", Alert.AlertType.error);
                         return;
                     }
                 }
@@ -332,6 +333,11 @@ namespace WindowsFormsApplication2
             //Save or Update Function
             if (btnSave.Text == "SAVE")
             {
+                if (clsAccess.checkForInsertRestriction("Withdrawal Data Entry", Classes.clsUser.Username) != true)
+                {
+                    return;
+                }
+
                 //Check for withdrawal limit For Saving
                 if (clsSavingsDataEntry.getCountWithdrawal() == true)
                 {
@@ -377,7 +383,18 @@ namespace WindowsFormsApplication2
 
                     cmd.ExecuteNonQuery();
 
-                    Alert.show("Successfully Added.", Alert.AlertType.success);
+                    if(radioATM.Checked == true)
+                    {
+                        Alert.show("ATM Withdrawal successfully created.", Alert.AlertType.success);
+                    }
+                    else if(radioCash.Checked == true)
+                    {
+                        Alert.show("Cash Withdrawal successfully created.", Alert.AlertType.success);
+                    }
+                    else
+                    {
+                        Alert.show("Cheque Withdrawal successfully created.", Alert.AlertType.success);
+                    }
 
                     //Get Withdrawal Slip Number
                     txtWithdrawalSlipNo.Text = clsSavingsDataEntry.returnWithdrawalSlipNo();
@@ -413,24 +430,29 @@ namespace WindowsFormsApplication2
             }
             else if(btnSave.Text == "UPDATE") //UPDATE
             {
+                if (clsAccess.checkForEditRestriction("Withdrawal Data Entry", Classes.clsUser.Username) != true)
+                {
+                    return;
+                }
+
                 //=============================================================
                 //              UPDATE CODE
                 //=============================================================
                 if (status.Text == "POSTED")
                 {
-                    Alert.show("This Withdrawal Already Posted!", Alert.AlertType.warning);
+                    Alert.show("This Withdrawal is already posted.", Alert.AlertType.warning);
                     return;
                 }
 
                 if (dtReleaseDate.Text != "")
                 {
                     //If withdrawal already released cannot update cancel first and recreate
-                    Alert.show("Withdrawal Already been Released!", Alert.AlertType.error);
+                    Alert.show("This Withdrawal is already released.", Alert.AlertType.error);
                     return;
                 }
                 if (txtCancelledBy.Text != "")
                 {
-                    Alert.show("Withdrawal Already been Cancelled!", Alert.AlertType.error);
+                    Alert.show("This Withdrawal is already cancelled.", Alert.AlertType.error);
                     return;
                 }
 
@@ -475,6 +497,7 @@ namespace WindowsFormsApplication2
                 btnSave.Text = "SAVE";
                 status.Text = "";
                 dtDateWithdrawal.Text = DateTime.Today.Date.ToShortDateString();
+                btnRelease.Enabled = false;
 
             }
     
@@ -483,7 +506,12 @@ namespace WindowsFormsApplication2
 
         public void btnRelease_Click(object sender, EventArgs e)
         {
-            if(txtWithdrawalSlipNo.Text == "")
+            if (clsAccess.checkForEditRestriction("Withdrawal Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
+            if (txtWithdrawalSlipNo.Text == "")
             {
                 Alert.show("No withdrawal for release.", Alert.AlertType.error);
                 return;
@@ -491,19 +519,19 @@ namespace WindowsFormsApplication2
 
             if (status.Text == "POSTED")
             {
-                Alert.show("This Withdrawal Already Posted!", Alert.AlertType.warning);
+                Alert.show("This Withdrawal is already posted.", Alert.AlertType.warning);
                 return;
             }
 
             if (txtCancelledBy.Text != "")
             {
-                Alert.show("This Withdrawal Already Cancelled!", Alert.AlertType.error);
+                Alert.show("This Withdrawal is already cancelled.", Alert.AlertType.error);
                 return;
             }
 
             if (dtReleaseDate.Text != "")
             {
-                Alert.show("This Withdrawal Already Released!", Alert.AlertType.error);
+                Alert.show("This Withdrawal is aready released.", Alert.AlertType.error);
                 return;
             }
 
@@ -553,7 +581,7 @@ namespace WindowsFormsApplication2
                         //MessageBox Before Showing Disbursement
                         //=================================================================================
                         this.Close();
-                        Alert.show("Successfully Released!", Alert.AlertType.success);
+                        Alert.show("Cash withdrawal successfully released.", Alert.AlertType.success);
                     }
 
                     //CHECK IF WITHDRAWABLE METHOD IS CHECK 
@@ -807,31 +835,36 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction("Withdrawal Data Entry", Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             //check if cancel note already fill up
             txtNote.ReadOnly = false;
 
             if (txtWithdrawalSlipNo.Text == "")
             {
-                Alert.show("No withdrawal for cancellation.", Alert.AlertType.error);
+                Alert.show("No Savings Withdrawal for cancellation.", Alert.AlertType.error);
                 return;
             }
 
             
             if(status.Text == "CANCELLED")
             {
-                Alert.show("This Withdrawal Already Cancelled!", Alert.AlertType.warning);
+                Alert.show("This Withdrawal is already cancelled.", Alert.AlertType.warning);
                 return;
             }
 
             if(status.Text == "POSTED")
             {
-                Alert.show("This Withdrawal Already Posted!", Alert.AlertType.warning);
+                Alert.show("This Withdrawal is already posted.", Alert.AlertType.warning);
                 return;
             }
 
             if (txtNote.Text == "")
             {
-                Alert.show("Cancel note is required!", Alert.AlertType.warning);
+                Alert.show("Cancel note is required.", Alert.AlertType.warning);
                 txtNote.Focus();
                 return;
             }
@@ -985,6 +1018,11 @@ namespace WindowsFormsApplication2
         private void radioATM_CheckedChanged(object sender, EventArgs e)
         {
             btnRelease.Enabled = false;
+        }
+
+        private void SavingsDataEntry_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            clsOpen.deleteTransaction("Savings", txtWithdrawalSlipNo.Text);
         }
     }
 }

@@ -31,6 +31,28 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bunifu_UI_v1.5.3">
       <HintPath>..\..\SchoolSystem\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Bunifu_UI_v1.5.3.dll</HintPath>
@@ -122,6 +144,7 @@
     <Compile Include="ChartOfAccounts.Designer.cs">
       <DependentUpon>ChartOfAccounts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\clsAccessControl.cs" />
     <Compile Include="Classes\clsATMDiskAdvice.cs" />
     <Compile Include="Classes\clsATMRejects.cs" />
     <Compile Include="Classes\clsATMWithdrawal.cs" />
@@ -129,6 +152,7 @@
     <Compile Include="Classes\clsCashReceipt.cs" />
     <Compile Include="Classes\clsCashReplenishment.cs" />
     <Compile Include="Classes\clsCashTransactionViewing.cs" />
+    <Compile Include="Classes\clsCollection.cs" />
     <Compile Include="Classes\clsDisbursement.cs" />
     <Compile Include="Classes\clsGeneralVoucher.cs" />
     <Compile Include="Classes\clsHoldAccounts.cs" />
@@ -142,6 +166,7 @@
     <Compile Include="Classes\clsLoanComputationDetails.cs" />
     <Compile Include="Classes\clsLoanDataEntry.cs" />
     <Compile Include="Classes\clsLoanLookUp.cs" />
+    <Compile Include="Classes\clsLoanPDCPastDue.cs" />
     <Compile Include="Classes\clsLoanReport.cs" />
     <Compile Include="Classes\clsLoanType.cs" />
     <Compile Include="Classes\clsLoginCredentials.cs" />
@@ -153,10 +178,14 @@
     <Compile Include="Classes\clsParameter.cs" />
     <Compile Include="Classes\clsPDCManagement.cs" />
     <Compile Include="Classes\clsPLBI.cs" />
+    <Compile Include="Classes\clsProvisionalReceipt.cs" />
     <Compile Include="Classes\clsQuery.cs" />
+    <Compile Include="Classes\clsQueryCoMaker.cs" />
     <Compile Include="Classes\clsQueryLoanDetails.cs" />
     <Compile Include="Classes\clsQueryMember.cs" />
+    <Compile Include="Classes\clsQueryPayrollDeduction.cs" />
     <Compile Include="Classes\clsReminder.cs" />
+    <Compile Include="Classes\clsReminderSavings.cs" />
     <Compile Include="Classes\clsSavings.cs" />
     <Compile Include="Classes\clsSavingsDataEntry.cs" />
     <Compile Include="Classes\clsSearchCashReceipt.cs" />
@@ -165,6 +194,8 @@
     <Compile Include="Classes\clsSearchJournal.cs" />
     <Compile Include="Classes\clsSearchPrincipal.cs" />
     <Compile Include="Classes\clsUser.cs" />
+    <Compile Include="Classes\clsUserFileMaintenance.cs" />
+    <Compile Include="Classes\clsVoucherValidation.cs" />
     <Compile Include="Client.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +213,12 @@
     <Compile Include="ClientLookUp.Designer.cs">
       <DependentUpon>ClientLookUp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Collection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Collection.Designer.cs">
+      <DependentUpon>Collection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Company.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,6 +232,62 @@
       <DependentUpon>CostCenter.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Global.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsDailyProductivity.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsDailyProductivityStaffAccnt.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsDashboardStaff.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsDashboardTH.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsIncomingWork.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsTeamWorkList.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsWorklists.cs" />
+    <Compile Include="Dashboard\DashboardClasses\clsWorklistsStaff.cs" />
+    <Compile Include="Dashboard\DashboardControls\DailyProductivity.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\DailyProductivity.Designer.cs">
+      <DependentUpon>DailyProductivity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\DailyProductivityStaff.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\DailyProductivityStaff.Designer.cs">
+      <DependentUpon>DailyProductivityStaff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\IncomingWorklist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\IncomingWorklist.Designer.cs">
+      <DependentUpon>IncomingWorklist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\teamsWorklist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\teamsWorklist.Designer.cs">
+      <DependentUpon>teamsWorklist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\Worklist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\Worklist.Designer.cs">
+      <DependentUpon>Worklist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\WorklistStaff.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardControls\WorklistStaff.Designer.cs">
+      <DependentUpon>WorklistStaff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardStaff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardStaff.Designer.cs">
+      <DependentUpon>DashboardStaff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardTH.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dashboard\DashboardTH.Designer.cs">
+      <DependentUpon>DashboardTH.cs</DependentUpon>
+    </Compile>
     <Compile Include="DisbursementVoucher.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -401,6 +494,12 @@
       <DependentUpon>PDCManagementCR.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PDCFolder\pdcQuestion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCFolder\pdcQuestion.Designer.cs">
+      <DependentUpon>pdcQuestion.cs</DependentUpon>
+    </Compile>
     <Compile Include="PDCFolder\PDCReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -425,13 +524,37 @@
     <Compile Include="PDCFolder\searchMember.Designer.cs">
       <DependentUpon>searchMember.cs</DependentUpon>
     </Compile>
+    <Compile Include="PDCManagementV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCManagementV2.Designer.cs">
+      <DependentUpon>PDCManagementV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PDCPastDue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PDCPastDue.Designer.cs">
+      <DependentUpon>PDCPastDue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProvisionalReceipt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProvisionalReceipt.Designer.cs">
+      <DependentUpon>ProvisionalReceipt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Query.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Query.Designer.cs">
       <DependentUpon>Query.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QueryCoMaker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QueryCoMaker.Designer.cs">
+      <DependentUpon>QueryCoMaker.cs</DependentUpon>
     </Compile>
     <Compile Include="QueryLoanBalances.cs">
       <SubType>UserControl</SubType>
@@ -445,11 +568,23 @@
     <Compile Include="QueryLoanDetails.Designer.cs">
       <DependentUpon>QueryLoanDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="QueryLoanListing.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QueryLoanListing.Designer.cs">
+      <DependentUpon>QueryLoanListing.cs</DependentUpon>
+    </Compile>
     <Compile Include="QueryMemberProfile.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="QueryMemberProfile.Designer.cs">
       <DependentUpon>QueryMemberProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QueryPayrollDeduction.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QueryPayrollDeduction.Designer.cs">
+      <DependentUpon>QueryPayrollDeduction.cs</DependentUpon>
     </Compile>
     <Compile Include="QuerySavingsDeposit.cs">
       <SubType>UserControl</SubType>
@@ -474,6 +609,12 @@
     </Compile>
     <Compile Include="ReminderPDC\reminder.Designer.cs">
       <DependentUpon>reminder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReminderSavings\ReminderSavingsDeduction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReminderSavings\ReminderSavingsDeduction.Designer.cs">
+      <DependentUpon>ReminderSavingsDeduction.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportsForms\CashReceiptReportSummary.cs">
       <AutoGen>True</AutoGen>
@@ -685,6 +826,12 @@
       <DependentUpon>subCoMaker.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ReportsForms\subListofLoansPLBI.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>subListofLoansPLBI.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="rptSavingsMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -702,6 +849,12 @@
     </Compile>
     <Compile Include="SavingsDataEntry.Designer.cs">
       <DependentUpon>SavingsDataEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SavingsDeductionBilling.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SavingsDeductionBilling.Designer.cs">
+      <DependentUpon>SavingsDeductionBilling.cs</DependentUpon>
     </Compile>
     <Compile Include="SavingsWithdrawalATM.cs">
       <SubType>Form</SubType>
@@ -739,6 +892,25 @@
     <Compile Include="TransactionType.Designer.cs">
       <DependentUpon>TransactionType.cs</DependentUpon>
     </Compile>
+    <Compile Include="UsersFileMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsersFileMaintenance.Designer.cs">
+      <DependentUpon>UsersFileMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Users\AccessControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Users\AccessControl.Designer.cs">
+      <DependentUpon>AccessControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Users\clsSettings.cs" />
+    <Compile Include="Users\UserSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Users\UserSettings.Designer.cs">
+      <DependentUpon>UserSettings.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Alert.resx">
       <DependentUpon>Alert.cs</DependentUpon>
     </EmbeddedResource>
@@ -772,11 +944,38 @@
     <EmbeddedResource Include="ClientLookUp.resx">
       <DependentUpon>ClientLookUp.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Collection.resx">
+      <DependentUpon>Collection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Company.resx">
       <DependentUpon>Company.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CostCenter.resx">
       <DependentUpon>CostCenter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardControls\DailyProductivity.resx">
+      <DependentUpon>DailyProductivity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardControls\DailyProductivityStaff.resx">
+      <DependentUpon>DailyProductivityStaff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardControls\IncomingWorklist.resx">
+      <DependentUpon>IncomingWorklist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardControls\teamsWorklist.resx">
+      <DependentUpon>teamsWorklist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardControls\Worklist.resx">
+      <DependentUpon>Worklist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardControls\WorklistStaff.resx">
+      <DependentUpon>WorklistStaff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardStaff.resx">
+      <DependentUpon>DashboardStaff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dashboard\DashboardTH.resx">
+      <DependentUpon>DashboardTH.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DisbursementVoucher.resx">
       <DependentUpon>DisbursementVoucher.cs</DependentUpon>
@@ -884,6 +1083,9 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PDCManagementCR.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="PDCFolder\pdcQuestion.resx">
+      <DependentUpon>pdcQuestion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PDCFolder\PDCReport.resx">
       <DependentUpon>PDCReport.cs</DependentUpon>
     </EmbeddedResource>
@@ -896,6 +1098,12 @@
     <EmbeddedResource Include="PDCFolder\searchMember.resx">
       <DependentUpon>searchMember.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PDCManagementV2.resx">
+      <DependentUpon>PDCManagementV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PDCPastDue.resx">
+      <DependentUpon>PDCPastDue.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -905,8 +1113,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ProvisionalReceipt.resx">
+      <DependentUpon>ProvisionalReceipt.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Query.resx">
       <DependentUpon>Query.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryCoMaker.resx">
+      <DependentUpon>QueryCoMaker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QueryLoanBalances.resx">
       <DependentUpon>QueryLoanBalances.cs</DependentUpon>
@@ -914,8 +1128,14 @@
     <EmbeddedResource Include="QueryLoanDetails.resx">
       <DependentUpon>QueryLoanDetails.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="QueryLoanListing.resx">
+      <DependentUpon>QueryLoanListing.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="QueryMemberProfile.resx">
       <DependentUpon>QueryMemberProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryPayrollDeduction.resx">
+      <DependentUpon>QueryPayrollDeduction.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QuerySavingsDeposit.resx">
       <DependentUpon>QuerySavingsDeposit.cs</DependentUpon>
@@ -928,6 +1148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ReminderPDC\reminder.resx">
       <DependentUpon>reminder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReminderSavings\ReminderSavingsDeduction.resx">
+      <DependentUpon>ReminderSavingsDeduction.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportsForms\CashReceiptReportSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -1061,6 +1284,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>subCoMaker.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="ReportsForms\subListofLoansPLBI.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>subListofLoansPLBI.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="rptSavingsMain.resx">
       <DependentUpon>rptSavingsMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -1069,6 +1296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SavingsDataEntry.resx">
       <DependentUpon>SavingsDataEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SavingsDeductionBilling.resx">
+      <DependentUpon>SavingsDeductionBilling.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SavingsWithdrawalATM.resx">
       <DependentUpon>SavingsWithdrawalATM.cs</DependentUpon>
@@ -1088,6 +1318,15 @@
     <EmbeddedResource Include="TransactionType.resx">
       <DependentUpon>TransactionType.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UsersFileMaintenance.resx">
+      <DependentUpon>UsersFileMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Users\AccessControl.resx">
+      <DependentUpon>AccessControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Users\UserSettings.resx">
+      <DependentUpon>UserSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\App.config" />
     <None Include="Properties\Settings.settings">
@@ -1102,6 +1341,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\icons8-person-40.png" />
+    <Content Include="pdcIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
@@ -1110,7 +1350,62 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="ADODB">
+      <Guid>{2A75196C-D9EB-4129-B803-931327F72D5C}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="JRO">
+      <Guid>{AC3B8B4C-B6CA-11D1-9F31-00C04FC29D52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Access.Dao">
+      <Guid>{4AC9E1DA-5BAD-4AC7-86E3-24F4CDCECA28}</Guid>
+      <VersionMajor>12</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

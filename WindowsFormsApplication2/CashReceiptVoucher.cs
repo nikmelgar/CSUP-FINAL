@@ -24,7 +24,10 @@ namespace WindowsFormsApplication2
         Global global = new Global();
         Classes.clsCashReceipt clsCash = new Classes.clsCashReceipt();
         Classes.clsSearchCashReceipt clsSearchCash = new Classes.clsSearchCashReceipt();
-
+        Classes.clsVoucherValidation clsVoucherValidation = new Classes.clsVoucherValidation();
+        Classes.clsOpenTransaction clsOpen = new Classes.clsOpenTransaction();
+        Classes.clsPDCManagement clsPDCManagement = new Classes.clsPDCManagement();
+        Classes.clsAccessControl clsAccess = new Classes.clsAccessControl();
         //===============================================================
         //                      MOUSE MOVE PANEL
         //===============================================================
@@ -42,8 +45,14 @@ namespace WindowsFormsApplication2
         //                      Other Dec.
         //===============================================================
         int selected, selectedRow;
+        public bool fromTH = false;
 
-
+        //===============================================================
+        //                    FROM PDC MANAGEMENT
+        //===============================================================
+        public bool frmPDCManagement = false;
+        public string frmPDCManagementChequeNumber;
+        
         private void panelHeader_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -86,12 +95,20 @@ namespace WindowsFormsApplication2
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if(btnClose.Text == "CANCEL")
+            if (btnClose.Text == "CANCEL")
             {
+                if (txtORNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Receipt Voucher", txtORNo.Text);
+                }
                 ForCancel();
             }
             else
             {
+                if (txtORNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Receipt Voucher", txtORNo.Text);
+                }
                 this.Close();
             }
         }
@@ -132,7 +149,7 @@ namespace WindowsFormsApplication2
 
 
                 }
-                else if(e.ColumnIndex == 1)
+                else if (e.ColumnIndex == 1)
                 {
                     try
                     {
@@ -199,7 +216,7 @@ namespace WindowsFormsApplication2
                     catch
                     {
 
-                    }                               
+                    }
 
                 }
                 else
@@ -237,8 +254,12 @@ namespace WindowsFormsApplication2
             populateDatagridCombobox();//Trans
             populateDatagridComboboxDetails();//Details
             clsCash.loadBank(cmbBank);
-            
-            txtPreparedBy.Text = Classes.clsUser.Username;
+
+            if (fromTH == false)
+            {
+                txtPreparedBy.Text = Classes.clsUser.Username;
+            }
+
         }
 
         private void datagridviewTransaction_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -305,22 +326,22 @@ namespace WindowsFormsApplication2
             {
                 if (datagridviewTransaction.CurrentRow.IsNewRow)
                 {
-                    Alert.show("New row cannot be deleted!", Alert.AlertType.error);
+                    Alert.show("New row cannot be deleted.", Alert.AlertType.error);
                     return;
                 }
 
-                
+
 
                 string msg = Environment.NewLine + "Are you sure you want to delete this entry?";
                 DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    foreach(DataGridViewCell cell in datagridviewTransaction.SelectedCells)
+                    foreach (DataGridViewCell cell in datagridviewTransaction.SelectedCells)
                     {
                         int row = datagridviewTransaction.CurrentCell.RowIndex;
                         datagridviewTransaction.Rows.RemoveAt(row);
                         compute();
-                    }         
+                    }
                 }
                 else
                 {
@@ -337,7 +358,7 @@ namespace WindowsFormsApplication2
         {
             datagridviewTransaction.Rows[selectedRow].Cells[selected].Value = dgvTrans.SelectedRows[0].Cells["Code"].Value.ToString();
 
-            if(dgvTrans.SelectedRows[0].Cells["Code"].Value.ToString() != "002")
+            if (dgvTrans.SelectedRows[0].Cells["Code"].Value.ToString() != "002")
             {
                 datagridviewTransaction.Rows[selectedRow].Cells[selected + 1].Value = dgvTrans.SelectedRows[0].Cells["Description"].Value.ToString();
             }
@@ -418,7 +439,7 @@ namespace WindowsFormsApplication2
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if(radioCash.Checked == true)
+            if (radioCash.Checked == true)
             {
                 cmbBank.Enabled = false;
                 txtCheckAmount.Enabled = false;
@@ -455,7 +476,7 @@ namespace WindowsFormsApplication2
                     ////Setting area for DateTimePicker Control  
                     //// Setting Location  
                     panelDetails.Location = new Point(oRectangle.X + 3, oRectangle.Y + 25);
-                   
+
                     selected = dataGridView3.CurrentCell.ColumnIndex;
                     selectedRow = dataGridView3.CurrentRow.Index;
 
@@ -481,7 +502,7 @@ namespace WindowsFormsApplication2
                         dgvDetails.Columns["Account_Description"].HeaderText = "Description";
                         txtSearch.Focus();
                     }
-                      
+
                 }
                 else if (e.ColumnIndex == 1)
                 {
@@ -585,7 +606,7 @@ namespace WindowsFormsApplication2
             {
                 if (dataGridView3.CurrentRow.IsNewRow)
                 {
-                    Alert.show("New row cannot be deleted!", Alert.AlertType.error);
+                    Alert.show("New row cannot be deleted.", Alert.AlertType.error);
                     return;
                 }
 
@@ -661,7 +682,7 @@ namespace WindowsFormsApplication2
                 cbCell.DataSource = dt;
             }
 
-              
+
         }
 
         private void dataGridView3_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -736,7 +757,7 @@ namespace WindowsFormsApplication2
                     dgvDetails.Columns["Account_Description"].HeaderText = "Description";
                     txtSearch.Focus();
                 }
-                    
+
             }
         }
 
@@ -744,21 +765,30 @@ namespace WindowsFormsApplication2
         {
             if (datagridviewTransaction.Rows.Count >= 1)
             {
-                if(txtPayorID.Text == "")
+                if (txtPayorID.Text == "")
                 {
-                    Alert.show("Please select member first.", Alert.AlertType.warning);
+                    Alert.show("Please select Member first.", Alert.AlertType.warning);
                     return;
                 }
 
-                if (txtTransAmount.Text == "0.00" || txtTransAmount.Text == "")
+                if(datagridviewTransaction.Rows.Count == 1)
                 {
-                    Alert.show("Please select transaction first and put Amount!", Alert.AlertType.warning);
+                    if (txtTransAmount.Text == "")
+                    {
+                        Alert.show("Transaction details are required.", Alert.AlertType.warning);
+                        return;
+                    }
+                }
+
+                if (txtTransAmount.Text == "0.00")
+                {
+                    Alert.show("Transaction amount is required.", Alert.AlertType.warning);
                     return;
                 }
 
-                if(radioMember.Checked == true)
+                if (radioMember.Checked == true)
                 {
-                    using (SqlConnection con = new SqlConnection (global.connectString()))
+                    using (SqlConnection con = new SqlConnection(global.connectString()))
                     {
                         con.Open();
 
@@ -770,7 +800,7 @@ namespace WindowsFormsApplication2
 
                         //Change from last to first Record for Payment
                         ArrayList row1 = new ArrayList();
-                        if (radioCash.Checked == true || radioPecciCheck.Checked == true)
+                        if (radioCash.Checked == true)
                         {
                             //Cash
                             row1.Add("101");
@@ -822,76 +852,205 @@ namespace WindowsFormsApplication2
                                         cmd.Parameters.AddWithValue("@userid", Classes.clsCashReceipt.userID);
                                         cmd.Parameters.AddWithValue("@description", datagridviewTransaction.Rows[y].Cells[1].Value.ToString());
 
-                                        //Put in datatable
                                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                                        DataTable dt = new DataTable();
-                                        adapter.Fill(dt);
+                                        DataSet ds = new DataSet();
+                                        adapter.Fill(ds);
 
-                                        //Declare Double first
-                                        Double balance, deferred, amountInput, Excess;
+                                        decimal payment_onHand, remaining_bal;
+                                        remaining_bal = 0;
+                                        payment_onHand = 0;
 
-                                        //Set Variable Values
-                                        balance = Convert.ToDouble(dt.Rows[0].ItemArray[6].ToString());
-                                        deferred = Convert.ToDouble(dt.Rows[0].ItemArray[7].ToString());
-                                        amountInput = Convert.ToDouble(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
+                                        payment_onHand = Convert.ToDecimal(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
 
-                                        //Has a deferred loan
-                                        if (deferred != 0.00 || deferred != 0)
+                                        //CHECK IF HAS A DEFERRED 
+                                        if (Convert.ToString(ds.Tables[0].Rows[0]["Deferred"].ToString()) != "0.00")
                                         {
-                                            if (amountInput > deferred)
+                                            //Payment is greater than deffered amount
+                                            if (payment_onHand >= Convert.ToDecimal(ds.Tables[0].Rows[0]["Deferred"].ToString()))
                                             {
-                                                //Payment is greater than deferred 
-                                                //Past Due First
-                                                Excess = amountInput - deferred;
-
-                                                row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
+                                                //Insert Deferred,unearned and Interest on loan
+                                                //ADDING THE DEFERRED AMOUNT 
+                                                row.Add(ds.Tables[0].Rows[0]["PastDueDr"].ToString());
                                                 row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                                row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                                row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
                                                 row.Add("0.00");
-                                                row.Add(Convert.ToDecimal(deferred).ToString("#,0.00"));
+                                                row.Add(Convert.ToDecimal(ds.Tables[0].Rows[0]["Deferred"].ToString()).ToString("#,0.00"));
                                                 row.Add(Classes.clsCashReceipt.userID.ToString());
                                                 dataGridView3.Rows.Add(row.ToArray());
 
-                                                //Current Loan
-                                                row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
-                                                row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                                row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
-                                                row.Add("0.00");
-                                                row.Add(Convert.ToDecimal(Excess).ToString("#,0.00"));
-                                                row.Add(Classes.clsCashReceipt.userID.ToString());
-                                                dataGridView3.Rows.Add(row.ToArray());
+                                                remaining_bal = payment_onHand - Convert.ToDecimal(ds.Tables[0].Rows[0]["Deferred"].ToString());
+
+                                                //Check if has unearned interest
+                                                if (Convert.ToString(global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString())) != "0.00")
+                                                {
+
+                                                    //ADDING THE UNEARNED AMOUNT 
+                                                    row.Clear();
+                                                    row.Add("314"); //UNEARNED ACCOUNT
+                                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                    row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                    row.Add(global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString()).ToString("#,0.00")); //DEBIT
+                                                    row.Add("0.00"); //CREDIT
+                                                    row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                    dataGridView3.Rows.Add(row.ToArray());
+
+                                                    //ADDING THE INTEREST ON LOAN AMOUNT 
+                                                    row.Clear();
+                                                    row.Add("401.1"); //INTEREST ON LOAN ACCOUNT
+                                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                    row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                    row.Add("0.00"); //DEBIT
+                                                    row.Add(global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString()).ToString("#,0.00")); //CREDIT
+                                                    row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                    dataGridView3.Rows.Add(row.ToArray());
+                                                }
+
+                                                //PUT REMAINING ON PRINCIPAL
+                                                if (remaining_bal > 0)
+                                                {
+                                                    //ADDING THE DEFERRED AMOUNT 
+                                                    row.Clear();
+                                                    row.Add(ds.Tables[0].Rows[0]["CurrentDr"].ToString());
+                                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                    row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                    row.Add("0.00");
+                                                    row.Add(remaining_bal.ToString("#,0.00"));
+                                                    row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                    dataGridView3.Rows.Add(row.ToArray());
+                                                }
+
                                             }
-                                            else //For exact and Less than the amount
+                                            else
                                             {
-                                                //Exact Amount 
-                                                row.Add(dt.Rows[0].ItemArray[5].ToString()); //PastDue Account
-                                                row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                                row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
-                                                row.Add("0.00");
-                                                row.Add(datagridviewTransaction.Rows[y].Cells[2].Value.ToString());
-                                                row.Add(Classes.clsCashReceipt.userID.ToString());
-                                                dataGridView3.Rows.Add(row.ToArray());
+                                                //Payment less than the deffered amount
+                                                //check first if the deferred is mix of interest and principal
+                                                if (Convert.ToString(global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString())) != "0.00")
+                                                {
+                                                    if (global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString()) == payment_onHand)
+                                                    {
+                                                        //ADDING THE UNEARNED AMOUNT 
+                                                        row.Clear();
+                                                        row.Add("314"); //UNEARNED ACCOUNT
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add(payment_onHand.ToString("#,0.00")); //DEBIT
+                                                        row.Add("0.00"); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+
+                                                        //ADDING THE INTEREST ON LOAN AMOUNT 
+                                                        row.Clear();
+                                                        row.Add("401.1"); //UNEARNED ACCOUNT
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add("0.00"); //DEBIT
+                                                        row.Add(payment_onHand.ToString("#,0.00")); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+
+                                                        //INSERT INTO PAST DUE
+                                                        row.Clear();
+                                                        row.Add(ds.Tables[0].Rows[0]["PastDueDr"].ToString());
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add("0.00"); //DEBIT
+                                                        row.Add(payment_onHand.ToString("#,0.00")); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+                                                    }
+                                                    else if (payment_onHand > global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString()))
+                                                    {
+                                                        //GREATER THAN THE INTEREST UNEARNED
+                                                        //ADDING THE UNEARNED AMOUNT 
+                                                        row.Clear();
+                                                        row.Add("314"); //UNEARNED ACCOUNT
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add(global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString()).ToString("#,0.00")); //DEBIT
+                                                        row.Add("0.00"); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+
+                                                        //ADDING THE INTEREST ON LOAN AMOUNT 
+                                                        row.Clear();
+                                                        row.Add("401.1"); //UNEARNED ACCOUNT
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add("0.00"); //DEBIT
+                                                        row.Add(global.getUnearnAmountGLOBAL(ds.Tables[0].Rows[0]["Loan_No"].ToString()).ToString("#,0.00")); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+
+                                                        //ADDING THE DEFERRED AMOUNT 
+                                                        row.Clear();
+                                                        row.Add(ds.Tables[0].Rows[0]["PastDueDr"].ToString());
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add("0.00");
+                                                        row.Add(payment_onHand.ToString("#,0.00"));
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+                                                    }
+                                                    else
+                                                    {
+                                                        //LESS THAN THE UNEARNED AMOUNT
+                                                        row.Clear();
+                                                        row.Add("314"); //UNEARNED ACCOUNT
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add(payment_onHand.ToString("#,0.00")); //DEBIT
+                                                        row.Add("0.00"); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+
+                                                        //ADDING THE INTEREST ON LOAN AMOUNT 
+                                                        row.Clear();
+                                                        row.Add("401.1"); //UNEARNED ACCOUNT
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add("0.00"); //DEBIT
+                                                        row.Add(payment_onHand.ToString("#,0.00")); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+
+                                                        //INSERT INTO PAST DUE
+                                                        row.Clear();
+                                                        row.Add(ds.Tables[0].Rows[0]["PastDueDr"].ToString());
+                                                        row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                        row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                        row.Add("0.00"); //DEBIT
+                                                        row.Add(payment_onHand.ToString("#,0.00")); //CREDIT
+                                                        row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                        dataGridView3.Rows.Add(row.ToArray());
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    //PUT ALL IN PAST DUE 
+                                                    row.Clear();
+                                                    row.Add(ds.Tables[0].Rows[0]["PastDueDr"].ToString());
+                                                    row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
+                                                    row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
+                                                    row.Add("0.00");
+                                                    row.Add(payment_onHand.ToString("#,0.00"));
+                                                    row.Add(Classes.clsCashReceipt.userID.ToString());
+                                                    dataGridView3.Rows.Add(row.ToArray());
+                                                }
                                             }
+
                                         }
                                         else
                                         {
-                                            //No Deferred Loan
-                                            //Current Loan
-                                            row.Add(dt.Rows[0].ItemArray[4].ToString()); //Current Account
+                                            //NO DEFERRED ON LOANS
+                                            //ADDING THE PRINCIPAL AMOUNT
+                                            row.Add(ds.Tables[0].Rows[0]["CurrentDr"].ToString()); //Current Account
                                             row.Add(txtPayorID.Text + " - " + txtPayorName.Text);
-                                            row.Add(dt.Rows[0].ItemArray[0].ToString()); //Loan Number
+                                            row.Add(ds.Tables[0].Rows[0]["Loan_No"].ToString()); //Loan Number
                                             row.Add("0.00");
-                                            row.Add(Convert.ToDecimal(datagridviewTransaction.Rows[y].Cells[2].Value.ToString()).ToString("#,0.00"));
+                                            row.Add(payment_onHand.ToString("#,0.00"));
                                             row.Add(Classes.clsCashReceipt.userID.ToString());
                                             dataGridView3.Rows.Add(row.ToArray());
                                         }
-
-
-                                        //Restore Variables to 0;
-                                        balance = 0;
-                                        deferred = 0;
-                                        amountInput = 0;
-                                        Excess = 0;
                                         break;
                                     case "003":
                                         //Share Capital
@@ -935,17 +1094,28 @@ namespace WindowsFormsApplication2
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            //For Creating Cash Receipt and Saving
-            if(btnNew.Text == "NEW")
+            if (clsAccess.checkForInsertRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
             {
+                return;
+            }
+
+            //For Creating Cash Receipt and Saving
+            if (btnNew.Text == "NEW")
+            {
+                //remove open transaction
+                if (txtORNo.Text != "")
+                {
+                    clsOpen.deleteTransaction("Receipt Voucher", txtORNo.Text);
+                }
                 InitializedFromNew();
+                btnAuditted.Enabled = false;
             }
             else
             {
                 //SAVING CREATED CASH RECEIPTS
 
                 //Validation First Before Saving
-                if(clsCash.CashValidation(txtORNo,txtPayorID,txtTransAmount,txtDebit,txtCredit,datagridviewTransaction,dataGridView3,dgvChecks,radioCash,radioPecciCheck,radioNonPecciCheck) == false)
+                if (clsCash.CashValidation(txtORNo, txtPayorID, txtTransAmount, txtDebit, txtCredit, datagridviewTransaction, dataGridView3, dgvChecks, radioCash, radioPecciCheck, radioNonPecciCheck) == false)
                 {
                     //Continue to saving
                     //=================================================================================================
@@ -1156,9 +1326,50 @@ namespace WindowsFormsApplication2
                             }
                         }
                     }
+
+                    //Check if From PDCManagement
+                    if(frmPDCManagement == true)
+                    {
+                        using (SqlConnection con = new SqlConnection(global.connectString()))
+                        {
+                            con.Open();
+                            //Remove the Entry from PDC Management where OR Number = Provisional Receipt
+                            SqlCommand cmdDeletePDC = new SqlCommand();
+                            cmdDeletePDC.Connection = con;
+                            cmdDeletePDC.CommandText = "DELETE PDCManagementV2 WHERE ORNumber = '" + txtORNo.Text + "'";
+                            cmdDeletePDC.CommandType = CommandType.Text;
+                            cmdDeletePDC.ExecuteNonQuery();
+
+                            SqlCommand cmdDeletePDCDetails = new SqlCommand();
+                            cmdDeletePDCDetails.Connection = con;
+                            cmdDeletePDCDetails.CommandText = "DELETE PDCManagementV2_Details WHERE ChequeNo = '" + frmPDCManagementChequeNumber + "'";
+                            cmdDeletePDCDetails.CommandType = CommandType.Text;
+                            cmdDeletePDCDetails.ExecuteNonQuery();
+
+                            frmPDCManagement = false;
+                            frmPDCManagementChequeNumber = "";
+
+                            //Refresh the grid if the form is open
+                            PDCManagementV2 pdc = new PDCManagementV2();
+
+                            foreach (Form form in Application.OpenForms)
+                            {
+
+                                if (form.GetType() == typeof(PDCManagementV2))
+                                {
+                                    form.Activate();
+                                    pdc = (PDCManagementV2)Application.OpenForms["PDCManagementV2"];
+                                    clsPDCManagement.loadPDC(pdc.dataGridView1);
+                                }
+                            }
+                        }
+                    }
+
+
                     Alert.show("Receipt voucher successfully created.", Alert.AlertType.success);
                     //RESTORE COMMANDS AND TEXT
                     AfterSavingOrUpdating();
+                    btnAuditted.Enabled = true;
                 }
             }
         }
@@ -1322,6 +1533,7 @@ namespace WindowsFormsApplication2
             //=======================================
             txtPostedBy.Text = "";
             txtCancelledBy.Text = "";
+            txtAuditedBy.Text = "";
             txtPreparedBy.Text = Classes.clsUser.Username;
 
         }
@@ -1388,6 +1600,11 @@ namespace WindowsFormsApplication2
             txtPostedBy.Text = "";
             txtCancelledBy.Text = "";
 
+            //=======================================
+            //       PDC Management
+            //=======================================
+            frmPDCManagement = false;
+
         }
 
         private void btnPost_Click(object sender, EventArgs e)
@@ -1396,7 +1613,7 @@ namespace WindowsFormsApplication2
             //                          CASH RECEIPTS POSTING
             //===================================================================================
 
-            if(clsSearchCash.checkIfPosted(txtORNo.Text) == true)
+            if (clsSearchCash.checkIfPosted(txtORNo.Text) == true)
             {
                 //If Voucher already cancelled
                 Alert.show("Receipt voucher already posted.", Alert.AlertType.error);
@@ -1407,6 +1624,23 @@ namespace WindowsFormsApplication2
             {
                 //If Voucher already cancelled
                 Alert.show("Receipt voucher already cancelled.", Alert.AlertType.error);
+                return;
+            }
+
+            if (txtAuditedBy.Text == "")
+            {
+                Alert.show("This voucher needs to be audited first.", Alert.AlertType.error);
+                return;
+            }
+
+            if (clsVoucherValidation.checkIfTeamHeadAccounting() == false)
+            {
+                //Posting is for accounting department only(Team Head)
+                return;
+            }
+
+            if (clsVoucherValidation.isPrepBy(txtPreparedBy.Text) == true)
+            {
                 return;
             }
 
@@ -1448,6 +1682,11 @@ namespace WindowsFormsApplication2
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForDeleteRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
+
             part = txtParticulars.Text;
             //===================================================================================
             //                          CASH RECEIPTS POSTING
@@ -1527,6 +1766,10 @@ namespace WindowsFormsApplication2
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            if (clsAccess.checkForEditRestriction(lblTitle.Text, Classes.clsUser.Username) != true)
+            {
+                return;
+            }
 
             //=========================================================================
             //                      Check if Posted or Cancelled
@@ -1555,10 +1798,11 @@ namespace WindowsFormsApplication2
             //                      Validation Before Updating
             //=========================================================================
 
-           
-            if(btnEdit.Text == "EDIT")
+
+            if (btnEdit.Text == "EDIT")
             {
                 forUpdating();
+                btnAuditted.Enabled = false;
             }
             else
             {
@@ -1648,6 +1892,15 @@ namespace WindowsFormsApplication2
                         }
 
                         cmd.Parameters.AddWithValue("@Prepared_By", txtPreparedBy.Text);
+
+                        if (radioLocPerea.Checked == true)
+                        {
+                            cmd.Parameters.AddWithValue("@Location", radioLocPerea.Text);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Location", radioLocTeltech.Text);
+                        }
 
                         cmd.ExecuteNonQuery(); //SAVING CASH HEADER
 
@@ -1775,7 +2028,7 @@ namespace WindowsFormsApplication2
                                 //Delete First Records
                                 SqlCommand cmdDelete = new SqlCommand();
                                 cmdDelete.Connection = con;
-                                cmdDelete.CommandText = "DELETE Cash_Receipts_Checks Or_No = '" + txtORNo.Text + "'";
+                                cmdDelete.CommandText = "DELETE Cash_Receipts_Checks WHERE Or_No = '" + txtORNo.Text + "'";
                                 cmdDelete.CommandType = CommandType.Text;
                                 cmdDelete.ExecuteNonQuery();
 
@@ -1799,10 +2052,11 @@ namespace WindowsFormsApplication2
                         }
                     }
 
-                   
+
                     Alert.show("Receipt voucher successfully updated.", Alert.AlertType.success);
                     //RESTORE COMMANDS AND TEXT
                     AfterSavingOrUpdating();
+                    btnAuditted.Enabled = true;
 
                 }
             }
@@ -1913,7 +2167,7 @@ namespace WindowsFormsApplication2
         private void dataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             datagridviewTransaction.Rows[selectedRow].Cells[selected].Value = dataGridView2.SelectedRows[0].Cells["Loan_Description"].Value.ToString();
-            
+
             panel38.Visible = false;
         }
 
@@ -1925,6 +2179,58 @@ namespace WindowsFormsApplication2
         private void panel19_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void btnAuditted_Click(object sender, EventArgs e)
+        {
+            if (txtAuditedBy.Text != "")
+            {
+                Alert.show("This voucher has been audited already.", Alert.AlertType.error);
+                return;
+            }
+            else
+            {
+                if (Classes.clsUser.department.ToString() == "3")
+                {
+                    string msg = Environment.NewLine + "Are you sure you want to continue?";
+                    DialogResult result = MessageBox.Show(this, msg, "PLDT Credit Cooperative", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        using (SqlConnection con = new SqlConnection(global.connectString()))
+                        {
+                            con.Open();
+
+                            SqlCommand cmd = new SqlCommand();
+                            cmd.Connection = con;
+                            cmd.CommandText = "UPDATE Cash_Receipts_Header SET Audited_By = '" + Classes.clsUser.Username + "' WHERE Or_No = '" + txtORNo.Text + "'";
+                            cmd.CommandType = CommandType.Text;
+                            cmd.ExecuteNonQuery();
+
+                        }
+
+                        Alert.show("Receipt voucher successfully audited.", Alert.AlertType.success);
+                        txtAuditedBy.Text = Classes.clsUser.Username;
+                    }
+                }
+                else
+                {
+                    Alert.show("Error : Access denied.", Alert.AlertType.error);
+                    return;
+                }
+            }
+        }
+
+        private void CashReceiptVoucher_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (txtORNo.Text != "")
+            {
+                clsOpen.deleteTransaction("Receipt Voucher", txtORNo.Text);
+            }
+        }
+
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
 
         public void forUpdating()

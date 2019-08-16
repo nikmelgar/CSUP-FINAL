@@ -46,12 +46,16 @@
             this.button1 = new System.Windows.Forms.Button();
             this.btnMembership = new System.Windows.Forms.Button();
             this.PanelMainContainer = new System.Windows.Forms.Panel();
+            this.btnCoMaker = new System.Windows.Forms.Button();
+            this.queryPayrollDeduction1 = new WindowsFormsApplication2.QueryPayrollDeduction();
+            this.queryLoanListing1 = new WindowsFormsApplication2.QueryLoanListing();
             this.queryLoanDetails1 = new WindowsFormsApplication2.QueryLoanDetails();
             this.queryLoanBalances1 = new WindowsFormsApplication2.QueryLoanBalances();
             this.queryShareCapital1 = new WindowsFormsApplication2.QueryShareCapital();
             this.querySavingsDeposit1 = new WindowsFormsApplication2.QuerySavingsDeposit();
             this.queryMemberProfile1 = new WindowsFormsApplication2.QueryMemberProfile();
             this.querySearchMember1 = new WindowsFormsApplication2.QuerySearchMember();
+            this.queryCoMaker1 = new WindowsFormsApplication2.QueryCoMaker();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnClose)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnMin)).BeginInit();
@@ -136,6 +140,7 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(45)))), ((int)(((byte)(50)))));
+            this.panel5.Controls.Add(this.btnCoMaker);
             this.panel5.Controls.Add(this.button7);
             this.panel5.Controls.Add(this.button6);
             this.panel5.Controls.Add(this.button5);
@@ -199,6 +204,7 @@
             this.button5.Text = "Payroll Deduction";
             this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
             // 
@@ -288,6 +294,9 @@
             // 
             // PanelMainContainer
             // 
+            this.PanelMainContainer.Controls.Add(this.queryCoMaker1);
+            this.PanelMainContainer.Controls.Add(this.queryPayrollDeduction1);
+            this.PanelMainContainer.Controls.Add(this.queryLoanListing1);
             this.PanelMainContainer.Controls.Add(this.queryLoanDetails1);
             this.PanelMainContainer.Controls.Add(this.queryLoanBalances1);
             this.PanelMainContainer.Controls.Add(this.queryShareCapital1);
@@ -299,6 +308,41 @@
             this.PanelMainContainer.Name = "PanelMainContainer";
             this.PanelMainContainer.Size = new System.Drawing.Size(1523, 909);
             this.PanelMainContainer.TabIndex = 63;
+            // 
+            // btnCoMaker
+            // 
+            this.btnCoMaker.FlatAppearance.BorderSize = 0;
+            this.btnCoMaker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCoMaker.Font = new System.Drawing.Font("Century Gothic", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCoMaker.ForeColor = System.Drawing.Color.White;
+            this.btnCoMaker.Image = ((System.Drawing.Image)(resources.GetObject("btnCoMaker.Image")));
+            this.btnCoMaker.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnCoMaker.Location = new System.Drawing.Point(12, 560);
+            this.btnCoMaker.Name = "btnCoMaker";
+            this.btnCoMaker.Size = new System.Drawing.Size(254, 61);
+            this.btnCoMaker.TabIndex = 39;
+            this.btnCoMaker.Text = "Co-Maker";
+            this.btnCoMaker.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCoMaker.UseVisualStyleBackColor = true;
+            this.btnCoMaker.Click += new System.EventHandler(this.btnCoMaker_Click);
+            // 
+            // queryPayrollDeduction1
+            // 
+            this.queryPayrollDeduction1.BackColor = System.Drawing.Color.White;
+            this.queryPayrollDeduction1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryPayrollDeduction1.Location = new System.Drawing.Point(0, 0);
+            this.queryPayrollDeduction1.Name = "queryPayrollDeduction1";
+            this.queryPayrollDeduction1.Size = new System.Drawing.Size(1523, 909);
+            this.queryPayrollDeduction1.TabIndex = 7;
+            // 
+            // queryLoanListing1
+            // 
+            this.queryLoanListing1.BackColor = System.Drawing.Color.White;
+            this.queryLoanListing1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryLoanListing1.Location = new System.Drawing.Point(0, 0);
+            this.queryLoanListing1.Name = "queryLoanListing1";
+            this.queryLoanListing1.Size = new System.Drawing.Size(1523, 909);
+            this.queryLoanListing1.TabIndex = 6;
             // 
             // queryLoanDetails1
             // 
@@ -354,6 +398,15 @@
             this.querySearchMember1.Size = new System.Drawing.Size(1523, 909);
             this.querySearchMember1.TabIndex = 0;
             // 
+            // queryCoMaker1
+            // 
+            this.queryCoMaker1.BackColor = System.Drawing.Color.White;
+            this.queryCoMaker1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.queryCoMaker1.Location = new System.Drawing.Point(0, 0);
+            this.queryCoMaker1.Name = "queryCoMaker1";
+            this.queryCoMaker1.Size = new System.Drawing.Size(1523, 909);
+            this.queryCoMaker1.TabIndex = 8;
+            // 
             // Query
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -404,5 +457,9 @@
         private QueryShareCapital queryShareCapital1;
         private QueryLoanDetails queryLoanDetails1;
         private QueryLoanBalances queryLoanBalances1;
+        private QueryLoanListing queryLoanListing1;
+        private QueryPayrollDeduction queryPayrollDeduction1;
+        private System.Windows.Forms.Button btnCoMaker;
+        private QueryCoMaker queryCoMaker1;
     }
 }

@@ -23,6 +23,8 @@ namespace WindowsFormsApplication2.loanFrms
         Classes.clsLoanLookUp clsLookUp = new Classes.clsLoanLookUp();
         Classes.clsLoanDataEntry clsLoanDataEntry = new Classes.clsLoanDataEntry();
         clsMembership clsMembership = new clsMembership();
+        Classes.clsHoldAccounts clsHoldAccount = new Classes.clsHoldAccounts();
+
         private void label1_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -66,7 +68,7 @@ namespace WindowsFormsApplication2.loanFrms
         {
             if (txtEmployeeID.Text == "" && txtLastName.Text == "" && txtFirstName.Text == "")
             {
-                Alert.show("Please enter valid keyword in search box.", Alert.AlertType.warning);
+                Alert.show("Please enter valid Keyword.", Alert.AlertType.warning);
                 return;
             }
             clsLookUp.search(txtEmployeeID.Text, txtFirstName.Text, txtLastName.Text, dataGridView1);
@@ -83,6 +85,19 @@ namespace WindowsFormsApplication2.loanFrms
                 {
                     return;
                 }
+            }
+
+            //Check for hold accounts
+            if (clsHoldAccount.checkIfHoldAccount(Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["userID"].Value.ToString())) == true)
+            {
+                Alert.show("Member's account is on hold.", Alert.AlertType.error);
+                return;
+            }
+
+            if (clsHoldAccount.checkIfTHeresADependent(dataGridView1.SelectedRows[0].Cells["EmployeeID"].Value.ToString()) == true)
+            {
+                Alert.show("Member's account is on hold.", Alert.AlertType.error);
+                return;
             }
 
             LoansDataEntry loanDataEntry = new LoansDataEntry ();
@@ -161,11 +176,6 @@ namespace WindowsFormsApplication2.loanFrms
                         if (c is ComboBox) ((ComboBox)c).SelectedIndex = -1;
                     }
 
-                    if (loanDataEntry.txtCompany.Text == "NON PAYROLL")
-                    {
-                        loanDataEntry.cmbPaymentOption.SelectedIndex = 1;
-                        loanDataEntry.cmbPaymentOption.Enabled = false;
-                    } 
                     this.Close();
                     return;
                 }

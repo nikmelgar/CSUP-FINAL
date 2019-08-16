@@ -119,7 +119,7 @@ namespace WindowsFormsApplication2
 
                 if (checkDT.Rows.Count == 0)
                 {
-                    Alert.show("No Record(s) Found!", Alert.AlertType.error);
+                    Alert.show("No record(s) found.", Alert.AlertType.error);
                     return;
                 }
 
